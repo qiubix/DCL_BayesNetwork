@@ -91,7 +91,7 @@ private:
 
     void loadNetwork();
 
-    void addNode();
+    void addNode(const string name, const vector & outcomes, const vector &parents);
 
     void exportNetwork();
 
