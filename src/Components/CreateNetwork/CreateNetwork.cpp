@@ -73,5 +73,29 @@ void CreateNetwork::onNewImage() {
     LOG(LTRACE) << "CreateNetwork::onNewImage\n";
 }
 
+void CreateNetwork::initNetwork()
+{
+    //TODO: getting data from input stream and building network on the basics of this data
+}
+
+void CreateNetwork::loadNetwork()
+{
+    //TODO: loading previously build network from file
+    int result = -1;
+    //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
+    //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
+    LOG(LWARNING) << "Reading network file: " << result;
+}
+
+void CreateNetwork::addNode()
+{
+    //TODO: adding single node to the network, setting its properties and connecting it to appropriate parents
+}
+
+void CreateNetwork::exportNetwork()
+{
+    //TODO: exporting network to output datastreams and to file
+}
+
 }//: namespace Network
 }//: namespace Processors
