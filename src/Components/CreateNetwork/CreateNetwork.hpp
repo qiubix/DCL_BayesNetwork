@@ -17,8 +17,8 @@
 #include <opencv2/core/core.hpp>
 
 
+namespace Processors {
 namespace Network {
-namespace CreateNetwork {
 
 /*!
  * \class CreateNetwork
@@ -28,41 +28,41 @@ namespace CreateNetwork {
 class CreateNetwork: public Base::Component
 {
 public:
-	/*!
-	 * Constructor.
-	 */
+    /*!
+     * Constructor.
+     */
     CreateNetwork(const std::string & name = "");
 
-	/*!
-	 * Destructor
-	 */
+    /*!
+     * Destructor
+     */
     virtual ~CreateNetwork();
 
-	/*!
-	 * Prepare data streams and handlers
-	 */
-	void prepareInterface();
+    /*!
+     * Prepare data streams and handlers
+     */
+    void prepareInterface();
 
 protected:
 
-	/*!
-	 * Connects source to given device.
-	 */
-	bool onInit();
+    /*!
+     * Connects source to given device.
+     */
+    bool onInit();
 
-	/*!
-	 * Disconnect source from device, closes streams, etc.
-	 */
-	bool onFinish();
+    /*!
+     * Disconnect source from device, closes streams, etc.
+     */
+    bool onFinish();
 
-	/*!
-	 * Start component
-	 */
-	bool onStart();
+    /*!
+     * Start component
+     */
+    bool onStart();
 
-	/*!
-	 * Stop component
-	 */
+    /*!
+     * Stop component
+     */
     bool onStop();
 
     /*!
@@ -70,30 +70,30 @@ protected:
      */
     bool onStep();
 
-	/*!
-	 * Event handler function.
-	 */
-	void onNewImage();
+    /*!
+     * Event handler function.
+     */
+    void onNewImage();
 
-	/// Input data stream
-	Base::DataStreamIn<cv::Mat> in_img;
+    /// Input data stream
+    Base::DataStreamIn<cv::Mat> in_img;
 
-	/// Output data stream - image with drawn blobs
-	Base::DataStreamOut<cv::Mat> out_img;
+    /// Output data stream - image with drawn blobs
+    Base::DataStreamOut<cv::Mat> out_img;
 
 private:
-	cv::Mat img_uchar;
+    cv::Mat img_uchar;
 
 };
 
-}//: namespace CreateNetwork
 }//: namespace Network
+}//: namespace Processors
 
 
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("CreateNetwork", Network::CreateNetwork::CreateNetwork)
+REGISTER_COMPONENT("CreateNetwork", Processors::Network::CreateNetwork)
 
 #endif /* CREATE_NETWORK_HPP_ */
 

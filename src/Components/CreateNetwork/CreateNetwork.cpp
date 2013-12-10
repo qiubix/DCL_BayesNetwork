@@ -15,8 +15,8 @@
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+namespace Processors {
 namespace Network {
-namespace CreateNetwork {
 
 CreateNetwork::CreateNetwork(const std::string & name) : Base::Component(name)
 {
@@ -73,5 +73,5 @@ void CreateNetwork::onNewImage() {
     LOG(LTRACE) << "CreateNetwork::onNewImage\n";
 }
 
-}//: namespace CreateNetwork
+}//: namespace Network
 }//: namespace Processors
