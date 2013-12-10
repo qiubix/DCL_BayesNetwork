@@ -6,6 +6,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(procCreateNetwork SHARED ${files})
-target_link_libraries(procCreateNetwork ${DisCODe_LIBRARIES} BayesNetworkTypes ${OpenCV_LIBS})
+target_link_libraries(procCreateNetwork ${DisCODe_LIBRARIES} ${OpenCV_LIBS})
 
 INSTALL_COMPONENT(procCreateNetwork)
