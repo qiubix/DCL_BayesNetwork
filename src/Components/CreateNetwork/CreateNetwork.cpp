@@ -89,7 +89,6 @@ void CreateNetwork::loadNetwork()
 
 void CreateNetwork::addNode(const std::string name, const std::vector<std::string> & outcomesNames, const std::vector<std::string> & parentsNames)
 {
-    //TODO: adding single node to the network, setting its properties and connecting it to appropriate parents
     int newNode = theNet.AddNode(DSL_cpt, name.c_str());
     DSL_idArray outcomes;
     for (int i=0; i<outcomesNames.size(); i++) {
@@ -102,6 +101,11 @@ void CreateNetwork::addNode(const std::string name, const std::vector<std::strin
         nextParent = theNet.FindNode(parentsNames[i]);
         theNet.AddArc(nextParent, newNode);
     }
+}
+
+void CreateNetwork::setNodeCPT(const string name, const vector &probabilities)
+{
+    //TODO: set node CPT
 }
 
 void CreateNetwork::exportNetwork()
