@@ -87,7 +87,6 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
-
 void CreateNetwork::exportNetwork()
 {
     //TODO: exporting network to output datastreams and to file
