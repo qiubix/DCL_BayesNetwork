@@ -91,6 +91,8 @@ private:
 
     void loadNetwork();
 
+    void addNode(const string name, const std::vector<string>& outcomesNames, const std::vector<string>& parentsNames);
+
     void exportNetwork();
 
 };
