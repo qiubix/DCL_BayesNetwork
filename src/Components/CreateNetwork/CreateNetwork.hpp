@@ -93,7 +93,7 @@ private:
 
     void addNode(const string name, const std::vector<string>& outcomesNames, const std::vector<string>& parentsNames);
 
-    void setNodeCPT(const string name, const std::vector<double> & probabilities);
+    void setNodeCPT(const string name, vector<double> probabilities);
 
     void exportNetwork();
 
