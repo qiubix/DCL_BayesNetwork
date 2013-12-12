@@ -79,6 +79,8 @@ protected:
     /// Input data stream
     Base::DataStreamIn<cv::Mat> in_img;
 
+    Base::DataStreamIn<DSL_network> in_network;
+
     /// Output data stream - image with drawn blobs
     Base::DataStreamOut<cv::Mat> out_img;
 

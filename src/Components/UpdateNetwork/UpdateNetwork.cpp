@@ -31,6 +31,11 @@ UpdateNetwork::~UpdateNetwork()
 void UpdateNetwork::prepareInterface()
 {
     LOG(LTRACE) << "UpdateNetwork::prepareInterface\n";
+    h_onStep.setup(this, &UpdateNetwork::onStep());
+    registerHandler("onStep", &h_onStep);
+
+    registerStream("in_network", &in_network);
+
 }
 
 bool UpdateNetwork::onInit()
