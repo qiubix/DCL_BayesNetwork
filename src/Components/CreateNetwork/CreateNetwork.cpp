@@ -97,7 +97,6 @@ void CreateNetwork::addNode(const std::string name, const std::vector<std::strin
     }
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 
-    std::vector<int> parents;
     int nextParent;
     for (int i=0; i<parentsNames.size(); i++) {
         nextParent = theNet.FindNode(parentsNames[i]);
