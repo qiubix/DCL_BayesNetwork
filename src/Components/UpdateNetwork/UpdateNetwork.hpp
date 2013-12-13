@@ -93,6 +93,8 @@ private:
 
     void observeNode(string observedNode, int observedState = 0);
 
+    void clearEvidence();
+
 };
 
 }//: namespace Network

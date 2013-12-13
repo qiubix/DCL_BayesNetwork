@@ -85,5 +85,10 @@ void UpdateNetwork::observeNode(string observedNode, int observedState)
     theNet.GetNode(node)->Value()->SetEvidence(observedState);
 }
 
+void UpdateNetwork::clearEvidence()
+{
+    theNet.ClearAllEvidence();
+}
+
 }//: namespace Network
 }//: namespace Processors
