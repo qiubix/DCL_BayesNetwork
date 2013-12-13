@@ -87,14 +87,6 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
-void CreateNetwork::addNode(const std::string name, const std::vector<std::string> & outcomes, const std::vector <std::string> & parents)
-{
-    //TODO: adding single node to the network, setting its properties and connecting it to appropriate parents
-    int newNode = theNet.AddNode(DSL_CPT, name);
-    DSL_idArray outcomes;
-
-
-}
 
 void CreateNetwork::exportNetwork()
 {
