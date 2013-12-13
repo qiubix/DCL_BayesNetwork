@@ -81,6 +81,8 @@ protected:
 
     Base::DataStreamIn<DSL_network> in_network;
 
+    //Base::EventHandler <UpdateNetwork> h_onStep;
+
     /// Output data stream - image with drawn blobs
     Base::DataStreamOut<cv::Mat> out_img;
 
