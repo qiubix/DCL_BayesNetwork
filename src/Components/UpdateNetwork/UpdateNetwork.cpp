@@ -78,6 +78,18 @@ void UpdateNetwork::onNewImage() {
     LOG(LTRACE) << "UpdateNetwork::onNewImage\n";
 }
 
+void UpdateNetwork::changeNodeCPT(const string nodeName, vector<double> probabilities)
+{
+    LOG(LTRACE) << "UpdateNetwork::changeNodeProbabilities";
+    int node = theNet.FindNode(nodeName.c_str());
+    DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
+    std::vector<double>::iterator it = probabilities.begin();
+    do {
+        theCoordinates.UncheckedValue() = *it;
+        ++it;
+    } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+}
+
 void UpdateNetwork::observeNode(string observedNode, int observedState)
 {
     LOG(LTRACE) << "UpdateNetwork::observeNode";

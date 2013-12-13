@@ -91,6 +91,8 @@ private:
 
     DSL_network theNet;
 
+    void changeNodeCPT(const string nodeName, vector<double> probabilities);
+
     void observeNode(string observedNode, int observedState = 0);
 
     void clearEvidence();
