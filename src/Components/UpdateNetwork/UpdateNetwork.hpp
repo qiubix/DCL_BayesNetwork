@@ -89,6 +89,8 @@ private:
 
     DSL_network theNet;
 
+    void observeNode(string observedNode, int observedState = 0);
+
 };
 
 }//: namespace Network

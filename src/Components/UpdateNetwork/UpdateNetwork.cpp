@@ -78,5 +78,12 @@ void UpdateNetwork::onNewImage() {
     LOG(LTRACE) << "UpdateNetwork::onNewImage\n";
 }
 
+void UpdateNetwork::observeNode(string observedNode, int observedState)
+{
+    LOG(LTRACE) << "UpdateNetwork::observeNode";
+    int node = theNet.FindNode(observedNode.c_str());
+    theNet.GetNode(node)->Value()->SetEvidence(observedState);
+}
+
 }//: namespace Network
 }//: namespace Processors
