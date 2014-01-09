@@ -87,6 +87,33 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
+void CreateNetwork::addNode(const std::string name, const std::vector<std::string> & outcomesNames, const std::vector<std::string> & parentsNames)
+{
+    int newNode = theNet.AddNode(DSL_CPT, name.c_str());
+    DSL_idArray outcomes;
+    for (int i=0; i<outcomesNames.size(); i++) {
+        outcomes.Add(outcomesNames[i].c_str());
+    }
+    theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
+
+    int nextParent;
+    for (int i=0; i<parentsNames.size(); i++) {
+        nextParent = theNet.FindNode(parentsNames[i].c_str());
+        theNet.AddArc(nextParent, newNode);
+    }
+}
+
+void CreateNetwork::setNodeCPT(const string name, vector<double> probabilities)
+{
+    int node = theNet.FindNode(name.c_str());
+    DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
+
+    std::vector<double>::iterator it = probabilities.begin();
+    do {
+        theCoordinates.UncheckedValue() = *it;
+        ++it;
+    } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+}
 
 void CreateNetwork::exportNetwork()
 {
