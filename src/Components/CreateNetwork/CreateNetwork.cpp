@@ -87,6 +87,16 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
+void CreateNetwork::mapMultiplicityVector()
+{
+    /*
+     * TODO: mapping joint multiplicity vector to joint multiplicity map,
+     * which links handle of a node generated during the process of adding node (method addNode();)
+     * to value of multiplicity for a specific feature
+     * Handle of a node remains constant for the lifetime of the network.
+     */
+}
+
 void CreateNetwork::setBaseNetworkCPTs()
 {
     /*
@@ -103,6 +113,22 @@ void CreateNetwork::setBaseFeaturesCPTs()
      * P(Fi) = ki / sum_j(kj)
      * probability (a'priori) of feature appearence
      */
+    int sum = 0;
+    for( std::map<int,int>::iterator j=jointMultiplicityMap.begin(); j != jointMultiplicityMap.end(); ++j ) {
+        sum += j->second;
+    }
+
+    std::map<int,string>::iterator it = features.begin();
+    std::vector <double> probabilities;
+    double baseProbability;
+    for( ; it!=features.end(); ++it) {
+        int multiplicity = jointMultiplicityMap[it->first];
+        baseProbability = multiplicity/sum;
+        probabilities.push_back(baseProbability);
+        probabilities.push_back(1 - baseProbability);
+        setNodeCPT(it->second, probabilities);
+        probabilities.clear();
+    }
 }
 
 void CreateNetwork::setBaseHypothesesCPTs()
@@ -128,6 +154,7 @@ void CreateNetwork::addNode(const std::string name, const std::vector<std::strin
         nextParent = theNet.FindNode(parentsNames[i].c_str());
         theNet.AddArc(nextParent, newNode);
     }
+    features.insert(std::make_pair<int,string>(newNode, name));
 }
 
 void CreateNetwork::setNodeCPT(const string name, vector<double> probabilities)

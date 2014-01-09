@@ -87,9 +87,15 @@ private:
 
     DSL_network theNet;
 
+    //FIXME: change mapping of features handlers (identifiers)
+    std::map <int, string> features;
+    std::map <int, int> jointMultiplicityMap;
+
     void initNetwork();
 
     void loadNetwork();
+
+    void mapMultiplicityVector();
 
     void setBaseNetworkCPTs();
 
