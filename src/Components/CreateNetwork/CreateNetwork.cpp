@@ -87,6 +87,33 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
+void CreateNetwork::setBaseNetworkCPTs()
+{
+    /*
+     * TODO: set base CPTs of all nodes in the network
+     * using setBaseFeaturesCPTs();
+     * using setBaseHypothesesCPTs();
+     */
+}
+
+void CreateNetwork::setBaseFeaturesCPTs()
+{
+    /*
+     * TODO: set base CPTs of Feature nodes, based on JointMultiplicityVector
+     * P(Fi) = ki / sum_j(kj)
+     * probability (a'priori) of feature appearence
+     */
+}
+
+void CreateNetwork::setBaseHypothesesCPTs()
+{
+    /*
+     * TODO: set base CPTs of Hypotheses nodes, based on JointMultiplicityVector
+     * P(Hi|Fk, Fk+1, ..., Fn) = P(Hi|Fk)*P(Hi|Fk+1)*...*P(Hi|Fn)
+     * probability of hypothesis acceptance
+     */
+}
+
 void CreateNetwork::addNode(const std::string name, const std::vector<std::string> & outcomesNames, const std::vector<std::string> & parentsNames)
 {
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
