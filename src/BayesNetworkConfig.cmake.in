@@ -1,6 +1,6 @@
-# This file is used when other components needs to use something provided by this DCL. 
+# This file is used when other components needs to use something provided by this DCL.
 # Provide any include paths and lib directories. Use @CMAKE_INSTALL_PREFIX@
-# to point to 'dist' directory of current DCL, it'll be substituted during installation. 
+# to point to 'dist' directory of current DCL, it'll be substituted during installation.
 
 # directory containing header files
 SET(BayesNetwork_INCLUDE_DIR @CMAKE_INSTALL_PREFIX@/include)
@@ -10,7 +10,7 @@ INCLUDE_DIRECTORIES(${BayesNetwork_INCLUDE_DIR})
 SET(BayesNetwork_LIB_DIR @CMAKE_INSTALL_PREFIX@/lib)
 LINK_DIRECTORIES(${BayesNetwork_LIB_DIR})
 
-# list of libraries to link against when using features of MS
+# list of libraries to link against when using features of BayesNetwork
 # add all additional libraries built by this dcl (NOT components)
 # SET(BayesNetwork_LIBS lib_1 lib_2)
 # SET(ADDITIONAL_LIB_DIRS @CMAKE_INSTALL_PREFIX@/lib ${ADDITIONAL_LIB_DIRS})
