@@ -33,6 +33,11 @@ void CreateNetwork::prepareInterface()
     LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
 }
 
+DSL_network CreateNetwork::getNetwork()
+{
+    return this->theNet;
+}
+
 bool CreateNetwork::onInit()
 {
     LOG(LTRACE) << "CreateNetwork::initialize\n";
@@ -140,7 +145,7 @@ void CreateNetwork::setBaseHypothesesCPTs()
      */
 }
 
-void CreateNetwork::addNode(const std::string name, const std::vector<std::string> & outcomesNames, const std::vector<std::string> & parentsNames)
+void CreateNetwork::addNode(const std::string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames)
 {
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
     DSL_idArray outcomes;

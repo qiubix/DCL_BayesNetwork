@@ -6,12 +6,16 @@
 /*
  * TODO: write test case fixture
  */
+BOOST_AUTO_TEST_SUITE( CreateNetworkTestSuite )
 
-BOOST_AUTO_TEST_CASE( test )
+BOOST_AUTO_TEST_CASE( testAddNode )
 {
     Processors::Network::CreateNetwork* network = new Processors::Network::CreateNetwork("TestNetwork");
     BOOST_CHECK_EQUAL(2, 2);
+    delete network;
 }
+
+BOOST_AUTO_TEST_SUITE_END()
 
 /*
  * TODO: write test cases:

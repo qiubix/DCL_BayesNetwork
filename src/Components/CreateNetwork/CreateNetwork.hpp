@@ -44,6 +44,20 @@ public:
      */
     void prepareInterface();
 
+    DSL_network getNetwork();
+
+    void addNode(const string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames);
+
+    void setNodeCPT(const string name, vector<double> probabilities);
+
+    void mapMultiplicityVector();
+
+    void setBaseNetworkCPTs();
+
+    void setBaseFeaturesCPTs();
+
+    void setBaseHypothesesCPTs();
+
 protected:
 
     /*!
@@ -94,18 +108,6 @@ private:
     void initNetwork();
 
     void loadNetwork();
-
-    void mapMultiplicityVector();
-
-    void setBaseNetworkCPTs();
-
-    void setBaseFeaturesCPTs();
-
-    void setBaseHypothesesCPTs();
-
-    void addNode(const string name, const std::vector<string>& outcomesNames, const std::vector<string>& parentsNames);
-
-    void setNodeCPT(const string name, vector<double> probabilities);
 
     void exportNetwork();
 
