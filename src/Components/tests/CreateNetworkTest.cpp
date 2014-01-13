@@ -3,6 +3,8 @@
 
 #include "CreateNetwork.hpp"
 
+BOOST_AUTO_TEST_SUITE( test1 )
+
 BOOST_AUTO_TEST_CASE( test )
 {
     Processors::Network::CreateNetwork* network = new Processors::Network::CreateNetwork("TestNetwork");
@@ -10,3 +12,5 @@ BOOST_AUTO_TEST_CASE( test )
     BOOST_CHECK_EQUAL(4, temp);
     delete network;
 }
+
+BOOST_AUTO_TEST_SUITE_END()
