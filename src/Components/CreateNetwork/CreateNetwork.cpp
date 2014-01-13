@@ -21,6 +21,7 @@ namespace Network {
 CreateNetwork::CreateNetwork(const std::string & name) : Base::Component(name)
 {
     LOG(LTRACE)<<"Hello CreateNetwork\n";
+    this->temp = 4;
 }
 
 CreateNetwork::~CreateNetwork()
@@ -31,6 +32,11 @@ CreateNetwork::~CreateNetwork()
 void CreateNetwork::prepareInterface()
 {
     LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
+}
+
+int CreateNetwork::getTemp()
+{
+    return this->temp;
 }
 
 bool CreateNetwork::onInit()

@@ -6,5 +6,7 @@
 BOOST_AUTO_TEST_CASE( test )
 {
     Processors::Network::CreateNetwork* network = new Processors::Network::CreateNetwork("TestNetwork");
-    BOOST_CHECK_EQUAL(2, 2);
+    int temp = network->getTemp();
+    BOOST_CHECK_EQUAL(4, temp);
+    delete network;
 }

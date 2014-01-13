@@ -44,6 +44,8 @@ public:
      */
     void prepareInterface();
 
+    int getTemp();
+
 protected:
 
     /*!
@@ -97,6 +99,7 @@ private:
 
     void exportNetwork();
 
+    int temp;
 };
 
 }//: namespace Network
