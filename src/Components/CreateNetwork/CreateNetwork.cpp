@@ -38,6 +38,11 @@ DSL_network CreateNetwork::getNetwork()
     return this->theNet;
 }
 
+string CreateNetwork::getNodeName(int nodeHandle)
+{
+    return features[nodeHandle];
+}
+
 bool CreateNetwork::onInit()
 {
     LOG(LTRACE) << "CreateNetwork::initialize\n";
