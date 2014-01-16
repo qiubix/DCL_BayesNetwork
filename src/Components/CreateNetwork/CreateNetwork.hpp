@@ -63,7 +63,7 @@ public:
 protected:
 
     /// Input data stream
-    Base::DataStreamIn< vector<int> > in_model;
+    Base::DataStreamIn< map<int,int> > in_model;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
 
     /// Output data stream
@@ -112,7 +112,7 @@ private:
     //FIXME: change mapping of features handlers (identifiers)
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
-    std::vector < std::vector<int> > models;
+    std::vector < std::map<int,int> > models;
 
     void initNetwork();
 

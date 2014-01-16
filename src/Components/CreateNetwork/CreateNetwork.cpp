@@ -203,7 +203,8 @@ void CreateNetwork::setNodeCPT(const string name, vector<double> probabilities)
 
 void CreateNetwork::exportNetwork()
 {
-    //TODO: exporting network to output datastreams and to file
+    theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
+    out_network.write(theNet);
 }
 
 }//: namespace Network
