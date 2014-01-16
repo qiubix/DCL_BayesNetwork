@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <sstream>
 #include <iostream>
 
 #include "CreateNetwork.hpp"
@@ -106,6 +107,7 @@ void CreateNetwork::onJointMultiplicity()
 {
     LOG(LTRACE) << "CreateNetwork::onJointMultiplicity\n";
     jointMultiplicityVector = in_jointMultiplicity.read();
+    mapFeaturesNames();
 }
 
 void CreateNetwork::initNetwork()
@@ -124,17 +126,12 @@ void CreateNetwork::loadNetwork()
 
 void CreateNetwork::mapFeaturesNames()
 {
-    /* TODO:
-     * map numbers representing features position in multiplicity vector
-     * to strings representing their names
-     */
-
-    /*
-     * TODO: mapping joint multiplicity vector to joint multiplicity map,
-     * which links handle of a node generated during the process of adding node (method addNode();)
-     * to value of multiplicity for a specific feature
-     * Handle of a node remains constant for the lifetime of the network.
-     */
+    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        std::stringstream name;
+        name << "F" << i;
+        string featureName(name.str());
+        features.insert(std::make_pair<int,string>(i,featureName));
+    }
 }
 
 void CreateNetwork::setBaseNetworkCPTs()
