@@ -31,6 +31,18 @@ CreateNetwork::~CreateNetwork()
 void CreateNetwork::prepareInterface()
 {
     LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
+
+    h_onNewModel.setup(this, &CreateNetwork::onNewModel);
+    registerHandler("onNewModel", &h_onNewModel);
+    h_onJointMultiplicity.setup(this, &CreateNetwork::onJointMultiplicity);
+    registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
+
+    registerStream("in_model", &in_model);
+    addDependency("onNewModel", &in_model);
+    registerStream("in_jointMultiplicity", &in_jointMultiplicity);
+    addDependency("onJointMultiplicity", &in_jointMultiplicity);
+
+    registerStream("out_network", &out_network);
 }
 
 DSL_network CreateNetwork::getNetwork()
@@ -83,6 +95,16 @@ void CreateNetwork::onNewImage() {
     LOG(LTRACE) << "CreateNetwork::onNewImage\n";
 }
 
+void CreateNetwork::onNewModel()
+{
+    LOG(LTRACE) << "CreateNetwork::onNewModel\n";
+}
+
+void CreateNetwork::onJointMultiplicity()
+{
+    LOG(LTRACE) << "CreateNetwork::onJointMultiplicity\n";
+}
+
 void CreateNetwork::initNetwork()
 {
     //TODO: getting data from input stream and building network on the basics of this data
@@ -123,6 +145,8 @@ void CreateNetwork::setBaseFeaturesCPTs()
      * P(Fi) = ki / sum_j(kj)
      * probability (a'priori) of feature appearence
      */
+
+  /*
     int sum = 0;
     for( std::map<int,int>::iterator j=jointMultiplicityMap.begin(); j != jointMultiplicityMap.end(); ++j ) {
         sum += j->second;
@@ -138,6 +162,11 @@ void CreateNetwork::setBaseFeaturesCPTs()
         probabilities.push_back(1 - baseProbability);
         setNodeCPT(it->second, probabilities);
         probabilities.clear();
+    }
+    */
+    int sum = 0;
+    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        sum += jointMultiplicityVector[i];
     }
 }
 

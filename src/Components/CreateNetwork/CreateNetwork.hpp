@@ -62,6 +62,13 @@ public:
 
 protected:
 
+    /// Input data stream
+    Base::DataStreamIn< vector<int> > in_model;
+    Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+
+    /// Output data stream
+    Base::DataStreamOut<DSL_network> out_network;
+
     /*!
      * Connects source to given device.
      */
@@ -87,16 +94,15 @@ protected:
      */
     bool onStep();
 
+    Base::EventHandler <CreateNetwork> h_onNewModel;
+    Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
+
     /*!
      * Event handler function.
      */
+    void onNewModel();
+    void onJointMultiplicity();
     void onNewImage();
-
-    /// Input data stream
-    Base::DataStreamIn<cv::Mat> in_img;
-
-    /// Output data stream - image with drawn blobs
-    Base::DataStreamOut<cv::Mat> out_img;
 
 private:
     cv::Mat img_uchar;
@@ -105,6 +111,7 @@ private:
 
     //FIXME: change mapping of features handlers (identifiers)
     std::map <int, string> features;
+    std::vector <int> jointMultiplicityVector;
     std::map <int, int> jointMultiplicityMap;
 
     void initNetwork();
