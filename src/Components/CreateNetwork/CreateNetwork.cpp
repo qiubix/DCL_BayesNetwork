@@ -84,18 +84,6 @@ bool CreateNetwork::onStart()
     return true;
 }
 
-bool CreateNetwork::onStep()
-{
-    LOG(LTRACE) << "CreateNetwork::onStep\n";
-
-    return true;
-}
-
-
-void CreateNetwork::onNewImage() {
-    LOG(LTRACE) << "CreateNetwork::onNewImage\n";
-}
-
 void CreateNetwork::onNewModel()
 {
     LOG(LTRACE) << "CreateNetwork::onNewModel\n";
@@ -108,6 +96,8 @@ void CreateNetwork::onJointMultiplicity()
     LOG(LTRACE) << "CreateNetwork::onJointMultiplicity\n";
     jointMultiplicityVector = in_jointMultiplicity.read();
     mapFeaturesNames();
+    buildNetwork();
+    exportNetwork();
 }
 
 void CreateNetwork::buildNetwork()
@@ -138,7 +128,6 @@ void CreateNetwork::buildNetwork()
 
 void CreateNetwork::loadNetwork()
 {
-    //TODO: loading previously build network from file
     int result = -1;
     //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
     //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);

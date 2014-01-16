@@ -24,7 +24,7 @@ namespace Network {
 /*!
  * \class CreateNetwork
  * \brief Class used to build Bayes network
- * \author kkaterza
+ * \author Karol Katerżawa
  */
 class CreateNetwork: public Base::Component
 {
@@ -51,14 +51,6 @@ public:
     void addNode(const string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames);
 
     void setNodeCPT(const string name, vector<double> probabilities);
-
-    void mapFeaturesNames();
-
-    void setBaseNetworkCPTs();
-
-    void setBaseFeaturesCPTs();
-
-    void setBaseHypothesesCPTs();
 
 protected:
 
@@ -89,11 +81,7 @@ protected:
      */
     bool onStop();
 
-    /*!
-     *
-     */
-    bool onStep();
-
+    /// Event handlers
     Base::EventHandler <CreateNetwork> h_onNewModel;
     Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
 
@@ -102,19 +90,23 @@ protected:
      */
     void onNewModel();
     void onJointMultiplicity();
-    void onNewImage();
 
 private:
-    cv::Mat img_uchar;
-
     DSL_network theNet;
 
-    //FIXME: change mapping of features handlers (identifiers)
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
 
+    void mapFeaturesNames();
+
     void buildNetwork();
+
+    void setBaseNetworkCPTs();
+
+    void setBaseFeaturesCPTs();
+
+    void setBaseHypothesesCPTs();
 
     void loadNetwork();
 
