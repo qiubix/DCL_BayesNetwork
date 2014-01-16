@@ -24,7 +24,7 @@ namespace Network {
 /*!
  * \class CreateNetwork
  * \brief Class used to build Bayes network
- * \author kkaterza
+ * \author Karol Katerżawa
  */
 class CreateNetwork: public Base::Component
 {
@@ -46,6 +46,13 @@ public:
 
 protected:
 
+    /// Input data stream
+    Base::DataStreamIn< map<int,int> > in_model;
+    Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+
+    /// Output data stream
+    Base::DataStreamOut<DSL_network> out_network;
+
     /*!
      * Connects source to given device.
      */
@@ -66,34 +73,42 @@ protected:
      */
     bool onStop();
 
-    /*!
-     *
-     */
-    bool onStep();
+    /// Event handlers
+    Base::EventHandler <CreateNetwork> h_onNewModel;
+    Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
 
     /*!
      * Event handler function.
      */
-    void onNewImage();
-
-    /// Input data stream
-    Base::DataStreamIn<cv::Mat> in_img;
-
-    /// Output data stream - image with drawn blobs
-    Base::DataStreamOut<cv::Mat> out_img;
+    void onNewModel();
+    void onJointMultiplicity();
 
 private:
-    cv::Mat img_uchar;
-
     DSL_network theNet;
 
-    void initNetwork();
+    std::map <int, string> features;
+    std::vector <int> jointMultiplicityVector;
+    std::vector < std::map<int,int> > models;
 
-    void loadNetwork();
+    DSL_network getNetwork();
 
-    void addNode(const string name, const std::vector<string>& outcomesNames, const std::vector<string>& parentsNames);
+    std::string getNodeName(int nodeHandle);
+
+    void addNode(const string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames);
 
     void setNodeCPT(const string name, vector<double> probabilities);
+
+    void mapFeaturesNames();
+
+    void buildNetwork();
+
+    void setBaseNetworkCPTs();
+
+    void setBaseFeaturesCPTs();
+
+    void setBaseHypothesesCPTs();
+
+    void loadNetwork();
 
     void exportNetwork();
 
