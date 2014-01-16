@@ -99,7 +99,7 @@ void CreateNetwork::onNewImage() {
 void CreateNetwork::onNewModel()
 {
     LOG(LTRACE) << "CreateNetwork::onNewModel\n";
-    std::vector<int> newModel = in_model.read();
+    map<int,int> newModel = in_model.read();
     models.push_back(newModel);
 }
 
@@ -110,9 +110,30 @@ void CreateNetwork::onJointMultiplicity()
     mapFeaturesNames();
 }
 
-void CreateNetwork::initNetwork()
+void CreateNetwork::buildNetwork()
 {
-    //TODO: getting data from input stream and building network on the basics of this data
+    vector<string> outcomesNames;
+    vector<string> parentsNames;
+    outcomesNames.push_back("YES");
+    outcomesNames.push_back("NO");
+    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        addNode(features[i], outcomesNames, parentsNames);
+    }
+    for (unsigned j=0; j<models.size(); ++j) {
+        stringstream name;
+        name << "H" << j;
+        string hypothesisName(name.str());
+        map<int,int> modelFeatures = models[j];
+        map<int,int>::iterator it = modelFeatures.begin();
+        while (it != modelFeatures.end()) {
+            string parentName = features[it->first];
+            parentsNames.push_back(parentName);
+            ++it;
+        }
+        addNode(hypothesisName, outcomesNames, parentsNames);
+        parentsNames.clear();
+    }
+    setBaseNetworkCPTs();
 }
 
 void CreateNetwork::loadNetwork()

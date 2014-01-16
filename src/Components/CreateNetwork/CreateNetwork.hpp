@@ -114,7 +114,7 @@ private:
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
 
-    void initNetwork();
+    void buildNetwork();
 
     void loadNetwork();
 
