@@ -44,14 +44,6 @@ public:
      */
     void prepareInterface();
 
-    DSL_network getNetwork();
-
-    std::string getNodeName(int nodeHandle);
-
-    void addNode(const string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames);
-
-    void setNodeCPT(const string name, vector<double> probabilities);
-
 protected:
 
     /// Input data stream
@@ -97,6 +89,14 @@ private:
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
+
+    DSL_network getNetwork();
+
+    std::string getNodeName(int nodeHandle);
+
+    void addNode(const string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames);
+
+    void setNodeCPT(const string name, vector<double> probabilities);
 
     void mapFeaturesNames();
 
