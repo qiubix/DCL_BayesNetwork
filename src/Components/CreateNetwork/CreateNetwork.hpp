@@ -52,7 +52,7 @@ public:
 
     void setNodeCPT(const string name, vector<double> probabilities);
 
-    void mapMultiplicityVector();
+    void mapFeaturesNames();
 
     void setBaseNetworkCPTs();
 
@@ -112,7 +112,7 @@ private:
     //FIXME: change mapping of features handlers (identifiers)
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
-    std::map <int, int> jointMultiplicityMap;
+    std::vector < std::vector<int> > models;
 
     void initNetwork();
 

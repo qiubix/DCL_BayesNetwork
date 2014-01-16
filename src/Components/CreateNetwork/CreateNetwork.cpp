@@ -98,11 +98,14 @@ void CreateNetwork::onNewImage() {
 void CreateNetwork::onNewModel()
 {
     LOG(LTRACE) << "CreateNetwork::onNewModel\n";
+    std::vector<int> newModel = in_model.read();
+    models.push_back(newModel);
 }
 
 void CreateNetwork::onJointMultiplicity()
 {
     LOG(LTRACE) << "CreateNetwork::onJointMultiplicity\n";
+    jointMultiplicityVector = in_jointMultiplicity.read();
 }
 
 void CreateNetwork::initNetwork()
@@ -119,8 +122,13 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
-void CreateNetwork::mapMultiplicityVector()
+void CreateNetwork::mapFeaturesNames()
 {
+    /* TODO:
+     * map numbers representing features position in multiplicity vector
+     * to strings representing their names
+     */
+
     /*
      * TODO: mapping joint multiplicity vector to joint multiplicity map,
      * which links handle of a node generated during the process of adding node (method addNode();)
@@ -140,33 +148,21 @@ void CreateNetwork::setBaseNetworkCPTs()
 
 void CreateNetwork::setBaseFeaturesCPTs()
 {
-    /*
-     * TODO: set base CPTs of Feature nodes, based on JointMultiplicityVector
-     * P(Fi) = ki / sum_j(kj)
-     * probability (a'priori) of feature appearence
-     */
-
-  /*
     int sum = 0;
-    for( std::map<int,int>::iterator j=jointMultiplicityMap.begin(); j != jointMultiplicityMap.end(); ++j ) {
-        sum += j->second;
+    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        sum += jointMultiplicityVector[i];
     }
 
     std::map<int,string>::iterator it = features.begin();
     std::vector <double> probabilities;
-    double baseProbability;
+    double baseProbability = 0;
     for( ; it!=features.end(); ++it) {
-        int multiplicity = jointMultiplicityMap[it->first];
+        int multiplicity = jointMultiplicityVector[it->first];
         baseProbability = multiplicity/sum;
         probabilities.push_back(baseProbability);
         probabilities.push_back(1 - baseProbability);
         setNodeCPT(it->second, probabilities);
         probabilities.clear();
-    }
-    */
-    int sum = 0;
-    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
-        sum += jointMultiplicityVector[i];
     }
 }
 
