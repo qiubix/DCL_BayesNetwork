@@ -157,11 +157,8 @@ void CreateNetwork::mapFeaturesNames()
 
 void CreateNetwork::setBaseNetworkCPTs()
 {
-    /*
-     * TODO: set base CPTs of all nodes in the network
-     * using setBaseFeaturesCPTs();
-     * using setBaseHypothesesCPTs();
-     */
+    setBaseFeaturesCPTs();
+    setBaseHypothesesCPTs();
 }
 
 void CreateNetwork::setBaseFeaturesCPTs()
@@ -186,11 +183,40 @@ void CreateNetwork::setBaseFeaturesCPTs()
 
 void CreateNetwork::setBaseHypothesesCPTs()
 {
-    /*
-     * TODO: set base CPTs of Hypotheses nodes, based on JointMultiplicityVector
-     * P(Hi|Fk, Fk+1, ..., Fn) = P(Hi|Fk)*P(Hi|Fk+1)*...*P(Hi|Fn)
-     * probability of hypothesis acceptance
-     */
+    int jointMultiplicitySum = 0;
+    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        jointMultiplicitySum += jointMultiplicityVector[i];
+    }
+
+    vector<double> probabilities;
+    for (unsigned i=0; i<models.size(); ++i) {
+        double P_Hi = 1/models.size();
+        map<int,int> modelFeatures = models[i];
+        map<int,int>::iterator k = modelFeatures.begin();
+
+        int modelMultiplicitySum = 0;
+        while (k != modelFeatures.end()) {
+            modelMultiplicitySum += k->second;
+            ++k;
+        }
+
+        k = modelFeatures.begin();
+        double baseProbability = 1;
+        while (k != modelFeatures.end()) {
+            double P_Fk_given_Hi = (k->second)/modelMultiplicitySum;
+            double P_Fk = jointMultiplicityVector[k->first]/jointMultiplicitySum;
+            double P_Hi_given_Fk = P_Fk_given_Hi * P_Hi / P_Fk;
+            baseProbability *= P_Hi_given_Fk;
+            ++k;
+        }
+        probabilities.push_back(baseProbability);
+        probabilities.push_back(1 - baseProbability);
+        stringstream name;
+        name << "H" << i;
+        string hypothesisName(name.str());
+        setNodeCPT(hypothesisName, probabilities);
+        probabilities.clear();
+    }
 }
 
 void CreateNetwork::addNode(const std::string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames)
