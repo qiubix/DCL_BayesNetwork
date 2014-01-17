@@ -16,6 +16,7 @@
 
 #include <opencv2/core/core.hpp>
 
+#include <Types/PointXYZSIFT>
 
 namespace Processors {
 namespace Network {
@@ -31,7 +32,7 @@ public:
     /*!
      * Constructor.
      */
-    MapMultiplicity(const std::string & name = "");
+    MapMultiplicity(const std::string & name = "MapMultiplicity");
 
     /*!
      * Destructor
@@ -46,11 +47,12 @@ public:
 protected:
 
     /// Input data stream
-    Base::DataStreamIn< map<int,int> > in_model;
-    Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+    Base::DataStreamIn< pcl::PointCloud<Types::PCL::PointXYZSIFT>::Ptr > in_model;
+    Base::DataStreamIn< pcl::PointCloud<Types::PCL::PointXYZSIFT>::Ptr > in_jointCloud;
 
     /// Output data stream
-    Base::DataStreamOut< vector<int> > out_network;
+    Base::DataStreamOut< vector< map<int,int> > > out_models;
+    Base::DataStreamOut< vector<int> > out_jointMultiplicity;
 
     /*!
      * Connects source to given device.

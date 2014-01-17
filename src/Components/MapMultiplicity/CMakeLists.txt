@@ -6,6 +6,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(procMapMultiplicity SHARED ${files})
-target_link_libraries(procMapMultiplicity ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS})
+target_link_libraries(procMapMultiplicity ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBS})
 
 INSTALL_COMPONENT(procMapMultiplicity)
