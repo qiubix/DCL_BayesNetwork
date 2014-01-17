@@ -15,8 +15,10 @@
 #include "Property.hpp"
 
 #include <opencv2/core/core.hpp>
+#include <vector>
+#include <map>
 
-#include <Types/PointXYZSIFT>
+#include <Types/PointXYZSIFT.hpp>
 
 namespace Processors {
 namespace Network {
@@ -47,8 +49,8 @@ public:
 protected:
 
     /// Input data stream
-    Base::DataStreamIn< pcl::PointCloud<Types::PCL::PointXYZSIFT>::Ptr > in_model;
-    Base::DataStreamIn< pcl::PointCloud<Types::PCL::PointXYZSIFT>::Ptr > in_jointCloud;
+    Base::DataStreamIn< std::map<int,int> > in_model;
+    Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_jointCloud;
 
     /// Output data stream
     Base::DataStreamOut< vector< map<int,int> > > out_models;

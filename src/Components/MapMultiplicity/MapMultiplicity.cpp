@@ -40,10 +40,11 @@ void MapMultiplicity::prepareInterface()
 
     registerStream("in_model", &in_model);
     addDependency("onNewModel", &in_model);
-    registerStream("in_jointMultiplicity", &in_jointMultiplicity);
-    addDependency("onJointMultiplicity", &in_jointMultiplicity);
+    registerStream("in_jointCloud", &in_jointCloud);
+    addDependency("onJointMultiplicity", &in_jointCloud);
 
-    registerStream("out_network", &out_network);
+    registerStream("out_models", &out_models);
+    registerStream("out_jointMultiplicity", &out_jointMultiplicity);
 }
 
 bool MapMultiplicity::onInit()
