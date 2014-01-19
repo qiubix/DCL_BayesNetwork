@@ -24,7 +24,7 @@ namespace Network {
 /*!
  * \class UpdateNetwork
  * \brief Class used to build Bayes network
- * \author kkaterza
+ * \author Karol Katerzawa
  */
 class UpdateNetwork: public Base::Component
 {
@@ -32,7 +32,7 @@ public:
     /*!
      * Constructor.
      */
-    UpdateNetwork(const std::string & name = "");
+    UpdateNetwork(const std::string & name = "UpdateNetwork");
 
     /*!
      * Destructor
@@ -66,29 +66,22 @@ protected:
      */
     bool onStop();
 
-    /*!
-     *
-     */
-    bool onStep();
+    Base::EventHandler <UpdateNetwork> h_onNetwork;
+    Base::EventHandler <UpdateNetwork> h_onObservation;
 
     /*!
      * Event handler function.
      */
-    void onNewImage();
+    void onNetwork();
+    void onObservation();
 
     /// Input data stream
-    Base::DataStreamIn<cv::Mat> in_img;
-
     Base::DataStreamIn<DSL_network> in_network;
 
-    //Base::EventHandler <UpdateNetwork> h_onStep;
-
-    /// Output data stream - image with drawn blobs
-    Base::DataStreamOut<cv::Mat> out_img;
+    /// Output data stream
+    Base::DataStreamOut< std::vector<double> > out_hypothesisProbabilities;
 
 private:
-    cv::Mat img_uchar;
-
     DSL_network theNet;
 
     void changeNodeCPT(const string nodeName, vector<double> probabilities);

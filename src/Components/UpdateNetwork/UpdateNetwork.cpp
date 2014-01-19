@@ -31,10 +31,13 @@ UpdateNetwork::~UpdateNetwork()
 void UpdateNetwork::prepareInterface()
 {
     LOG(LTRACE) << "UpdateNetwork::prepareInterface\n";
-    //h_onStep.setup(this, &UpdateNetwork::onStep);
-    //registerHandler("onStep", &h_onStep);
+    h_onNetwork.setup(this, &UpdateNetwork::onNetwork);
+    registerHandler("onNetwork", &h_onNetwork);
+//    h_onObservation.setup(this, &UpdateNetwork::onObservation);
+//    registerHandler("onObservation", &h_onObservation);
 
     registerStream("in_network", &in_network);
+    addDependency("onNetwork", &in_network);
 
 }
 
@@ -66,16 +69,14 @@ bool UpdateNetwork::onStart()
     return true;
 }
 
-bool UpdateNetwork::onStep()
+void UpdateNetwork::onNetwork()
 {
-    LOG(LTRACE) << "UpdateNetwork::onStep\n";
-
-    return true;
+    LOG(LTRACE) << "UpdateNetwork::onNetwork\n";
 }
 
-
-void UpdateNetwork::onNewImage() {
-    LOG(LTRACE) << "UpdateNetwork::onNewImage\n";
+void UpdateNetwork::onObservation()
+{
+    LOG(LTRACE) << "UpdateNetwork::onObservation\n";
 }
 
 void UpdateNetwork::changeNodeCPT(const string nodeName, vector<double> probabilities)
