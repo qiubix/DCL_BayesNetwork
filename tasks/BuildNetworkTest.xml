@@ -8,7 +8,10 @@
     <Subtasks>
         <Subtask name="Main">
             <Executor name="Processing" period="0.1">
-		    <Component name="Reader" type="PCL:JSONReader" priority="1" bump="0"></Component>
+		    <Component name="Reader" type="PCL:JSONReader" priority="1" bump="0">
+			    <param name="filename">/home/kkaterza/models/model_1.json</param>
+			    <param name="filename">/home/kkaterza/models/model_2.json</param>
+		    </Component>
 		    <Component name="Adder" type="PCL:SIFTAdder" priority="2" bump="0"></Component>
 		    <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bump="0"></Component>
 		    <Component name="Builder" type="BayesNetwork:CreateNetwork" priority="4" bump="0"></Component>
@@ -20,37 +23,13 @@
             <sink>Adder.in_cloud</sink>
         </Source>
         <Source name="Adder.out_cloud">
-            <sink>Mapper.in_model</sink>
+            <sink>Mapper.in_jointCloud</sink>
         </Source>
         <Source name="Adder.out_modelMultiplicity">
-            <sink>Mapper.in_</sink>
+            <sink>Builder.in_model</sink>
         </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
-        </Source>
-        <Source name="">
-            <sink></sink>
+        <Source name="Mapper.out_jointMultiplicity">
+            <sink>Builder.in_jointMultiplicity</sink>
         </Source>
     </DataStreams>
 </Task>
