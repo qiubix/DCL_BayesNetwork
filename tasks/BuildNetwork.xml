@@ -8,9 +8,8 @@
     <Subtasks>
         <Subtask name="Main">
             <Executor name="Processing">
-		    <Component name="Reader" type="PCL:JSONReader" priority="1" bump="0">
-			    <param name="filename">/home/kkaterza/models/cereal_box_sift.json</param> 
-			    <param name="filename">/home/kkaterza/models/food_box_8_sift.json</param> 
+		    <Component name="Reader" type="PCL:SOMPCDReader" priority="1" bump="0">
+			    <param name="names">/home/kkaterza/models_pdc/</param> 
 			    <!-- <param name="filename">/home/kkaterza/models/model_1.json</param> -->
 			    <!-- <param name="filename">/home/kkaterza/models/model_2.json</param> -->
 		    </Component>
@@ -21,8 +20,8 @@
         </Subtask>
     </Subtasks>
     <DataStreams>
-        <Source name="Reader.out_cloud_xyzsift">
-            <sink>Adder.in_cloud</sink>
+        <Source name="Reader.out_models">
+            <sink>Adder.in_models</sink>
         </Source>
         <Source name="Adder.out_cloud">
             <sink>Mapper.in_jointCloud</sink>

@@ -86,14 +86,14 @@ bool CreateNetwork::onStart()
 
 void CreateNetwork::onNewModel()
 {
-    LOG(LTRACE) << "CreateNetwork::onNewModel\n";
+    LOG(LDEBUG) << "CreateNetwork::onNewModel\n";
     map<int,int> newModel = in_model.read();
     models.push_back(newModel);
 }
 
 void CreateNetwork::onJointMultiplicity()
 {
-    LOG(LTRACE) << "CreateNetwork::onJointMultiplicity\n";
+    LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity\n";
     jointMultiplicityVector = in_jointMultiplicity.read();
     mapFeaturesNames();
     buildNetwork();

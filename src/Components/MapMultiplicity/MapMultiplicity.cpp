@@ -39,7 +39,7 @@ void MapMultiplicity::prepareInterface()
     registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
 
     registerStream("in_model", &in_model);
-    addDependency("onNewModel", &in_model);
+//    addDependency("onNewModel", &in_model);
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointMultiplicity", &in_jointCloud);
 
@@ -77,7 +77,7 @@ bool MapMultiplicity::onStart()
 
 void MapMultiplicity::onNewModel()
 {
-    LOG(LTRACE) << "MapMultiplicity::onNewModel\n";
+    LOG(LDEBUG) << "MapMultiplicity::onNewModel\n";
     std::map<int,int> newModel = in_model.read();
     models.push_back(newModel);
     out_models.write(models);
@@ -85,7 +85,7 @@ void MapMultiplicity::onNewModel()
 
 void MapMultiplicity::onJointMultiplicity()
 {
-    LOG(LTRACE) << "MapMultiplicity::onJointMultiplicity\n";
+    LOG(LDEBUG) << "MapMultiplicity::onJointMultiplicity\n";
     pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud = in_jointCloud.read();
     std::vector <int> jointMultiplicity;
     int featureMultiplicity;
@@ -95,6 +95,7 @@ void MapMultiplicity::onJointMultiplicity()
         jointMultiplicity.push_back(featureMultiplicity);
         ++it;
     }
+    LOG(LDEBUG) << "MapMultiplicity::onJointMultiplicity - writing to dataport\n";
     out_jointMultiplicity.write(jointMultiplicity);
 }
 
