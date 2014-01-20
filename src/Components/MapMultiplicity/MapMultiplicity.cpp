@@ -78,11 +78,24 @@ bool MapMultiplicity::onStart()
 void MapMultiplicity::onNewModel()
 {
     LOG(LTRACE) << "MapMultiplicity::onNewModel\n";
+    std::map<int,int> newModel = in_model.read();
+    models.push_back(newModel);
+    out_models.write(models);
 }
 
 void MapMultiplicity::onJointMultiplicity()
 {
     LOG(LTRACE) << "MapMultiplicity::onJointMultiplicity\n";
+    pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud = in_jointCloud.read();
+    std::vector <int> jointMultiplicity;
+    int featureMultiplicity;
+    pcl::PointCloud<PointXYZSIFT>::iterator it = jointCloud->begin();
+    while (it != jointCloud->end()) {
+        featureMultiplicity = it->times;
+        jointMultiplicity.push_back(featureMultiplicity);
+        ++it;
+    }
+    out_jointMultiplicity.write(jointMultiplicity);
 }
 
 }//: namespace Network

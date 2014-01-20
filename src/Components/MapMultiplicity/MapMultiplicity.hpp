@@ -53,8 +53,8 @@ protected:
     Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_jointCloud;
 
     /// Output data stream
-    Base::DataStreamOut< vector< map<int,int> > > out_models;
-    Base::DataStreamOut< vector<int> > out_jointMultiplicity;
+    Base::DataStreamOut< std::vector< map<int,int> > > out_models;
+    Base::DataStreamOut< std::vector<int> > out_jointMultiplicity;
 
     /*!
      * Connects source to given device.
@@ -87,6 +87,7 @@ protected:
     void onJointMultiplicity();
 
 private:
+    std::vector < std::map<int,int> > models;
 
 };
 
