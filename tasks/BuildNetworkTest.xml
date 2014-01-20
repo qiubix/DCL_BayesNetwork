@@ -1,0 +1,56 @@
+<Task>
+    <!-- reference task information -->
+    <Reference>
+            <Author> </Author>
+        <Description> </Description>
+    </Reference>
+
+    <Subtasks>
+        <Subtask name="Main">
+            <Executor name="Processing" period="0.1">
+		    <Component name="Reader" type="PCL:JSONReader" priority="1" bump="0"></Component>
+		    <Component name="Adder" type="PCL:SIFTAdder" priority="2" bump="0"></Component>
+		    <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bump="0"></Component>
+		    <Component name="Builder" type="BayesNetwork:CreateNetwork" priority="4" bump="0"></Component>
+            </Executor>
+        </Subtask>
+    </Subtasks>
+    <DataStreams>
+        <Source name="Reader.out_cloud_xyzsift">
+            <sink>Adder.in_cloud</sink>
+        </Source>
+        <Source name="Adder.out_cloud">
+            <sink>Mapper.in_model</sink>
+        </Source>
+        <Source name="Adder.out_modelMultiplicity">
+            <sink>Mapper.in_</sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+        <Source name="">
+            <sink></sink>
+        </Source>
+    </DataStreams>
+</Task>
