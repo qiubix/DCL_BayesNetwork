@@ -33,13 +33,13 @@ void CreateNetwork::prepareInterface()
 {
     LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
 
-    h_onNewModel.setup(this, &CreateNetwork::onNewModel);
-    registerHandler("onNewModel", &h_onNewModel);
+    h_onModels.setup(this, &CreateNetwork::onModels);
+    registerHandler("onModels", &h_onModels);
     h_onJointMultiplicity.setup(this, &CreateNetwork::onJointMultiplicity);
     registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
 
-    registerStream("in_model", &in_model);
-    addDependency("onNewModel", &in_model);
+    registerStream("in_models", &in_models);
+    addDependency("onModels", &in_models);
     registerStream("in_jointMultiplicity", &in_jointMultiplicity);
     addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
@@ -84,16 +84,18 @@ bool CreateNetwork::onStart()
     return true;
 }
 
-void CreateNetwork::onNewModel()
+void CreateNetwork::onModels()
 {
-    LOG(LDEBUG) << "CreateNetwork::onNewModel\n";
-    map<int,int> newModel = in_model.read();
-    models.push_back(newModel);
+    LOG(LINFO) << "CreateNetwork::onModels";
+//    map<int,int> newModel = in_models.read();
+//    models.push_back(newModel);
+    models = in_models.read();
+    LOG(LDEBUG) << "CreateNetwork: Number of models: " << models.size();
 }
 
 void CreateNetwork::onJointMultiplicity()
 {
-    LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity\n";
+    LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity";
     jointMultiplicityVector = in_jointMultiplicity.read();
     mapFeaturesNames();
     buildNetwork();
@@ -102,6 +104,7 @@ void CreateNetwork::onJointMultiplicity()
 
 void CreateNetwork::buildNetwork()
 {
+    LOG(LDEBUG) << "CreateNetwork::buildNetwork";
     vector<string> outcomesNames;
     vector<string> parentsNames;
     outcomesNames.push_back("YES");
@@ -146,12 +149,14 @@ void CreateNetwork::mapFeaturesNames()
 
 void CreateNetwork::setBaseNetworkCPTs()
 {
+    LOG(LDEBUG) << "Set base network CPTs";
     setBaseFeaturesCPTs();
     setBaseHypothesesCPTs();
 }
 
 void CreateNetwork::setBaseFeaturesCPTs()
 {
+    LOG(LDEBUG) << "Set base features CPTs";
     int sum = 0;
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
         sum += jointMultiplicityVector[i];
@@ -172,6 +177,7 @@ void CreateNetwork::setBaseFeaturesCPTs()
 
 void CreateNetwork::setBaseHypothesesCPTs()
 {
+    LOG(LDEBUG) << "Set base hypotheses CPTs";
     int jointMultiplicitySum = 0;
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
         jointMultiplicitySum += jointMultiplicityVector[i];
@@ -210,6 +216,7 @@ void CreateNetwork::setBaseHypothesesCPTs()
 
 void CreateNetwork::addNode(const std::string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames)
 {
+//    LOG(LTRACE) << "Add node to network: " << name;
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
     DSL_idArray outcomes;
     for (int i=0; i<outcomesNames.size(); i++) {

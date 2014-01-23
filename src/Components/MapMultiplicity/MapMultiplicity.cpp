@@ -33,17 +33,17 @@ void MapMultiplicity::prepareInterface()
 {
     LOG(LTRACE) << "MapMultiplicity::prepareInterface\n";
 
-    h_onNewModel.setup(this, &MapMultiplicity::onNewModel);
-    registerHandler("onNewModel", &h_onNewModel);
+//    h_onNewModel.setup(this, &MapMultiplicity::onNewModel);
+//    registerHandler("onNewModel", &h_onNewModel);
     h_onJointMultiplicity.setup(this, &MapMultiplicity::onJointMultiplicity);
     registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
 
-    registerStream("in_model", &in_model);
+//    registerStream("in_model", &in_model);
 //    addDependency("onNewModel", &in_model);
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointMultiplicity", &in_jointCloud);
 
-    registerStream("out_models", &out_models);
+//    registerStream("out_models", &out_models);
     registerStream("out_jointMultiplicity", &out_jointMultiplicity);
 }
 
@@ -75,17 +75,17 @@ bool MapMultiplicity::onStart()
     return true;
 }
 
-void MapMultiplicity::onNewModel()
-{
-    LOG(LDEBUG) << "MapMultiplicity::onNewModel\n";
-    std::map<int,int> newModel = in_model.read();
-    models.push_back(newModel);
-    out_models.write(models);
-}
+//void MapMultiplicity::onNewModel()
+//{
+//    LOG(LDEBUG) << "MapMultiplicity::onNewModel\n";
+//    std::map<int,int> newModel = in_model.read();
+//    models.push_back(newModel);
+//    out_models.write(models);
+//}
 
 void MapMultiplicity::onJointMultiplicity()
 {
-    LOG(LDEBUG) << "MapMultiplicity::onJointMultiplicity\n";
+    LOG(LDEBUG) << "Extracting multiplicity of the joint cloud";
     pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud = in_jointCloud.read();
     std::vector <int> jointMultiplicity;
     int featureMultiplicity;
@@ -95,7 +95,8 @@ void MapMultiplicity::onJointMultiplicity()
         jointMultiplicity.push_back(featureMultiplicity);
         ++it;
     }
-    LOG(LDEBUG) << "MapMultiplicity::onJointMultiplicity - writing to dataport\n";
+//    LOG(LDEBUG) << "MapMultiplicity::onJointMultiplicity - writing to dataport\n";
+    LOG(LINFO) << "Number of joint model's features: " << jointMultiplicity.size();
     out_jointMultiplicity.write(jointMultiplicity);
 }
 

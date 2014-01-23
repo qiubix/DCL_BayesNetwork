@@ -47,7 +47,7 @@ public:
 protected:
 
     /// Input data stream
-    Base::DataStreamIn< map<int,int> > in_model;
+    Base::DataStreamIn< std::vector< std::map<int,int> > > in_models;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
 
     /// Output data stream
@@ -74,13 +74,13 @@ protected:
     bool onStop();
 
     /// Event handlers
-    Base::EventHandler <CreateNetwork> h_onNewModel;
+    Base::EventHandler <CreateNetwork> h_onModels;
     Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
 
     /*!
      * Event handler function.
      */
-    void onNewModel();
+    void onModels();
     void onJointMultiplicity();
 
 private:
