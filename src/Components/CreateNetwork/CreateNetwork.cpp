@@ -86,7 +86,7 @@ bool CreateNetwork::onStart()
 
 void CreateNetwork::onModels()
 {
-    LOG(LINFO) << "CreateNetwork::onModels";
+    LOG(LDEBUG) << "CreateNetwork::onModels";
 //    map<int,int> newModel = in_models.read();
 //    models.push_back(newModel);
     models = in_models.read();
@@ -96,22 +96,27 @@ void CreateNetwork::onModels()
 void CreateNetwork::onJointMultiplicity()
 {
     LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity";
-    jointMultiplicityVector = in_jointMultiplicity.read();
-    mapFeaturesNames();
-    buildNetwork();
-    exportNetwork();
+	jointMultiplicityVector = in_jointMultiplicity.read();
+    //TODO: FIXME: think of better way of synchronizing input dataports
+    if (theNet.GetNumberOfNodes() == 0 && !models.empty()) {
+		mapFeaturesNames();
+		buildNetwork();
+		exportNetwork();
+    }
 }
 
 void CreateNetwork::buildNetwork()
 {
-    LOG(LDEBUG) << "CreateNetwork::buildNetwork";
+    LOG(LDEBUG) << "=========== BUILDING NETWORK ==============";
     vector<string> outcomesNames;
     vector<string> parentsNames;
     outcomesNames.push_back("YES");
     outcomesNames.push_back("NO");
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
         addNode(features[i], outcomesNames, parentsNames);
+        LOG(LTRACE) << "Added feature no " << i;
     }
+    LOG(LDEBUG) << "Number of feature nodes added: " << jointMultiplicityVector.size();
     for (unsigned j=0; j<models.size(); ++j) {
         stringstream name;
         name << "H" << j;
@@ -124,8 +129,10 @@ void CreateNetwork::buildNetwork()
             ++it;
         }
         addNode(hypothesisName, outcomesNames, parentsNames);
+        LOG(LTRACE) << "Added hypotheses no " << j;
         parentsNames.clear();
     }
+    LOG(LDEBUG) << "Added " << models.size() << " hypotheses nodes";
     setBaseNetworkCPTs();
 }
 
@@ -156,36 +163,39 @@ void CreateNetwork::setBaseNetworkCPTs()
 
 void CreateNetwork::setBaseFeaturesCPTs()
 {
-    LOG(LDEBUG) << "Set base features CPTs";
+    LOG(LDEBUG) << "------- Set base features CPTs -------";
     int sum = 0;
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        LOG(LDEBUG) << "feature " << i << " multiplicity: " << jointMultiplicityVector[i];
         sum += jointMultiplicityVector[i];
     }
+    LOG(LDEBUG) << "summed multiplicity of all features: " << sum;
 
     std::map<int,string>::iterator it = features.begin();
-    std::vector <double> probabilities;
-    double baseProbability = 0;
     for( ; it!=features.end(); ++it) {
+        LOG(LDEBUG) << "feature no: " << it->first;
         int multiplicity = jointMultiplicityVector[it->first];
-        baseProbability = multiplicity/sum;
+        LOG(LDEBUG) << "feature multiplicity in model: " << multiplicity;
+        double baseProbability = (double) multiplicity/sum;
+		std::vector <double> probabilities;
         probabilities.push_back(baseProbability);
         probabilities.push_back(1 - baseProbability);
+        LOG(LDEBUG) << "calculated base probability " << baseProbability;
         setNodeCPT(it->second, probabilities);
-        probabilities.clear();
     }
 }
 
 void CreateNetwork::setBaseHypothesesCPTs()
 {
-    LOG(LDEBUG) << "Set base hypotheses CPTs";
+    LOG(LDEBUG) << "------ Set base hypotheses CPTs ------";
     int jointMultiplicitySum = 0;
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
         jointMultiplicitySum += jointMultiplicityVector[i];
     }
 
-    vector<double> probabilities;
     for (unsigned i=0; i<models.size(); ++i) {
-        double P_Hi = 1/models.size();
+        LOG(LDEBUG) << "hypothesis no :" << i;
+        double P_Hi = (double) 1/models.size();
         map<int,int> modelFeatures = models[i];
         map<int,int>::iterator k = modelFeatures.begin();
 
@@ -198,25 +208,26 @@ void CreateNetwork::setBaseHypothesesCPTs()
         k = modelFeatures.begin();
         double baseProbability = 1;
         while (k != modelFeatures.end()) {
-            double P_Fk_given_Hi = (k->second)/modelMultiplicitySum;
-            double P_Fk = jointMultiplicityVector[k->first]/jointMultiplicitySum;
-            double P_Hi_given_Fk = P_Fk_given_Hi * P_Hi / P_Fk;
+            double P_Fk_given_Hi = (double) (k->second)/modelMultiplicitySum;
+            double P_Fk = (double) jointMultiplicityVector[k->first]/jointMultiplicitySum;
+            double P_Hi_given_Fk = (double) P_Fk_given_Hi * P_Hi / P_Fk;
             baseProbability *= P_Hi_given_Fk;
             ++k;
         }
+        LOG(LDEBUG) << "Calculated probability: " << baseProbability;
+		std::vector<double> probabilities;
         probabilities.push_back(baseProbability);
         probabilities.push_back(1 - baseProbability);
         stringstream name;
         name << "H" << i;
         string hypothesisName(name.str());
         setNodeCPT(hypothesisName, probabilities);
-        probabilities.clear();
     }
 }
 
 void CreateNetwork::addNode(const std::string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames)
 {
-//    LOG(LTRACE) << "Add node to network: " << name;
+    LOG(LDEBUG) << "Add node to network: " << name;
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
     DSL_idArray outcomes;
     for (int i=0; i<outcomesNames.size(); i++) {
@@ -229,11 +240,12 @@ void CreateNetwork::addNode(const std::string name, const std::vector<string> ou
         nextParent = theNet.FindNode(parentsNames[i].c_str());
         theNet.AddArc(nextParent, newNode);
     }
-    features.insert(std::make_pair<int,string>(newNode, name));
+//    features.insert(std::make_pair<int,string>(newNode, name));
 }
 
 void CreateNetwork::setNodeCPT(const string name, vector<double> probabilities)
 {
+    LOG(LDEBUG) << "Set node CPT: " << name;
     int node = theNet.FindNode(name.c_str());
     DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
 
