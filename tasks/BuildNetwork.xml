@@ -11,7 +11,7 @@
 		    <Component name="Reader" type="PCL:SOMPCDReader" priority="1" bump="0">
 			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8;/home/kkaterza/models_pcd/testmodel</param> -->
 			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8</param> -->
-			    <param name="names">/home/kkaterza/models_pcd/testmodel2;/home/kkaterza/models_pcd/testmodel2</param> 
+			    <param name="names">/home/kkaterza/models_pcd/testmodel;/home/kkaterza/models_pcd/testmodel2</param> 
 			    <!-- <param name="filename">/home/kkaterza/models/model_1.json</param> -->
 			    <!-- <param name="filename">/home/kkaterza/models/model_2.json</param> -->
 		    </Component>
