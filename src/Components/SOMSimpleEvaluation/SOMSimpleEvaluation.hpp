@@ -47,7 +47,8 @@ public:
 protected:
     ///Input data streams
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_models;
-    Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+    Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
+    Base::DataStreamIn< std::vector<int> > in_instance;
     
     //Output data streams
 
@@ -85,6 +86,9 @@ private:
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
+    std::vector <int> instance;
+    
+    void evaluate();
 };
 
 }//: namespace Network
