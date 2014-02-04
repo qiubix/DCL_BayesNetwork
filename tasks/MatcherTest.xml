@@ -11,11 +11,11 @@
 		    <Component name="ModelReader" type="PCL:SOMPCDReader" priority="1" bump="0">
 			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8;/home/kkaterza/models_pcd/testmodel</param> -->
 			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8</param> -->
-			    <param name="names">/home/qiubix/models_pcd/testmodels</param> 
+				<param name="names">/home/qiubix/models_pcd/simple_eval/model_1;/home/qiubix/models_pcd/simple_eval/model_2;/home/qiubix/models_pcd/simple_eval/model_3;/home/qiubix/models_pcd/simple_eval/model_4</param> 
 		    </Component>
 		    <Component name="Adder" type="PCL:SIFTAdder" priority="2" bump="0"></Component>
 		    <Component name="InstanceReader" type="PCL:SOMPCDReader" priority="3" bump="0">
-			    <param name="names">/home/qiubix/models_pcd/instances</param> 
+				<param name="names">/home/qiubix/models_pcd/instances/instance_1</param> 
 		    </Component>
 		    <Component name="Matcher" type="BayesNetwork:SIFTFeatureMatcher" priority="4" bump="0"></Component>
             </Executor>
