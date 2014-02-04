@@ -39,11 +39,11 @@ void SIFTFeatureMatcher::prepareInterface()
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointCloud", &in_jointCloud);
     
-    h_onInstance.setup(this, &SIFTFeatureMatcher::onInstance);
-    registerHandler("onInstance", &h_onInstance);
+    h_onInstances.setup(this, &SIFTFeatureMatcher::onInstances);
+    registerHandler("onInstances", &h_onInstances);
     
-    registerStream("in_instanceCloud", &in_instanceCloud);
-    addDependency("onInstance", &in_instanceCloud);
+    registerStream("in_instances", &in_instances);
+    addDependency("onInstances", &in_instances);
 
     registerStream("out_featuresIndexes", &out_featuresIndexes);
 }
@@ -80,9 +80,12 @@ void SIFTFeatureMatcher::onJointCloud()
     }
 }
 
-void SIFTFeatureMatcher::onInstance()
+void SIFTFeatureMatcher::onInstances()
 {
-    pcl::PointCloud<PointXYZSIFT>::Ptr instance = in_instanceCloud.read();
+//    pcl::PointCloud<PointXYZSIFT>::Ptr instance = in_instances.read();
+    std::vector <AbstractObject*> instances = in_instances.read();
+    pcl::PointCloud<PointXYZSIFT>::Ptr instance = dynamic_cast<SIFTObjectModel*>(instances.at(0))->cloud_xyzsift;
+    
 }
 
 }//: namespace Network

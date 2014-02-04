@@ -20,6 +20,7 @@
 #include <vector>
 
 #include <Types/PointXYZSIFT.hpp>
+#include <Types/SIFTObjectModel.hpp>
 
 namespace Processors {
 namespace Network {
@@ -51,7 +52,8 @@ protected:
 
     /// Input data stream
     Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_jointCloud;
-    Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_instanceCloud;
+//    Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_instanceCloud;
+    Base::DataStreamIn<std::vector<AbstractObject*> > in_instances;
 
     /// Output data stream
     Base::DataStreamOut< std::vector<int> > out_featuresIndexes;
@@ -78,13 +80,13 @@ protected:
 
     /// Event handlers
     Base::EventHandler <SIFTFeatureMatcher> h_onJointCloud;
-    Base::EventHandler <SIFTFeatureMatcher> h_onInstance;
+    Base::EventHandler <SIFTFeatureMatcher> h_onInstances;
 
     /*!
      * Event handler function.
      */
     void onJointCloud();
-    void onInstance();
+    void onInstances();
 
 private:
 
