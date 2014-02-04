@@ -32,34 +32,48 @@ SOMSimpleEvaluation::~SOMSimpleEvaluation()
 void SOMSimpleEvaluation::prepareInterface()
 {
     LOG(LTRACE) << "SOMSimpleEvaluation::prepareInterface\n";
+    h_onModels.setup(this, &SOMSimpleEvaluation::onModels);
+    registerHandler("onModels", &h_onModels);
+    
+    registerStream("in_models", &in_models);
+    registerStream("in_jointMultiplicity", &in_jointMultiplicity);
+    addDependency("onModels", &in_models);
+    addDependency("onModels", &in_jointMultiplicity);
 }
 
 bool SOMSimpleEvaluation::onInit()
 {
     LOG(LTRACE) << "SOMSimpleEvaluation::initialize\n";
-
     return true;
 }
 
 bool SOMSimpleEvaluation::onFinish()
 {
     LOG(LTRACE) << "SOMSimpleEvaluation::finish\n";
-
-    return true;
-}
-
-bool SOMSimpleEvaluation::onStop()
-{
-    LOG(LTRACE) << "SOMSimpleEvaluation::onStop\n";
-
     return true;
 }
 
 bool SOMSimpleEvaluation::onStart()
 {
     LOG(LTRACE) << "SOMSimpleEvaluation::onStart\n";
-
     return true;
+}
+
+bool SOMSimpleEvaluation::onStop()
+{
+    LOG(LTRACE) << "SOMSimpleEvaluation::onStop\n";
+    return true;
+}
+
+void SOMSimpleEvaluation::onModels()
+{
+    models = in_models.read();
+    jointMultiplicityVector = in_jointMultiplicity.read();
+}
+
+void SOMSimpleEvaluation::onInstance()
+{
+    
 }
 
 

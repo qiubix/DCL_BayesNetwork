@@ -45,6 +45,11 @@ public:
     void prepareInterface();
 
 protected:
+    ///Input data streams
+    Base::DataStreamIn< std::vector< std::map<int,int> > > in_models;
+    Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+    
+    //Output data streams
 
     /*!
      * Connects source to given device.
@@ -67,12 +72,19 @@ protected:
     bool onStop();
 
     /// Event handlers
+    Base::EventHandler <SOMSimpleEvaluation> h_onModels;
+    Base::EventHandler <SOMSimpleEvaluation> h_onInstance;
 
     /*!
      * Event handler function.
      */
+    void onModels();
+    void onInstance();
 
 private:
+    std::map <int, string> features;
+    std::vector <int> jointMultiplicityVector;
+    std::vector < std::map<int,int> > models;
 };
 
 }//: namespace Network
