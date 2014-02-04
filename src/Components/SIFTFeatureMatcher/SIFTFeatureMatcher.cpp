@@ -115,9 +115,11 @@ void SIFTFeatureMatcher::onInstances()
         return;
     }
     
+	LOG(LDEBUG) << "================= SIFTFeatureMatcher: determining correspondencies =================";
+    
     std::vector <AbstractObject*> instances = in_instances.read();
     pcl::PointCloud<PointXYZSIFT>::Ptr instance = dynamic_cast<SIFTObjectModel*>(instances.at(0))->cloud_xyzsift;
-    LOG(LINFO) << "Instance cloud size: " << instance -> size();
+    LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
 
 	pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
 	pcl::registration::CorrespondenceEstimation<PointXYZSIFT, PointXYZSIFT> correst ;
@@ -169,8 +171,11 @@ void SIFTFeatureMatcher::onInstances()
 		}
         int featureIndex = correspondences -> at(i).index_query;
         featuresIndexes.push_back(featureIndex);
-        LOG(LINFO) << "Index of matching feature: " << featureIndex;
+        LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
+    
+    LOG(LDEBUG) << "Number of matched features: " << featuresIndexes.size();
+    out_featuresIndexes.write(featuresIndexes);
 }
 
 }//: namespace Network

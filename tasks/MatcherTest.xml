@@ -15,7 +15,7 @@
 		    </Component>
 		    <Component name="Adder" type="PCL:SIFTAdder" priority="2" bump="0"></Component>
 		    <Component name="InstanceReader" type="PCL:SOMPCDReader" priority="3" bump="0">
-				<param name="names">/home/qiubix/models_pcd/instances/instance_2</param> 
+				<param name="names">/home/qiubix/models_pcd/instances/instance_4</param> 
 		    </Component>
 		    <Component name="Matcher" type="BayesNetwork:SIFTFeatureMatcher" priority="4" bump="0"></Component>
             </Executor>
