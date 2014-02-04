@@ -11,13 +11,13 @@
 		    <Component name="Reader" type="PCL:SOMPCDReader" priority="1" bump="0">
 			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8;/home/kkaterza/models_pcd/testmodel</param> -->
 			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8</param> -->
-			    <param name="names">/home/qiubix/models_pcd/simple_eval</param> 
+				<param name="names">/home/qiubix/models_pcd/simple_eval/model_1;/home/qiubix/models_pcd/simple_eval/model_2;/home/qiubix/models_pcd/simple_eval/model_3;/home/qiubix/models_pcd/simple_eval/model_4</param> 
 			    <!-- <param name="filename">/home/kkaterza/models/model_1.json</param> -->
 			    <!-- <param name="filename">/home/kkaterza/models/model_2.json</param> -->
 		    </Component>
 		    <Component name="Adder" type="PCL:SIFTAdder" priority="2" bump="0"></Component>
-		    <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bump="0"></Component>
-		    <Component name="Builder" type="BayesNetwork:CreateNetwork" priority="4" bump="0"></Component>
+		    <!-- <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bump="0"></Component>  -->
+		    <!-- <Component name="Builder" type="BayesNetwork:CreateNetwork" priority="4" bump="0"></Component>-->
             </Executor>
         </Subtask>
     </Subtasks>
@@ -25,14 +25,14 @@
         <Source name="Reader.out_models">
             <sink>Adder.in_models</sink>
         </Source>
-        <Source name="Adder.out_cloud">
-            <sink>Mapper.in_jointCloud</sink>
-        </Source>
-        <Source name="Adder.out_multiplicityOfModels">
-            <sink>Builder.in_models</sink>
-        </Source>
-        <Source name="Mapper.out_jointMultiplicity">
-            <sink>Builder.in_jointMultiplicity</sink>
-        </Source>
+        <!-- <Source name="Adder.out_cloud">-->
+        <!--     <sink>Mapper.in_jointCloud</sink>-->
+        <!-- </Source>-->
+        <!-- <Source name="Adder.out_multiplicityOfModels">-->
+        <!--     <sink>Builder.in_models</sink>-->
+        <!-- </Source>-->
+        <!-- <Source name="Mapper.out_jointMultiplicity">-->
+        <!--     <sink>Builder.in_jointMultiplicity</sink>-->
+        <!-- </Source>-->
     </DataStreams>
 </Task>
