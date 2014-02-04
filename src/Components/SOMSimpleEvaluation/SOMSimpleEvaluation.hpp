@@ -51,6 +51,7 @@ protected:
     Base::DataStreamIn< std::vector<int> > in_instance;
     
     //Output data streams
+    Base::DataStreamOut< std::vector<double> > out_probabilities;
 
     /*!
      * Connects source to given device.

@@ -44,6 +44,8 @@ void SOMSimpleEvaluation::prepareInterface()
     registerHandler("onInstance", &h_onInstance);
     registerStream("in_instance", &in_instance);
     addDependency("onInstance", &in_instance);
+    
+    registerStream("out_probabilities", &out_probabilities);
 }
 
 bool SOMSimpleEvaluation::onInit()
