@@ -158,7 +158,7 @@ void CreateNetwork::setBaseNetworkCPTs()
 {
     LOG(LDEBUG) << "Set base network CPTs";
     setBaseFeaturesCPTs();
-    setBaseHypothesesCPTs();
+//    setBaseHypothesesCPTs();
 }
 
 void CreateNetwork::setBaseFeaturesCPTs()
