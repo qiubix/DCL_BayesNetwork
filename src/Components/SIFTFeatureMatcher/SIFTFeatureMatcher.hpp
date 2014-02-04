@@ -52,8 +52,9 @@ protected:
 
     /// Input data stream
     Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_jointCloud;
-//    Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_instanceCloud;
     Base::DataStreamIn<std::vector<AbstractObject*> > in_instances;
+    Base::DataStreamIn<AbstractObject*> in_instance;
+    Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_instanceCloud;
 
     /// Output data stream
     Base::DataStreamOut< std::vector<int> > out_featuresIndexes;
@@ -81,17 +82,24 @@ protected:
     /// Event handlers
     Base::EventHandler <SIFTFeatureMatcher> h_onJointCloud;
     Base::EventHandler <SIFTFeatureMatcher> h_onInstances;
+    Base::EventHandler <SIFTFeatureMatcher> h_onInstance;
+    Base::EventHandler <SIFTFeatureMatcher> h_onInstanceCloud;
 
     /*!
      * Event handler function.
      */
     void onJointCloud();
     void onInstances();
+    void onInstance();
+    void onInstanceCloud();
 
 private:
 
     pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud;
+    pcl::PointCloud<PointXYZSIFT>::Ptr instance;
     std::vector <int> featuresIndexes;
+    
+    void matchFeatures();
 
 };
 

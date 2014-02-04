@@ -64,15 +64,26 @@ void SIFTFeatureMatcher::prepareInterface()
 
     h_onJointCloud.setup(this, &SIFTFeatureMatcher::onJointCloud);
     registerHandler("onJointCloud", &h_onJointCloud);
-
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointCloud", &in_jointCloud);
     
     h_onInstances.setup(this, &SIFTFeatureMatcher::onInstances);
     registerHandler("onInstances", &h_onInstances);
-    
     registerStream("in_instances", &in_instances);
     addDependency("onInstances", &in_instances);
+//    addDependency("onInstances", &in_jointCloud);
+    
+    h_onInstance.setup(this, &SIFTFeatureMatcher::onInstance);
+    registerHandler("onInstance", &h_onInstance);
+    registerStream("in_instance", &in_instance);
+    addDependency("onInstance", &in_instance);
+//    addDependency("onInstance", &in_jointCloud);
+    
+    h_onInstanceCloud.setup(this, &SIFTFeatureMatcher::onInstanceCloud);
+    registerHandler("onInstanceCloud", &h_onInstanceCloud);
+    registerStream("in_instanceCloud", &in_instanceCloud);
+    addDependency("onInstanceCloud", &in_instanceCloud);
+//    addDependency("onInstanceCloud", &in_jointCloud);
 
     registerStream("out_featuresIndexes", &out_featuresIndexes);
 }
@@ -115,12 +126,38 @@ void SIFTFeatureMatcher::onInstances()
         return;
     }
     
+    std::vector <AbstractObject*> instances = in_instances.read();
+    instance = dynamic_cast<SIFTObjectModel*>(instances.at(0))->cloud_xyzsift;
+    LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
+    matchFeatures();
+}
+
+void SIFTFeatureMatcher::onInstance()
+{
+    if(jointCloud == NULL) {
+        return;
+    }
+    
+    instance = dynamic_cast<SIFTObjectModel*>(in_instance.read())->cloud_xyzsift;
+    LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
+    matchFeatures();
+}
+
+void SIFTFeatureMatcher::onInstanceCloud()
+{
+    if(jointCloud == NULL) {
+        return;
+    }
+    
+    instance = in_instanceCloud.read();
+    LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
+    matchFeatures();
+}
+
+void SIFTFeatureMatcher::matchFeatures()
+{
 	LOG(LDEBUG) << "================= SIFTFeatureMatcher: determining correspondencies =================";
     
-    std::vector <AbstractObject*> instances = in_instances.read();
-    pcl::PointCloud<PointXYZSIFT>::Ptr instance = dynamic_cast<SIFTObjectModel*>(instances.at(0))->cloud_xyzsift;
-    LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
-
 	pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
 	pcl::registration::CorrespondenceEstimation<PointXYZSIFT, PointXYZSIFT> correst ;
 
@@ -174,7 +211,7 @@ void SIFTFeatureMatcher::onInstances()
         LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
     
-    LOG(LDEBUG) << "Number of matched features: " << featuresIndexes.size();
+    LOG(LINFO) << "Number of matched features: " << featuresIndexes.size();
     out_featuresIndexes.write(featuresIndexes);
 }
 
