@@ -113,6 +113,7 @@ void SOMSimpleEvaluation::evaluate()
 		LOG(LINFO) << "Model nr " << i << ": probability = " << probability;
 		hypothesesProbabilities.push_back(probability);
 	}
+    out_probabilities.write(hypothesesProbabilities);
 }
 
 
