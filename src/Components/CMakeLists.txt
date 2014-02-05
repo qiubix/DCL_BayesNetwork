@@ -5,4 +5,6 @@ ADD_COMPONENT(MapMultiplicity)
 
 ADD_COMPONENT(SIFTFeatureMatcher)
 
+ADD_COMPONENT(SOMSimpleEvaluation)
+
 add_subdirectory(tests)
