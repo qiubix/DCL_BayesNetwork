@@ -91,7 +91,7 @@ void MapMultiplicity::onJointMultiplicity()
     int featureMultiplicity;
     pcl::PointCloud<PointXYZSIFT>::iterator it = jointCloud->begin();
     while (it != jointCloud->end()) {
-        featureMultiplicity = it->times;
+        featureMultiplicity = it->multiplicity;
         jointMultiplicity.push_back(featureMultiplicity);
         ++it;
     }
