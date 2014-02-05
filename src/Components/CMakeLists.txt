@@ -1,2 +1,10 @@
 # Add all components here using ADD_COMPONENT(<COMPONENT_DIRECTORY>)
-ADD_COMPONENT(Network)
+ADD_COMPONENT(CreateNetwork)
+
+ADD_COMPONENT(MapMultiplicity)
+
+ADD_COMPONENT(SIFTFeatureMatcher)
+
+ADD_COMPONENT(SOMSimpleEvaluation)
+
+add_subdirectory(tests)

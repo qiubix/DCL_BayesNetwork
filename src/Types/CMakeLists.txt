@@ -2,15 +2,15 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # If DCL provides any additional libraries - add them here
 
-# # Get soource files of library 
+# # Get soource files of library
 # FILE(GLOB lib_src *.cpp)
-# ADD_LIBRARY(MSTypes SHARED ${lib_src})
+# ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src})
 # # Link with other libraries
-# TARGET_LINK_LIBRARIES(MSTypes ${OpenCV_LIBRARIES})
+# TARGET_LINK_LIBRARIES(BayesNetworkTypes ${OpenCV_LIBRARIES})
 #
 # # Install library
 # INSTALL(
-#   TARGETS CvBlobsTypes
+#   TARGETS BayesNetworkTypes
 #   RUNTIME DESTINATION bin COMPONENT applications
 #   LIBRARY DESTINATION lib COMPONENT applications
 #   ARCHIVE DESTINATION lib COMPONENT sdk

@@ -1,5 +1,5 @@
 #Project name
-PROJECT(Network)
+PROJECT(BayesNetwork)
 
 # CMake required version must be >= 2.6
 cmake_minimum_required(VERSION 2.6)
@@ -19,3 +19,5 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 ADD_SUBDIRECTORY(src)
+
+enable_testing()

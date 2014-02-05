@@ -1,0 +1,37 @@
+<Task>
+    <!-- reference task information -->
+    <Reference>
+            <Author> </Author>
+        <Description> </Description>
+    </Reference>
+
+    <Subtasks>
+        <Subtask name="Main">
+            <Executor name="Processing">
+		    <Component name="Reader" type="PCL:JSONReader" priority="1" bump="0">
+			    <param name="filename">/home/kkaterza/models/cereal_box_sift.json</param> 
+			    <param name="filename">/home/kkaterza/models/food_box_8_sift.json</param> 
+			    <!-- <param name="filename">/home/kkaterza/models/model_1.json</param> -->
+			    <!-- <param name="filename">/home/kkaterza/models/model_2.json</param> -->
+		    </Component>
+		    <Component name="Adder" type="PCL:SIFTAdder" priority="2" bump="0"></Component>
+		    <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bump="0"></Component>
+		    <Component name="Builder" type="BayesNetwork:CreateNetwork" priority="4" bump="0"></Component>
+            </Executor>
+        </Subtask>
+    </Subtasks>
+    <DataStreams>
+        <Source name="Reader.out_cloud_xyzsift">
+            <sink>Adder.in_cloud</sink>
+        </Source>
+        <Source name="Adder.out_cloud">
+            <sink>Mapper.in_jointCloud</sink>
+        </Source>
+        <Source name="Adder.out_modelMultiplicity">
+            <sink>Builder.in_model</sink>
+        </Source>
+        <Source name="Mapper.out_jointMultiplicity">
+            <sink>Builder.in_jointMultiplicity</sink>
+        </Source>
+    </DataStreams>
+</Task>
