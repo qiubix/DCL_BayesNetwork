@@ -16,6 +16,8 @@
 
 #include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
+#include <pcl/octree/octree.h>
+#include <Types/PointXYZSIFT.hpp>
 
 
 namespace Processors {
@@ -49,6 +51,7 @@ protected:
     /// Input data stream
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_models;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+    Base::DataStreamIn< std::vector <pcl::octree::OctreePointCloud <PointXYZSIFT> > > in_octrees;
 
     /// Output data stream
     Base::DataStreamOut<DSL_network> out_network;
