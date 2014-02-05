@@ -44,5 +44,8 @@
         <Source name="Mapper.out_jointMultiplicity">
         	<sink>Evaluator.in_jointMultiplicity</sink>
         </Source>
+        <Source name="Matcher.out_featuresIndexes">
+        	<sink>Evaluator.in_instance</sink>
+        </Source>
     </DataStreams>
 </Task>

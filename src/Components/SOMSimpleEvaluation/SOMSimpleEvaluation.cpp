@@ -84,12 +84,35 @@ void SOMSimpleEvaluation::onInstance()
     LOG(LTRACE) << "SOMSimpleEvaluation::onInstance";
     if(!models.empty() && !jointMultiplicityVector.empty()) {
 		instance = in_instance.read();
+        evaluate();
     }
 }
 
 void SOMSimpleEvaluation::evaluate()
 {
-    LOG(LTRACE) << "SOMSimpleEvaluation::evaluate";
+	LOG(LTRACE) << "SOMSimpleEvaluation::evaluate";
+	for (unsigned i=0; i<models.size(); ++i) {
+		std::map <int, int> model = models[i];
+		LOG(LINFO) << "Model nr " << i << ": size = " << model.size();
+		int totalModelMultiplicity = 0;
+		for( unsigned j=0; j<model.size(); ++j) {
+			totalModelMultiplicity += model[j];
+		}
+		double probability = 0;
+		for (unsigned j=0; j<instance.size(); ++j) {
+			int featureId = instance[j];
+			std::map<int,int>::iterator it = model.find(featureId);
+			if (it == model.end()) {
+				continue;
+			}
+			else {
+				int multiplicityInModel = it -> second;
+				probability += (double) multiplicityInModel/(totalModelMultiplicity * jointMultiplicityVector[featureId]);
+			}
+		}
+		LOG(LINFO) << "Model nr " << i << ": probability = " << probability;
+		hypothesesProbabilities.push_back(probability);
+	}
 }
 
 

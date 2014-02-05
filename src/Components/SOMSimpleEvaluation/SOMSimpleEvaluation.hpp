@@ -88,6 +88,7 @@ private:
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
     std::vector <int> instance;
+    std::vector <double> hypothesesProbabilities;
     
     void evaluate();
 };
