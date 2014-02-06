@@ -25,7 +25,8 @@ namespace Network {
 class OctreeContainerEmptyWithId : public OctreeContainerEmpty 
 {
 public:
-    OctreeContainerEmptyWithId() {
+    OctreeContainerEmptyWithId() : OctreeContainerEmpty()
+    {
         this->nodeId = -1;
         this->parentId = -1;
     }
@@ -298,9 +299,14 @@ void CreateNetwork::mapFeaturesNames()
 //    }
 //}
 
-void CreateNetwork::addNode(const std::string name)
+void CreateNetwork::addNode(std::string name)
 {
     LOG(LDEBUG) << "Add node to network: " << name;
+//    if(name.length()<2){
+//        std::string zero("0");
+//        zero.append(name);
+//        name = zero;
+//    }
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
     DSL_idArray outcomes;
     std::vector<string> outcomesNames;
@@ -328,6 +334,16 @@ void CreateNetwork::addArc(int parentId, int currentId)
     stringstream parentNameStr;
     parentNameStr << "V_" << parentId;
     string parentName(parentNameStr.str());
+    int parentNode = theNet.FindNode(parentName.c_str());
+    theNet.AddArc(parentNode, childNode);
+}
+
+void CreateNetwork::addArc(string parentName, int currentId)
+{
+	stringstream childNameStr;
+	childNameStr << "V_" << currentId;
+	string childName(childNameStr.str());
+    int childNode = theNet.FindNode(childName.c_str());
     int parentNode = theNet.FindNode(parentName.c_str());
     theNet.AddArc(parentNode, childNode);
 }
@@ -397,7 +413,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndices, OctreeContainerEmptyWithId> octree (voxelSize);
+	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
 	// Set input cloud.
 	octree.setInputCloud(cloud);
 	// Calculate bounding box of input cloud.
@@ -420,8 +436,8 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	addNode(hypothesisName);
 
 	// Use breadth-first iterator
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndices, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
-	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndices, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
+	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
+	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
     
     // Root node
 	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
@@ -450,31 +466,41 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			for (child_idx = 0; child_idx < 8 ; ++child_idx) {
 				if (branch_node->hasChild(child_idx)) {
 					LOG(LINFO) << "Child "<<(int)child_idx << "present";
-//					OctreeBranchNode* current_branch = octree->getBranchChildPtr(*current_branch, child_idx);
-                    OctreeNode* child = branch_node->getChildPtr(child_idx);
-                    if(child->getNodeType() == BRANCH_NODE) {
+					//					OctreeBranchNode* current_branch = octree->getBranchChildPtr(*current_branch, child_idx);
+					OctreeNode* child = branch_node->getChildPtr(child_idx);
+					if(child->getNodeType() == BRANCH_NODE) {
 						OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
-                        child_node->getContainer().setNodeId(nextId++);
-                        int currentId = nextId - 1;
+						child_node->getContainer().setNodeId(nextId++);
+						int currentId = nextId - 1;
 						stringstream name;
-						name << "V_" << currentId;
+						if(currentId < 10) {
+							name << "V_0" << currentId;
+						}
+						else {
+							name << "V_" << currentId;
+						}
 						string voxelName(name.str());
 						addNode(voxelName);
-                        addArc(currentId, parentId);
-                        LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
-                    }
-                    if(child->getNodeType() == LEAF_NODE) {
-////                        LOG(LWARNING) << "adding child of tyle leaf node";
-//                        OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
-//                        child_node->getContainer().setNodeId(nextId++);
-//                        int currentId = nextId - 1;
-//						stringstream name;
-//						name << "V_" << currentId;
-//						string voxelName(name.str());
-//						addNode(voxelName);
-//                        addArc(currentId, parentId);
-//                        LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
-                    }
+						addArc(currentId, parentId);
+						LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
+					}
+					if(child->getNodeType() == LEAF_NODE) {
+						////                        LOG(LWARNING) << "adding child of tyle leaf node";
+						OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
+						child_node->getContainer().setNodeId(nextId++);
+						int currentId = nextId - 1;
+						stringstream name;
+						if(currentId < 10) {
+							name << "V_0" << currentId;
+						}
+						else {
+							name << "V_" << currentId;
+						}
+						string voxelName(name.str());
+						addNode(voxelName);
+						addArc(currentId, parentId);
+						LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
+					}
 				}
 			}
 			branchNodeCount++;
@@ -496,6 +522,8 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			if(containter_size > maxLeafContainerSize)
 				maxLeafContainerSize = containter_size;
 	
+            int parentId = leaf_node->getContainer().getNodeId();
+            
 			// Iterate through container elements, i.e. cloud points.
 			std::vector<int> point_indices;
 	 		leaf_node->getContainer().getPointIndices(point_indices);
@@ -505,6 +533,12 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 				PointXYZSIFT p = cloud->at(point_indices[i]);
 				LOG(LINFO) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
 				LOG(LINFO) << "multiplicity: " << p.multiplicity;
+                LOG(LWARNING) << "pointId" << p.pointId;
+						stringstream name;
+						name << "F_" << p.pointId;
+						string featureName(name.str());
+						addNode(featureName);
+						addArc(featureName, parentId);
 			}//: for points		
 			leafNodeCount++;
 		}//: if leaf

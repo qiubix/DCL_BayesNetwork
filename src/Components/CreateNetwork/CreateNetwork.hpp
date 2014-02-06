@@ -106,7 +106,7 @@ private:
 
     std::string getNodeName(int nodeHandle);
 
-    void addNode(const string name);
+    void addNode(string name);
 
     void setNodeCPT(const string name, vector<double> probabilities);
 
@@ -129,6 +129,7 @@ private:
     //    void setVoxelCPT(pcl::octree::OctreeNode<PointXYZSIFT> node);
     void addNodeParents(const std::string name, const std::vector<int> parentsId);
     void addArc(int parentId, int currentId);
+    void addArc(string parentName, int currentId);
 };
 
 }//: namespace Network
