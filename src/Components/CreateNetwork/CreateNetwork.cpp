@@ -29,6 +29,7 @@ public:
         this->nodeId = -1;
         this->parentId = -1;
     }
+    virtual ~OctreeContainerEmptyWithId() {}
 
     int getNodeId()
     {
@@ -52,6 +53,37 @@ private:
     int parentId;
 };
 
+class OctreeContainerPointIndicesWithId : public OctreeContainerPointIndices 
+{
+public:
+    OctreeContainerPointIndicesWithId() : OctreeContainerPointIndices() 
+    {
+        this->nodeId = -1;
+        this->parentId = -1;
+    }
+    virtual ~OctreeContainerPointIndicesWithId() {}
+
+    int getNodeId()
+    {
+        return nodeId;
+    }
+    int getParentId()
+    {
+       	return parentId;
+    }
+    void setNodeId(int nodeId)
+    {
+        this->nodeId = nodeId;
+    }
+    void setParentId(int parentId) 
+    {
+        this->parentId = parentId;
+    }
+
+private:
+    int nodeId;
+    int parentId;
+};
 
 CreateNetwork::CreateNetwork(const std::string & name) : Base::Component(name)
 {
@@ -266,7 +298,7 @@ void CreateNetwork::mapFeaturesNames()
 //    }
 //}
 
-void CreateNetwork::addNode(const std::string name, const std::vector<string> parentsNames)
+void CreateNetwork::addNode(const std::string name)
 {
     LOG(LDEBUG) << "Add node to network: " << name;
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
@@ -279,12 +311,30 @@ void CreateNetwork::addNode(const std::string name, const std::vector<string> pa
     }
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 
-    int nextParent;
-    for (int i=0; i<parentsNames.size(); i++) {
-        nextParent = theNet.FindNode(parentsNames[i].c_str());
-        theNet.AddArc(nextParent, newNode);
-    }
+//    int nextParent;
+//    for (int i=0; i<parentsNames.size(); i++) {
+//        nextParent = theNet.FindNode(parentsNames[i].c_str());
+//        theNet.AddArc(nextParent, newNode);
+//    }
 //    features.insert(std::make_pair<int,string>(newNode, name));
+}
+
+void CreateNetwork::addArc(int parentId, int currentId)
+{
+	stringstream childNameStr;
+	childNameStr << "V_" << currentId;
+	string childName(childNameStr.str());
+    int childNode = theNet.FindNode(childName.c_str());
+    stringstream parentNameStr;
+    parentNameStr << "V_" << parentId;
+    string parentName(parentNameStr.str());
+    int parentNode = theNet.FindNode(parentName.c_str());
+    theNet.AddArc(parentNode, childNode);
+}
+
+void CreateNetwork::addNodeParents(const std::string name, const std::vector<int> parentsId) 
+{
+    
 }
 
 void CreateNetwork::setNodeCPT(const string name, vector<double> probabilities)
@@ -357,16 +407,33 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	octree.addPointsFromInputCloud ();
 
 
+    int modelId = 0;
+    int nextId = 0;
 	unsigned int lastDepth = 0;
 	unsigned int branchNodeCount = 0;
 	unsigned int leafNodeCount = 0;
 	unsigned int maxLeafContainerSize = 0;
+    
+	stringstream name;
+	name << "V_" << modelId;
+	string hypothesisName(name.str());
+	addNode(hypothesisName);
 
 	// Use breadth-first iterator
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndices, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt;
+	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndices, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
 	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndices, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
+    
+    // Root node
+	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
+    if(node->getNodeType() == BRANCH_NODE) {
+		OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
+		branch_node->getContainer().setNodeId(nextId);
+		nextId++;
+		LOG(LWARNING) << "root id: " << branch_node->getContainer().getNodeId();
+    }
+            
 
-	for (bfIt = octree.breadth_begin(); bfIt != bfIt_end; ++bfIt)
+	for (; bfIt != bfIt_end; ++bfIt)
 	{
 		LOG(LINFO) << "depth = " << bfIt.getCurrentOctreeDepth ();
 		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
@@ -375,6 +442,9 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			LOG(LINFO) << "BRANCH";
 
 			OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
+            int parentId = branch_node->getContainer().getNodeId();
+			LOG(LINFO) << "root id: " << parentId;
+            
 			// iterate over all children
 			unsigned char child_idx;
 			for (child_idx = 0; child_idx < 8 ; ++child_idx) {
@@ -384,7 +454,26 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
                     OctreeNode* child = branch_node->getChildPtr(child_idx);
                     if(child->getNodeType() == BRANCH_NODE) {
 						OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
+                        child_node->getContainer().setNodeId(nextId++);
+                        int currentId = nextId - 1;
+						stringstream name;
+						name << "V_" << currentId;
+						string voxelName(name.str());
+						addNode(voxelName);
+                        addArc(currentId, parentId);
                         LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
+                    }
+                    if(child->getNodeType() == LEAF_NODE) {
+////                        LOG(LWARNING) << "adding child of tyle leaf node";
+//                        OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
+//                        child_node->getContainer().setNodeId(nextId++);
+//                        int currentId = nextId - 1;
+//						stringstream name;
+//						name << "V_" << currentId;
+//						string voxelName(name.str());
+//						addNode(voxelName);
+//                        addArc(currentId, parentId);
+//                        LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
                     }
 				}
 			}
@@ -396,7 +485,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			// Current node is a branch node.
 			LOG(LINFO) << "LEAF";
 			// Cast to proper data structure.
-			OctreeLeafNode< OctreeContainerPointIndices >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndices>* > (node);
+			OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
 			// Get container size.
 			int containter_size = leaf_node->getContainer().getSize();
 			// Check whether size is proper.
@@ -425,8 +514,12 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
 	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
     
+    LOG(LWARNING) << "before writing network to file";
     theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
-
+    LOG(LWARNING) << "after writing network to file";
+    
+//	Delete octree data structure (pushes allocated nodes to memory pool!).
+//	octree.deleteTree ();
 }
 
 }//: namespace Network
