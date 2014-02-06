@@ -110,7 +110,6 @@ void CreateNetwork::prepareInterface()
 //    registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 //    addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
-//    registerStream("out_network", &out_network);
 	// Register data streams.
 //	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
@@ -118,6 +117,8 @@ void CreateNetwork::prepareInterface()
 	h_cloud_xyzrgb_to_octree.setup(boost::bind(&CreateNetwork::cloud_xyzsift_to_octree, this));
 	registerHandler("cloud_xyzrgb_to_octree", &h_cloud_xyzrgb_to_octree);
 	addDependency("cloud_xyzrgb_to_octree", &in_cloud_xyzsift);
+    
+    registerStream("out_network", &out_network);
 }
 
 DSL_network CreateNetwork::getNetwork()
@@ -548,9 +549,10 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
 	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
     
-    LOG(LWARNING) << "before writing network to file";
+    LOG(LINFO) << "before writing network to file";
     theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
-    LOG(LWARNING) << "after writing network to file";
+    LOG(LINFO) << "after writing network to file";
+    out_network.write(theNet);
     
 //	Delete octree data structure (pushes allocated nodes to memory pool!).
 //	octree.deleteTree ();
