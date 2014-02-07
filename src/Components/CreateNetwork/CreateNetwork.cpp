@@ -304,11 +304,6 @@ void CreateNetwork::mapFeaturesNames()
 void CreateNetwork::addNode(std::string name)
 {
     LOG(LDEBUG) << "Add node to network: " << name;
-//    if(name.length()<2){
-//        std::string zero("0");
-//        zero.append(name);
-//        name = zero;
-//    }
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
     DSL_idArray outcomes;
     std::vector<string> outcomesNames;
@@ -368,11 +363,6 @@ int CreateNetwork::generateNext(std::string::iterator start, std::string::iterat
 	return false;
 }
 
-void CreateNetwork::addNodeParents(const std::string name, const std::vector<int> parentsId) 
-{
-    
-}
-
 void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 {
     LOG(LWARNING) << "Set node CPT: " << name;
@@ -398,47 +388,11 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
     } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
-void CreateNetwork::exportNetwork()
-{
-    theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
-    out_network.write(theNet);
-}
-
-//void CreateNetwork::buildNetworkForModel(pcl::octree::OctreePointCloud<PointXYZSIFT> octree, int modelId)
-//{
-//	DSL_network theNet;
-//	OctreePointCloud<PointXYZSIFT>::BreadthFirstIterator bfIt;
-//	const OctreePointCloud<PointXYZSIFT>::BreadthFirstIterator bfIt_end = octree.breadth_end();
-
-//	stringstream name;
-//	name << "H_" << modelId;
-//	string hypothesisName(name.str());
-//	std::vector<string> parentsNames;
-//	addNode(theNet, hypothesisName, parentsNames);
-
-//	for (bfIt = octree.breadth_begin(); bfIt != bfIt_end; ++bfIt) {
-//		OctreeNode* node = bfIt.getCurrentOctreeNode(); 
-        
-//        unsigned char child_idx;
-//		if (node->getNodeType () == BRANCH_NODE) 
-//		{
-//			OctreeBranchNode<PointXYZSIFT>* branch_node = static_cast<OctreeBranchNode<PointXYZSIFT>*> (node);
-//            std::vector<string> childrenNames;
-//			// iterate over all children
-//			for (child_idx = 0; child_idx < 8 ; ++child_idx)
-//			{
-//				// if child exist
-//                if (branch_node->hasChild(child_idx)) {
-//                    OctreeNode* child_node = branch_node->getChildPtr(child_idx);
-                    
-//                }
-//			}
-//		}
-//	}
-//}
-
-
 void CreateNetwork::cloud_xyzsift_to_octree() {
+    if(theNet.GetNumberOfNodes() != 0) {
+        return;
+    }
+    
 	LOG(LTRACE) << "PC2Octree::cloud_xyzsift_to_octree";
 	// Read from dataport.
 	pcl::PointCloud<PointXYZSIFT>::Ptr cloud = in_cloud_xyzsift.read();
@@ -588,13 +542,19 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
 	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
     
-    LOG(LINFO) << "before writing network to file";
+    LOG(LWARNING) << "before writing network to file";
     theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
-    LOG(LINFO) << "after writing network to file";
+    LOG(LWARNING) << "after writing network to file";
     out_network.write(theNet);
     
 //	Delete octree data structure (pushes allocated nodes to memory pool!).
 //	octree.deleteTree ();
+}
+
+void CreateNetwork::exportNetwork()
+{
+    theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
+    out_network.write(theNet);
 }
 
 }//: namespace Network

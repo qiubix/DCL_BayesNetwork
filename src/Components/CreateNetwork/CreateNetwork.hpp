@@ -57,7 +57,6 @@ protected:
     /// Input data stream
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
-//    Base::DataStreamIn< std::vector <pcl::octree::OctreePointCloud <PointXYZSIFT> > > in_octrees;
 	Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
 
     /// Output data stream
@@ -124,10 +123,8 @@ private:
 
     void exportNetwork();
     
-//    void buildNetworkForModel(pcl::octree::OctreePointCloud<PointXYZSIFT> octree, int modelId);
-
     //    void setVoxelCPT(pcl::octree::OctreeNode<PointXYZSIFT> node);
-    void addNodeParents(const std::string name, const std::vector<int> parentsId);
+//    void addNodeParents(const std::string name, const std::vector<int> parentsId);
     void addArc(int parentId, int currentId);
     void addArc(string parentName, int currentId);
     int generateNext(std::string::iterator start, std::string::iterator end);
