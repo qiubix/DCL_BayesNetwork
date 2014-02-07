@@ -86,13 +86,13 @@ void SOMEvaluation::onModels()
 
 void SOMEvaluation::onNetwork()
 {
-    LOG(LTRACE) << "SOMEvaluation::onNetwork";
+    LOG(LWARNING) << "SOMEvaluation::onNetwork";
     theNet = in_network.read();
 }
 
 void SOMEvaluation::onInstance()
 {
-	LOG(LTRACE) << "SOMEvaluation::onInstance";
+	LOG(LWARNING) << "SOMEvaluation::onInstance";
 	if(theNet.GetNumberOfNodes() != 0) {
 		instance = in_instanceMatchedFeatures.read();
 		evaluate();
@@ -102,12 +102,14 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
 	LOG(LTRACE) << "SOMEvaluation::evaluate";
+    LOG(LWARNING) << "instance size: " << instance.size();
     for (unsigned i=0; i<instance.size(); ++i) {
         int nodeId = instance[i];
         std::stringstream ss;
         ss << "F_" << nodeId;
         std::string nodeName(ss.str());
         int node = theNet.FindNode(nodeName.c_str());
+        LOG(LWARNING) << "Observing node" << nodeName << ": nodeId = " << node;
         if(node != DSL_OUT_OF_RANGE) {
             theNet.GetNode(node)->Value()->SetEvidence(0);
         }

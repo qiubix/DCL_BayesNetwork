@@ -365,7 +365,7 @@ int CreateNetwork::generateNext(std::string::iterator start, std::string::iterat
 
 void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 {
-    LOG(LWARNING) << "Set node CPT: " << name;
+    LOG(LDEBUG) << "Set node CPT: " << name;
     std::vector<double> probabilities;
     std::string s(numberOfParents,'1');
     do {
@@ -383,7 +383,7 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
     std::vector<double>::iterator it = probabilities.begin();
     do {
         theCoordinates.UncheckedValue() = *it;
-        LOG(LWARNING) << "Probability: " << *it;
+        LOG(LDEBUG) << "Probability: " << *it;
         ++it;
     } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
@@ -431,7 +431,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 		branch_node->getContainer().setNodeId(nextId);
 		nextId++;
-		LOG(LWARNING) << "root id: " << branch_node->getContainer().getNodeId();
+		LOG(LINFO) << "root id: " << branch_node->getContainer().getNodeId();
     }
             
 
@@ -441,7 +441,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
 		if (node->getNodeType () == BRANCH_NODE) {
 			// current node is a branch node
-			LOG(LWARNING) << "BRANCH";
+			LOG(LDEBUG) << "BRANCH";
 
 			OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
             int parentId = branch_node->getContainer().getNodeId();
@@ -466,7 +466,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 						voxelName = name.str();
 						addNode(voxelName);
 						addArc(currentId, parentId);
-						LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
+						LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 					}
 					if(child->getNodeType() == LEAF_NODE) {
 						////                        LOG(LWARNING) << "adding child of tyle leaf node";
@@ -478,7 +478,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 						voxelName = name.str();
 						addNode(voxelName);
 						addArc(currentId, parentId);
-						LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
+						LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 					}//:if leaf node
 				}//:if has child
 			}//:for children
@@ -520,7 +520,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 				PointXYZSIFT p = cloud->at(point_indices[i]);
 				LOG(LINFO) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
 				LOG(LINFO) << "multiplicity: " << p.multiplicity;
-				LOG(LWARNING) << "pointId" << p.pointId;
+				LOG(LDEBUG) << "pointId " << p.pointId;
 				stringstream name;
 				name << "F_" << p.pointId;
 				string featureName(name.str());
