@@ -169,7 +169,7 @@ void SIFTFeatureMatcher::matchFeatures()
 
 	LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
 
-	if ( correspondences -> size() > 20 ) {
+	if ( correspondences -> size() > 4 ) {
 		//ransac znalezienie blednych dopasowan
 		pcl::Correspondences inliers ;
 		pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
@@ -211,7 +211,7 @@ void SIFTFeatureMatcher::matchFeatures()
         LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
     
-    LOG(LINFO) << "Number of matched features: " << featuresIndexes.size();
+    LOG(LWARNING) << "Number of matched features: " << featuresIndexes.size();
     out_featuresIndexes.write(featuresIndexes);
 }
 
