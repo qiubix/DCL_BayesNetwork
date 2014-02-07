@@ -108,7 +108,7 @@ private:
 
     void addNode(string name);
 
-    void setNodeCPT(const string name, vector<double> probabilities);
+    void setNodeCPT(string name, int numberOfParents);
 
     void mapFeaturesNames();
 
@@ -130,6 +130,7 @@ private:
     void addNodeParents(const std::string name, const std::vector<int> parentsId);
     void addArc(int parentId, int currentId);
     void addArc(string parentName, int currentId);
+    int generateNext(std::string::iterator start, std::string::iterator end);
 };
 
 }//: namespace Network

@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 #include "CreateNetwork.hpp"
 
@@ -349,20 +350,50 @@ void CreateNetwork::addArc(string parentName, int currentId)
     theNet.AddArc(parentNode, childNode);
 }
 
+int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
+{
+	while(start != end)
+	{
+		--end;
+		if ((*end & 1) == 1)
+		{
+			--*end;
+			return true;
+		}
+		else
+		{
+			++*end;
+		}
+	}
+	return false;
+}
+
 void CreateNetwork::addNodeParents(const std::string name, const std::vector<int> parentsId) 
 {
     
 }
 
-void CreateNetwork::setNodeCPT(const string name, vector<double> probabilities)
+void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 {
-    LOG(LDEBUG) << "Set node CPT: " << name;
+    LOG(LWARNING) << "Set node CPT: " << name;
+    std::vector<double> probabilities;
+    std::string s(numberOfParents,'1');
+    do {
+        int ones = std::count(s.begin(),s.end(),'1');
+        double probability = (double) ones/numberOfParents;
+//        LOG(LWARNING) << "Probability: " << probability;
+        probabilities.push_back(probability);
+        probabilities.push_back(1-probability);
+    } while(generateNext(s.begin(), s.end()));
+    
+    
     int node = theNet.FindNode(name.c_str());
     DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
 
     std::vector<double>::iterator it = probabilities.begin();
     do {
         theCoordinates.UncheckedValue() = *it;
+        LOG(LWARNING) << "Probability: " << *it;
         ++it;
     } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
@@ -456,7 +487,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
 		if (node->getNodeType () == BRANCH_NODE) {
 			// current node is a branch node
-			LOG(LINFO) << "BRANCH";
+			LOG(LWARNING) << "BRANCH";
 
 			OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
             int parentId = branch_node->getContainer().getNodeId();
@@ -464,9 +495,12 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
             
 			// iterate over all children
 			unsigned char child_idx;
+            int childrenCounter = 0;
+            string voxelName = "";
 			for (child_idx = 0; child_idx < 8 ; ++child_idx) {
 				if (branch_node->hasChild(child_idx)) {
 					LOG(LINFO) << "Child "<<(int)child_idx << "present";
+                    childrenCounter++;
 					//					OctreeBranchNode* current_branch = octree->getBranchChildPtr(*current_branch, child_idx);
 					OctreeNode* child = branch_node->getChildPtr(child_idx);
 					if(child->getNodeType() == BRANCH_NODE) {
@@ -474,13 +508,8 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 						child_node->getContainer().setNodeId(nextId++);
 						int currentId = nextId - 1;
 						stringstream name;
-						if(currentId < 10) {
-							name << "V_0" << currentId;
-						}
-						else {
-							name << "V_" << currentId;
-						}
-						string voxelName(name.str());
+						name << "V_" << currentId;
+						voxelName = name.str();
 						addNode(voxelName);
 						addArc(currentId, parentId);
 						LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
@@ -491,19 +520,21 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 						child_node->getContainer().setNodeId(nextId++);
 						int currentId = nextId - 1;
 						stringstream name;
-						if(currentId < 10) {
-							name << "V_0" << currentId;
-						}
-						else {
-							name << "V_" << currentId;
-						}
-						string voxelName(name.str());
+						name << "V_" << currentId;
+						voxelName = name.str();
 						addNode(voxelName);
 						addArc(currentId, parentId);
 						LOG(LWARNING) << "node id: " << child_node->getContainer().getNodeId();
-					}
-				}
-			}
+					}//:if leaf node
+				}//:if has child
+			}//:for children
+			stringstream name;
+			name << "V_" << parentId;
+			voxelName = name.str();
+			LOG(LWARNING) << "voxel ID: " << parentId;
+			LOG(LWARNING) << "voxel name: " << voxelName;
+			LOG(LWARNING) << "children count: " <<childrenCounter;
+			setNodeCPT(voxelName, childrenCounter);
 			branchNodeCount++;
 		}
 
@@ -524,6 +555,7 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 				maxLeafContainerSize = containter_size;
 	
             int parentId = leaf_node->getContainer().getNodeId();
+            int childrenCounter = leaf_node->getContainer().getSize();
             
 			// Iterate through container elements, i.e. cloud points.
 			std::vector<int> point_indices;
@@ -534,13 +566,20 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 				PointXYZSIFT p = cloud->at(point_indices[i]);
 				LOG(LINFO) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
 				LOG(LINFO) << "multiplicity: " << p.multiplicity;
-                LOG(LWARNING) << "pointId" << p.pointId;
-						stringstream name;
-						name << "F_" << p.pointId;
-						string featureName(name.str());
-						addNode(featureName);
-						addArc(featureName, parentId);
+				LOG(LWARNING) << "pointId" << p.pointId;
+				stringstream name;
+				name << "F_" << p.pointId;
+				string featureName(name.str());
+				addNode(featureName);
+				addArc(featureName, parentId);
 			}//: for points		
+			stringstream name;
+			name << "V_" << parentId;
+			string voxelName = name.str();
+			LOG(LWARNING) << "voxel ID: " << parentId;
+			LOG(LWARNING) << "voxel name: " << voxelName;
+			LOG(LWARNING) << "children count: " <<childrenCounter;
+			setNodeCPT(voxelName, childrenCounter);
 			leafNodeCount++;
 		}//: if leaf
 	}//: for nodes
