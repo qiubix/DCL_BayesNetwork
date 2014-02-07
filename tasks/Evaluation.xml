@@ -1,0 +1,60 @@
+<Task>
+    <!-- reference task information -->
+    <Reference>
+            <Author> </Author>
+        <Description> </Description>
+    </Reference>
+
+    <Subtasks>
+        <Subtask name="Main">
+            <Executor name="Processing">
+		    <Component name="ModelReader" type="PCL:PCDReader" priority="1" bump="0">
+			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8;/home/kkaterza/models_pcd/testmodel</param> -->
+			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8</param> -->
+				<!-- <param name="names">/home/qiubix/models_pcd/simple_eval/model_1;/home/qiubix/models_pcd/simple_eval/model_2;/home/qiubix/models_pcd/simple_eval/model_3;/home/qiubix/models_pcd/simple_eval/model_4</param> -->
+				<param name="filename">%[TASK_LOCATION]%/../data/testcloud_xyzsift.pcd</param>
+		    </Component>
+			<!-- <Component name="Adder" type="PCL:SIFTAdder" priority="1" bump="0"></Component>-->
+		    <Component name="InstanceReader" type="PCL:PCDReader" priority="2" bump="0">
+				<param name="filename">%[TASK_LOCATION]%/../data/test_instance_cloud_xyzsift.pcd</param>
+			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8;/home/kkaterza/models_pcd/testmodel</param> -->
+			    <!-- <param name="names">/home/kkaterza/models_pcd/cereal_box_1;/home/kkaterza/models_pcd/food_box_8</param> -->
+				<!-- <param name="names">/home/qiubix/models_pcd/instances/instance_1</param> -->
+		    </Component>
+			<Component name="Matcher" type="BayesNetwork:SIFTFeatureMatcher" priority="3" bumb="0"></Component>
+			<!-- <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="1" bumb="0"></Component>-->
+		    <Component name="Builder" type="BayesNetwork:CreateNetwork" priority="4" bump="0"></Component>
+			<Component name="Evaluator" type="BayesNetwork:SOMEvaluation" priority="5" bumb="0"></Component>
+		    <!-- <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bump="0"></Component>  -->
+            </Executor>
+        </Subtask>
+    </Subtasks>
+    <DataStreams>
+		<!-- <Source name="ModelReader.out_models">
+            <sink>Adder.in_models</sink>
+		</Source> -->
+        <Source name="ModelReader.out_cloud_xyzsift">
+            <sink>Builder.in_cloud_xyzsift</sink>
+			<sink>Matcher.in_jointCloud</sink>
+        </Source>
+        <Source name="InstanceReader.out_cloud_xyzsift">
+            <sink>Matcher.in_instanceCloud</sink>
+        </Source>
+		<!-- <Source name="Adder.out_cloud">
+        	<sink>Matcher.in_jointCloud</sink>
+        	<sink>Mapper.in_jointCloud</sink>
+		</Source> -->
+		<!-- <Source name="Adder.out_multiplicityOfModels">
+        	<sink>Evaluator.in_models</sink>
+		</Source> 
+        <Source name="Mapper.out_jointMultiplicity">
+        	<sink>Evaluator.in_jointMultiplicity</sink>
+        </Source>-->
+		<Source name="Builder.out_network">
+			<sink>Evaluator.in_network</sink>
+		</Source>
+        <Source name="Matcher.out_featuresIndexes">
+        	<sink>Evaluator.in_instanceMatchedFeatures</sink>
+        </Source>
+    </DataStreams>
+</Task>

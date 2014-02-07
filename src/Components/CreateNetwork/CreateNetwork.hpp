@@ -13,9 +13,17 @@
 #include "Component.hpp"
 #include "DataStream.hpp"
 #include "Property.hpp"
+#include "EventHandler2.hpp"
 
 #include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
+
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/octree/octree.h>
+#include <pcl/octree/octree_impl.h>
+
+#include <Types/PointXYZSIFT.hpp>
 
 
 namespace Processors {
@@ -32,7 +40,7 @@ public:
     /*!
      * Constructor.
      */
-    CreateNetwork(const std::string & name = "");
+    CreateNetwork(const std::string & name = "CreateNetwork");
 
     /*!
      * Destructor
@@ -47,8 +55,10 @@ public:
 protected:
 
     /// Input data stream
-    Base::DataStreamIn< std::vector< std::map<int,int> > > in_models;
+    Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+//    Base::DataStreamIn< std::vector <pcl::octree::OctreePointCloud <PointXYZSIFT> > > in_octrees;
+	Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
 
     /// Output data stream
     Base::DataStreamOut<DSL_network> out_network;
@@ -76,12 +86,14 @@ protected:
     /// Event handlers
     Base::EventHandler <CreateNetwork> h_onModels;
     Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
+	Base::EventHandler2 h_cloud_xyzrgb_to_octree;
 
     /*!
      * Event handler function.
      */
     void onModels();
     void onJointMultiplicity();
+	void cloud_xyzsift_to_octree();
 
 private:
     DSL_network theNet;
@@ -94,9 +106,9 @@ private:
 
     std::string getNodeName(int nodeHandle);
 
-    void addNode(const string name, const std::vector<string> outcomesNames, const std::vector<string> parentsNames);
+    void addNode(string name);
 
-    void setNodeCPT(const string name, vector<double> probabilities);
+    void setNodeCPT(string name, int numberOfParents);
 
     void mapFeaturesNames();
 
@@ -111,7 +123,14 @@ private:
     void loadNetwork();
 
     void exportNetwork();
+    
+//    void buildNetworkForModel(pcl::octree::OctreePointCloud<PointXYZSIFT> octree, int modelId);
 
+    //    void setVoxelCPT(pcl::octree::OctreeNode<PointXYZSIFT> node);
+    void addNodeParents(const std::string name, const std::vector<int> parentsId);
+    void addArc(int parentId, int currentId);
+    void addArc(string parentName, int currentId);
+    int generateNext(std::string::iterator start, std::string::iterator end);
 };
 
 }//: namespace Network
