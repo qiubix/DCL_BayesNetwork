@@ -485,9 +485,9 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			stringstream name;
 			name << "V_" << parentId;
 			voxelName = name.str();
-			LOG(LWARNING) << "voxel ID: " << parentId;
-			LOG(LWARNING) << "voxel name: " << voxelName;
-			LOG(LWARNING) << "children count: " <<childrenCounter;
+			LOG(LDEBUG) << "voxel ID: " << parentId;
+			LOG(LDEBUG) << "voxel name: " << voxelName;
+			LOG(LDEBUG) << "children count: " <<childrenCounter;
 			setNodeCPT(voxelName, childrenCounter);
 			branchNodeCount++;
 		}
@@ -530,9 +530,9 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			stringstream name;
 			name << "V_" << parentId;
 			string voxelName = name.str();
-			LOG(LWARNING) << "voxel ID: " << parentId;
-			LOG(LWARNING) << "voxel name: " << voxelName;
-			LOG(LWARNING) << "children count: " <<childrenCounter;
+			LOG(LDEBUG) << "voxel ID: " << parentId;
+			LOG(LDEBUG) << "voxel name: " << voxelName;
+			LOG(LDEBUG) << "children count: " <<childrenCounter;
 			setNodeCPT(voxelName, childrenCounter);
 			leafNodeCount++;
 		}//: if leaf
