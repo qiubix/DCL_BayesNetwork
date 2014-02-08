@@ -388,6 +388,37 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
     } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
+void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
+{
+    LOG(LDEBUG) << "Set node CPT: " << name;
+    std::vector<double> probabilities;
+    std::string s(parentsCoefficients.size(),'1');
+    do {
+        int ones = std::count(s.begin(),s.end(),'1');
+        double probability = 0; //(double) ones/numberOfParents;
+        for(unsigned i=0; i<parentsCoefficients.size(); ++i) {
+            if(s.at(i) == '1') {
+                probability += parentsCoefficients[i];
+            }
+        }
+        probability = probability/parentsCoefficients.size();
+//        LOG(LWARNING) << "Probability: " << probability;
+        probabilities.push_back(probability);
+        probabilities.push_back(1-probability);
+    } while(generateNext(s.begin(), s.end()));
+    
+    
+    int node = theNet.FindNode(name.c_str());
+    DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
+
+    std::vector<double>::iterator it = probabilities.begin();
+    do {
+        theCoordinates.UncheckedValue() = *it;
+        LOG(LDEBUG) << "Probability: " << *it;
+        ++it;
+    } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+}
+
 void CreateNetwork::cloud_xyzsift_to_octree() {
     if(theNet.GetNumberOfNodes() != 0) {
         return;
@@ -415,6 +446,10 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	unsigned int branchNodeCount = 0;
 	unsigned int leafNodeCount = 0;
 	unsigned int maxLeafContainerSize = 0;
+    int summedFeaturesMultiplicity = 0;
+//    for(unsigned i=0; i<cloud->size(); ++i) {
+//        summedFeaturesMultiplicity += cloud->at(i).multiplicity;
+//    }
     
 	stringstream name;
 	name << "V_" << modelId;
@@ -510,10 +545,16 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 	
             int parentId = leaf_node->getContainer().getNodeId();
             int childrenCounter = leaf_node->getContainer().getSize();
+            std::vector<double> featuresCoefficients;
+            int summedFeaturesMultiplicity = 0;
             
 			// Iterate through container elements, i.e. cloud points.
 			std::vector<int> point_indices;
 	 		leaf_node->getContainer().getPointIndices(point_indices);
+            for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
+				PointXYZSIFT p = cloud->at(point_indices[j]);
+                summedFeaturesMultiplicity += p.multiplicity;
+            }
 			for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
 			{
 				LOG(LDEBUG) << "Iteration number " << i << " Point index=" << point_indices[i];
@@ -526,6 +567,8 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 				string featureName(name.str());
 				addNode(featureName);
 				addArc(featureName, parentId);
+                double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
+                featuresCoefficients.push_back(coefficient);
 			}//: for points		
 			stringstream name;
 			name << "V_" << parentId;
@@ -533,7 +576,8 @@ void CreateNetwork::cloud_xyzsift_to_octree() {
 			LOG(LDEBUG) << "voxel ID: " << parentId;
 			LOG(LDEBUG) << "voxel name: " << voxelName;
 			LOG(LDEBUG) << "children count: " <<childrenCounter;
-			setNodeCPT(voxelName, childrenCounter);
+			setNodeCPT(voxelName, featuresCoefficients);
+//            setNodeCPT(voxelName, childrenCounter);
 			leafNodeCount++;
 		}//: if leaf
 	}//: for nodes
