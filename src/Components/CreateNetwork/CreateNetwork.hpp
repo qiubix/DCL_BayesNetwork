@@ -85,7 +85,7 @@ protected:
     /// Event handlers
     Base::EventHandler <CreateNetwork> h_onModels;
     Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
-	Base::EventHandler2 h_cloud_xyzrgb_to_octree;
+	Base::EventHandler2 h_buildNetwork;
 
     /*!
      * Event handler function.
@@ -93,6 +93,7 @@ protected:
     void onModels();
     void onJointMultiplicity();
 	void cloud_xyzsift_to_octree();
+    void buildNetwork();
 
 private:
     DSL_network theNet;
@@ -112,20 +113,10 @@ private:
 
     void mapFeaturesNames();
 
-    void buildNetwork();
-
-    void setBaseNetworkCPTs();
-
-    void setBaseFeaturesCPTs();
-
-    void setBaseHypothesesCPTs();
-
     void loadNetwork();
 
     void exportNetwork();
     
-    //    void setVoxelCPT(pcl::octree::OctreeNode<PointXYZSIFT> node);
-//    void addNodeParents(const std::string name, const std::vector<int> parentsId);
     void addArc(int parentId, int currentId);
     void addArc(string parentName, int currentId);
     int generateNext(std::string::iterator start, std::string::iterator end);

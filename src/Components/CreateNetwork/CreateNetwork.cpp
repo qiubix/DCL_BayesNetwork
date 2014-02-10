@@ -115,9 +115,9 @@ void CreateNetwork::prepareInterface()
 //	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
 	// Register handlers
-	h_cloud_xyzrgb_to_octree.setup(boost::bind(&CreateNetwork::cloud_xyzsift_to_octree, this));
-	registerHandler("cloud_xyzrgb_to_octree", &h_cloud_xyzrgb_to_octree);
-	addDependency("cloud_xyzrgb_to_octree", &in_cloud_xyzsift);
+	h_buildNetwork.setup(boost::bind(&CreateNetwork::buildNetwork, this));
+	registerHandler("buildNetwork", &h_buildNetwork);
+	addDependency("buildNetwork", &in_cloud_xyzsift);
     
     registerStream("out_network", &out_network);
 }
@@ -181,37 +181,6 @@ void CreateNetwork::onJointMultiplicity()
     }
 }
 
-//void CreateNetwork::buildNetwork()
-//{
-//    LOG(LDEBUG) << "=========== BUILDING NETWORK ==============";
-//    vector<string> outcomesNames;
-//    vector<string> parentsNames;
-//    outcomesNames.push_back("YES");
-//    outcomesNames.push_back("NO");
-//    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
-//        addNode(features[i], outcomesNames, parentsNames);
-//        LOG(LTRACE) << "Added feature no " << i;
-//    }
-//    LOG(LDEBUG) << "Number of feature nodes added: " << jointMultiplicityVector.size();
-//    for (unsigned j=0; j<models.size(); ++j) {
-//        stringstream name;
-//        name << "H" << j;
-//        string hypothesisName(name.str());
-//        map<int,int> modelFeatures = models[j];
-//        map<int,int>::iterator it = modelFeatures.begin();
-//        while (it != modelFeatures.end()) {
-//            string parentName = features[it->first];
-//            parentsNames.push_back(parentName);
-//            ++it;
-//        }
-//        addNode(hypothesisName, outcomesNames, parentsNames);
-//        LOG(LTRACE) << "Added hypotheses no " << j;
-//        parentsNames.clear();
-//    }
-//    LOG(LDEBUG) << "Added " << models.size() << " hypotheses nodes";
-//    setBaseNetworkCPTs();
-//}
-
 void CreateNetwork::loadNetwork()
 {
     int result = -1;
@@ -230,77 +199,6 @@ void CreateNetwork::mapFeaturesNames()
     }
 }
 
-//void CreateNetwork::setBaseNetworkCPTs()
-//{
-//    LOG(LDEBUG) << "Set base network CPTs";
-//    setBaseFeaturesCPTs();
-////    setBaseHypothesesCPTs();
-//}
-
-//void CreateNetwork::setBaseFeaturesCPTs()
-//{
-//    LOG(LDEBUG) << "------- Set base features CPTs -------";
-//    int sum = 0;
-//    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
-//        LOG(LDEBUG) << "feature " << i << " multiplicity: " << jointMultiplicityVector[i];
-//        sum += jointMultiplicityVector[i];
-//    }
-//    LOG(LDEBUG) << "summed multiplicity of all features: " << sum;
-
-//    std::map<int,string>::iterator it = features.begin();
-//    for( ; it!=features.end(); ++it) {
-//        LOG(LDEBUG) << "feature no: " << it->first;
-//        int multiplicity = jointMultiplicityVector[it->first];
-//        LOG(LDEBUG) << "feature multiplicity in model: " << multiplicity;
-//        double baseProbability = (double) multiplicity/sum;
-//		std::vector <double> probabilities;
-//        probabilities.push_back(baseProbability);
-//        probabilities.push_back(1 - baseProbability);
-//        LOG(LDEBUG) << "calculated base probability " << baseProbability;
-//        setNodeCPT(it->second, probabilities);
-//    }
-//}
-
-//void CreateNetwork::setBaseHypothesesCPTs()
-//{
-//    LOG(LDEBUG) << "------ Set base hypotheses CPTs ------";
-//    int jointMultiplicitySum = 0;
-//    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
-//        jointMultiplicitySum += jointMultiplicityVector[i];
-//    }
-
-//    for (unsigned i=0; i<models.size(); ++i) {
-//        LOG(LDEBUG) << "hypothesis no :" << i;
-//        double P_Hi = (double) 1/models.size();
-//        map<int,int> modelFeatures = models[i];
-//        map<int,int>::iterator k = modelFeatures.begin();
-
-//        int modelMultiplicitySum = 0;
-//        while (k != modelFeatures.end()) {
-//            modelMultiplicitySum += k->second;
-//            ++k;
-//        }
-
-//        k = modelFeatures.begin();
-//        double baseProbability = 1;
-//        while (k != modelFeatures.end()) {
-//            double P_Fk_given_Hi = (double) (k->second)/modelMultiplicitySum;
-//            double P_Fk = (double) jointMultiplicityVector[k->first]/jointMultiplicitySum;
-//            double P_Hi_given_Fk = (double) P_Fk_given_Hi * P_Hi / P_Fk;
-//            baseProbability *= P_Hi_given_Fk;
-//            ++k;
-//        }
-//        LOG(LDEBUG) << "Calculated probability: " << baseProbability;
-//		std::vector<double> probabilities;
-//        probabilities.push_back(baseProbability);
-//        probabilities.push_back(1 - baseProbability);
-//        stringstream name;
-//        name << "H" << i;
-//        string hypothesisName(name.str());
-//        setNodeCPT(hypothesisName, probabilities);
-//    }
-//}
-
 void CreateNetwork::addNode(std::string name)
 {
     LOG(LDEBUG) << "Add node to network: " << name;
@@ -313,13 +211,6 @@ void CreateNetwork::addNode(std::string name)
         outcomes.Add(outcomesNames[i].c_str());
     }
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
-
-//    int nextParent;
-//    for (int i=0; i<parentsNames.size(); i++) {
-//        nextParent = theNet.FindNode(parentsNames[i].c_str());
-//        theNet.AddArc(nextParent, newNode);
-//    }
-//    features.insert(std::make_pair<int,string>(newNode, name));
 }
 
 void CreateNetwork::addArc(int parentId, int currentId)
@@ -419,12 +310,12 @@ void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficie
     } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
-void CreateNetwork::cloud_xyzsift_to_octree() {
+void CreateNetwork::buildNetwork() {
     if(theNet.GetNumberOfNodes() != 0) {
         return;
     }
     
-	LOG(LTRACE) << "PC2Octree::cloud_xyzsift_to_octree";
+	LOG(LTRACE) << "PC2Octree::buildNetwork";
 	// Read from dataport.
 	pcl::PointCloud<PointXYZSIFT>::Ptr cloud = in_cloud_xyzsift.read();
 
