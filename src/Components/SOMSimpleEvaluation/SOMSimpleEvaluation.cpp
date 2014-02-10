@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <Common/Timer.hpp>
 
 #include "SOMSimpleEvaluation.hpp"
 
@@ -91,9 +92,13 @@ void SOMSimpleEvaluation::onInstance()
 void SOMSimpleEvaluation::evaluate()
 {
 	LOG(LTRACE) << "SOMSimpleEvaluation::evaluate";
+    Common::Timer timer;
+    timer.restart();
+//    clock_t startTime, endTime;
+//    startTime = clock();
 	for (unsigned i=0; i<models.size(); ++i) {
 		std::map <int, int> model = models[i];
-		LOG(LINFO) << "Model nr " << i << ": size = " << model.size();
+		LOG(LWARNING) << "Model nr " << i << ": size = " << model.size();
 		int totalModelMultiplicity = 0;
 		for( unsigned j=0; j<model.size(); ++j) {
 			totalModelMultiplicity += model[j];
@@ -110,7 +115,9 @@ void SOMSimpleEvaluation::evaluate()
 				probability += (double) multiplicityInModel/(totalModelMultiplicity * jointMultiplicityVector[featureId]);
 			}
 		}
-		LOG(LINFO) << "Model nr " << i << ": probability = " << probability;
+//		endTime = clock();
+//		double runtime = (double) (endTime - startTime)/CLOCKS_PER_SEC;
+		LOG(LWARNING) << "Model nr " << i << ": probability = " << probability << " runtime: " << timer.elapsed();
 		hypothesesProbabilities.push_back(probability);
 	}
     out_probabilities.write(hypothesesProbabilities);

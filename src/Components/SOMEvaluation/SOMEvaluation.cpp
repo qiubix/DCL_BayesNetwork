@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <time.h>
+#include <Common/Timer.hpp>
 
 #include "SOMEvaluation.hpp"
 
@@ -103,6 +105,10 @@ void SOMEvaluation::evaluate()
 {
 	LOG(LTRACE) << "SOMEvaluation::evaluate";
     LOG(LWARNING) << "instance size: " << instance.size();
+    Common::Timer timer;
+    timer.restart();
+//    clock_t startTime, endTime;
+//    startTime = clock();
     theNet.ClearAllEvidence();
     for (unsigned i=0; i<instance.size(); ++i) {
         int nodeId = instance[i];
@@ -123,7 +129,9 @@ void SOMEvaluation::evaluate()
     theCoordinates[0] = theNames->FindPosition("YES");
     theCoordinates.GoToCurrentPosition();
     double hypothesisProbability = theCoordinates.UncheckedValue();
-    LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
+//    endTime = clock();
+//    double runtime = (double) (endTime - startTime)/CLOCKS_PER_SEC;
+    LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability << " runtime: " << timer.elapsed();
     hypothesesProbabilities.push_back(hypothesisProbability);
     out_probabilities.write(hypothesesProbabilities);
 }

@@ -108,6 +108,7 @@ private:
     void addNode(string name);
 
     void setNodeCPT(string name, int numberOfParents);
+    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
 
     void mapFeaturesNames();
 

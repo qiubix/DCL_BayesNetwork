@@ -169,7 +169,7 @@ void SIFTFeatureMatcher::matchFeatures()
 
 	LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
 
-	if ( correspondences -> size() > 4 ) {
+	if ( correspondences -> size() > 20 ) {
 		//ransac znalezienie blednych dopasowan
 		pcl::Correspondences inliers ;
 		pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
