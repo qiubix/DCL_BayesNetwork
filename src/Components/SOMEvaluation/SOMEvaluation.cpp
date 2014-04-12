@@ -104,36 +104,32 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
 	LOG(LTRACE) << "SOMEvaluation::evaluate";
-    LOG(LWARNING) << "instance size: " << instance.size();
-    Common::Timer timer;
-    timer.restart();
-//    clock_t startTime, endTime;
-//    startTime = clock();
-    theNet.ClearAllEvidence();
-    for (unsigned i=0; i<instance.size(); ++i) {
-        int nodeId = instance[i];
-        std::stringstream ss;
-        ss << "F_" << nodeId;
-        std::string nodeName(ss.str());
-        int node = theNet.FindNode(nodeName.c_str());
-        LOG(LDEBUG) << "Observing node" << nodeName << ": nodeId = " << node;
-        if(node != DSL_OUT_OF_RANGE) {
-            theNet.GetNode(node)->Value()->SetEvidence(0);
-        }
-    }
-    theNet.UpdateBeliefs();
-    int hypothesis = theNet.FindNode("V_0");
-    theNet.GetNode(hypothesis)->Value();
-    DSL_sysCoordinates theCoordinates(*theNet.GetNode(hypothesis)->Value());
-    DSL_idArray *theNames = theNet.GetNode(hypothesis)->Definition()->GetOutcomesNames();
-    theCoordinates[0] = theNames->FindPosition("YES");
-    theCoordinates.GoToCurrentPosition();
-    double hypothesisProbability = theCoordinates.UncheckedValue();
-//    endTime = clock();
-//    double runtime = (double) (endTime - startTime)/CLOCKS_PER_SEC;
-    LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability << " runtime: " << timer.elapsed();
-    hypothesesProbabilities.push_back(hypothesisProbability);
-    out_probabilities.write(hypothesesProbabilities);
+	LOG(LWARNING) << "instance size: " << instance.size();
+	Common::Timer timer;
+	timer.restart();
+	theNet.ClearAllEvidence();
+	for (unsigned i=0; i<instance.size(); ++i) {
+		int nodeId = instance[i];
+		std::stringstream ss;
+		ss << "F_" << nodeId;
+		std::string nodeName(ss.str());
+		int node = theNet.FindNode(nodeName.c_str());
+		LOG(LDEBUG) << "Observing node" << nodeName << ": nodeId = " << node;
+		if(node != DSL_OUT_OF_RANGE) {
+			theNet.GetNode(node)->Value()->SetEvidence(0);
+		}
+	}
+	theNet.UpdateBeliefs();
+	int hypothesis = theNet.FindNode("V_0");
+	theNet.GetNode(hypothesis)->Value();
+	DSL_sysCoordinates theCoordinates(*theNet.GetNode(hypothesis)->Value());
+	DSL_idArray *theNames = theNet.GetNode(hypothesis)->Definition()->GetOutcomesNames();
+	theCoordinates[0] = theNames->FindPosition("YES");
+	theCoordinates.GoToCurrentPosition();
+	double hypothesisProbability = theCoordinates.UncheckedValue();
+	LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability << " runtime: " << timer.elapsed();
+	hypothesesProbabilities.push_back(hypothesisProbability);
+	out_probabilities.write(hypothesesProbabilities);
 }
 
 
