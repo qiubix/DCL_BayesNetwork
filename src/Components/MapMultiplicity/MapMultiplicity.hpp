@@ -49,11 +49,9 @@ public:
 protected:
 
     /// Input data stream
-//    Base::DataStreamIn< std::map<int,int> > in_model;
     Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_jointCloud;
 
     /// Output data stream
-//    Base::DataStreamOut< std::vector< map<int,int> > > out_models;
     Base::DataStreamOut< std::vector<int> > out_jointMultiplicity;
 
     /*!
@@ -77,18 +75,12 @@ protected:
     bool onStop();
 
     /// Event handlers
-//    Base::EventHandler <MapMultiplicity> h_onNewModel;
     Base::EventHandler <MapMultiplicity> h_onJointMultiplicity;
 
     /*!
      * Event handler function.
      */
-//    void onNewModel();
     void onJointMultiplicity();
-
-private:
-//    std::vector < std::map<int,int> > models;
-
 };
 
 }//: namespace Network
