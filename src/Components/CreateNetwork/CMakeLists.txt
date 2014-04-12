@@ -5,7 +5,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
-add_library(procCreateNetwork SHARED ${files})
+add_library(procCreateNetwork SHARED ${files} OctreeContainers.hpp)
 target_link_libraries(procCreateNetwork ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS})
 
 INSTALL_COMPONENT(procCreateNetwork)

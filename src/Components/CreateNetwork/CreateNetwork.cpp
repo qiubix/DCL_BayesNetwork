@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "CreateNetwork.hpp"
+#include "OctreeContainers.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
@@ -22,70 +23,6 @@ using namespace pcl::octree;
 
 namespace Processors {
 namespace Network {
-
-class OctreeContainerEmptyWithId : public OctreeContainerEmpty 
-{
-public:
-    OctreeContainerEmptyWithId() : OctreeContainerEmpty()
-    {
-        this->nodeId = -1;
-        this->parentId = -1;
-    }
-    virtual ~OctreeContainerEmptyWithId() {}
-
-    int getNodeId()
-    {
-        return nodeId;
-    }
-    int getParentId()
-    {
-       	return parentId;
-    }
-    void setNodeId(int nodeId)
-    {
-        this->nodeId = nodeId;
-    }
-    void setParentId(int parentId) 
-    {
-        this->parentId = parentId;
-    }
-
-private:
-    int nodeId;
-    int parentId;
-};
-
-class OctreeContainerPointIndicesWithId : public OctreeContainerPointIndices 
-{
-public:
-    OctreeContainerPointIndicesWithId() : OctreeContainerPointIndices() 
-    {
-        this->nodeId = -1;
-        this->parentId = -1;
-    }
-    virtual ~OctreeContainerPointIndicesWithId() {}
-
-    int getNodeId()
-    {
-        return nodeId;
-    }
-    int getParentId()
-    {
-       	return parentId;
-    }
-    void setNodeId(int nodeId)
-    {
-        this->nodeId = nodeId;
-    }
-    void setParentId(int parentId) 
-    {
-        this->parentId = parentId;
-    }
-
-private:
-    int nodeId;
-    int parentId;
-};
 
 CreateNetwork::CreateNetwork(const std::string & name) : Base::Component(name)
 {
