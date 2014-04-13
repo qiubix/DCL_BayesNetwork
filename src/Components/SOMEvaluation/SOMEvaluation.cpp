@@ -34,13 +34,6 @@ SOMEvaluation::~SOMEvaluation()
 void SOMEvaluation::prepareInterface()
 {
     LOG(LTRACE) << "SOMEvaluation::prepareInterface";
-//    h_onModels.setup(this, &SOMEvaluation::onModels);
-//    registerHandler("onModels", &h_onModels);
-    
-//    registerStream("in_models", &in_models);
-//    registerStream("in_jointMultiplicity", &in_jointMultiplicity);
-//    addDependency("onModels", &in_models);
-//    addDependency("onModels", &in_jointMultiplicity);
     
     h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
     registerHandler("onNetwork", &h_onNetwork);
@@ -79,13 +72,6 @@ bool SOMEvaluation::onStop()
     return true;
 }
 
-void SOMEvaluation::onModels()
-{
-    LOG(LTRACE) << "SOMEvaluation::onModels";
-//    models = in_models.read();
-//    jointMultiplicityVector = in_jointMultiplicity.read();
-}
-
 void SOMEvaluation::onNetwork()
 {
     LOG(LWARNING) << "SOMEvaluation::onNetwork";
@@ -103,35 +89,61 @@ void SOMEvaluation::onInstance()
 
 void SOMEvaluation::evaluate()
 {
-	LOG(LTRACE) << "SOMEvaluation::evaluate";
-	LOG(LWARNING) << "instance size: " << instance.size();
-	Common::Timer timer;
-	timer.restart();
-	theNet.ClearAllEvidence();
-	for (unsigned i=0; i<instance.size(); ++i) {
-		int nodeId = instance[i];
+		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
+		LOG(LDEBUG) << "instance size: " << instance.size();
+
+		Common::Timer timer;
+		timer.restart();
+
+		theNet.ClearAllEvidence();
+		activateMatchedFeatureNodes();
+		theNet.UpdateBeliefs();
+
+		displayHypothesisProbability();
+    
+		LOG(LINFO) << " runtime: " << timer.elapsed();
+}
+
+void SOMEvaluation::activateMatchedFeatureNodes()
+{
+		for (unsigned i=0; i<instance.size(); ++i) {
+				int node = findFeatureNode(instance[i]);
+				LOG(LDEBUG) << "Observing node: nodeId = " << node;
+				if(node != DSL_OUT_OF_RANGE) {
+						theNet.GetNode(node)->Value()->SetEvidence(0);
+				}
+		}
+}
+
+void SOMEvaluation::displayHypothesisProbability()
+{
+		int hypothesis = theNet.FindNode("V_0");
+    double hypothesisProbability = getNodeProbability(hypothesis);
+    
+		LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
+        
+		hypothesesProbabilities.push_back(hypothesisProbability);
+		out_probabilities.write(hypothesesProbabilities);
+}
+
+int SOMEvaluation::findFeatureNode(int nodeId)
+{
 		std::stringstream ss;
 		ss << "F_" << nodeId;
 		std::string nodeName(ss.str());
-		int node = theNet.FindNode(nodeName.c_str());
-		LOG(LDEBUG) << "Observing node" << nodeName << ": nodeId = " << node;
-		if(node != DSL_OUT_OF_RANGE) {
-			theNet.GetNode(node)->Value()->SetEvidence(0);
-		}
-	}
-	theNet.UpdateBeliefs();
-	int hypothesis = theNet.FindNode("V_0");
-	theNet.GetNode(hypothesis)->Value();
-	DSL_sysCoordinates theCoordinates(*theNet.GetNode(hypothesis)->Value());
-	DSL_idArray *theNames = theNet.GetNode(hypothesis)->Definition()->GetOutcomesNames();
-	theCoordinates[0] = theNames->FindPosition("YES");
-	theCoordinates.GoToCurrentPosition();
-	double hypothesisProbability = theCoordinates.UncheckedValue();
-	LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability << " runtime: " << timer.elapsed();
-	hypothesesProbabilities.push_back(hypothesisProbability);
-	out_probabilities.write(hypothesesProbabilities);
+		return theNet.FindNode(nodeName.c_str());
 }
 
+double SOMEvaluation::getNodeProbability(int nodeId) 
+{
+		theNet.GetNode(nodeId)->Value();
+		DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
+		DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
+		theCoordinates[0] = theNames->FindPosition("YES");
+		theCoordinates.GoToCurrentPosition();
+		double probability = theCoordinates.UncheckedValue();
+		return probability;
+}
 
 }//: namespace Network
 }//: namespace Processors

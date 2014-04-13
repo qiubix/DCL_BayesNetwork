@@ -51,11 +51,6 @@ public:
 protected:
     ///Input data streams
     Base::DataStreamIn<DSL_network> in_network;
-//	Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_instance;
-//	Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
-    
-//    Base::DataStreamIn< std::vector< std::map<int,int> > > in_models;
-//    Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
     Base::DataStreamIn< std::vector<int> > in_instanceMatchedFeatures;
     
     //Output data streams
@@ -82,28 +77,28 @@ protected:
     bool onStop();
 
     /// Event handlers
-    Base::EventHandler <SOMEvaluation> h_onModels;
     Base::EventHandler <SOMEvaluation> h_onNetwork;
     Base::EventHandler <SOMEvaluation> h_onInstance;
 
     /*!
      * Event handler function.
      */
-    void onModels();
     void onNetwork();
     void onInstance();
 
 private:
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
-//    std::vector < std::map<int,int> > models;
     std::vector <int> instance;
     std::vector <double> hypothesesProbabilities;
     
     DSL_network theNet;
-//    pcl::PointCloud<PointXYZSIFT>::Ptr instance;
     
     void evaluate();
+    void activateMatchedFeatureNodes();
+    void displayHypothesisProbability();
+    int findFeatureNode(int nodeId);
+    double getNodeProbability(int nodeId);
 };
 
 }//: namespace Network
