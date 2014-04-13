@@ -115,9 +115,9 @@ bool SIFTFeatureMatcher::onStop()
 
 void SIFTFeatureMatcher::onJointCloud()
 {
-    if(jointCloud == NULL) {
-		jointCloud = in_jointCloud.read();
-    }
+		if(jointCloud == NULL) {
+				jointCloud = in_jointCloud.read();
+		}
 }
 
 void SIFTFeatureMatcher::onInstances()
@@ -210,9 +210,9 @@ void SIFTFeatureMatcher::matchFeatures()
         featuresIndexes.push_back(featureIndex);
         LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
-    
-    LOG(LWARNING) << "Number of matched features: " << featuresIndexes.size();
-    out_featuresIndexes.write(featuresIndexes);
+
+	LOG(LWARNING) << "Number of matched features: " << featuresIndexes.size();
+	out_featuresIndexes.write(featuresIndexes);
 }
 
 }//: namespace Network

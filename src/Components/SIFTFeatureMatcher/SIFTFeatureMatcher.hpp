@@ -52,8 +52,8 @@ protected:
 
     /// Input data stream
     Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_jointCloud;
-    Base::DataStreamIn<std::vector<AbstractObject*> > in_instances;
-    Base::DataStreamIn<AbstractObject*> in_instance;
+    Base::DataStreamIn< std::vector<AbstractObject*> > in_instances;
+    Base::DataStreamIn< AbstractObject* > in_instance;
     Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_instanceCloud;
 
     /// Output data stream
