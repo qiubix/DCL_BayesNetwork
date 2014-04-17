@@ -97,12 +97,20 @@ protected:
 
 private:
     DSL_network theNet;
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
 
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
+    
+    unsigned int branchNodeCount;
+    unsigned int leafNodeCount;
+    unsigned int maxLeafContainerSize;
+    int nextId;
 
     DSL_network getNetwork();
+    void createBranchNode(pcl::octree::OctreeNode* node);
+    void createLeafNode(pcl::octree::OctreeNode* node);
 
     std::string getNodeName(int nodeHandle);
 
