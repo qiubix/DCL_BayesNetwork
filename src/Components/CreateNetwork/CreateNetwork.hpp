@@ -57,7 +57,7 @@ protected:
     /// Input data stream
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
-	Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+		Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
 
     /// Output data stream
     Base::DataStreamOut<DSL_network> out_network;
@@ -85,13 +85,12 @@ protected:
     /// Event handlers
     Base::EventHandler <CreateNetwork> h_onModels;
     Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
-	Base::EventHandler2 h_buildNetwork;
+		Base::EventHandler2 h_buildNetwork;
 
     /*!
      * Event handler function.
      */
-    void onModels();
-    void onJointMultiplicity();
+    void buildNetwork();
 
 private:
     DSL_network theNet;
@@ -106,9 +105,6 @@ private:
     unsigned int maxLeafContainerSize;
     int nextId;
     
-    void mapFeaturesNames();
-    void loadNetwork();
-    void buildNetwork();
     void exportNetwork();
 
     void addHypothesisNode();
@@ -127,6 +123,8 @@ private:
     int generateNext(std::string::iterator start, std::string::iterator end);
 
     std::string getNodeName(int nodeHandle);
+    void mapFeaturesNames();
+    void loadNetwork();
 };
 
 }//: namespace Network

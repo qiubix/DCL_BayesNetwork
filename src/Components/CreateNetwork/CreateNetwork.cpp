@@ -40,27 +40,17 @@ CreateNetwork::~CreateNetwork()
 
 void CreateNetwork::prepareInterface()
 {
-    LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
-
-//    h_onModels.setup(this, &CreateNetwork::onModels);
-//    registerHandler("onModels", &h_onModels);
-//    h_onJointMultiplicity.setup(this, &CreateNetwork::onJointMultiplicity);
-//    registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
-
-//    registerStream("in_models", &in_modelsMultiplicity);
-//    addDependency("onModels", &in_modelsMultiplicity);
-//    registerStream("in_jointMultiplicity", &in_jointMultiplicity);
-//    addDependency("onJointMultiplicity", &in_jointMultiplicity);
+	LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
 
 	// Register data streams.
-//	registerStream("in_cloud", &in_cloud_xyz);
+	//	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
 	// Register handlers
 	h_buildNetwork.setup(boost::bind(&CreateNetwork::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
 	addDependency("buildNetwork", &in_cloud_xyzsift);
-    
-    registerStream("out_network", &out_network);
+
+	registerStream("out_network", &out_network);
 }
 
 bool CreateNetwork::onInit()
@@ -85,45 +75,6 @@ bool CreateNetwork::onStart()
 {
     LOG(LTRACE) << "CreateNetwork::onStart\n";
     return true;
-}
-
-void CreateNetwork::onModels()
-{
-    LOG(LDEBUG) << "CreateNetwork::onModels";
-//    map<int,int> newModel = in_models.read();
-//    models.push_back(newModel);
-    models = in_modelsMultiplicity.read();
-    LOG(LDEBUG) << "CreateNetwork: Number of models: " << models.size();
-}
-
-void CreateNetwork::onJointMultiplicity()
-{
-	LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity";
-	jointMultiplicityVector = in_jointMultiplicity.read();
-	//TODO: FIXME: think of better way of synchronizing input dataports
-	if (theNet.GetNumberOfNodes() == 0 && !models.empty()) {
-		mapFeaturesNames();
-		buildNetwork();
-		exportNetwork();
-	}
-}
-
-void CreateNetwork::loadNetwork()
-{
-    int result = -1;
-    //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
-    //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
-    LOG(LWARNING) << "Reading network file: " << result;
-}
-
-void CreateNetwork::mapFeaturesNames()
-{
-    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
-        std::stringstream name;
-        name << "F" << i;
-        string featureName(name.str());
-        features.insert(std::make_pair<int,string>(i,featureName));
-    }
 }
 
 void CreateNetwork::buildNetwork() {
@@ -179,6 +130,8 @@ void CreateNetwork::buildNetwork() {
 
 	//	Delete octree data structure (pushes allocated nodes to memory pool!).
 	octree.deleteTree ();
+  
+  exportNetwork();
 }
 
 void CreateNetwork::exportNetwork()
@@ -427,6 +380,24 @@ int CreateNetwork::generateNext(std::string::iterator start, std::string::iterat
 string CreateNetwork::getNodeName(int nodeHandle)
 {
     return features[nodeHandle];
+}
+
+void CreateNetwork::loadNetwork()
+{
+    int result = -1;
+    //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
+    //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
+    LOG(LWARNING) << "Reading network file: " << result;
+}
+
+void CreateNetwork::mapFeaturesNames()
+{
+    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+        std::stringstream name;
+        name << "F" << i;
+        string featureName(name.str());
+        features.insert(std::make_pair<int,string>(i,featureName));
+    }
 }
 
 }//: namespace Network
