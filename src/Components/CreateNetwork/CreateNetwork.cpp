@@ -120,11 +120,11 @@ void CreateNetwork::buildNetwork() {
     
 		if (node->getNodeType () == BRANCH_NODE) {
 			LOG(LDEBUG) << "BRANCH";
-      createBranchNode(node);
+      createBranchNodeChildren(node);
 		}
     if (node->getNodeType () == LEAF_NODE) {
 			LOG(LINFO) << "LEAF";
-      createLeafNode(node);
+      createLeafNodeChildren(node);
 		}
 	}
 
@@ -160,7 +160,7 @@ void CreateNetwork::addHypothesisNode()
 	addNode(hypothesisName);
 }
 
-void CreateNetwork::createBranchNode(pcl::octree::OctreeNode* node) 
+void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node) 
 {
 	OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 	int parentId = branch_node->getContainer().getNodeId();
@@ -195,6 +195,8 @@ void CreateNetwork::createBranchNode(pcl::octree::OctreeNode* node)
 			}//:if leaf node
 		}//:if has child
 	}//:for children
+  
+  //TODO: replace with method call
 	stringstream name;
 	name << "V_" << parentId;
 	voxelName = name.str();
@@ -205,7 +207,7 @@ void CreateNetwork::createBranchNode(pcl::octree::OctreeNode* node)
 	branchNodeCount++;
 }
 
-void CreateNetwork::createLeafNode(pcl::octree::OctreeNode* node)
+void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
 	// Cast to proper data structure.
 	OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
@@ -235,8 +237,8 @@ void CreateNetwork::createLeafNode(pcl::octree::OctreeNode* node)
 	{
 		LOG(LDEBUG) << "Iteration number " << i << " Point index=" << point_indices[i];
 		PointXYZSIFT p = cloud->at(point_indices[i]);
-		LOG(LINFO) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
-		LOG(LINFO) << "multiplicity: " << p.multiplicity;
+		LOG(LDEBUG) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
+		LOG(LDEBUG) << "multiplicity: " << p.multiplicity;
 		LOG(LDEBUG) << "pointId " << p.pointId;
 		stringstream name;
 		name << "F_" << p.pointId;
@@ -258,6 +260,7 @@ void CreateNetwork::addVoxelNode(int id)
 	addNode(voxelName);
 }
 
+//TODO: make functionality more general
 void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
 {
 	stringstream name;
