@@ -160,6 +160,7 @@ void CreateNetwork::addHypothesisNode()
 	addNode(hypothesisName);
 }
 
+//TODO: refactor
 void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node) 
 {
 	OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
@@ -169,34 +170,17 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 	// iterate over all children
 	unsigned char child_idx;
 	int childrenCounter = 0;
-	string voxelName = "";
 	for (child_idx = 0; child_idx < 8 ; ++child_idx) {
 		if (branch_node->hasChild(child_idx)) {
 			LOG(LINFO) << "Child "<<(int)child_idx << "present";
 			childrenCounter++;
-			//					OctreeBranchNode* current_branch = octree->getBranchChildPtr(*current_branch, child_idx);
 			OctreeNode* child = branch_node->getChildPtr(child_idx);
-			if(child->getNodeType() == BRANCH_NODE) {
-				OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
-				child_node->getContainer().setNodeId(nextId++);
-				int currentId = nextId - 1;
-				addVoxelNode(currentId);
-				addArc(currentId, parentId);
-				LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
-			}
-			if(child->getNodeType() == LEAF_NODE) {
-				////                        LOG(LWARNING) << "adding child of tyle leaf node";
-				OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
-				child_node->getContainer().setNodeId(nextId++);
-				int currentId = nextId - 1;
-				addVoxelNode(currentId);
-				addArc(currentId, parentId);
-				LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
-			}//:if leaf node
+      createChild(child, parentId);
 		}//:if has child
 	}//:for children
   
   //TODO: replace with method call
+	string voxelName = "";
 	stringstream name;
 	name << "V_" << parentId;
 	voxelName = name.str();
@@ -207,6 +191,7 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 	branchNodeCount++;
 }
 
+//TODO: refactor
 void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
 	// Cast to proper data structure.
@@ -250,6 +235,26 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 	}//: for points		
   setVoxelNodeCPT(parentId, featuresCoefficients, childrenCounter);
 	leafNodeCount++;
+}
+
+void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
+{
+	if(child->getNodeType() == BRANCH_NODE) {
+		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
+		child_node->getContainer().setNodeId(nextId++);
+		int currentId = nextId - 1;
+		addVoxelNode(currentId);
+		addArc(currentId, parentId);
+		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
+	}
+	if(child->getNodeType() == LEAF_NODE) {
+		OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
+		child_node->getContainer().setNodeId(nextId++);
+		int currentId = nextId - 1;
+		addVoxelNode(currentId);
+		addArc(currentId, parentId);
+		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
+	}
 }
 
 void CreateNetwork::addVoxelNode(int id)
@@ -310,6 +315,7 @@ void CreateNetwork::addArc(string parentName, int currentId)
     theNet.AddArc(parentNode, childNode);
 }
 
+//TODO: split into two methods: calculating probability and actually setting node's cpt
 void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 {
 	LOG(LDEBUG) << "Set node CPT: " << name;
