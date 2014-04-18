@@ -115,9 +115,9 @@ bool SIFTFeatureMatcher::onStop()
 
 void SIFTFeatureMatcher::onJointCloud()
 {
-    if(jointCloud == NULL) {
-		jointCloud = in_jointCloud.read();
-    }
+		if(jointCloud == NULL) {
+				jointCloud = in_jointCloud.read();
+		}
 }
 
 void SIFTFeatureMatcher::onInstances()
@@ -169,7 +169,7 @@ void SIFTFeatureMatcher::matchFeatures()
 
 	LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
 
-	if ( correspondences -> size() > 4 ) {
+	if ( correspondences -> size() > 20 ) {
 		//ransac znalezienie blednych dopasowan
 		pcl::Correspondences inliers ;
 		pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
@@ -210,9 +210,9 @@ void SIFTFeatureMatcher::matchFeatures()
         featuresIndexes.push_back(featureIndex);
         LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
-    
-    LOG(LINFO) << "Number of matched features: " << featuresIndexes.size();
-    out_featuresIndexes.write(featuresIndexes);
+
+	LOG(LWARNING) << "Number of matched features: " << featuresIndexes.size();
+	out_featuresIndexes.write(featuresIndexes);
 }
 
 }//: namespace Network

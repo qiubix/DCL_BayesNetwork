@@ -12,3 +12,11 @@ http://genie.sis.pitt.edu/index.php/downloads
 
 PCL library:
 http://pointclouds.org/
+
+OpenCV library:
+http://opencv.org/
+
+
+#### Another DCL dependencies:
+* CvBasic
+* PCL
