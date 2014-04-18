@@ -57,7 +57,7 @@ protected:
     /// Input data stream
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
     Base::DataStreamIn< vector<int> > in_jointMultiplicity;
-	Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+		Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
 
     /// Output data stream
     Base::DataStreamOut<DSL_network> out_network;
@@ -85,41 +85,47 @@ protected:
     /// Event handlers
     Base::EventHandler <CreateNetwork> h_onModels;
     Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
-	Base::EventHandler2 h_buildNetwork;
+		Base::EventHandler2 h_buildNetwork;
 
     /*!
      * Event handler function.
      */
-    void onModels();
-    void onJointMultiplicity();
-	void cloud_xyzsift_to_octree();
     void buildNetwork();
 
 private:
     DSL_network theNet;
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
 
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
     std::vector < std::map<int,int> > models;
+    
+    unsigned int branchNodeCount;
+    unsigned int leafNodeCount;
+    unsigned int maxLeafContainerSize;
+    int nextId;
+    
+    void exportNetwork();
 
-    DSL_network getNetwork();
-
-    std::string getNodeName(int nodeHandle);
+    void addHypothesisNode();
+    void createBranchNodeChildren(pcl::octree::OctreeNode* node);
+    void createLeafNodeChildren(pcl::octree::OctreeNode* node);
+    
+    void createChild(pcl::octree::OctreeNode* child, int parentId);
+    void addVoxelNode(int id);
+    void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
     void addNode(string name);
-
-    void setNodeCPT(string name, int numberOfParents);
-    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
-
-    void mapFeaturesNames();
-
-    void loadNetwork();
-
-    void exportNetwork();
     
     void addArc(int parentId, int currentId);
     void addArc(string parentName, int currentId);
+    void setNodeCPT(string name, int numberOfParents);
+    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
     int generateNext(std::string::iterator start, std::string::iterator end);
+
+    std::string getNodeName(int nodeHandle);
+    void mapFeaturesNames();
+    void loadNetwork();
 };
 
 }//: namespace Network
