@@ -63,41 +63,27 @@ void CreateNetwork::prepareInterface()
     registerStream("out_network", &out_network);
 }
 
-DSL_network CreateNetwork::getNetwork()
-{
-    return this->theNet;
-}
-
-string CreateNetwork::getNodeName(int nodeHandle)
-{
-    return features[nodeHandle];
-}
-
 bool CreateNetwork::onInit()
 {
     LOG(LTRACE) << "CreateNetwork::initialize\n";
-
     return true;
 }
 
 bool CreateNetwork::onFinish()
 {
     LOG(LTRACE) << "CreateNetwork::finish\n";
-
     return true;
 }
 
 bool CreateNetwork::onStop()
 {
     LOG(LTRACE) << "CreateNetwork::onStop\n";
-
     return true;
 }
 
 bool CreateNetwork::onStart()
 {
     LOG(LTRACE) << "CreateNetwork::onStart\n";
-
     return true;
 }
 
@@ -141,11 +127,12 @@ void CreateNetwork::mapFeaturesNames()
 }
 
 void CreateNetwork::buildNetwork() {
+	LOG(LTRACE) << "CreateNetwork::buildNetwork";
+  
 	if(theNet.GetNumberOfNodes() != 0) {
 		return;
 	}
 
-	LOG(LTRACE) << "CreateNetwork::buildNetwork";
 	// Read from dataport.
 	cloud = in_cloud_xyzsift.read();
 
@@ -204,117 +191,6 @@ void CreateNetwork::exportNetwork()
 	theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
 	LOG(LDEBUG) << "after writing network to file";
 	out_network.write(theNet);
-}
-
-void CreateNetwork::addNode(std::string name)
-{
-    LOG(LDEBUG) << "Add node to network: " << name;
-    int newNode = theNet.AddNode(DSL_CPT, name.c_str());
-    DSL_idArray outcomes;
-    std::vector<string> outcomesNames;
-    outcomesNames.push_back("YES");
-    outcomesNames.push_back("NO");
-    for (int i=0; i<outcomesNames.size(); i++) {
-        outcomes.Add(outcomesNames[i].c_str());
-    }
-    theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
-}
-
-void CreateNetwork::addArc(int parentId, int currentId)
-{
-	stringstream childNameStr;
-	childNameStr << "V_" << currentId;
-	string childName(childNameStr.str());
-    int childNode = theNet.FindNode(childName.c_str());
-    stringstream parentNameStr;
-    parentNameStr << "V_" << parentId;
-    string parentName(parentNameStr.str());
-    int parentNode = theNet.FindNode(parentName.c_str());
-    theNet.AddArc(parentNode, childNode);
-}
-
-void CreateNetwork::addArc(string parentName, int currentId)
-{
-	stringstream childNameStr;
-	childNameStr << "V_" << currentId;
-	string childName(childNameStr.str());
-    int childNode = theNet.FindNode(childName.c_str());
-    int parentNode = theNet.FindNode(parentName.c_str());
-    theNet.AddArc(parentNode, childNode);
-}
-
-void CreateNetwork::setNodeCPT(string name, int numberOfParents)
-{
-    LOG(LDEBUG) << "Set node CPT: " << name;
-    std::vector<double> probabilities;
-    std::string s(numberOfParents,'1');
-    do {
-        int ones = std::count(s.begin(),s.end(),'1');
-        double probability = (double) ones/numberOfParents;
-//        LOG(LWARNING) << "Probability: " << probability;
-        probabilities.push_back(probability);
-        probabilities.push_back(1-probability);
-    } while(generateNext(s.begin(), s.end()));
-    
-    
-    int node = theNet.FindNode(name.c_str());
-    DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
-
-    std::vector<double>::iterator it = probabilities.begin();
-    do {
-        theCoordinates.UncheckedValue() = *it;
-        LOG(LDEBUG) << "Probability: " << *it;
-        ++it;
-    } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
-}
-
-void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
-{
-    LOG(LDEBUG) << "Set node CPT: " << name;
-    std::vector<double> probabilities;
-    std::string s(parentsCoefficients.size(),'1');
-    do {
-        int ones = std::count(s.begin(),s.end(),'1');
-        double probability = 0; //(double) ones/numberOfParents;
-        for(unsigned i=0; i<parentsCoefficients.size(); ++i) {
-            if(s.at(i) == '1') {
-                probability += parentsCoefficients[i];
-            }
-        }
-        probability = probability/parentsCoefficients.size();
-//        LOG(LWARNING) << "Probability: " << probability;
-        probabilities.push_back(probability);
-        probabilities.push_back(1-probability);
-    } while(generateNext(s.begin(), s.end()));
-    
-    
-    int node = theNet.FindNode(name.c_str());
-    DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
-
-    std::vector<double>::iterator it = probabilities.begin();
-    do {
-        theCoordinates.UncheckedValue() = *it;
-        LOG(LDEBUG) << "Probability: " << *it;
-        ++it;
-    } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
-}
-
-int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
-{
-	while(start != end)
-	{
-		--end;
-		if ((*end & 1) == 1)
-		{
-			--*end;
-			return true;
-		}
-		else
-		{
-			++*end;
-		}
-	}
-	return false;
 }
 
 void CreateNetwork::addHypothesisNode() 
@@ -439,6 +315,118 @@ void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoeffici
 	LOG(LDEBUG) << "children count: " <<childrenCounter;
 	setNodeCPT(voxelName, featuresCoefficients);
 	//            setNodeCPT(voxelName, childrenCounter);
+}
+
+void CreateNetwork::addNode(std::string name)
+{
+    LOG(LDEBUG) << "Add node to network: " << name;
+    int newNode = theNet.AddNode(DSL_CPT, name.c_str());
+    DSL_idArray outcomes;
+    std::vector<string> outcomesNames;
+    outcomesNames.push_back("YES");
+    outcomesNames.push_back("NO");
+    for (int i=0; i<outcomesNames.size(); i++) {
+        outcomes.Add(outcomesNames[i].c_str());
+    }
+    theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
+}
+
+void CreateNetwork::addArc(int parentId, int currentId)
+{
+	stringstream childNameStr;
+	childNameStr << "V_" << currentId;
+	string childName(childNameStr.str());
+    int childNode = theNet.FindNode(childName.c_str());
+    stringstream parentNameStr;
+    parentNameStr << "V_" << parentId;
+    string parentName(parentNameStr.str());
+    int parentNode = theNet.FindNode(parentName.c_str());
+    theNet.AddArc(parentNode, childNode);
+}
+
+void CreateNetwork::addArc(string parentName, int currentId)
+{
+	stringstream childNameStr;
+	childNameStr << "V_" << currentId;
+	string childName(childNameStr.str());
+    int childNode = theNet.FindNode(childName.c_str());
+    int parentNode = theNet.FindNode(parentName.c_str());
+    theNet.AddArc(parentNode, childNode);
+}
+
+void CreateNetwork::setNodeCPT(string name, int numberOfParents)
+{
+	LOG(LDEBUG) << "Set node CPT: " << name;
+	std::vector<double> probabilities;
+	std::string s(numberOfParents,'1');
+	do {
+		int ones = std::count(s.begin(),s.end(),'1');
+		double probability = (double) ones/numberOfParents;
+		probabilities.push_back(probability);
+		probabilities.push_back(1-probability);
+	} while(generateNext(s.begin(), s.end()));
+
+	int node = theNet.FindNode(name.c_str());
+	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
+
+	std::vector<double>::iterator it = probabilities.begin();
+	do {
+		theCoordinates.UncheckedValue() = *it;
+		LOG(LDEBUG) << "Probability: " << *it;
+		++it;
+	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+}
+
+void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
+{
+	LOG(LDEBUG) << "Set node CPT: " << name;
+	std::vector<double> probabilities;
+	std::string s(parentsCoefficients.size(),'1');
+	do {
+		int ones = std::count(s.begin(),s.end(),'1');
+		double probability = 0; //(double) ones/numberOfParents;
+		for(unsigned i=0; i<parentsCoefficients.size(); ++i) {
+			if(s.at(i) == '1') {
+				probability += parentsCoefficients[i];
+			}
+		}
+		probability = probability/parentsCoefficients.size();
+		probabilities.push_back(probability);
+		probabilities.push_back(1-probability);
+	} while(generateNext(s.begin(), s.end()));
+
+	int node = theNet.FindNode(name.c_str());
+	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
+
+	std::vector<double>::iterator it = probabilities.begin();
+	do {
+		theCoordinates.UncheckedValue() = *it;
+		LOG(LDEBUG) << "Probability: " << *it;
+		++it;
+	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+}
+
+int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
+{
+	while(start != end)
+	{
+		--end;
+		if ((*end & 1) == 1)
+		{
+			--*end;
+			return true;
+		}
+		else
+		{
+			++*end;
+		}
+	}
+	return false;
+}
+
+string CreateNetwork::getNodeName(int nodeHandle)
+{
+    return features[nodeHandle];
 }
 
 }//: namespace Network

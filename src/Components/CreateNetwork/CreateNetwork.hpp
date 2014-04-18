@@ -92,8 +92,6 @@ protected:
      */
     void onModels();
     void onJointMultiplicity();
-	void cloud_xyzsift_to_octree();
-    void buildNetwork();
 
 private:
     DSL_network theNet;
@@ -107,30 +105,28 @@ private:
     unsigned int leafNodeCount;
     unsigned int maxLeafContainerSize;
     int nextId;
+    
+    void mapFeaturesNames();
+    void loadNetwork();
+    void buildNetwork();
+    void exportNetwork();
 
-    DSL_network getNetwork();
+    void addHypothesisNode();
     void createBranchNode(pcl::octree::OctreeNode* node);
     void createLeafNode(pcl::octree::OctreeNode* node);
-    void addHypothesisNode();
+    
     void addVoxelNode(int id);
     void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
-    std::string getNodeName(int nodeHandle);
-
     void addNode(string name);
-
-    void setNodeCPT(string name, int numberOfParents);
-    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
-
-    void mapFeaturesNames();
-
-    void loadNetwork();
-
-    void exportNetwork();
     
     void addArc(int parentId, int currentId);
     void addArc(string parentName, int currentId);
+    void setNodeCPT(string name, int numberOfParents);
+    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
     int generateNext(std::string::iterator start, std::string::iterator end);
+
+    std::string getNodeName(int nodeHandle);
 };
 
 }//: namespace Network
