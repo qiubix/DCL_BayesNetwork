@@ -112,14 +112,14 @@ void CreateNetwork::onModels()
 
 void CreateNetwork::onJointMultiplicity()
 {
-    LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity";
+	LOG(LDEBUG) << "CreateNetwork::onJointMultiplicity";
 	jointMultiplicityVector = in_jointMultiplicity.read();
-    //TODO: FIXME: think of better way of synchronizing input dataports
-    if (theNet.GetNumberOfNodes() == 0 && !models.empty()) {
+	//TODO: FIXME: think of better way of synchronizing input dataports
+	if (theNet.GetNumberOfNodes() == 0 && !models.empty()) {
 		mapFeaturesNames();
 		buildNetwork();
 		exportNetwork();
-    }
+	}
 }
 
 void CreateNetwork::loadNetwork()
@@ -138,6 +138,72 @@ void CreateNetwork::mapFeaturesNames()
         string featureName(name.str());
         features.insert(std::make_pair<int,string>(i,featureName));
     }
+}
+
+void CreateNetwork::buildNetwork() {
+	if(theNet.GetNumberOfNodes() != 0) {
+		return;
+	}
+
+	LOG(LTRACE) << "CreateNetwork::buildNetwork";
+	// Read from dataport.
+	cloud = in_cloud_xyzsift.read();
+
+	// Set voxel resolution.
+	float voxelSize = 0.01f;
+	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
+	// Set input cloud.
+	octree.setInputCloud(cloud);
+	// Calculate bounding box of input cloud.
+	octree.defineBoundingBox();
+
+	// Add points from input cloud to octree.
+	octree.addPointsFromInputCloud ();
+
+  addHypothesisNode();
+
+	// Use breadth-first iterator
+	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
+	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
+
+	// Root node
+	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
+	if(node->getNodeType() == BRANCH_NODE) {
+		OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
+		branch_node->getContainer().setNodeId(nextId);
+		nextId++;
+		LOG(LINFO) << "root id: " << branch_node->getContainer().getNodeId();
+	}
+
+	for (; bfIt != bfIt_end; ++bfIt)
+	{
+		LOG(LINFO) << "depth = " << bfIt.getCurrentOctreeDepth ();
+		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
+    
+		if (node->getNodeType () == BRANCH_NODE) {
+			LOG(LDEBUG) << "BRANCH";
+      createBranchNode(node);
+		}
+    if (node->getNodeType () == LEAF_NODE) {
+			LOG(LINFO) << "LEAF";
+      createLeafNode(node);
+		}
+	}
+
+	//	Delete octree data structure (pushes allocated nodes to memory pool!).
+	octree.deleteTree ();
+}
+
+void CreateNetwork::exportNetwork()
+{
+	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
+	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
+	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
+
+	LOG(LDEBUG) << "before writing network to file";
+	theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
+	LOG(LDEBUG) << "after writing network to file";
+	out_network.write(theNet);
 }
 
 void CreateNetwork::addNode(std::string name)
@@ -175,24 +241,6 @@ void CreateNetwork::addArc(string parentName, int currentId)
     int childNode = theNet.FindNode(childName.c_str());
     int parentNode = theNet.FindNode(parentName.c_str());
     theNet.AddArc(parentNode, childNode);
-}
-
-int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
-{
-	while(start != end)
-	{
-		--end;
-		if ((*end & 1) == 1)
-		{
-			--*end;
-			return true;
-		}
-		else
-		{
-			++*end;
-		}
-	}
-	return false;
 }
 
 void CreateNetwork::setNodeCPT(string name, int numberOfParents)
@@ -251,33 +299,27 @@ void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficie
     } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
-void CreateNetwork::buildNetwork() {
-	if(theNet.GetNumberOfNodes() != 0) {
-		return;
+int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
+{
+	while(start != end)
+	{
+		--end;
+		if ((*end & 1) == 1)
+		{
+			--*end;
+			return true;
+		}
+		else
+		{
+			++*end;
+		}
 	}
+	return false;
+}
 
-	LOG(LTRACE) << "CreateNetwork::buildNetwork";
-	// Read from dataport.
-	cloud = in_cloud_xyzsift.read();
-
-	// Set voxel resolution.
-	float voxelSize = 0.01f;
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
-	// Set input cloud.
-	octree.setInputCloud(cloud);
-	// Calculate bounding box of input cloud.
-	octree.defineBoundingBox();
-
-	// Add points from input cloud to octree.
-	octree.addPointsFromInputCloud ();
-
-
+void CreateNetwork::addHypothesisNode() 
+{
 	int modelId = 0;
-//	int nextId = 0;
-//	unsigned int lastDepth = 0;
-//	unsigned int branchNodeCount = 0;
-//	unsigned int leafNodeCount = 0;
-//	unsigned int maxLeafContainerSize = 0;
 //	int summedFeaturesMultiplicity = 0;
 	//    for(unsigned i=0; i<cloud->size(); ++i) {
 	//        summedFeaturesMultiplicity += cloud->at(i).multiplicity;
@@ -287,49 +329,6 @@ void CreateNetwork::buildNetwork() {
 	name << "V_" << modelId;
 	string hypothesisName(name.str());
 	addNode(hypothesisName);
-
-	// Use breadth-first iterator
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
-	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
-
-	// Root node
-	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
-	if(node->getNodeType() == BRANCH_NODE) {
-		OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
-		branch_node->getContainer().setNodeId(nextId);
-		nextId++;
-		LOG(LINFO) << "root id: " << branch_node->getContainer().getNodeId();
-	}
-
-	for (; bfIt != bfIt_end; ++bfIt)
-	{
-		LOG(LINFO) << "depth = " << bfIt.getCurrentOctreeDepth ();
-		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
-		if (node->getNodeType () == BRANCH_NODE) {
-			// current node is a branch node
-			LOG(LDEBUG) << "BRANCH";
-      createBranchNode(node);
-		}//: if branch
-
-		if (node->getNodeType () == LEAF_NODE) 
-		{
-			// Current node is a branch node.
-			LOG(LINFO) << "LEAF";
-      createLeafNode(node);
-		}//: if leaf
-	}//: for nodes
-
-	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
-	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
-	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
-
-	LOG(LWARNING) << "before writing network to file";
-	theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
-	LOG(LWARNING) << "after writing network to file";
-	out_network.write(theNet);
-
-	//	Delete octree data structure (pushes allocated nodes to memory pool!).
-	octree.deleteTree ();
 }
 
 void CreateNetwork::createBranchNode(pcl::octree::OctreeNode* node) 
@@ -352,10 +351,7 @@ void CreateNetwork::createBranchNode(pcl::octree::OctreeNode* node)
 				OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
 				child_node->getContainer().setNodeId(nextId++);
 				int currentId = nextId - 1;
-				stringstream name;
-				name << "V_" << currentId;
-				voxelName = name.str();
-				addNode(voxelName);
+				addVoxelNode(currentId);
 				addArc(currentId, parentId);
 				LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 			}
@@ -364,10 +360,7 @@ void CreateNetwork::createBranchNode(pcl::octree::OctreeNode* node)
 				OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
 				child_node->getContainer().setNodeId(nextId++);
 				int currentId = nextId - 1;
-				stringstream name;
-				name << "V_" << currentId;
-				voxelName = name.str();
-				addNode(voxelName);
+				addVoxelNode(currentId);
 				addArc(currentId, parentId);
 				LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 			}//:if leaf node
@@ -424,21 +417,28 @@ void CreateNetwork::createLeafNode(pcl::octree::OctreeNode* node)
 		double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
+  setVoxelNodeCPT(parentId, featuresCoefficients, childrenCounter);
+	leafNodeCount++;
+}
+
+void CreateNetwork::addVoxelNode(int id)
+{
 	stringstream name;
-	name << "V_" << parentId;
+	name << "V_" << id;
 	string voxelName = name.str();
-	LOG(LDEBUG) << "voxel ID: " << parentId;
+	addNode(voxelName);
+}
+
+void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
+{
+	stringstream name;
+	name << "V_" << id;
+	string voxelName = name.str();
+	LOG(LDEBUG) << "voxel ID: " << id;
 	LOG(LDEBUG) << "voxel name: " << voxelName;
 	LOG(LDEBUG) << "children count: " <<childrenCounter;
 	setNodeCPT(voxelName, featuresCoefficients);
 	//            setNodeCPT(voxelName, childrenCounter);
-	leafNodeCount++;
-}
-
-void CreateNetwork::exportNetwork()
-{
-    theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
-    out_network.write(theNet);
 }
 
 }//: namespace Network

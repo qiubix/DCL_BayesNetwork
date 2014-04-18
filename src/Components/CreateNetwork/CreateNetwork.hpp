@@ -111,6 +111,9 @@ private:
     DSL_network getNetwork();
     void createBranchNode(pcl::octree::OctreeNode* node);
     void createLeafNode(pcl::octree::OctreeNode* node);
+    void addHypothesisNode();
+    void addVoxelNode(int id);
+    void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
     std::string getNodeName(int nodeHandle);
 
