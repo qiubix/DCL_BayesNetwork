@@ -78,7 +78,7 @@ bool CreateNetwork::onStart()
 }
 
 void CreateNetwork::buildNetwork() {
-	LOG(LTRACE) << "CreateNetwork::buildNetwork";
+	LOG(LDEBUG) << "CreateNetwork::buildNetwork";
   
 	if(theNet.GetNumberOfNodes() != 0) {
 		return;

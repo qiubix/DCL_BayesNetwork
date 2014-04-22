@@ -80,7 +80,7 @@ void SOMEvaluation::onNetwork()
 
 void SOMEvaluation::onInstance()
 {
-	LOG(LWARNING) << "SOMEvaluation::onInstance";
+	LOG(LDEBUG) << "SOMEvaluation::onInstance";
 	if(theNet.GetNumberOfNodes() != 0) {
 		instance = in_instanceMatchedFeatures.read();
 		evaluate();
@@ -102,6 +102,7 @@ void SOMEvaluation::evaluate()
 		displayHypothesisProbability();
     
 		LOG(LINFO) << " runtime: " << timer.elapsed();
+    LOG(LDEBUG) << "SOMEvaluation finished";
 }
 
 void SOMEvaluation::activateMatchedFeatureNodes()

@@ -199,7 +199,7 @@ void SIFTFeatureMatcher::matchFeatures()
 		}
 	}
 
-	LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << jointCloud->size() << " keypoints";
+	LOG(LDEBUG) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << jointCloud->size() << " keypoints";
 
 	for(int i = 0; i< correspondences->size();i++){	
 		if (correspondences->at(i).index_query >=jointCloud->size() ||
@@ -211,7 +211,7 @@ void SIFTFeatureMatcher::matchFeatures()
         LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
 
-	LOG(LWARNING) << "Number of matched features: " << featuresIndexes.size();
+	LOG(LDEBUG) << "Number of matched features: " << featuresIndexes.size();
 	out_featuresIndexes.write(featuresIndexes);
 }
 
