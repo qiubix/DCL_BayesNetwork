@@ -94,7 +94,7 @@ void SOMEvaluation::onNetwork()
 
 void SOMEvaluation::onInstance()
 {
-	LOG(LWARNING) << "SOMEvaluation::onInstance";
+	LOG(LINFO) << "SOMEvaluation::onInstance";
 	if(theNet.GetNumberOfNodes() != 0) {
 		instance = in_instanceMatchedFeatures.read();
 		evaluate();
@@ -104,12 +104,26 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
 	LOG(LTRACE) << "SOMEvaluation::evaluate";
-    LOG(LWARNING) << "instance size: " << instance.size();
+    LOG(LINFO) << "instance size: " << instance.size();
     Common::Timer timer;
     timer.restart();
 //    clock_t startTime, endTime;
 //    startTime = clock();
     theNet.ClearAllEvidence();
+	int nodeId = 0;
+    while(true) {
+        std::stringstream ss;
+        ss << "F_" << nodeId;
+        std::string nodeName(ss.str());
+        int node = theNet.FindNode(nodeName.c_str());
+        if(node != DSL_OUT_OF_RANGE) {
+            theNet.GetNode(node)->Value()->SetEvidence(1);
+        }
+        else {
+            break;
+        }
+        nodeId++;
+    }
     for (unsigned i=0; i<instance.size(); ++i) {
         int nodeId = instance[i];
         std::stringstream ss;

@@ -98,7 +98,6 @@ private:
     pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud;
     pcl::PointCloud<PointXYZSIFT>::Ptr instance;
     std::vector <int> featuresIndexes;
-    
     void matchFeatures();
 
 };

@@ -211,6 +211,13 @@ void CreateNetwork::addNode(std::string name)
         outcomes.Add(outcomesNames[i].c_str());
     }
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
+    
+//    if(name[0] == 'F') {
+//        DSL_sysCoordinates theCoordinates(*theNet.GetNode(newNode)->Definition());
+//        theCoordinates.UncheckedValue() = 0;
+//        theCoordinates.Next();
+//        theCoordinates.UncheckedValue() = 1;
+//    }
 }
 
 void CreateNetwork::addArc(int parentId, int currentId)

@@ -150,7 +150,7 @@ void SIFTFeatureMatcher::onInstanceCloud()
     }
     
     instance = in_instanceCloud.read();
-    LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
+    LOG(LINFO) << "Instance cloud size: " << instance -> size();
     matchFeatures();
 }
 
@@ -201,6 +201,7 @@ void SIFTFeatureMatcher::matchFeatures()
 
 	LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << jointCloud->size() << " keypoints";
 
+//    std::vector <int> featuresIndexes;
 	for(int i = 0; i< correspondences->size();i++){	
 		if (correspondences->at(i).index_query >=jointCloud->size() ||
 		        correspondences->at(i).index_match >=instance->size()){
@@ -211,7 +212,7 @@ void SIFTFeatureMatcher::matchFeatures()
         LOG(LDEBUG) << "Index of matching feature: " << featureIndex;
 	}
     
-    LOG(LWARNING) << "Number of matched features: " << featuresIndexes.size();
+    LOG(LINFO) << "Number of matched features: " << featuresIndexes.size();
     out_featuresIndexes.write(featuresIndexes);
 }
 
