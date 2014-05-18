@@ -19,5 +19,8 @@ dist/
 # user files 
 *.user
 
+# swap files
+*.swp
+
 # output network
 out_network.xdsl
