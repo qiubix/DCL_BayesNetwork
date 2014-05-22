@@ -222,8 +222,9 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 		LOG(LDEBUG) << "pointId " << p.pointId;
     
     string featureName = createFeatureName(p.pointId);
+    string parentName = createVoxelName(parentId);
 		addNode(featureName);
-		addArc(featureName, parentId);
+		addArc(featureName, parentName);
 		double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
@@ -252,7 +253,7 @@ void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
   }
 	int currentId = nextId - 1;
 	addVoxelNode(currentId);
-	addArc(currentId, parentId);
+	addArc(createVoxelName(currentId), createVoxelName(parentId));
 }
 
 void CreateNetwork::addVoxelNode(int id)
@@ -301,19 +302,8 @@ void CreateNetwork::addNode(std::string name)
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
-//TODO: REFACTOR: remove duplication of addArc methods and call methods for determining names (if it's really necessary to create this names here)
-void CreateNetwork::addArc(int parentId, int currentId)
+void CreateNetwork::addArc(string parentName, string childName)
 {
-	string childName = createVoxelName(currentId);
-	int childNode = theNet.FindNode(childName.c_str());
-	string parentName = createVoxelName(parentId);
-	int parentNode = theNet.FindNode(parentName.c_str());
-	theNet.AddArc(parentNode, childNode);
-}
-
-void CreateNetwork::addArc(string parentName, int currentId)
-{
-	string childName = createVoxelName(currentId);
 	int childNode = theNet.FindNode(childName.c_str());
 	int parentNode = theNet.FindNode(parentName.c_str());
 	theNet.AddArc(parentNode, childNode);

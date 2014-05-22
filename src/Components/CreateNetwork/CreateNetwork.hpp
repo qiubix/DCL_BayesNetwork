@@ -119,8 +119,7 @@ private:
 
     void addNode(string name);
     
-    void addArc(int parentId, int currentId);
-    void addArc(string parentName, int currentId);
+    void addArc(string parentName, string childName);
     void setNodeCPT(string name, int numberOfParents);
     void setNodeCPT(string name, std::vector<double> parentsCoefficients);
     void fillCPT(string name, std::vector<double> probabilities);
