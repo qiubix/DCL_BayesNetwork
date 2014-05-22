@@ -114,6 +114,7 @@ private:
     void createChild(pcl::octree::OctreeNode* child, int parentId);
     void addVoxelNode(int id);
     string createVoxelName(int id);
+    string createFeatureName(int id);
     void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
     void addNode(string name);
@@ -122,6 +123,7 @@ private:
     void addArc(string parentName, int currentId);
     void setNodeCPT(string name, int numberOfParents);
     void setNodeCPT(string name, std::vector<double> parentsCoefficients);
+    void fillCPT(string name, std::vector<double> probabilities);
     int generateNext(std::string::iterator start, std::string::iterator end);
 
     std::string getNodeName(int nodeHandle);

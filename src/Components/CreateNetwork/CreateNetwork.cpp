@@ -193,15 +193,11 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 //TODO: refactor
 void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
-	// Cast to proper data structure.
 	OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
-	// Get container size.
 	int containter_size = leaf_node->getContainer().getSize();
-	// Check whether size is proper.
 	if(containter_size >8) {
-		LOG(LERROR) << "Leaf containter too big! (" << containter_size << ")";
+		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
 	}//: if
-	// Get maximum size of container.	
 	if(containter_size > maxLeafContainerSize)
 		maxLeafContainerSize = containter_size;
 
@@ -224,9 +220,8 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 		LOG(LDEBUG) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
 		LOG(LDEBUG) << "multiplicity: " << p.multiplicity;
 		LOG(LDEBUG) << "pointId " << p.pointId;
-		stringstream name;
-		name << "F_" << p.pointId;
-		string featureName(name.str());
+    
+    string featureName = createFeatureName(p.pointId);
 		addNode(featureName);
 		addArc(featureName, parentId);
 		double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
@@ -240,25 +235,24 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 	leafNodeCount++;
 }
 
-//TODO: REFACTOR: remove duplication
 void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
 {
 	if(child->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
 		child_node->getContainer().setNodeId(nextId++);
-		int currentId = nextId - 1;
-		addVoxelNode(currentId);
-		addArc(currentId, parentId);
 		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 	}
-	if(child->getNodeType() == LEAF_NODE) {
+	else if(child->getNodeType() == LEAF_NODE) {
 		OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
 		child_node->getContainer().setNodeId(nextId++);
-		int currentId = nextId - 1;
-		addVoxelNode(currentId);
-		addArc(currentId, parentId);
 		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 	}
+  else {
+    return;
+  }
+	int currentId = nextId - 1;
+	addVoxelNode(currentId);
+	addArc(currentId, parentId);
 }
 
 void CreateNetwork::addVoxelNode(int id)
@@ -275,6 +269,14 @@ string CreateNetwork::createVoxelName(int id)
 	name << "V_" << id;
 	string voxelName = name.str();
   return voxelName;
+}
+
+string CreateNetwork::createFeatureName(int id)
+{
+	stringstream name;
+	name << "F_" << id;
+	string featureName(name.str());
+	return featureName;
 }
 
 //TODO: make functionality more general
@@ -299,27 +301,22 @@ void CreateNetwork::addNode(std::string name)
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
+//TODO: REFACTOR: remove duplication of addArc methods and call methods for determining names (if it's really necessary to create this names here)
 void CreateNetwork::addArc(int parentId, int currentId)
 {
-	stringstream childNameStr;
-	childNameStr << "V_" << currentId;
-	string childName(childNameStr.str());
-    int childNode = theNet.FindNode(childName.c_str());
-    stringstream parentNameStr;
-    parentNameStr << "V_" << parentId;
-    string parentName(parentNameStr.str());
-    int parentNode = theNet.FindNode(parentName.c_str());
-    theNet.AddArc(parentNode, childNode);
+	string childName = createVoxelName(currentId);
+	int childNode = theNet.FindNode(childName.c_str());
+	string parentName = createVoxelName(parentId);
+	int parentNode = theNet.FindNode(parentName.c_str());
+	theNet.AddArc(parentNode, childNode);
 }
 
 void CreateNetwork::addArc(string parentName, int currentId)
 {
-	stringstream childNameStr;
-	childNameStr << "V_" << currentId;
-	string childName(childNameStr.str());
-    int childNode = theNet.FindNode(childName.c_str());
-    int parentNode = theNet.FindNode(parentName.c_str());
-    theNet.AddArc(parentNode, childNode);
+	string childName = createVoxelName(currentId);
+	int childNode = theNet.FindNode(childName.c_str());
+	int parentNode = theNet.FindNode(parentName.c_str());
+	theNet.AddArc(parentNode, childNode);
 }
 
 //TODO: split into two methods: calculating probability and actually setting node's cpt
@@ -335,15 +332,7 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 		probabilities.push_back(1-probability);
 	} while(generateNext(s.begin(), s.end()));
 
-	int node = theNet.FindNode(name.c_str());
-	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
-
-	std::vector<double>::iterator it = probabilities.begin();
-	do {
-		theCoordinates.UncheckedValue() = *it;
-		LOG(LDEBUG) << "Probability: " << *it;
-		++it;
-	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+	fillCPT(name, probabilities);
 }
 
 void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
@@ -363,7 +352,12 @@ void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficie
 		probabilities.push_back(probability);
 		probabilities.push_back(1-probability);
 	} while(generateNext(s.begin(), s.end()));
+  
+	fillCPT(name, probabilities);
+}
 
+void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
+{
 	int node = theNet.FindNode(name.c_str());
 	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
 
