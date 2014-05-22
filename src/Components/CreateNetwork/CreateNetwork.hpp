@@ -113,6 +113,7 @@ private:
     
     void createChild(pcl::octree::OctreeNode* child, int parentId);
     void addVoxelNode(int id);
+    string createVoxelName(int id);
     void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
     void addNode(string name);

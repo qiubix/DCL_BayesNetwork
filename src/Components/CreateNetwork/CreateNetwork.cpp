@@ -153,10 +153,13 @@ void CreateNetwork::addHypothesisNode()
 	//    for(unsigned i=0; i<cloud->size(); ++i) {
 	//        summedFeaturesMultiplicity += cloud->at(i).multiplicity;
 	//    }
-
-	stringstream name;
-	name << "V_" << modelId;
-	string hypothesisName(name.str());
+  
+  /*
+   * FIXME: hardcoded modelId! Works only for one model. 
+   * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
+   * Possible solution: hypothesis node name may start with H_
+   */
+  string hypothesisName = createVoxelName(modelId);
 	addNode(hypothesisName);
 }
 
@@ -165,25 +168,21 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 {
 	OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 	int parentId = branch_node->getContainer().getNodeId();
-	LOG(LINFO) << "root id: " << parentId;
+	LOG(LDEBUG) << "root id: " << parentId;
 
 	// iterate over all children
 	unsigned char child_idx;
 	int childrenCounter = 0;
 	for (child_idx = 0; child_idx < 8 ; ++child_idx) {
 		if (branch_node->hasChild(child_idx)) {
-			LOG(LINFO) << "Child "<<(int)child_idx << "present";
+			LOG(LDEBUG) << "Child "<<(int)child_idx << "present";
 			childrenCounter++;
 			OctreeNode* child = branch_node->getChildPtr(child_idx);
       createChild(child, parentId);
 		}//:if has child
 	}//:for children
   
-  //TODO: replace with method call
-	string voxelName = "";
-	stringstream name;
-	name << "V_" << parentId;
-	voxelName = name.str();
+	string voxelName = createVoxelName(parentId);
 	LOG(LDEBUG) << "voxel ID: " << parentId;
 	LOG(LDEBUG) << "voxel name: " << voxelName;
 	LOG(LDEBUG) << "children count: " <<childrenCounter;
@@ -233,10 +232,15 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 		double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
+  
+	LOG(LDEBUG) << "voxel ID: " << parentId;
+	LOG(LDEBUG) << "voxel name: " << createVoxelName(parentId);
+	LOG(LDEBUG) << "children count: " <<childrenCounter;
   setVoxelNodeCPT(parentId, featuresCoefficients, childrenCounter);
 	leafNodeCount++;
 }
 
+//TODO: REFACTOR: remove duplication
 void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
 {
 	if(child->getNodeType() == BRANCH_NODE) {
@@ -262,18 +266,21 @@ void CreateNetwork::addVoxelNode(int id)
 	stringstream name;
 	name << "V_" << id;
 	string voxelName = name.str();
-	addNode(voxelName);
+  addNode(voxelName);
+}
+
+string CreateNetwork::createVoxelName(int id)
+{
+	stringstream name;
+	name << "V_" << id;
+	string voxelName = name.str();
+  return voxelName;
 }
 
 //TODO: make functionality more general
 void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
 {
-	stringstream name;
-	name << "V_" << id;
-	string voxelName = name.str();
-	LOG(LDEBUG) << "voxel ID: " << id;
-	LOG(LDEBUG) << "voxel name: " << voxelName;
-	LOG(LDEBUG) << "children count: " <<childrenCounter;
+  string voxelName = createVoxelName(id);
 	setNodeCPT(voxelName, featuresCoefficients);
 	//            setNodeCPT(voxelName, childrenCounter);
 }
