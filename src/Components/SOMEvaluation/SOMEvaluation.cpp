@@ -133,6 +133,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 						theNet.GetNode(node)->Value()->SetEvidence(0);
 				}
 		}
+    LOG(LDEBUG) << "Finished activating matched features";
 }
 
 void SOMEvaluation::displayHypothesisProbability()
