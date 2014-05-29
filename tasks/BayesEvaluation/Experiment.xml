@@ -44,7 +44,7 @@
 				</Component>
 				<Component name="SOMEvaluation" type="BayesNetwork:SOMEvaluation" priority="12" bump="0">
 				</Component>
-            		</Executor>
+			</Executor>
 		</Subtask>	
 	
 	</Subtasks>
