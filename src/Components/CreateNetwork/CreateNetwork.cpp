@@ -220,18 +220,18 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 	}
 	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
 	{
-		LOG(LDEBUG) << "Iteration number " << i << " Point index=" << point_indices[i];
+		LOG(LTRACE) << "Iteration number " << i << " Point index=" << point_indices[i];
 		PointXYZSIFT p = cloud->at(point_indices[i]);
-		LOG(LDEBUG) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
-		LOG(LDEBUG) << "multiplicity: " << p.multiplicity;
-		LOG(LDEBUG) << "pointId " << p.pointId;
+		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
+		LOG(LTRACE) << "multiplicity: " << p.multiplicity;
+		LOG(LTRACE) << "pointId " << p.pointId;
     
     string featureName = createFeatureName(p.pointId);
     string parentName = createVoxelName(parentId);
 		addNode(featureName);
 		addArc(featureName, parentName);
 //    fillCPT(featureName, featureInitialProbabilities);
-		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter);
+		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter * 2);
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
   
@@ -360,7 +360,7 @@ void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
 	std::vector<double>::iterator it = probabilities.begin();
 	do {
 		theCoordinates.UncheckedValue() = *it;
-		LOG(LDEBUG) << "Probability: " << *it;
+		LOG(LTRACE) << "Probability: " << *it;
 		++it;
 	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
