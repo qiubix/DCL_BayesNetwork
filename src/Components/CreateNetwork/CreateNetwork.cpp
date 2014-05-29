@@ -45,10 +45,12 @@ void CreateNetwork::prepareInterface()
 	// Register data streams.
 	//	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
 	h_buildNetwork.setup(boost::bind(&CreateNetwork::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
 	addDependency("buildNetwork", &in_cloud_xyzsift);
+	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
 }
@@ -86,6 +88,7 @@ void CreateNetwork::buildNetwork() {
 
 	// Read from dataport.
 	cloud = in_cloud_xyzsift.read();
+  jointMultiplicityVector = in_jointMultiplicity.read();
 
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
@@ -203,6 +206,8 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 
 	int parentId = leaf_node->getContainer().getNodeId();
 	int childrenCounter = leaf_node->getContainer().getSize();
+//	double p[] = {0,1.0};
+//	std::vector<double> featureInitialProbabilities (p, p + sizeof(p) / sizeof(double) );
 	std::vector<double> featuresCoefficients;
 	int summedFeaturesMultiplicity = 0;
 
@@ -215,17 +220,18 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 	}
 	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
 	{
-		LOG(LDEBUG) << "Iteration number " << i << " Point index=" << point_indices[i];
+		LOG(LTRACE) << "Iteration number " << i << " Point index=" << point_indices[i];
 		PointXYZSIFT p = cloud->at(point_indices[i]);
-		LOG(LDEBUG) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
-		LOG(LDEBUG) << "multiplicity: " << p.multiplicity;
-		LOG(LDEBUG) << "pointId " << p.pointId;
+		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
+		LOG(LTRACE) << "multiplicity: " << p.multiplicity;
+		LOG(LTRACE) << "pointId " << p.pointId;
     
     string featureName = createFeatureName(p.pointId);
     string parentName = createVoxelName(parentId);
 		addNode(featureName);
 		addArc(featureName, parentName);
-		double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
+//    fillCPT(featureName, featureInitialProbabilities);
+		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter * 2);
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
   
@@ -354,7 +360,7 @@ void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
 	std::vector<double>::iterator it = probabilities.begin();
 	do {
 		theCoordinates.UncheckedValue() = *it;
-		LOG(LDEBUG) << "Probability: " << *it;
+		LOG(LTRACE) << "Probability: " << *it;
 		++it;
 	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }

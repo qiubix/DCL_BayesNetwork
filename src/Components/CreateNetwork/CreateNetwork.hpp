@@ -56,7 +56,7 @@ protected:
 
     /// Input data stream
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
-    Base::DataStreamIn< vector<int> > in_jointMultiplicity;
+    Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
 		Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
 
     /// Output data stream
