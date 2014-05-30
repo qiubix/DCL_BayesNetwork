@@ -10,7 +10,6 @@
 #include <algorithm>
 
 #include "CreateNetwork.hpp"
-#include "OctreeContainers.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
@@ -193,44 +192,27 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 	branchNodeCount++;
 }
 
-//TODO: refactor
 void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
 	OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
-	int containter_size = leaf_node->getContainer().getSize();
-	if(containter_size >8) {
-		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
-	}//: if
-	if(containter_size > maxLeafContainerSize)
-		maxLeafContainerSize = containter_size;
+  logLeafNodeContainerSize(leaf_node);
 
 	int parentId = leaf_node->getContainer().getNodeId();
 	int childrenCounter = leaf_node->getContainer().getSize();
-//	double p[] = {0,1.0};
-//	std::vector<double> featureInitialProbabilities (p, p + sizeof(p) / sizeof(double) );
 	std::vector<double> featuresCoefficients;
-	int summedFeaturesMultiplicity = 0;
 
 	// Iterate through container elements, i.e. cloud points.
 	std::vector<int> point_indices;
 	leaf_node->getContainer().getPointIndices(point_indices);
-	for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
-		PointXYZSIFT p = cloud->at(point_indices[j]);
-		summedFeaturesMultiplicity += p.multiplicity;
-	}
+  
 	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
 	{
-		LOG(LTRACE) << "Iteration number " << i << " Point index=" << point_indices[i];
 		PointXYZSIFT p = cloud->at(point_indices[i]);
-		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
-		LOG(LTRACE) << "multiplicity: " << p.multiplicity;
-		LOG(LTRACE) << "pointId " << p.pointId;
-    
+    logPoint(p, point_indices[i]);
     string featureName = createFeatureName(p.pointId);
     string parentName = createVoxelName(parentId);
 		addNode(featureName);
 		addArc(featureName, parentName);
-//    fillCPT(featureName, featureInitialProbabilities);
 		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter * 2);
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
@@ -394,6 +376,36 @@ void CreateNetwork::loadNetwork()
     //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
     //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
     LOG(LWARNING) << "Reading network file: " << result;
+}
+
+void CreateNetwork::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+{
+	int containter_size = leaf_node->getContainer().getSize();
+	if(containter_size >8) {
+		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
+	}//: if
+	if(containter_size > maxLeafContainerSize)
+    maxLeafContainerSize = containter_size;
+}
+
+int CreateNetwork::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+{
+  int summedFeaturesMultiplicity = 0;
+	std::vector<int> point_indices;
+	leaf_node->getContainer().getPointIndices(point_indices);
+	for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
+		PointXYZSIFT p = cloud->at(point_indices[j]);
+		summedFeaturesMultiplicity += p.multiplicity;
+	}
+  return summedFeaturesMultiplicity;
+}
+
+void CreateNetwork::logPoint(PointXYZSIFT p, int index)
+{
+		LOG(LTRACE) << "Point index = " << index;
+		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
+		LOG(LTRACE) << "multiplicity: " << p.multiplicity;
+		LOG(LTRACE) << "pointId " << p.pointId;
 }
 
 void CreateNetwork::mapFeaturesNames()

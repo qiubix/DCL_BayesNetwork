@@ -14,6 +14,7 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
+#include "OctreeContainers.hpp"
 
 #include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
@@ -127,6 +128,9 @@ private:
 
     std::string getNodeName(int nodeHandle);
     void mapFeaturesNames();
+    void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
+    int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
+    void logPoint(PointXYZSIFT p, int index);
     void loadNetwork();
 };
 
