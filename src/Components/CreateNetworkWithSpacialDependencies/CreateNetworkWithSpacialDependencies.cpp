@@ -1,5 +1,5 @@
 /*!
- * \file CreateNetwork.cpp
+ * \file CreateNetworkWithSpacialDependencies.cpp
  * \brief
  */
 
@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "CreateNetwork.hpp"
+#include "CreateNetworkWithSpacialDependencies.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
@@ -23,30 +23,30 @@ using namespace pcl::octree;
 namespace Processors {
 namespace Network {
 
-CreateNetwork::CreateNetwork(const std::string & name) : Base::Component(name)
+CreateNetworkWithSpacialDependencies::CreateNetworkWithSpacialDependencies(const std::string & name) : Base::Component(name)
 {
-    LOG(LTRACE)<<"Hello CreateNetwork\n";
+    LOG(LTRACE)<<"Hello CreateNetworkWithSpacialDependencies\n";
     branchNodeCount = 0;
     leafNodeCount = 0;
     maxLeafContainerSize = 0;
     nextId = 0;
 }
 
-CreateNetwork::~CreateNetwork()
+CreateNetworkWithSpacialDependencies::~CreateNetworkWithSpacialDependencies()
 {
-    LOG(LTRACE)<<"Good bye CreateNetwork\n";
+    LOG(LTRACE)<<"Good bye CreateNetworkWithSpacialDependencies\n";
 }
 
-void CreateNetwork::prepareInterface()
+void CreateNetworkWithSpacialDependencies::prepareInterface()
 {
-	LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
+	LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::prepareInterface\n";
 
 	// Register data streams.
 	//	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
 	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
-	h_buildNetwork.setup(boost::bind(&CreateNetwork::buildNetwork, this));
+	h_buildNetwork.setup(boost::bind(&CreateNetworkWithSpacialDependencies::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
 	addDependency("buildNetwork", &in_cloud_xyzsift);
 	addDependency("buildNetwork", &in_jointMultiplicity);
@@ -54,32 +54,32 @@ void CreateNetwork::prepareInterface()
 	registerStream("out_network", &out_network);
 }
 
-bool CreateNetwork::onInit()
+bool CreateNetworkWithSpacialDependencies::onInit()
 {
-    LOG(LTRACE) << "CreateNetwork::initialize\n";
+    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::initialize\n";
     return true;
 }
 
-bool CreateNetwork::onFinish()
+bool CreateNetworkWithSpacialDependencies::onFinish()
 {
-    LOG(LTRACE) << "CreateNetwork::finish\n";
+    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::finish\n";
     return true;
 }
 
-bool CreateNetwork::onStop()
+bool CreateNetworkWithSpacialDependencies::onStop()
 {
-    LOG(LTRACE) << "CreateNetwork::onStop\n";
+    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::onStop\n";
     return true;
 }
 
-bool CreateNetwork::onStart()
+bool CreateNetworkWithSpacialDependencies::onStart()
 {
-    LOG(LTRACE) << "CreateNetwork::onStart\n";
+    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::onStart\n";
     return true;
 }
 
-void CreateNetwork::buildNetwork() {
-	LOG(LDEBUG) << "CreateNetwork::buildNetwork";
+void CreateNetworkWithSpacialDependencies::buildNetwork() {
+	LOG(LDEBUG) << "CreateNetworkWithSpacialDependencies::buildNetwork";
   
 	if(theNet.GetNumberOfNodes() != 0) {
 		return;
@@ -136,7 +136,7 @@ void CreateNetwork::buildNetwork() {
   exportNetwork();
 }
 
-void CreateNetwork::exportNetwork()
+void CreateNetworkWithSpacialDependencies::exportNetwork()
 {
 	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
 	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
@@ -148,7 +148,7 @@ void CreateNetwork::exportNetwork()
 	out_network.write(theNet);
 }
 
-void CreateNetwork::addHypothesisNode() 
+void CreateNetworkWithSpacialDependencies::addHypothesisNode() 
 {
 	int modelId = 0;
 //	int summedFeaturesMultiplicity = 0;
@@ -166,7 +166,7 @@ void CreateNetwork::addHypothesisNode()
 }
 
 //TODO: refactor
-void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node) 
+void CreateNetworkWithSpacialDependencies::createBranchNodeChildren(pcl::octree::OctreeNode* node) 
 {
 	OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 	int parentId = branch_node->getContainer().getNodeId();
@@ -192,7 +192,7 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 	branchNodeCount++;
 }
 
-void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
+void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
 	OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
   logLeafNodeContainerSize(leaf_node);
@@ -224,7 +224,7 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 	leafNodeCount++;
 }
 
-void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
+void CreateNetworkWithSpacialDependencies::createChild(pcl::octree::OctreeNode* child, int parentId)
 {
 	if(child->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
@@ -244,7 +244,7 @@ void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
 	addArc(createVoxelName(currentId), createVoxelName(parentId));
 }
 
-void CreateNetwork::addVoxelNode(int id)
+void CreateNetworkWithSpacialDependencies::addVoxelNode(int id)
 {
 	stringstream name;
 	name << "V_" << id;
@@ -252,7 +252,7 @@ void CreateNetwork::addVoxelNode(int id)
   addNode(voxelName);
 }
 
-string CreateNetwork::createVoxelName(int id)
+string CreateNetworkWithSpacialDependencies::createVoxelName(int id)
 {
 	stringstream name;
 	name << "V_" << id;
@@ -260,7 +260,7 @@ string CreateNetwork::createVoxelName(int id)
   return voxelName;
 }
 
-string CreateNetwork::createFeatureName(int id)
+string CreateNetworkWithSpacialDependencies::createFeatureName(int id)
 {
 	stringstream name;
 	name << "F_" << id;
@@ -269,14 +269,14 @@ string CreateNetwork::createFeatureName(int id)
 }
 
 //TODO: make functionality more general
-void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
+void CreateNetworkWithSpacialDependencies::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
 {
   string voxelName = createVoxelName(id);
 	setNodeCPT(voxelName, featuresCoefficients);
 	//            setNodeCPT(voxelName, childrenCounter);
 }
 
-void CreateNetwork::addNode(std::string name)
+void CreateNetworkWithSpacialDependencies::addNode(std::string name)
 {
     LOG(LDEBUG) << "Add node to network: " << name;
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
@@ -290,7 +290,7 @@ void CreateNetwork::addNode(std::string name)
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
-void CreateNetwork::addArc(string parentName, string childName)
+void CreateNetworkWithSpacialDependencies::addArc(string parentName, string childName)
 {
 	int childNode = theNet.FindNode(childName.c_str());
 	int parentNode = theNet.FindNode(parentName.c_str());
@@ -298,7 +298,7 @@ void CreateNetwork::addArc(string parentName, string childName)
 }
 
 //TODO: split into two methods: calculating probability and actually setting node's cpt
-void CreateNetwork::setNodeCPT(string name, int numberOfParents)
+void CreateNetworkWithSpacialDependencies::setNodeCPT(string name, int numberOfParents)
 {
 	LOG(LDEBUG) << "Set node CPT: " << name;
 	std::vector<double> probabilities;
@@ -313,7 +313,7 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 	fillCPT(name, probabilities);
 }
 
-void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
+void CreateNetworkWithSpacialDependencies::setNodeCPT(string name, std::vector<double> parentsCoefficients)
 {
 	LOG(LDEBUG) << "Set node CPT: " << name;
 	std::vector<double> probabilities;
@@ -334,7 +334,7 @@ void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficie
 	fillCPT(name, probabilities);
 }
 
-void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
+void CreateNetworkWithSpacialDependencies::fillCPT(string name, std::vector<double> probabilities)
 {
 	int node = theNet.FindNode(name.c_str());
 	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
@@ -347,7 +347,7 @@ void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
 	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
-int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
+int CreateNetworkWithSpacialDependencies::generateNext(std::string::iterator start, std::string::iterator end)
 {
 	while(start != end)
 	{
@@ -365,12 +365,12 @@ int CreateNetwork::generateNext(std::string::iterator start, std::string::iterat
 	return false;
 }
 
-string CreateNetwork::getNodeName(int nodeHandle)
+string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
 {
     return features[nodeHandle];
 }
 
-void CreateNetwork::loadNetwork()
+void CreateNetworkWithSpacialDependencies::loadNetwork()
 {
     int result = -1;
     //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
@@ -378,7 +378,7 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
-void CreateNetwork::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
 {
 	int containter_size = leaf_node->getContainer().getSize();
 	if(containter_size >8) {
@@ -388,7 +388,7 @@ void CreateNetwork::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPoint
     maxLeafContainerSize = containter_size;
 }
 
-int CreateNetwork::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+int CreateNetworkWithSpacialDependencies::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
 {
   int summedFeaturesMultiplicity = 0;
 	std::vector<int> point_indices;
@@ -400,7 +400,7 @@ int CreateNetwork::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<Octree
   return summedFeaturesMultiplicity;
 }
 
-void CreateNetwork::logPoint(PointXYZSIFT p, int index)
+void CreateNetworkWithSpacialDependencies::logPoint(PointXYZSIFT p, int index)
 {
 		LOG(LTRACE) << "Point index = " << index;
 		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
@@ -408,7 +408,7 @@ void CreateNetwork::logPoint(PointXYZSIFT p, int index)
 		LOG(LTRACE) << "pointId " << p.pointId;
 }
 
-void CreateNetwork::mapFeaturesNames()
+void CreateNetworkWithSpacialDependencies::mapFeaturesNames()
 {
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
         std::stringstream name;

@@ -1,10 +1,10 @@
 /*!
- * \file CreateNetwork.hpp
+ * \file CreateNetworkWithSpacialDependencies.hpp
  * \brief
  */
 
-#ifndef CREATE_NETWORK_HPP_
-#define CREATE_NETWORK_HPP_
+#ifndef CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_
+#define CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_
 
 #define CV_NO_BACKWARD_COMPATIBILITY
 
@@ -31,22 +31,22 @@ namespace Processors {
 namespace Network {
 
 /*!
- * \class CreateNetwork
- * \brief Class used to build Bayes network
+ * \class CreateNetworkWithSpacialDependencies
+ * \brief Class used to build Bayes network based on features multiplicity and spacial dependencies between them
  * \author Karol Katerżawa
  */
-class CreateNetwork: public Base::Component
+class CreateNetworkWithSpacialDependencies: public Base::Component
 {
 public:
     /*!
      * Constructor.
      */
-    CreateNetwork(const std::string & name = "CreateNetwork");
+    CreateNetworkWithSpacialDependencies(const std::string & name = "CreateNetworkWithSpacialDependencies");
 
     /*!
      * Destructor
      */
-    virtual ~CreateNetwork();
+    virtual ~CreateNetworkWithSpacialDependencies();
 
     /*!
      * Prepare data streams and handlers
@@ -84,8 +84,8 @@ protected:
     bool onStop();
 
     /// Event handlers
-    Base::EventHandler <CreateNetwork> h_onModels;
-    Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
+    Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
+    Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
 		Base::EventHandler2 h_buildNetwork;
 
     /*!
@@ -141,7 +141,7 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("CreateNetwork", Processors::Network::CreateNetwork)
+REGISTER_COMPONENT("CreateNetworkWithSpacialDependencies", Processors::Network::CreateNetworkWithSpacialDependencies)
 
-#endif /* CREATE_NETWORK_HPP_ */
+#endif /* CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_ */
 
