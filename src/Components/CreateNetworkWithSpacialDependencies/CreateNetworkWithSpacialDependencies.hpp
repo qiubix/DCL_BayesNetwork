@@ -109,20 +109,15 @@ private:
     void exportNetwork();
 
     void addHypothesisNode();
-    void createBranchNodeChildren(pcl::octree::OctreeNode* node);
-    void createLeafNodeChildren(pcl::octree::OctreeNode* node);
     
     void createChild(pcl::octree::OctreeNode* child, int parentId);
     void addVoxelNode(int id);
     string createVoxelName(int id);
     string createFeatureName(int id);
-    void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
     void addNode(string name);
     
     void addArc(string parentName, string childName);
-    void setNodeCPT(string name, int numberOfParents);
-    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
     void fillCPT(string name, std::vector<double> probabilities);
     int generateNext(std::string::iterator start, std::string::iterator end);
 
