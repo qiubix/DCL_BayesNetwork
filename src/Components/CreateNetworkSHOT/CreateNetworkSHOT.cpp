@@ -1,5 +1,5 @@
 /*!
- * \file CreateNetwork.cpp
+ * \file CreateNetworkSHOT.cpp
  * \brief
  */
 
@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "CreateNetwork.hpp"
+#include "CreateNetworkSHOT.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
@@ -23,75 +23,75 @@ using namespace pcl::octree;
 namespace Processors {
 namespace Network {
 
-CreateNetwork::CreateNetwork(const std::string & name) : Base::Component(name)
+CreateNetworkSHOT::CreateNetworkSHOT(const std::string & name) : Base::Component(name)
 {
-    LOG(LTRACE)<<"Hello CreateNetwork\n";
+    LOG(LTRACE)<<"Hello CreateNetworkSHOT\n";
     branchNodeCount = 0;
     leafNodeCount = 0;
     maxLeafContainerSize = 0;
     nextId = 0;
 }
 
-CreateNetwork::~CreateNetwork()
+CreateNetworkSHOT::~CreateNetworkSHOT()
 {
-    LOG(LTRACE)<<"Good bye CreateNetwork\n";
+    LOG(LTRACE)<<"Good bye CreateNetworkSHOT\n";
 }
 
-void CreateNetwork::prepareInterface()
+void CreateNetworkSHOT::prepareInterface()
 {
-	LOG(LTRACE) << "CreateNetwork::prepareInterface\n";
+	LOG(LTRACE) << "CreateNetworkSHOT::prepareInterface\n";
 
 	// Register data streams.
 	//	registerStream("in_cloud", &in_cloud_xyz);
-	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+	registerStream("in_cloud_xyzshot", &in_cloud_xyzshot);
 //	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
-	h_buildNetwork.setup(boost::bind(&CreateNetwork::buildNetwork, this));
+	h_buildNetwork.setup(boost::bind(&CreateNetworkSHOT::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
-	addDependency("buildNetwork", &in_cloud_xyzsift);
+	addDependency("buildNetwork", &in_cloud_xyzshot);
 //	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
 }
 
-bool CreateNetwork::onInit()
+bool CreateNetworkSHOT::onInit()
 {
-    LOG(LTRACE) << "CreateNetwork::initialize\n";
+    LOG(LTRACE) << "CreateNetworkSHOT::initialize\n";
     return true;
 }
 
-bool CreateNetwork::onFinish()
+bool CreateNetworkSHOT::onFinish()
 {
-    LOG(LTRACE) << "CreateNetwork::finish\n";
+    LOG(LTRACE) << "CreateNetworkSHOT::finish\n";
     return true;
 }
 
-bool CreateNetwork::onStop()
+bool CreateNetworkSHOT::onStop()
 {
-    LOG(LTRACE) << "CreateNetwork::onStop\n";
+    LOG(LTRACE) << "CreateNetworkSHOT::onStop\n";
     return true;
 }
 
-bool CreateNetwork::onStart()
+bool CreateNetworkSHOT::onStart()
 {
-    LOG(LTRACE) << "CreateNetwork::onStart\n";
+    LOG(LTRACE) << "CreateNetworkSHOT::onStart\n";
     return true;
 }
 
-void CreateNetwork::buildNetwork() {
-	LOG(LDEBUG) << "CreateNetwork::buildNetwork";
+void CreateNetworkSHOT::buildNetwork() {
+	LOG(LDEBUG) << "CreateNetworkSHOT::buildNetwork";
   
 	if(theNet.GetNumberOfNodes() != 0) {
 		return;
 	}
 
 	// Read from dataport.
-	cloud = in_cloud_xyzsift.read();
-  jointMultiplicityVector = in_jointMultiplicity.read();
+	cloud = in_cloud_xyzshot.read();
+//  jointMultiplicityVector = in_jointMultiplicity.read();
 
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
+	OctreePointCloud<PointXYZSHOT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
 	// Set input cloud.
 	octree.setInputCloud(cloud);
 	// Calculate bounding box of input cloud.
@@ -103,8 +103,8 @@ void CreateNetwork::buildNetwork() {
   addHypothesisNode();
 
 	// Use breadth-first iterator
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
-	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
+	OctreePointCloud<PointXYZSHOT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
+	const OctreePointCloud<PointXYZSHOT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
 
 	// Root node
 	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
@@ -136,7 +136,7 @@ void CreateNetwork::buildNetwork() {
   exportNetwork();
 }
 
-void CreateNetwork::exportNetwork()
+void CreateNetworkSHOT::exportNetwork()
 {
 	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
 	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
@@ -148,7 +148,7 @@ void CreateNetwork::exportNetwork()
 	out_network.write(theNet);
 }
 
-void CreateNetwork::addHypothesisNode() 
+void CreateNetworkSHOT::addHypothesisNode() 
 {
 	int modelId = 0;
 //	int summedFeaturesMultiplicity = 0;
@@ -166,7 +166,7 @@ void CreateNetwork::addHypothesisNode()
 }
 
 //TODO: refactor
-void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node) 
+void CreateNetworkSHOT::createBranchNodeChildren(pcl::octree::OctreeNode* node) 
 {
 	OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 	int parentId = branch_node->getContainer().getNodeId();
@@ -192,7 +192,7 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 	branchNodeCount++;
 }
 
-void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
+void CreateNetworkSHOT::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
 	OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
   logLeafNodeContainerSize(leaf_node);
@@ -207,13 +207,14 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
   
 	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
 	{
-		PointXYZSIFT p = cloud->at(point_indices[i]);
+		PointXYZSHOT p = cloud->at(point_indices[i]);
     logPoint(p, point_indices[i]);
     string featureName = createFeatureName(p.pointId);
     string parentName = createVoxelName(parentId);
 		addNode(featureName);
 		addArc(featureName, parentName);
-		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter * 2);
+//		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter * 2);
+		double coefficient = (double) p.multiplicity/(childrenCounter * 2);
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
   
@@ -224,7 +225,7 @@ void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 	leafNodeCount++;
 }
 
-void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
+void CreateNetworkSHOT::createChild(pcl::octree::OctreeNode* child, int parentId)
 {
 	if(child->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
@@ -244,7 +245,7 @@ void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
 	addArc(createVoxelName(currentId), createVoxelName(parentId));
 }
 
-void CreateNetwork::addVoxelNode(int id)
+void CreateNetworkSHOT::addVoxelNode(int id)
 {
 	stringstream name;
 	name << "V_" << id;
@@ -252,7 +253,7 @@ void CreateNetwork::addVoxelNode(int id)
   addNode(voxelName);
 }
 
-string CreateNetwork::createVoxelName(int id)
+string CreateNetworkSHOT::createVoxelName(int id)
 {
 	stringstream name;
 	name << "V_" << id;
@@ -260,7 +261,7 @@ string CreateNetwork::createVoxelName(int id)
   return voxelName;
 }
 
-string CreateNetwork::createFeatureName(int id)
+string CreateNetworkSHOT::createFeatureName(int id)
 {
 	stringstream name;
 	name << "F_" << id;
@@ -269,14 +270,14 @@ string CreateNetwork::createFeatureName(int id)
 }
 
 //TODO: make functionality more general
-void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
+void CreateNetworkSHOT::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
 {
   string voxelName = createVoxelName(id);
 	setNodeCPT(voxelName, featuresCoefficients);
 	//            setNodeCPT(voxelName, childrenCounter);
 }
 
-void CreateNetwork::addNode(std::string name)
+void CreateNetworkSHOT::addNode(std::string name)
 {
     LOG(LDEBUG) << "Add node to network: " << name;
     int newNode = theNet.AddNode(DSL_CPT, name.c_str());
@@ -290,7 +291,7 @@ void CreateNetwork::addNode(std::string name)
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
-void CreateNetwork::addArc(string parentName, string childName)
+void CreateNetworkSHOT::addArc(string parentName, string childName)
 {
 	int childNode = theNet.FindNode(childName.c_str());
 	int parentNode = theNet.FindNode(parentName.c_str());
@@ -298,7 +299,7 @@ void CreateNetwork::addArc(string parentName, string childName)
 }
 
 //TODO: split into two methods: calculating probability and actually setting node's cpt
-void CreateNetwork::setNodeCPT(string name, int numberOfParents)
+void CreateNetworkSHOT::setNodeCPT(string name, int numberOfParents)
 {
 	LOG(LDEBUG) << "Set node CPT: " << name;
 	std::vector<double> probabilities;
@@ -313,7 +314,7 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 	fillCPT(name, probabilities);
 }
 
-void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
+void CreateNetworkSHOT::setNodeCPT(string name, std::vector<double> parentsCoefficients)
 {
 	LOG(LDEBUG) << "Set node CPT: " << name;
 	std::vector<double> probabilities;
@@ -334,7 +335,7 @@ void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficie
 	fillCPT(name, probabilities);
 }
 
-void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
+void CreateNetworkSHOT::fillCPT(string name, std::vector<double> probabilities)
 {
 	int node = theNet.FindNode(name.c_str());
 	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
@@ -347,7 +348,7 @@ void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
 	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
-int CreateNetwork::generateNext(std::string::iterator start, std::string::iterator end)
+int CreateNetworkSHOT::generateNext(std::string::iterator start, std::string::iterator end)
 {
 	while(start != end)
 	{
@@ -365,12 +366,12 @@ int CreateNetwork::generateNext(std::string::iterator start, std::string::iterat
 	return false;
 }
 
-string CreateNetwork::getNodeName(int nodeHandle)
+string CreateNetworkSHOT::getNodeName(int nodeHandle)
 {
     return features[nodeHandle];
 }
 
-void CreateNetwork::loadNetwork()
+void CreateNetworkSHOT::loadNetwork()
 {
     int result = -1;
     //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
@@ -378,7 +379,7 @@ void CreateNetwork::loadNetwork()
     LOG(LWARNING) << "Reading network file: " << result;
 }
 
-void CreateNetwork::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+void CreateNetworkSHOT::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
 {
 	int containter_size = leaf_node->getContainer().getSize();
 	if(containter_size >8) {
@@ -388,19 +389,19 @@ void CreateNetwork::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPoint
     maxLeafContainerSize = containter_size;
 }
 
-int CreateNetwork::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+int CreateNetworkSHOT::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
 {
   int summedFeaturesMultiplicity = 0;
 	std::vector<int> point_indices;
 	leaf_node->getContainer().getPointIndices(point_indices);
 	for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
-		PointXYZSIFT p = cloud->at(point_indices[j]);
+		PointXYZSHOT p = cloud->at(point_indices[j]);
 		summedFeaturesMultiplicity += p.multiplicity;
 	}
   return summedFeaturesMultiplicity;
 }
 
-void CreateNetwork::logPoint(PointXYZSIFT p, int index)
+void CreateNetworkSHOT::logPoint(PointXYZSHOT p, int index)
 {
 		LOG(LTRACE) << "Point index = " << index;
 		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
@@ -408,7 +409,7 @@ void CreateNetwork::logPoint(PointXYZSIFT p, int index)
 		LOG(LTRACE) << "pointId " << p.pointId;
 }
 
-void CreateNetwork::mapFeaturesNames()
+void CreateNetworkSHOT::mapFeaturesNames()
 {
     for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
         std::stringstream name;

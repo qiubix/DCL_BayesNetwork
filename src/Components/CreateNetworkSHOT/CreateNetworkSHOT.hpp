@@ -24,7 +24,7 @@
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
-#include <Types/PointXYZSIFT.hpp>
+#include <Types/PointXYZSHOT.hpp>
 
 
 namespace Processors {
@@ -58,7 +58,7 @@ protected:
     /// Input data stream
     Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
     Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
-		Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+		Base::DataStreamIn<pcl::PointCloud<PointXYZSHOT>::Ptr > in_cloud_xyzshot;
 
     /// Output data stream
     Base::DataStreamOut<DSL_network> out_network;
@@ -95,7 +95,7 @@ protected:
 
 private:
     DSL_network theNet;
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+    pcl::PointCloud<PointXYZSHOT>::Ptr cloud;
 
     std::map <int, string> features;
     std::vector <int> jointMultiplicityVector;
@@ -130,7 +130,7 @@ private:
     void mapFeaturesNames();
     void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
     int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-    void logPoint(PointXYZSIFT p, int index);
+    void logPoint(PointXYZSHOT p, int index);
     void loadNetwork();
 };
 
