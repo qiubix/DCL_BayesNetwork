@@ -1,0 +1,38 @@
+<Task>
+	<!-- reference task information -->
+	<Reference>
+		<Author>
+			<name>Karol Katerzawa</name>
+			<link></link>
+		</Author>
+		
+		<Description>
+			<brief>TestSHOT:BuildNetwork</brief>
+			<full></full>	
+		</Description>
+	</Reference>
+	
+	<!-- task definition -->
+	<Subtasks>
+		<Subtask name="Main">
+			<Executor name="Processing"  period="1">
+				<Component name="S2OMJSONReader" type="S2ObjectModel:S2OMJSONReader" priority="1" bump="4">
+					<param name="filenames">/home/jkrasnod/test/cereal_box_1_test.json</param>
+				</Component>
+				<Component name="CreateNetwork" type="BayesNetwork:CreateNetworkSHOT" priority="11" bump="0">
+				</Component>
+			</Executor>
+		</Subtask>	
+	</Subtasks>
+	
+	<!-- pipes connecting datastreams -->
+	<DataStreams>
+		<Source name="S2OMJSONReader.out_models">
+			<sink>CreateNetwork.in_models</sink>
+		</Source>
+	</DataStreams>
+</Task>
+
+
+
+
