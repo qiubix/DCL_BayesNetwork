@@ -24,6 +24,7 @@
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
+#include <Types/S2ObjectModelFactory.hpp> 
 #include <Types/PointXYZSHOT.hpp>
 
 
@@ -56,9 +57,10 @@ public:
 protected:
 
     /// Input data stream
-    Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
-    Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
-		Base::DataStreamIn<pcl::PointCloud<PointXYZSHOT>::Ptr > in_cloud_xyzshot;
+//    Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
+//    Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
+//		Base::DataStreamIn<pcl::PointCloud<PointXYZSHOT>::Ptr > in_cloud_xyzshot;
+		Base::DataStreamIn<std::vector<AbstractObject*> > in_models;
 
     /// Output data stream
     Base::DataStreamOut<DSL_network> out_network;

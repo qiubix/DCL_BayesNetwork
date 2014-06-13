@@ -43,12 +43,13 @@ void CreateNetworkSHOT::prepareInterface()
 
 	// Register data streams.
 	//	registerStream("in_cloud", &in_cloud_xyz);
-	registerStream("in_cloud_xyzshot", &in_cloud_xyzshot);
+//	registerStream("in_cloud_xyzshot", &in_cloud_xyzshot);
 //	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
+	registerStream("in_models", &in_models);
 	// Register handlers
 	h_buildNetwork.setup(boost::bind(&CreateNetworkSHOT::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
-	addDependency("buildNetwork", &in_cloud_xyzshot);
+	addDependency("buildNetwork", &in_models);
 //	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
@@ -86,9 +87,16 @@ void CreateNetworkSHOT::buildNetwork() {
 	}
 
 	// Read from dataport.
-	cloud = in_cloud_xyzshot.read();
+//	cloud = in_cloud_xyzshot.read();
 //  jointMultiplicityVector = in_jointMultiplicity.read();
+  std::vector<AbstractObject*> models = in_models.read();
+  S2ObjectModel* model = dynamic_cast<S2ObjectModel*>(models[0]);
+  cloud = model->cloud_xyzshot;
 
+	for(unsigned i=0; i<cloud->size(); i++) {
+		cloud->at(i).pointId = i;
+	}
+    
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
 	OctreePointCloud<PointXYZSHOT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
