@@ -248,14 +248,6 @@ string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
     return features[nodeHandle];
 }
 
-void CreateNetworkWithSpacialDependencies::loadNetwork()
-{
-    int result = -1;
-    //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
-    //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
-    LOG(LWARNING) << "Reading network file: " << result;
-}
-
 void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
 {
 	int containter_size = leaf_node->getContainer().getSize();

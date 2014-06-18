@@ -126,7 +126,6 @@ private:
     void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
     int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
     void logPoint(PointXYZSIFT p, int index);
-    void loadNetwork();
 };
 
 }//: namespace Network
