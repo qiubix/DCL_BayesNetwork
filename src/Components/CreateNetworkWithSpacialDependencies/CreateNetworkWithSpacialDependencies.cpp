@@ -169,9 +169,7 @@ void CreateNetworkWithSpacialDependencies::createChild(pcl::octree::OctreeNode* 
 
 void CreateNetworkWithSpacialDependencies::addVoxelNode(int id)
 {
-	stringstream name;
-	name << "V_" << id;
-	string voxelName = name.str();
+	string voxelName = createVoxelName(id);
   addNode(voxelName);
 }
 
