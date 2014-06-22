@@ -106,6 +106,10 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
 	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
 
+	// Use depth-first iterator
+  OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt = octree.depth_begin();
+	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt_end = octree.depth_end();
+
 	// Root node
 	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
 	if(node->getNodeType() == BRANCH_NODE) {
