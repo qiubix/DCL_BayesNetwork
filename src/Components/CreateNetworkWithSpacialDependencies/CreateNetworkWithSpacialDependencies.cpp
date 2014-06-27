@@ -113,11 +113,33 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	// Root node
 	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
 	if(node->getNodeType() == BRANCH_NODE) {
-		OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
-		branch_node->getContainer().setNodeId(nextId);
+		OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
+		branchNode->getContainer().setNodeId(nextId);
 		nextId++;
-		LOG(LINFO) << "root id: " << branch_node->getContainer().getNodeId();
+		LOG(LINFO) << "root id: " << branchNode->getContainer().getNodeId();
 	}
+  
+  pcl::octree::OctreeNode* parent;
+  for (;dfIt != dfIt_end; ++dfIt) {
+		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
+    if (node->getNodeType() == LEAF_NODE) {
+			OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
+      createLeafNode(leafNode);
+      connectLeafNode(leafNode, parent);
+      createLeafNodeChildren(leafNode);
+    }
+    else if (node->getNodeType() == BRANCH_NODE) {
+			OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
+      if(nodeHasOnlyOneChild(branchNode)) {
+        continue;
+      }
+      else {
+        createBranchNode(branchNode);
+        connectBranchNode(branchNode, parent);
+        parent = node;
+      }
+    }
+  }
 
 	//	Delete octree data structure (pushes allocated nodes to memory pool!).
 	octree.deleteTree ();
@@ -250,9 +272,9 @@ string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
     return features[nodeHandle];
 }
 
-void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
-	int containter_size = leaf_node->getContainer().getSize();
+	int containter_size = leafNode->getContainer().getSize();
 	if(containter_size >8) {
 		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
 	}//: if
@@ -260,12 +282,12 @@ void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNo
     maxLeafContainerSize = containter_size;
 }
 
-int CreateNetworkWithSpacialDependencies::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+int CreateNetworkWithSpacialDependencies::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
   int summedFeaturesMultiplicity = 0;
 	std::vector<int> point_indices;
-	leaf_node->getContainer().getPointIndices(point_indices);
-	for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
+	leafNode->getContainer().getPointIndices(point_indices);
+	for(unsigned int j=0; j<leafNode->getContainer().getSize(); j++) {
 		PointXYZSIFT p = cloud->at(point_indices[j]);
 		summedFeaturesMultiplicity += p.multiplicity;
 	}
