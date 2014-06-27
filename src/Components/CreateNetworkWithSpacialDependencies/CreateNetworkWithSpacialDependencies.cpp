@@ -147,6 +147,36 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   exportNetwork();
 }
 
+void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
+{
+  //TODO: implement 
+}
+
+void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeNode *parent)
+{
+  //TODO: implement
+}
+
+void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
+{
+  //TODO: implement
+}
+
+void CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
+{
+  //TODO: implement
+}
+
+void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
+{
+  //TODO: implement
+}
+
+void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeNode *parent)
+{
+  //TODO: implement
+}
+
 void CreateNetworkWithSpacialDependencies::exportNetwork()
 {
 	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
