@@ -123,17 +123,21 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   for (;dfIt != dfIt_end; ++dfIt) {
 		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
     if (node->getNodeType() == LEAF_NODE) {
+      LOG(LDEBUG) << "Entering octree leaf node.";
 			OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
       createLeafNode(leafNode);
       connectLeafNode(leafNode, parent);
       createLeafNodeChildren(leafNode);
     }
     else if (node->getNodeType() == BRANCH_NODE) {
+      LOG(LDEBUG) << "Entering octree branch node.";
 			OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
       if(nodeHasOnlyOneChild(branchNode)) {
+        LOG(LDEBUG) << "Skipping octree node, that has only one child";
         continue;
       }
       else {
+        LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createBranchNode(branchNode);
         connectBranchNode(branchNode, parent);
         parent = node;
@@ -150,31 +154,38 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
   //TODO: implement 
+  int nodeId = 0; //FIXME: move to method arguments
+  LOG(LTRACE) << "Creating leaf node: " << nodeId;
 }
 
 void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeNode *parent)
 {
   //TODO: implement
+  LOG(LTRACE) << "Connecting nodes: ";
 }
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
   //TODO: implement
+  LOG(LTRACE) << "Creating leaf node children";
 }
 
 void CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   //TODO: implement
+  LOG(LTRACE) << "Check whether node has only one child";
 }
 
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   //TODO: implement
+  LOG(LTRACE) << "Creating branch node: ";
 }
 
 void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeNode *parent)
 {
   //TODO: implement
+  LOG(LTRACE) << "Connecting nodes: ";
 }
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()
