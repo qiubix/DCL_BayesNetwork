@@ -170,10 +170,18 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
   LOG(LTRACE) << "Creating leaf node children";
 }
 
-void CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
+bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
-  //TODO: implement
   LOG(LTRACE) << "Check whether node has only one child";
+  int childrenCounter = 0;
+  for (unsigned child_idx = 0; child_idx < 8; ++child_idx) {
+    if (branchNode -> hasChild(child_idx)) 
+      ++childrenCounter;
+  }
+  if (childrenCounter == 1)
+    return true;
+  else 
+    return false;
 }
 
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
