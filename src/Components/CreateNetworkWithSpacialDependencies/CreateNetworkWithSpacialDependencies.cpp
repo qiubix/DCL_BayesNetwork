@@ -112,15 +112,16 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 
 	// Root node
 	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
+  OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
 	if(node->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 		branchNode->getContainer().setNodeId(nextId);
     createBranchNode(branchNode);
+    parent = branchNode;
 		nextId++;
 		LOG(LINFO) << "root id: " << branchNode->getContainer().getNodeId();
 	}
   
-  pcl::octree::OctreeNode* parent = node;
   for (;dfIt != dfIt_end; ++dfIt) {
 		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
     if (node->getNodeType() == LEAF_NODE) {
@@ -141,7 +142,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createBranchNode(branchNode);
         connectBranchNode(branchNode, parent);
-        parent = node;
+        parent = branchNode;
       }
     }
   }
@@ -159,10 +160,15 @@ void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeC
   LOG(LTRACE) << "Creating leaf node: " << nodeId;
 }
 
-void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeNode *parent)
+void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
-  //TODO: implement
+  //TODO: FIXME: evaluate for proper order
   LOG(LTRACE) << "Connecting nodes: ";
+  int leafNodeId = leafNode->getContainer().getNodeId();
+  string bayesParentNodeName = createVoxelName(leafNodeId);
+  int parentId = branchNode->getContainer().getNodeId();
+  string bayesChildNodeName = createVoxelName(parentId);
+  addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)

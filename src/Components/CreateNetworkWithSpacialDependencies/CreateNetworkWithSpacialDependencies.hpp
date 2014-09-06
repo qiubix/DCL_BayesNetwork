@@ -107,7 +107,7 @@ private:
     int nextId;
     
 		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
-		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeNode* parent);
+		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 		void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
 
 		bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
