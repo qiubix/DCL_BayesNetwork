@@ -115,11 +115,12 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	if(node->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 		branchNode->getContainer().setNodeId(nextId);
+    createBranchNode(branchNode);
 		nextId++;
 		LOG(LINFO) << "root id: " << branchNode->getContainer().getNodeId();
 	}
   
-  pcl::octree::OctreeNode* parent;
+  pcl::octree::OctreeNode* parent = node;
   for (;dfIt != dfIt_end; ++dfIt) {
 		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
     if (node->getNodeType() == LEAF_NODE) {
