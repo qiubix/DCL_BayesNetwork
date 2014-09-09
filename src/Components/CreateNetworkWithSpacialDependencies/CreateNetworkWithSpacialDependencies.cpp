@@ -223,10 +223,15 @@ void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<Oct
   addVoxelNode(nodeId);
 }
 
-void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeNode *parent)
+void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeBranchNode<OctreeContainerEmptyWithId> *parentNode)
 {
-  //TODO: implement
+  //FIXME: check out FIXME in connectLeafNode method
   LOG(LTRACE) << "Connecting nodes: ";
+  int branchNodeId = leafNode->getContainer().getNodeId();
+  string bayesParentNodeName = createVoxelName(branchNodeId);
+  int parentId = parentNode->getContainer().getNodeId();
+  string bayesChildNodeName = createVoxelName(parentId);
+  addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()

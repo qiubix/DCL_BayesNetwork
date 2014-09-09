@@ -112,7 +112,7 @@ private:
 
 		bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 		void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-		void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeNode* parent);
+		void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
     
     void exportNetwork();
 
