@@ -127,7 +127,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     if (node->getNodeType() == LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
 			OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
-      createLeafNode(leafNode);
+      createLeafNode(leafNode, nextId);
+      ++nextId;
       connectLeafNode(leafNode, parent);
       createLeafNodeChildren(leafNode);
     }
@@ -153,11 +154,11 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   exportNetwork();
 }
 
-void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
+void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, int nodeId)
 {
-  //TODO: implement 
-  int nodeId = 0; //FIXME: move to method arguments
+  //FIXME: Check for correctness and duplication. Is this method even necessary? 
   LOG(LTRACE) << "Creating leaf node: " << nodeId;
+  addVoxelNode(nodeId);
 }
 
 void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)

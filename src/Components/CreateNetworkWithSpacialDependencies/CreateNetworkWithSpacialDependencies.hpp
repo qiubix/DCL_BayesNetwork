@@ -106,7 +106,7 @@ private:
     unsigned int maxLeafContainerSize;
     int nextId;
     
-		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, int nodeId);
 		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 		void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
 
