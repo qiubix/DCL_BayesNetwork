@@ -174,8 +174,31 @@ void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<Octree
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
-  //TODO: implement
-  LOG(LTRACE) << "Creating leaf node children";
+	LOG(LTRACE) << "Creating leaf node children";
+
+	int parentId = leaf_node->getContainer().getNodeId();
+	int childrenCounter = leaf_node->getContainer().getSize();
+
+	// Iterate through container elements, i.e. cloud points.
+	std::vector<int> point_indices;
+	leaf_node->getContainer().getPointIndices(point_indices);
+
+	string parentName = createVoxelName(parentId);
+
+	//FIXME: Change the way coefficients are calculated
+	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
+	{
+		PointXYZSIFT p = cloud->at(point_indices[i]);
+		logPoint(p, point_indices[i]);
+		string featureName = createFeatureName(p.pointId);
+		addNode(featureName);
+		addArc(featureName, parentName);
+	}//: for points		
+
+	LOG(LDEBUG) << "voxel ID: " << parentId;
+	LOG(LDEBUG) << "voxel name: " << createVoxelName(parentId);
+	LOG(LDEBUG) << "children count: " <<childrenCounter;
+	leafNodeCount++;
 }
 
 bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
