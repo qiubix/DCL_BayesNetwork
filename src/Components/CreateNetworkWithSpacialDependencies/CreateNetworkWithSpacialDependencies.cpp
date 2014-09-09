@@ -217,8 +217,10 @@ bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<
 
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
-  //TODO: implement
+  //FIXME: duplication with createLeafNode method
   LOG(LTRACE) << "Creating branch node: ";
+  int nodeId = branchNode -> getContainer().getNodeId();
+  addVoxelNode(nodeId);
 }
 
 void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeNode *parent)
