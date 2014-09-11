@@ -49,7 +49,7 @@ void CreateNetworkWithSpacialDependencies::prepareInterface()
 	h_buildNetwork.setup(boost::bind(&CreateNetworkWithSpacialDependencies::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
 	addDependency("buildNetwork", &in_cloud_xyzsift);
-	addDependency("buildNetwork", &in_jointMultiplicity);
+//	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
 }
@@ -87,7 +87,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 
 	// Read from dataport.
 	cloud = in_cloud_xyzsift.read();
-  jointMultiplicityVector = in_jointMultiplicity.read();
+//  jointMultiplicityVector = in_jointMultiplicity.read();
 
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
@@ -100,7 +100,9 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	// Add points from input cloud to octree.
 	octree.addPointsFromInputCloud ();
 
-  addHypothesisNode();
+//  addHypothesisNode();
+  
+  LOG(LDEBUG) << "Creating iterators";
 
 	// Use breadth-first iterator
 	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
@@ -110,6 +112,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt = octree.depth_begin();
 	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt_end = octree.depth_end();
 
+  LOG(LDEBUG) << "Creating nodes";
+  
 	// Root node
 	pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
@@ -141,6 +145,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       }
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
+        branchNode -> getContainer().setNodeId(nextId);
+        ++nextId;
         createBranchNode(branchNode);
         connectBranchNode(branchNode, parent);
         parent = branchNode;
@@ -176,17 +182,17 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
 {
 	LOG(LTRACE) << "Creating leaf node children";
 
-	int parentId = leaf_node->getContainer().getNodeId();
-	int childrenCounter = leaf_node->getContainer().getSize();
+	int parentId = leafNode->getContainer().getNodeId();
+	int childrenCounter = leafNode->getContainer().getSize();
 
 	// Iterate through container elements, i.e. cloud points.
 	std::vector<int> point_indices;
-	leaf_node->getContainer().getPointIndices(point_indices);
+	leafNode->getContainer().getPointIndices(point_indices);
 
 	string parentName = createVoxelName(parentId);
 
 	//FIXME: Change the way coefficients are calculated
-	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
+	for(unsigned int i=0; i<leafNode->getContainer().getSize(); i++)
 	{
 		PointXYZSIFT p = cloud->at(point_indices[i]);
 		logPoint(p, point_indices[i]);
@@ -227,7 +233,7 @@ void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<Oc
 {
   //FIXME: check out FIXME in connectLeafNode method
   LOG(LTRACE) << "Connecting nodes: ";
-  int branchNodeId = leafNode->getContainer().getNodeId();
+  int branchNodeId = branchNode->getContainer().getNodeId();
   string bayesParentNodeName = createVoxelName(branchNodeId);
   int parentId = parentNode->getContainer().getNodeId();
   string bayesChildNodeName = createVoxelName(parentId);
