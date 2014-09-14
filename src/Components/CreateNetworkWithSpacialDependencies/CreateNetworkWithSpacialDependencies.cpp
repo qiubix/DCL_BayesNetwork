@@ -123,7 +123,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     createBranchNode(branchNode);
     parent = branchNode;
 		nextId++;
-		LOG(LINFO) << "root id: " << branchNode->getContainer().getNodeId();
+		LOG(LDEBUG) << "root id: " << branchNode->getContainer().getNodeId();
 	}
   
   for (;dfIt != dfIt_end; ++dfIt) {
@@ -149,6 +149,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
         ++nextId;
         createBranchNode(branchNode);
         connectBranchNode(branchNode, parent);
+        LOG(LDEBUG) << "parent: " << parent->getContainer().getNodeId();
+        LOG(LDEBUG) << "child: " << branchNode->getContainer().getNodeId();
         parent = branchNode;
       }
     }
@@ -163,18 +165,18 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, int nodeId)
 {
   //FIXME: Check for correctness and duplication. Is this method even necessary? 
-  LOG(LTRACE) << "Creating leaf node: " << nodeId;
+  LOG(LDEBUG) << "Creating leaf node: " << nodeId;
   addVoxelNode(nodeId);
 }
 
 void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   //TODO: FIXME: evaluate for proper order
-  LOG(LTRACE) << "Connecting nodes: ";
   int leafNodeId = leafNode->getContainer().getNodeId();
   string bayesParentNodeName = createVoxelName(leafNodeId);
   int parentId = branchNode->getContainer().getNodeId();
   string bayesChildNodeName = createVoxelName(parentId);
+  LOG(LTRACE) << "Connecting nodes: " << bayesParentNodeName << "->" << bayesChildNodeName;
   addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
@@ -197,6 +199,7 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
 		PointXYZSIFT p = cloud->at(point_indices[i]);
 		logPoint(p, point_indices[i]);
 		string featureName = createFeatureName(p.pointId);
+    LOG(LDEBUG) << "Adding new feature: " << featureName;
 		addNode(featureName);
 		addArc(featureName, parentName);
 	}//: for points		
@@ -224,19 +227,19 @@ bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   //FIXME: duplication with createLeafNode method
-  LOG(LTRACE) << "Creating branch node: ";
   int nodeId = branchNode -> getContainer().getNodeId();
+  LOG(LDEBUG) << "Creating branch node: " << nodeId;
   addVoxelNode(nodeId);
 }
 
 void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeBranchNode<OctreeContainerEmptyWithId> *parentNode)
 {
   //FIXME: check out FIXME in connectLeafNode method
-  LOG(LTRACE) << "Connecting nodes: ";
   int branchNodeId = branchNode->getContainer().getNodeId();
   string bayesParentNodeName = createVoxelName(branchNodeId);
   int parentId = parentNode->getContainer().getNodeId();
   string bayesChildNodeName = createVoxelName(parentId);
+  LOG(LTRACE) << "Connecting nodes: " << bayesParentNodeName << "->" << bayesChildNodeName;
   addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
