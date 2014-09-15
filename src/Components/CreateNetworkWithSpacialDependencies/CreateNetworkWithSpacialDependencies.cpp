@@ -119,14 +119,13 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode(); 
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
 	if(node->getNodeType() == BRANCH_NODE) {
-		OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
-		LOG(LDEBUG) << "branch node: " << branchNode->getContainer().getNodeId();
-		branchNode->getContainer().setNodeId(nextId);
-    createBranchNode(branchNode);
-    parent = branchNode;
+		OctreeBranchNode<OctreeContainerEmptyWithId>* rootNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
+		LOG(LDEBUG) << "branch node: " << rootNode->getContainer().getNodeId();
+		rootNode->getContainer().setNodeId(nextId);
+    createBranchNode(rootNode);
+    parent = rootNode;
 		nextId++;
-    ++dfIt;
-		LOG(LDEBUG) << "root id: " << branchNode->getContainer().getNodeId();
+		LOG(LDEBUG) << "root id: " << rootNode->getContainer().getNodeId();
 	}
   
   for (;dfIt != dfIt_end; ++dfIt) {
@@ -145,18 +144,17 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       LOG(LDEBUG) << "Entering octree branch node.";
 			LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
 			OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
-        LOG(LDEBUG) << "branch node: " << branchNode->getContainer().getNodeId();
       if(nodeHasOnlyOneChild(branchNode)) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
         continue;
       }
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
-				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
-        LOG(LDEBUG) << "branch node: " << branchNode->getContainer().getNodeId();
+//				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
+//        LOG(LDEBUG) << "branch node: " << branchNode->getContainer().getNodeId();
         
         branchNode -> getContainer().setNodeId(nextId);
-				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
+//				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
         createBranchNode(branchNode);
         LOG(LDEBUG) << "parent: " << parent->getContainer().getNodeId();
         LOG(LDEBUG) << "child: " << branchNode->getContainer().getNodeId();
