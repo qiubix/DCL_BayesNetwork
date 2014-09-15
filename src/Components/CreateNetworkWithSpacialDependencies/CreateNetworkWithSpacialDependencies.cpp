@@ -114,17 +114,17 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 
   LOG(LDEBUG) << "Creating nodes";
   
-  int nextId = 0;
+//  int nextId = 0;
 	// Root node
 	pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode(); 
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
 	if(node->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* rootNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 		LOG(LDEBUG) << "branch node: " << rootNode->getContainer().getNodeId();
-		rootNode->getContainer().setNodeId(nextId);
+//		rootNode->getContainer().setNodeId(nextId);
     createBranchNode(rootNode);
     parent = rootNode;
-		nextId++;
+//		nextId++;
 		LOG(LDEBUG) << "root id: " << rootNode->getContainer().getNodeId();
 	}
   
@@ -153,14 +153,14 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 //				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
 //        LOG(LDEBUG) << "branch node: " << branchNode->getContainer().getNodeId();
         
-        branchNode -> getContainer().setNodeId(nextId);
+//        branchNode -> getContainer().setNodeId(nextId);
 //				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
         createBranchNode(branchNode);
         LOG(LDEBUG) << "parent: " << parent->getContainer().getNodeId();
         LOG(LDEBUG) << "child: " << branchNode->getContainer().getNodeId();
         connectBranchNode(branchNode, parent);
         parent = branchNode;
-        ++nextId;
+//        ++nextId;
       }
     }
   }
@@ -236,9 +236,12 @@ bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   //FIXME: duplication with createLeafNode method
-  int nodeId = branchNode -> getContainer().getNodeId();
-  LOG(LDEBUG) << "Creating branch node: " << nodeId;
-  addVoxelNode(nodeId);
+//  int nodeId = branchNode -> getContainer().getNodeId();
+//  LOG(LDEBUG) << "Creating branch node: " << nodeId;
+  LOG(LDEBUG) << "Creating branch node: " << nextId;
+  branchNode->getContainer().setNodeId(nextId);
+  addVoxelNode(nextId);
+  ++nextId;
 }
 
 void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeBranchNode<OctreeContainerEmptyWithId> *parentNode)
