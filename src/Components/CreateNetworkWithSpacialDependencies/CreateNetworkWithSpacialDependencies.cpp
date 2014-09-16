@@ -126,11 +126,14 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     parent = rootNode;
 //		nextId++;
 		LOG(LDEBUG) << "root id: " << rootNode->getContainer().getNodeId();
+    LOG(LDEBUG) << "parent pointer: " << parent;
+    ++dfIt;
 	}
   
   for (;dfIt != dfIt_end; ++dfIt) {
     LOG(LDEBUG) << "----- Another node in depth search -----";
     LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
+    LOG(LDEBUG) << "parent pointer: " << parent;
 		pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode(); 
     if (node->getNodeType() == LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
@@ -143,6 +146,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     else if (node->getNodeType() == BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
 			LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
+			LOG(LDEBUG) << "parent pointer: " << parent;
 			OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
       if(nodeHasOnlyOneChild(branchNode)) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
@@ -156,6 +160,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 //        branchNode -> getContainer().setNodeId(nextId);
 //				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
         createBranchNode(branchNode);
+				LOG(LDEBUG) << "parent pointer: " << parent;
+				LOG(LDEBUG) << "node pointer: " << branchNode;
         LOG(LDEBUG) << "parent: " << parent->getContainer().getNodeId();
         LOG(LDEBUG) << "child: " << branchNode->getContainer().getNodeId();
         connectBranchNode(branchNode, parent);
