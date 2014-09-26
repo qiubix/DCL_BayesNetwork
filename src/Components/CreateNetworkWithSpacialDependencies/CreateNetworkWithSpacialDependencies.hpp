@@ -112,6 +112,8 @@ private:
 
 		bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 		bool nextNodeIsAlsoBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		int getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		int getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode);
 		void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 		void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
     
@@ -125,6 +127,7 @@ private:
     string createFeatureName(int id);
 
     void addNode(string name);
+    void setNodeCPT(string name, int numberOfParents);
     
     void addArc(string parentName, string childName);
     void fillCPT(string name, std::vector<double> probabilities);

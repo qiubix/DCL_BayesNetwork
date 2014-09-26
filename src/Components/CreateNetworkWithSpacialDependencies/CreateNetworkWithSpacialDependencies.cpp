@@ -270,6 +270,23 @@ bool CreateNetworkWithSpacialDependencies::nextNodeIsAlsoBranchNode(OctreeBranch
     return false;
 }
 
+int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode)
+{
+  LOG(LTRACE) << "Get number of children from branch node";
+  unsigned char index;
+  int childrenCounter = 0;
+  for (index = 0; index < 8; ++index) {
+    if (branchNode->hasChild(index))
+			++childrenCounter;
+  }
+  return childrenCounter;
+}
+
+int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode)
+{
+  return leafNode->getContainer().getSize();
+}
+
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   //FIXME: duplication with createLeafNode method
@@ -372,6 +389,21 @@ void CreateNetworkWithSpacialDependencies::addNode(std::string name)
         outcomes.Add(outcomesNames[i].c_str());
     }
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
+}
+
+void CreateNetworkWithSpacialDependencies::setNodeCPT(string name, int numberOfParents)
+{
+	LOG(LDEBUG) << "Set node CPT: " << name;
+	std::vector<double> probabilities;
+	std::string s(numberOfParents,'1');
+	do {
+		int ones = std::count(s.begin(),s.end(),'1');
+		double probability = (double) ones/numberOfParents;
+		probabilities.push_back(probability);
+		probabilities.push_back(1-probability);
+	} while(generateNext(s.begin(), s.end()));
+
+	fillCPT(name, probabilities);
 }
 
 void CreateNetworkWithSpacialDependencies::addArc(string parentName, string childName)
