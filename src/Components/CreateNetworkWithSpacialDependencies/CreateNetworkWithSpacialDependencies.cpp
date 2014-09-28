@@ -196,6 +196,9 @@ void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeC
   LOG(LDEBUG) << "Creating leaf node: " << nextId;
   leafNode->getContainer().setNodeId(nextId);
   addVoxelNode(nextId);
+  string nodeName = createVoxelName(nextId);
+  int numberOfChildren = getNumberOfChildren(leafNode);
+  setNodeCPT(nodeName, numberOfChildren);
   ++nextId;
 }
 
@@ -279,11 +282,14 @@ int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeBranchNode<O
     if (branchNode->hasChild(index))
 			++childrenCounter;
   }
+  LOG(LDEBUG) << "number of children: " << childrenCounter;
   return childrenCounter;
 }
 
 int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode)
 {
+  LOG(LTRACE) << "Get number of children from leaf node";
+  LOG(LDEBUG) << "number of children: " << leafNode->getContainer().getSize();
   return leafNode->getContainer().getSize();
 }
 
@@ -295,6 +301,9 @@ void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<Oct
   LOG(LDEBUG) << "Creating branch node: " << nextId;
   branchNode->getContainer().setNodeId(nextId);
   addVoxelNode(nextId);
+  string nodeName = createVoxelName(nextId);
+  int numberOfChildren = getNumberOfChildren(branchNode);
+  setNodeCPT(nodeName, numberOfChildren);
   ++nextId;
 }
 
