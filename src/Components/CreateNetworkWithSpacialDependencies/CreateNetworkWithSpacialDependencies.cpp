@@ -400,6 +400,18 @@ void CreateNetworkWithSpacialDependencies::addNode(std::string name)
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
+void CreateNetworkWithSpacialDependencies::setCPTofAllNodes()
+{
+  LOG(LTRACE) << "Setting CPT of all nodes";
+	// Use breadth-first iterator
+	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
+	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
+  
+  for (; bfIt != bfIt_end; ++bfIt) {
+    
+  }
+}
+
 void CreateNetworkWithSpacialDependencies::setNodeCPT(string name, int numberOfParents)
 {
 	LOG(LDEBUG) << "Set node CPT: " << name;

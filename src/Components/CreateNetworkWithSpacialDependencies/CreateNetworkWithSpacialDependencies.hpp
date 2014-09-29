@@ -127,6 +127,8 @@ private:
     string createFeatureName(int id);
 
     void addNode(string name);
+    
+    void setCPTofAllNodes();
     void setNodeCPT(string name, int numberOfParents);
     
     void addArc(string parentName, string childName);
