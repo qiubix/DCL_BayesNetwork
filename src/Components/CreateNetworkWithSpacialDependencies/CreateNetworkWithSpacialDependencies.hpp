@@ -105,6 +105,7 @@ private:
     unsigned int leafNodeCount;
     unsigned int maxLeafContainerSize;
     int nextId;
+    unsigned int numberOfVoxels;
     
 		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
 		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);

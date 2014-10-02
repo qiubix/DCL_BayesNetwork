@@ -368,6 +368,7 @@ void CreateNetworkWithSpacialDependencies::addVoxelNode(int id)
 {
 	string voxelName = createVoxelName(id);
   addNode(voxelName);
+  ++numberOfVoxels;
 }
 
 string CreateNetworkWithSpacialDependencies::createVoxelName(int id)
@@ -403,28 +404,12 @@ void CreateNetworkWithSpacialDependencies::addNode(std::string name)
 void CreateNetworkWithSpacialDependencies::setCPTofAllNodes()
 {
   LOG(LTRACE) << "Setting CPT of all nodes";
-	// Use breadth-first iterator
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt = octree.breadth_begin();
-	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::BreadthFirstIterator bfIt_end = octree.breadth_end();
-  
-  for (; bfIt != bfIt_end; ++bfIt) {
-		LOG(LDEBUG) << "depth = " << bfIt.getCurrentOctreeDepth ();
-		pcl::octree::OctreeNode* node = bfIt.getCurrentOctreeNode(); 
-    
-		if (node->getNodeType () == BRANCH_NODE) {
-      OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
-      int numberOfChildren = getNumberOfChildren(branchNode);
-      int nodeId = branchNode->getContainer().getNodeId();
-      string nodeName = createVoxelName(nodeId);
-      setNodeCPT(nodeName, numberOfChildren);
-		}
-    if (node->getNodeType () == LEAF_NODE) {
-			OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
-      int numberOfChildren = getNumberOfChildren(leafNode);
-      int nodeId = leafNode->getContainer().getNodeId();
-      string nodeName = createVoxelName(nodeId);
-      setNodeCPT(nodeName, numberOfChildren);
-		}
+
+  for (unsigned int i=0; i<numberOfVoxels; ++i) {
+    LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
+    int numberOfChildren = theNet.GetNumOfAncestors(i);
+    string nodeName = createVoxelName(i);
+    setNodeCPT(nodeName, numberOfChildren);
   }
 }
 
