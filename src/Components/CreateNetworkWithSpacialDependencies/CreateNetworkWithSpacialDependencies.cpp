@@ -181,6 +181,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 //      }
     }
   }
+  setCPTofAllNodes();
 
 	//	Delete octree data structure (pushes allocated nodes to memory pool!).
 	octree.deleteTree ();
@@ -407,7 +408,10 @@ void CreateNetworkWithSpacialDependencies::setCPTofAllNodes()
 
   for (unsigned int i=0; i<numberOfVoxels; ++i) {
     LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
-    int numberOfChildren = theNet.GetNumOfAncestors(i);
+    int numberOfChildren = theNet.NumParents(i);
+    LOG(LTRACE) << "Number of ancestors: " << numberOfChildren;
+    if(numberOfChildren == 0) 
+      continue;
     string nodeName = createVoxelName(i);
     setNodeCPT(nodeName, numberOfChildren);
   }
