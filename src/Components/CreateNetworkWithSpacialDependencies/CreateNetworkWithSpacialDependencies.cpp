@@ -190,7 +190,6 @@ void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeC
 
 void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
-  //TODO: FIXME: evaluate for proper order
   int leafNodeId = leafNode->getContainer().getNodeId();
   string bayesParentNodeName = createVoxelName(leafNodeId);
   int parentId = branchNode->getContainer().getNodeId();
@@ -253,7 +252,6 @@ bool CreateNetworkWithSpacialDependencies::nextNodeIsAlsoBranchNode(OctreeBranch
     if (branchNode->hasChild(index))
 			childNode = branchNode -> getChildPtr(index);
   }
-//  LOG(LDEBUG) << "Child node: " << childNode;
   if (childNode->getNodeType() == BRANCH_NODE)
     return true;
   else
@@ -291,7 +289,6 @@ void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<Oct
 
 void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeBranchNode<OctreeContainerEmptyWithId> *parentNode)
 {
-  //FIXME: check out FIXME in connectLeafNode method
   int branchNodeId = branchNode->getContainer().getNodeId();
   string bayesParentNodeName = createVoxelName(branchNodeId);
   int parentId = parentNode->getContainer().getNodeId();
