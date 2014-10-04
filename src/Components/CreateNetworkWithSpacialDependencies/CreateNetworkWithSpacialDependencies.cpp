@@ -119,7 +119,6 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	// Root node
 	pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode(); 
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
-  OctreeBranchNode<OctreeContainerEmptyWithId>* previousParent;
   bool reachedLeafNode = false;
   
 	if(node->getNodeType() == BRANCH_NODE) {
@@ -127,8 +126,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 //		LOG(LDEBUG) << "branch node: " << rootNode->getContainer().getNodeId();
     createBranchNode(rootNode);
     parent = rootNode;
-    previousParent = parent;
-    nodeHasOnlyOneChild(rootNode);
+    addParentsToQueue(rootNode);
 //		LOG(LDEBUG) << "root id: " << rootNode->getContainer().getNodeId();
 //    LOG(LDEBUG) << "parent pointer: " << parent;
     ++dfIt;
@@ -151,7 +149,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       LOG(LDEBUG) << "Entering octree branch node.";
       if(reachedLeafNode) {
 //        LOG(LDEBUG) << "Reached leaf node.";
-        parent = previousParent;
+        parent = parentQueue.top();
+        parentQueue.pop();
         reachedLeafNode = false;
       }
 //			LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
@@ -162,6 +161,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 //        continue;
 //      }
 //      else {
+      addParentsToQueue(branchNode);
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
 //				LOG(LDEBUG) << "current parent: " << parent->getContainer().getNodeId();
 //        LOG(LDEBUG) << "branch node: " << branchNode->getContainer().getNodeId();
@@ -172,9 +172,6 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 //        LOG(LDEBUG) << "child: " << branchNode->getContainer().getNodeId();
         connectBranchNode(branchNode, parent);
         parent = branchNode;
-        if(nextNodeIsAlsoBranchNode(branchNode) && !nodeHasOnlyOneChild(branchNode)) {
-					previousParent = parent;
-        }
 //      }
     }
   }
@@ -184,6 +181,17 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	octree.deleteTree ();
   
   exportNetwork();
+}
+
+void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode)
+{
+  LOG(LDEBUG) << "Adding parents to queue";
+  if(!nodeHasOnlyOneChild(branchNode)) {
+    int numberOfChildren = getNumberOfChildren(branchNode);
+    for (int i=0; i<numberOfChildren-1; i++) {
+      parentQueue.push(branchNode);
+    }
+  }
 }
 
 void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
