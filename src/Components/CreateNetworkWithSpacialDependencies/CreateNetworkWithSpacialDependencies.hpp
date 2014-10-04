@@ -106,6 +106,9 @@ private:
     unsigned int maxLeafContainerSize;
     int nextId;
     unsigned int numberOfVoxels;
+    std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
+    
+    void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
     
 		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
 		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
