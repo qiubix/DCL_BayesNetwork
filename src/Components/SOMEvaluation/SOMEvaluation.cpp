@@ -80,7 +80,7 @@ void SOMEvaluation::onNetwork()
 
 void SOMEvaluation::onInstance()
 {
-	LOG(LWARNING) << "SOMEvaluation::onInstance";
+	LOG(LDEBUG) << "SOMEvaluation::onInstance";
 	if(theNet.GetNumberOfNodes() != 0) {
 		instance = in_instanceMatchedFeatures.read();
 		evaluate();
@@ -96,12 +96,32 @@ void SOMEvaluation::evaluate()
 		timer.restart();
 
 		theNet.ClearAllEvidence();
+    deactivateFeatures();
 		activateMatchedFeatureNodes();
 		theNet.UpdateBeliefs();
 
 		displayHypothesisProbability();
     
 		LOG(LINFO) << " runtime: " << timer.elapsed();
+    LOG(LDEBUG) << "SOMEvaluation finished";
+}
+
+void SOMEvaluation::deactivateFeatures()
+{
+	int nodeId = 0;
+	while(true) {
+		std::stringstream ss;
+		ss << "F_" << nodeId;
+		std::string nodeName(ss.str());
+		int node = theNet.FindNode(nodeName.c_str());
+		if(node != DSL_OUT_OF_RANGE) {
+			theNet.GetNode(node)->Value()->SetEvidence(1);
+		}
+		else {
+			break;
+		}
+		nodeId++;
+	}
 }
 
 void SOMEvaluation::activateMatchedFeatureNodes()
@@ -113,6 +133,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 						theNet.GetNode(node)->Value()->SetEvidence(0);
 				}
 		}
+    LOG(LDEBUG) << "Finished activating matched features";
 }
 
 void SOMEvaluation::displayHypothesisProbability()

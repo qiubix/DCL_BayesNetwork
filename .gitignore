@@ -17,4 +17,10 @@ build/
 dist/
 
 # user files 
-*.user
+*.user*
+
+# swap files
+*.swp
+
+# output network
+out_network.xdsl

@@ -1,10 +1,10 @@
 /*!
- * \file CreateNetwork.hpp
+ * \file CreateNetworkWithSpacialDependencies.hpp
  * \brief
  */
 
-#ifndef CREATE_NETWORK_HPP_
-#define CREATE_NETWORK_HPP_
+#ifndef CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_
+#define CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_
 
 #define CV_NO_BACKWARD_COMPATIBILITY
 
@@ -31,22 +31,22 @@ namespace Processors {
 namespace Network {
 
 /*!
- * \class CreateNetwork
- * \brief Class used to build Bayes network
+ * \class CreateNetworkWithSpacialDependencies
+ * \brief Class used to build Bayes network based on features multiplicity and spacial dependencies between them
  * \author Karol Katerżawa
  */
-class CreateNetwork: public Base::Component
+class CreateNetworkWithSpacialDependencies: public Base::Component
 {
 public:
     /*!
      * Constructor.
      */
-    CreateNetwork(const std::string & name = "CreateNetwork");
+    CreateNetworkWithSpacialDependencies(const std::string & name = "CreateNetworkWithSpacialDependencies");
 
     /*!
      * Destructor
      */
-    virtual ~CreateNetwork();
+    virtual ~CreateNetworkWithSpacialDependencies();
 
     /*!
      * Prepare data streams and handlers
@@ -84,8 +84,8 @@ protected:
     bool onStop();
 
     /// Event handlers
-    Base::EventHandler <CreateNetwork> h_onModels;
-    Base::EventHandler <CreateNetwork> h_onJointMultiplicity;
+    Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
+    Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
 		Base::EventHandler2 h_buildNetwork;
 
     /*!
@@ -105,24 +105,37 @@ private:
     unsigned int leafNodeCount;
     unsigned int maxLeafContainerSize;
     int nextId;
+    unsigned int numberOfVoxels;
+    std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
+    
+    void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+    
+		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+
+		bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		bool nextNodeIsAlsoBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		int getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		int getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode);
+		void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+		void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
     
     void exportNetwork();
 
     void addHypothesisNode();
-    void createBranchNodeChildren(pcl::octree::OctreeNode* node);
-    void createLeafNodeChildren(pcl::octree::OctreeNode* node);
     
     void createChild(pcl::octree::OctreeNode* child, int parentId);
     void addVoxelNode(int id);
     string createVoxelName(int id);
     string createFeatureName(int id);
-    void setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter);
 
     void addNode(string name);
     
-    void addArc(string parentName, string childName);
+    void setCPTofAllNodes();
     void setNodeCPT(string name, int numberOfParents);
-    void setNodeCPT(string name, std::vector<double> parentsCoefficients);
+    
+    void addArc(string parentName, string childName);
     void fillCPT(string name, std::vector<double> probabilities);
     int generateNext(std::string::iterator start, std::string::iterator end);
 
@@ -131,7 +144,6 @@ private:
     void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
     int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
     void logPoint(PointXYZSIFT p, int index);
-    void loadNetwork();
 };
 
 }//: namespace Network
@@ -141,7 +153,7 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("CreateNetwork", Processors::Network::CreateNetwork)
+REGISTER_COMPONENT("CreateNetworkWithSpacialDependencies", Processors::Network::CreateNetworkWithSpacialDependencies)
 
-#endif /* CREATE_NETWORK_HPP_ */
+#endif /* CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_ */
 

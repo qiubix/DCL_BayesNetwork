@@ -1,0 +1,61 @@
+<Task>
+	<!-- reference task information -->
+	<Reference>
+		<Author>
+			<name>Karol Katerzawa</name>
+			<link></link>
+		</Author>
+		
+		<Description>
+			<brief>BayesNetwork:HomeTest</brief>
+			<full></full>	
+		</Description>
+	</Reference>
+	
+	<!-- task definition -->
+	<Subtasks>
+		<Subtask name="Main">
+			<Executor name="Processing"  period="1">
+				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
+					<param name="filenames">/home/qiubix/Objects/SimpleObjects/object_1.json</param>
+				</Component>
+				<Component name="PCDReader" type="PCL:PCDReader" priority="2" bump="0">
+					<param name="filename">/home/qiubix/Objects/SimpleObjects/object_1/feature_0.pcd</param>
+				</Component>
+				<Component name="Adder" type="PCL:SIFTAdder" priority="9" bump="0">
+				</Component>
+				<Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
+				</Component>
+				<Component name="CreateNetwork" type="BayesNetwork:CreateNetworkWithSpacialDependencies" priority="11" bump="0">
+				</Component>
+				<Component name="SOMEvaluation" type="BayesNetwork:SOMEvaluation" priority="12" bump="0">
+				</Component>
+			</Executor>
+		</Subtask>	
+	</Subtasks>
+	
+	<!-- pipes connecting datastreams -->
+	<DataStreams>
+		<Source name="PCDReader.out_cloud_xyzsift">
+			<sink>SIFTFeatureMatcher.in_instanceCloud</sink>	
+		</Source>
+
+		<Source name="SIFTFeatureMatcher.out_featuresIndexes">
+			<sink>SOMEvaluation.in_instanceMatchedFeatures</sink>
+		</Source>
+		<Source name="SOMJSONReader.out_models">
+			<sink>Adder.in_models</sink>
+		</Source>
+		<Source name="Adder.out_cloud">
+			<sink>CreateNetwork.in_cloud_xyzsift</sink>
+			<sink>SIFTFeatureMatcher.in_jointCloud</sink>
+		</Source>
+		<Source name="CreateNetwork.out_network">
+			<sink>SOMEvaluation.in_network</sink>
+		</Source>
+	</DataStreams>
+</Task>
+
+
+
+

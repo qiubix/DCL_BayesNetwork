@@ -10,7 +10,6 @@
 #include <algorithm>
 
 #include "CreateNetwork.hpp"
-#include "OctreeContainers.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
@@ -45,10 +44,12 @@ void CreateNetwork::prepareInterface()
 	// Register data streams.
 	//	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
 	h_buildNetwork.setup(boost::bind(&CreateNetwork::buildNetwork, this));
 	registerHandler("buildNetwork", &h_buildNetwork);
 	addDependency("buildNetwork", &in_cloud_xyzsift);
+	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
 }
@@ -78,7 +79,7 @@ bool CreateNetwork::onStart()
 }
 
 void CreateNetwork::buildNetwork() {
-	LOG(LTRACE) << "CreateNetwork::buildNetwork";
+	LOG(LDEBUG) << "CreateNetwork::buildNetwork";
   
 	if(theNet.GetNumberOfNodes() != 0) {
 		return;
@@ -86,6 +87,7 @@ void CreateNetwork::buildNetwork() {
 
 	// Read from dataport.
 	cloud = in_cloud_xyzsift.read();
+  jointMultiplicityVector = in_jointMultiplicity.read();
 
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
@@ -153,10 +155,13 @@ void CreateNetwork::addHypothesisNode()
 	//    for(unsigned i=0; i<cloud->size(); ++i) {
 	//        summedFeaturesMultiplicity += cloud->at(i).multiplicity;
 	//    }
-
-	stringstream name;
-	name << "V_" << modelId;
-	string hypothesisName(name.str());
+  
+  /*
+   * FIXME: hardcoded modelId! Works only for one model. 
+   * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
+   * Possible solution: hypothesis node name may start with H_
+   */
+  string hypothesisName = createVoxelName(modelId);
 	addNode(hypothesisName);
 }
 
@@ -165,25 +170,21 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 {
 	OctreeBranchNode<OctreeContainerEmptyWithId>* branch_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
 	int parentId = branch_node->getContainer().getNodeId();
-	LOG(LINFO) << "root id: " << parentId;
+	LOG(LDEBUG) << "root id: " << parentId;
 
 	// iterate over all children
 	unsigned char child_idx;
 	int childrenCounter = 0;
 	for (child_idx = 0; child_idx < 8 ; ++child_idx) {
 		if (branch_node->hasChild(child_idx)) {
-			LOG(LINFO) << "Child "<<(int)child_idx << "present";
+			LOG(LDEBUG) << "Child "<<(int)child_idx << "present";
 			childrenCounter++;
 			OctreeNode* child = branch_node->getChildPtr(child_idx);
       createChild(child, parentId);
 		}//:if has child
 	}//:for children
   
-  //TODO: replace with method call
-	string voxelName = "";
-	stringstream name;
-	name << "V_" << parentId;
-	voxelName = name.str();
+	string voxelName = createVoxelName(parentId);
 	LOG(LDEBUG) << "voxel ID: " << parentId;
 	LOG(LDEBUG) << "voxel name: " << voxelName;
 	LOG(LDEBUG) << "children count: " <<childrenCounter;
@@ -191,48 +192,34 @@ void CreateNetwork::createBranchNodeChildren(pcl::octree::OctreeNode* node)
 	branchNodeCount++;
 }
 
-//TODO: refactor
 void CreateNetwork::createLeafNodeChildren(pcl::octree::OctreeNode* node)
 {
-	// Cast to proper data structure.
 	OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
-	// Get container size.
-	int containter_size = leaf_node->getContainer().getSize();
-	// Check whether size is proper.
-	if(containter_size >8) {
-		LOG(LERROR) << "Leaf containter too big! (" << containter_size << ")";
-	}//: if
-	// Get maximum size of container.	
-	if(containter_size > maxLeafContainerSize)
-		maxLeafContainerSize = containter_size;
+  logLeafNodeContainerSize(leaf_node);
 
 	int parentId = leaf_node->getContainer().getNodeId();
 	int childrenCounter = leaf_node->getContainer().getSize();
 	std::vector<double> featuresCoefficients;
-	int summedFeaturesMultiplicity = 0;
 
 	// Iterate through container elements, i.e. cloud points.
 	std::vector<int> point_indices;
 	leaf_node->getContainer().getPointIndices(point_indices);
-	for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
-		PointXYZSIFT p = cloud->at(point_indices[j]);
-		summedFeaturesMultiplicity += p.multiplicity;
-	}
+  
 	for(unsigned int i=0; i<leaf_node->getContainer().getSize(); i++)
 	{
-		LOG(LDEBUG) << "Iteration number " << i << " Point index=" << point_indices[i];
 		PointXYZSIFT p = cloud->at(point_indices[i]);
-		LOG(LDEBUG) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
-		LOG(LDEBUG) << "multiplicity: " << p.multiplicity;
-		LOG(LDEBUG) << "pointId " << p.pointId;
-		stringstream name;
-		name << "F_" << p.pointId;
-		string featureName(name.str());
+    logPoint(p, point_indices[i]);
+    string featureName = createFeatureName(p.pointId);
+    string parentName = createVoxelName(parentId);
 		addNode(featureName);
-		addArc(featureName, parentId);
-		double coefficient = (double) p.multiplicity/summedFeaturesMultiplicity;
+		addArc(featureName, parentName);
+		double coefficient = (double) p.multiplicity/(jointMultiplicityVector[i] * childrenCounter * 2);
 		featuresCoefficients.push_back(coefficient);
 	}//: for points		
+  
+	LOG(LDEBUG) << "voxel ID: " << parentId;
+	LOG(LDEBUG) << "voxel name: " << createVoxelName(parentId);
+	LOG(LDEBUG) << "children count: " <<childrenCounter;
   setVoxelNodeCPT(parentId, featuresCoefficients, childrenCounter);
 	leafNodeCount++;
 }
@@ -242,19 +229,19 @@ void CreateNetwork::createChild(pcl::octree::OctreeNode* child, int parentId)
 	if(child->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
 		child_node->getContainer().setNodeId(nextId++);
-		int currentId = nextId - 1;
-		addVoxelNode(currentId);
-		addArc(currentId, parentId);
 		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 	}
-	if(child->getNodeType() == LEAF_NODE) {
+	else if(child->getNodeType() == LEAF_NODE) {
 		OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
 		child_node->getContainer().setNodeId(nextId++);
-		int currentId = nextId - 1;
-		addVoxelNode(currentId);
-		addArc(currentId, parentId);
 		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
 	}
+  else {
+    return;
+  }
+	int currentId = nextId - 1;
+	addVoxelNode(currentId);
+	addArc(createVoxelName(currentId), createVoxelName(parentId));
 }
 
 void CreateNetwork::addVoxelNode(int id)
@@ -262,18 +249,29 @@ void CreateNetwork::addVoxelNode(int id)
 	stringstream name;
 	name << "V_" << id;
 	string voxelName = name.str();
-	addNode(voxelName);
+  addNode(voxelName);
+}
+
+string CreateNetwork::createVoxelName(int id)
+{
+	stringstream name;
+	name << "V_" << id;
+	string voxelName = name.str();
+  return voxelName;
+}
+
+string CreateNetwork::createFeatureName(int id)
+{
+	stringstream name;
+	name << "F_" << id;
+	string featureName(name.str());
+	return featureName;
 }
 
 //TODO: make functionality more general
 void CreateNetwork::setVoxelNodeCPT(int id, std::vector<double> featuresCoefficients, int childrenCounter) 
 {
-	stringstream name;
-	name << "V_" << id;
-	string voxelName = name.str();
-	LOG(LDEBUG) << "voxel ID: " << id;
-	LOG(LDEBUG) << "voxel name: " << voxelName;
-	LOG(LDEBUG) << "children count: " <<childrenCounter;
+  string voxelName = createVoxelName(id);
 	setNodeCPT(voxelName, featuresCoefficients);
 	//            setNodeCPT(voxelName, childrenCounter);
 }
@@ -292,27 +290,11 @@ void CreateNetwork::addNode(std::string name)
     theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
-void CreateNetwork::addArc(int parentId, int currentId)
+void CreateNetwork::addArc(string parentName, string childName)
 {
-	stringstream childNameStr;
-	childNameStr << "V_" << currentId;
-	string childName(childNameStr.str());
-    int childNode = theNet.FindNode(childName.c_str());
-    stringstream parentNameStr;
-    parentNameStr << "V_" << parentId;
-    string parentName(parentNameStr.str());
-    int parentNode = theNet.FindNode(parentName.c_str());
-    theNet.AddArc(parentNode, childNode);
-}
-
-void CreateNetwork::addArc(string parentName, int currentId)
-{
-	stringstream childNameStr;
-	childNameStr << "V_" << currentId;
-	string childName(childNameStr.str());
-    int childNode = theNet.FindNode(childName.c_str());
-    int parentNode = theNet.FindNode(parentName.c_str());
-    theNet.AddArc(parentNode, childNode);
+	int childNode = theNet.FindNode(childName.c_str());
+	int parentNode = theNet.FindNode(parentName.c_str());
+	theNet.AddArc(parentNode, childNode);
 }
 
 //TODO: split into two methods: calculating probability and actually setting node's cpt
@@ -328,15 +310,7 @@ void CreateNetwork::setNodeCPT(string name, int numberOfParents)
 		probabilities.push_back(1-probability);
 	} while(generateNext(s.begin(), s.end()));
 
-	int node = theNet.FindNode(name.c_str());
-	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
-
-	std::vector<double>::iterator it = probabilities.begin();
-	do {
-		theCoordinates.UncheckedValue() = *it;
-		LOG(LDEBUG) << "Probability: " << *it;
-		++it;
-	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+	fillCPT(name, probabilities);
 }
 
 void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficients)
@@ -356,14 +330,19 @@ void CreateNetwork::setNodeCPT(string name, std::vector<double> parentsCoefficie
 		probabilities.push_back(probability);
 		probabilities.push_back(1-probability);
 	} while(generateNext(s.begin(), s.end()));
+  
+	fillCPT(name, probabilities);
+}
 
+void CreateNetwork::fillCPT(string name, std::vector<double> probabilities)
+{
 	int node = theNet.FindNode(name.c_str());
 	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
 
 	std::vector<double>::iterator it = probabilities.begin();
 	do {
 		theCoordinates.UncheckedValue() = *it;
-		LOG(LDEBUG) << "Probability: " << *it;
+		LOG(LTRACE) << "Probability: " << *it;
 		++it;
 	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
@@ -397,6 +376,36 @@ void CreateNetwork::loadNetwork()
     //result = theNet.ReadFile("/home/qiubix/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
     //result = theNet.ReadFile("/home/kkaterza/DCL/BayesNetwork/in_network.xdsl", DSL_XDSL_FORMAT);
     LOG(LWARNING) << "Reading network file: " << result;
+}
+
+void CreateNetwork::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+{
+	int containter_size = leaf_node->getContainer().getSize();
+	if(containter_size >8) {
+		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
+	}//: if
+	if(containter_size > maxLeafContainerSize)
+    maxLeafContainerSize = containter_size;
+}
+
+int CreateNetwork::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leaf_node)
+{
+  int summedFeaturesMultiplicity = 0;
+	std::vector<int> point_indices;
+	leaf_node->getContainer().getPointIndices(point_indices);
+	for(unsigned int j=0; j<leaf_node->getContainer().getSize(); j++) {
+		PointXYZSIFT p = cloud->at(point_indices[j]);
+		summedFeaturesMultiplicity += p.multiplicity;
+	}
+  return summedFeaturesMultiplicity;
+}
+
+void CreateNetwork::logPoint(PointXYZSIFT p, int index)
+{
+		LOG(LTRACE) << "Point index = " << index;
+		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
+		LOG(LTRACE) << "multiplicity: " << p.multiplicity;
+		LOG(LTRACE) << "pointId " << p.pointId;
 }
 
 void CreateNetwork::mapFeaturesNames()

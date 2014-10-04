@@ -17,14 +17,14 @@
 		<Subtask name="Main">
 			<Executor name="Processing"  period="1">
 				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
-					<param name="filenames">/home/kkaterza/Objects/food_box_12.json</param>
+					<param name="filenames">/home/kkaterza/Objects/food_can_4.json</param>
 				</Component>
 				<Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
-					<param name="sequence.directory">/home/kkaterza/Objects/food_box_12</param>
+					<param name="sequence.directory">/home/kkaterza/Objects/food_can_4</param>
 					<param name="sequence.pattern">.*\_color.png</param>				
 				</Component>
 				<Component name="SequenceDepth" type="CvBasic:Sequence" priority="3" bump="0">
-					<param name="sequence.directory">/home/kkaterza/Objects/food_box_12</param>
+					<param name="sequence.directory">/home/kkaterza/Objects/food_can_4</param>
 					<param name="sequence.pattern">.*\_depth.png</param>	
 				</Component>
 				<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="5" bump="0">
@@ -39,6 +39,7 @@
 				</Component>
 				<Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
 				</Component>
+				<Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bumb="0"></Component>
 				<Component name="CreateNetwork" type="BayesNetwork:CreateNetwork" priority="11" bump="0">
 				</Component>
 				<Component name="SOMEvaluation" type="BayesNetwork:SOMEvaluation" priority="12" bump="0">
@@ -78,6 +79,10 @@
 		<Source name="Adder.out_cloud">
 			<sink>CreateNetwork.in_cloud_xyzsift</sink>
 			<sink>SIFTFeatureMatcher.in_jointCloud</sink>
+			<sink>Mapper.in_jointCloud</sink>
+		</Source>
+		<Source name="Mapper.out_jointMultiplicity">
+			<sink>CreateNetwork.in_jointMultiplicity</sink>
 		</Source>
 <!--				<Source name="PCDReader.out_cloud_xyzsift">
 			<sink>CreateNetwork.in_cloud_xyzsift</sink>

@@ -95,6 +95,7 @@ private:
     DSL_network theNet;
     
     void evaluate();
+    void deactivateFeatures();
     void activateMatchedFeatureNodes();
     void displayHypothesisProbability();
     int findFeatureNode(int nodeId);
