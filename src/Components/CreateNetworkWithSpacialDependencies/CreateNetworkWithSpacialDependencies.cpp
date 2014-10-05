@@ -237,7 +237,7 @@ bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<
     if (branchNode -> hasChild(child_idx)) 
       ++childrenCounter;
   }
-  LOG(LDEBUG) << "Number of children: " << childrenCounter;
+  LOG(LTRACE) << "Number of children: " << childrenCounter;
   if (childrenCounter == 1)
     return true;
   else 
@@ -268,7 +268,7 @@ int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeBranchNode<O
     if (branchNode->hasChild(index))
 			++childrenCounter;
   }
-  LOG(LDEBUG) << "number of children: " << childrenCounter;
+  LOG(LTRACE) << "number of children: " << childrenCounter;
   return childrenCounter;
 }
 
@@ -295,7 +295,6 @@ void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<Oc
   string bayesParentNodeName = network.createVoxelName(branchNodeId);
   int parentId = parentNode->getContainer().getNodeId();
   string bayesChildNodeName = network.createVoxelName(parentId);
-//  LOG(LTRACE) << "Connecting nodes: " << bayesParentNodeName << "->" << bayesChildNodeName;
   network.addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
@@ -321,28 +320,6 @@ void CreateNetworkWithSpacialDependencies::addHypothesisNode()
    * Possible solution: hypothesis node name may start with H_
    */
   network.addVoxelNode(modelId);
-}
-
-
-void CreateNetworkWithSpacialDependencies::createChild(pcl::octree::OctreeNode* child, int parentId)
-{
-	if(child->getNodeType() == BRANCH_NODE) {
-		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
-		child_node->getContainer().setNodeId(nextId++);
-		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
-	}
-	else if(child->getNodeType() == LEAF_NODE) {
-		OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
-		child_node->getContainer().setNodeId(nextId++);
-		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
-	}
-  else {
-    return;
-  }
-	int currentId = nextId - 1;
-	network.addVoxelNode(currentId);
-  ++numberOfVoxels;
-	network.addArc(network.createVoxelName(currentId), network.createVoxelName(parentId));
 }
 
 string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)

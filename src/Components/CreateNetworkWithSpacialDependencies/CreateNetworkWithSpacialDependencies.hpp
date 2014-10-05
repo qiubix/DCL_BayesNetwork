@@ -124,8 +124,6 @@ private:
     void exportNetwork();
 
     void addHypothesisNode();
-    
-    void createChild(pcl::octree::OctreeNode* child, int parentId);
 
     std::string getNodeName(int nodeHandle);
     void mapFeaturesNames();
