@@ -4,14 +4,17 @@
 #include "BayesNetwork.hpp"
 #include "Logger.hpp"
 
-void Processors::Network::BayesNetwork::addVoxelNode(int id)
+namespace Processors {
+namespace Network {
+
+void BayesNetwork::addVoxelNode(int id)
 {
   LOG(LTRACE) << "Adding voxel node to network";
   std::string voxelName = createVoxelName(id);
   addNode(voxelName);
 }
 
-std::string Processors::Network::BayesNetwork::createVoxelName(int id)
+std::string BayesNetwork::createVoxelName(int id)
 {
   LOG(LTRACE) << "Creating voxel name";
   std::stringstream name;
@@ -20,7 +23,7 @@ std::string Processors::Network::BayesNetwork::createVoxelName(int id)
   return voxelName;
 }
 
-std::string Processors::Network::BayesNetwork::createFeatureName(int id)
+std::string BayesNetwork::createFeatureName(int id)
 {
   LOG(LTRACE) << "Creating feature name";
   std::stringstream name;
@@ -29,7 +32,7 @@ std::string Processors::Network::BayesNetwork::createFeatureName(int id)
   return featureName;
 }
 
-void Processors::Network::BayesNetwork::addArc(std::string parentName, std::string childName)
+void BayesNetwork::addArc(std::string parentName, std::string childName)
 {
   LOG(LTRACE) << "Adding arc between nodes: " << parentName << "->" << childName;
   int childNode = network.FindNode(childName.c_str());
@@ -38,7 +41,7 @@ void Processors::Network::BayesNetwork::addArc(std::string parentName, std::stri
 }
 
 //FIXME: change confusing names - children or ancestors? 
-void Processors::Network::BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
+void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
 {
   LOG(LTRACE) << "Setting CPTs of all nodes in network";
   for (unsigned int i=0; i<numberOfVoxels; ++i) {
@@ -52,7 +55,7 @@ void Processors::Network::BayesNetwork::setCPTofAllVoxelNodes(unsigned int numbe
   }
 }
 
-void Processors::Network::BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
+void BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
 {
   LOG(LTRACE) << "Setting CPT of node " << name;
   std::vector<double> probabilities;
@@ -67,17 +70,17 @@ void Processors::Network::BayesNetwork::setNodeCPT(std::string name, int numberO
   fillCPT(name, probabilities);
 }
 
-std::string Processors::Network::BayesNetwork::getNodeName(int nodeHandle)
+std::string BayesNetwork::getNodeName(int nodeHandle)
 {
   LOG(LTRACE) << "Get name of node: " << nodeHandle;
 }
 
-int Processors::Network::BayesNetwork::getNumberOfChildren(int nodeId)
+int BayesNetwork::getNumberOfChildren(int nodeId)
 {
   LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
 }
 
-void Processors::Network::BayesNetwork::addNode(std::string name)
+void BayesNetwork::addNode(std::string name)
 {
   LOG(LDEBUG) << "Add node to network: " << name;
   int newNode = network.AddNode(DSL_CPT, name.c_str());
@@ -91,7 +94,7 @@ void Processors::Network::BayesNetwork::addNode(std::string name)
   network.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
-void Processors::Network::BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
+void BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
 {
   LOG(LTRACE) << "Filling CPT of node " << name;
   int node = network.FindNode(name.c_str());
@@ -108,7 +111,7 @@ void Processors::Network::BayesNetwork::fillCPT(std::string name, std::vector<do
 /*!
  * Generate next string of 1 and 0 to find next cell in CPT
  */
-int Processors::Network::BayesNetwork::generateNext(std::string::iterator start, std::string::iterator end)
+int BayesNetwork::generateNext(std::string::iterator start, std::string::iterator end)
 {
   while(start != end)
   {
@@ -125,3 +128,6 @@ int Processors::Network::BayesNetwork::generateNext(std::string::iterator start,
   }
   return false;
 }
+
+}//: namespace Network
+}//: namespace Processors
