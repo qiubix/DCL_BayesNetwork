@@ -82,9 +82,9 @@ bool CreateNetworkWithSpacialDependencies::onStart()
 void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	LOG(LDEBUG) << "CreateNetworkWithSpacialDependencies::buildNetwork";
   
-	if(theNet.GetNumberOfNodes() != 0) {
-		return;
-	}
+  if(network.getNumberOfNodes() != 0) {
+    return;
+  }
 
 	// Read from dataport.
 	cloud = in_cloud_xyzsift.read();
@@ -184,18 +184,19 @@ void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeC
   //FIXME: Check for correctness and duplication. Is this method even necessary? 
   LOG(LDEBUG) << "Creating leaf node: " << nextId;
   leafNode->getContainer().setNodeId(nextId);
-  addVoxelNode(nextId);
+  network.addVoxelNode(nextId);
+  ++numberOfVoxels;
   ++nextId;
 }
 
 void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode, OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode)
 {
   int leafNodeId = leafNode->getContainer().getNodeId();
-  string bayesParentNodeName = createVoxelName(leafNodeId);
+  string bayesParentNodeName = network.createVoxelName(leafNodeId);
   int parentId = branchNode->getContainer().getNodeId();
-  string bayesChildNodeName = createVoxelName(parentId);
-  LOG(LTRACE) << "Connecting nodes: " << bayesParentNodeName << "->" << bayesChildNodeName;
-  addArc(bayesParentNodeName, bayesChildNodeName);
+  string bayesChildNodeName = network.createVoxelName(parentId);
+//  LOG(LTRACE) << "Connecting nodes: " << bayesParentNodeName << "->" << bayesChildNodeName;
+  network.addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
@@ -209,21 +210,21 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
 	std::vector<int> point_indices;
 	leafNode->getContainer().getPointIndices(point_indices);
 
-	string parentName = createVoxelName(parentId);
+	string parentName = network.createVoxelName(parentId);
 
-	//FIXME: Change the way coefficients are calculated
-	for(unsigned int i=0; i<leafNode->getContainer().getSize(); i++)
-	{
-		PointXYZSIFT p = cloud->at(point_indices[i]);
-		logPoint(p, point_indices[i]);
-		string featureName = createFeatureName(p.pointId);
-    LOG(LDEBUG) << "Adding new feature: " << featureName;
-		addNode(featureName);
-		addArc(featureName, parentName);
-	}//: for points		
+  //FIXME: Change the way coefficients are calculated
+  for(unsigned int i=0; i<leafNode->getContainer().getSize(); i++)
+  {
+    PointXYZSIFT p = cloud->at(point_indices[i]);
+    logPoint(p, point_indices[i]);
+    int featureId = p.pointId;
+    network.addFeatureNode(featureId);
+    string featureName = network.createFeatureName(featureId);
+    network.addArc(featureName, parentName);
+  }//: for points		
 
 	LOG(LDEBUG) << "voxel ID: " << parentId;
-	LOG(LDEBUG) << "voxel name: " << createVoxelName(parentId);
+	LOG(LDEBUG) << "voxel name: " << network.createVoxelName(parentId);
 	LOG(LDEBUG) << "children count: " <<childrenCounter;
 	leafNodeCount++;
 }
@@ -236,7 +237,7 @@ bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<
     if (branchNode -> hasChild(child_idx)) 
       ++childrenCounter;
   }
-  LOG(LDEBUG) << "Number of children: " << childrenCounter;
+  LOG(LTRACE) << "Number of children: " << childrenCounter;
   if (childrenCounter == 1)
     return true;
   else 
@@ -267,7 +268,7 @@ int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeBranchNode<O
     if (branchNode->hasChild(index))
 			++childrenCounter;
   }
-  LOG(LDEBUG) << "number of children: " << childrenCounter;
+  LOG(LTRACE) << "number of children: " << childrenCounter;
   return childrenCounter;
 }
 
@@ -283,18 +284,18 @@ void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode<Oct
   //FIXME: duplication with createLeafNode method
   LOG(LDEBUG) << "Creating branch node: " << nextId;
   branchNode->getContainer().setNodeId(nextId);
-  addVoxelNode(nextId);
+  network.addVoxelNode(nextId);
+  ++numberOfVoxels;
   ++nextId;
 }
 
 void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId> *branchNode, OctreeBranchNode<OctreeContainerEmptyWithId> *parentNode)
 {
   int branchNodeId = branchNode->getContainer().getNodeId();
-  string bayesParentNodeName = createVoxelName(branchNodeId);
+  string bayesParentNodeName = network.createVoxelName(branchNodeId);
   int parentId = parentNode->getContainer().getNodeId();
-  string bayesChildNodeName = createVoxelName(parentId);
-  LOG(LTRACE) << "Connecting nodes: " << bayesParentNodeName << "->" << bayesChildNodeName;
-  addArc(bayesParentNodeName, bayesChildNodeName);
+  string bayesChildNodeName = network.createVoxelName(parentId);
+  network.addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()
@@ -304,9 +305,9 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
 
 	LOG(LDEBUG) << "before writing network to file";
-	theNet.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
+  network.exportNetworkToFile();
 	LOG(LDEBUG) << "after writing network to file";
-	out_network.write(theNet);
+	out_network.write(network.getNetwork());
 }
 
 void CreateNetworkWithSpacialDependencies::addHypothesisNode() 
@@ -318,134 +319,7 @@ void CreateNetworkWithSpacialDependencies::addHypothesisNode()
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  string hypothesisName = createVoxelName(modelId);
-	addNode(hypothesisName);
-}
-
-
-void CreateNetworkWithSpacialDependencies::createChild(pcl::octree::OctreeNode* child, int parentId)
-{
-	if(child->getNodeType() == BRANCH_NODE) {
-		OctreeBranchNode<OctreeContainerEmptyWithId>* child_node = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>*> (child);
-		child_node->getContainer().setNodeId(nextId++);
-		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
-	}
-	else if(child->getNodeType() == LEAF_NODE) {
-		OctreeLeafNode<OctreeContainerPointIndicesWithId>* child_node = static_cast<OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(child);
-		child_node->getContainer().setNodeId(nextId++);
-		LOG(LDEBUG) << "node id: " << child_node->getContainer().getNodeId();
-	}
-  else {
-    return;
-  }
-	int currentId = nextId - 1;
-	addVoxelNode(currentId);
-	addArc(createVoxelName(currentId), createVoxelName(parentId));
-}
-
-void CreateNetworkWithSpacialDependencies::addVoxelNode(int id)
-{
-	string voxelName = createVoxelName(id);
-  addNode(voxelName);
-  ++numberOfVoxels;
-}
-
-string CreateNetworkWithSpacialDependencies::createVoxelName(int id)
-{
-	stringstream name;
-	name << "V_" << id;
-	string voxelName = name.str();
-  return voxelName;
-}
-
-string CreateNetworkWithSpacialDependencies::createFeatureName(int id)
-{
-	stringstream name;
-	name << "F_" << id;
-	string featureName(name.str());
-	return featureName;
-}
-
-void CreateNetworkWithSpacialDependencies::addNode(std::string name)
-{
-    LOG(LDEBUG) << "Add node to network: " << name;
-    int newNode = theNet.AddNode(DSL_CPT, name.c_str());
-    DSL_idArray outcomes;
-    std::vector<string> outcomesNames;
-    outcomesNames.push_back("YES");
-    outcomesNames.push_back("NO");
-    for (int i=0; i<outcomesNames.size(); i++) {
-        outcomes.Add(outcomesNames[i].c_str());
-    }
-    theNet.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
-}
-
-void CreateNetworkWithSpacialDependencies::setCPTofAllNodes()
-{
-  LOG(LTRACE) << "Setting CPT of all nodes";
-
-  for (unsigned int i=0; i<numberOfVoxels; ++i) {
-    LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
-    int numberOfChildren = theNet.NumParents(i);
-    LOG(LTRACE) << "Number of ancestors: " << numberOfChildren;
-    if(numberOfChildren == 0) 
-      continue;
-    string nodeName = createVoxelName(i);
-    setNodeCPT(nodeName, numberOfChildren);
-  }
-}
-
-void CreateNetworkWithSpacialDependencies::setNodeCPT(string name, int numberOfParents)
-{
-	LOG(LDEBUG) << "Set node CPT: " << name;
-	std::vector<double> probabilities;
-	std::string s(numberOfParents,'1');
-	do {
-		int ones = std::count(s.begin(),s.end(),'1');
-		double probability = (double) ones/numberOfParents;
-		probabilities.push_back(probability);
-		probabilities.push_back(1-probability);
-	} while(generateNext(s.begin(), s.end()));
-
-	fillCPT(name, probabilities);
-}
-
-void CreateNetworkWithSpacialDependencies::addArc(string parentName, string childName)
-{
-	int childNode = theNet.FindNode(childName.c_str());
-	int parentNode = theNet.FindNode(parentName.c_str());
-	theNet.AddArc(parentNode, childNode);
-}
-
-void CreateNetworkWithSpacialDependencies::fillCPT(string name, std::vector<double> probabilities)
-{
-	int node = theNet.FindNode(name.c_str());
-	DSL_sysCoordinates theCoordinates(*theNet.GetNode(node)->Definition());
-
-	std::vector<double>::iterator it = probabilities.begin();
-	do {
-		theCoordinates.UncheckedValue() = *it;
-		LOG(LTRACE) << "Probability: " << *it;
-		++it;
-	} while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
-}
-
-int CreateNetworkWithSpacialDependencies::generateNext(std::string::iterator start, std::string::iterator end)
-{
-	while(start != end)
-	{
-		--end;
-		if ((*end & 1) == 1)
-		{
-			--*end;
-			return true;
-		}
-		else
-		{
-			++*end;
-		}
-	}
-	return false;
+  network.addVoxelNode(modelId);
 }
 
 string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
