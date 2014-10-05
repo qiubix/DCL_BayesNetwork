@@ -4,16 +4,26 @@
 void Processors::Network::BayesNetwork::addVoxelNode(int id)
 {
   LOG(LTRACE) << "Adding voxel node to network";
+  std::string voxelName = createVoxelName(id);
+  addNode(voxelName);
 }
 
 std::string Processors::Network::BayesNetwork::createVoxelName(int id)
 {
   LOG(LTRACE) << "Creating voxel name";
+  std::stringstream name;
+  name << "V_" << id;
+  std::string voxelName = name.str();
+  return voxelName;
 }
 
 std::string Processors::Network::BayesNetwork::createFeatureName(int id)
 {
   LOG(LTRACE) << "Creating feature name";
+  std::stringstream name;
+  name << "F_" << id;
+  std::string featureName(name.str());
+  return featureName;
 }
 
 void Processors::Network::BayesNetwork::addArc(std::string parentName, std::string childName)
@@ -24,9 +34,19 @@ void Processors::Network::BayesNetwork::addArc(std::string parentName, std::stri
   network.AddArc(parentNode, childNode);
 }
 
-void Processors::Network::BayesNetwork::setCPTofAllNodes()
+//FIXME: change confusing names - children or ancestors? 
+void Processors::Network::BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
 {
   LOG(LTRACE) << "Setting CPTs of all nodes in network";
+  for (unsigned int i=0; i<numberOfVoxels; ++i) {
+    LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
+    int numberOfChildren = network.NumParents(i);
+    LOG(LTRACE) << "Number of ancestors: " << numberOfChildren;
+    if(numberOfChildren == 0) 
+      continue;
+    std::string nodeName = createVoxelName(i);
+    setNodeCPT(nodeName, numberOfChildren);
+  }
 }
 
 void Processors::Network::BayesNetwork::setNodeCPT(std::string name, int numberOfParents)

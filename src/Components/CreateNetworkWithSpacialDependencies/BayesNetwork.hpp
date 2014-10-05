@@ -18,7 +18,7 @@ public:
   void addArc(std::string parentName, std::string childName);
 
   //manipulating CPTs
-  void setCPTofAllNodes();
+  void setCPTofAllVoxelNodes(unsigned int numberOfVoxels);
   void setNodeCPT(std::string name, int numberOfParents);
 
   //getters
