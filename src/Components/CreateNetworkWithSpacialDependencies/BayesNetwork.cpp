@@ -19,6 +19,9 @@ std::string Processors::Network::BayesNetwork::createFeatureName(int id)
 void Processors::Network::BayesNetwork::addArc(std::string parentName, std::string childName)
 {
   LOG(LTRACE) << "Adding arc between nodes: " << parentName << "->" << childName;
+  int childNode = network.FindNode(childName.c_str());
+  int parentNode = network.FindNode(parentName.c_str());
+  network.AddArc(parentNode, childNode);
 }
 
 void Processors::Network::BayesNetwork::setCPTofAllNodes()
@@ -29,16 +32,51 @@ void Processors::Network::BayesNetwork::setCPTofAllNodes()
 void Processors::Network::BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
 {
   LOG(LTRACE) << "Setting CPT of node " << name;
+  std::vector<double> probabilities;
+  std::string s(numberOfParents,'1');
+  do {
+    int ones = std::count(s.begin(),s.end(),'1');
+    double probability = (double) ones/numberOfParents;
+    probabilities.push_back(probability);
+    probabilities.push_back(1-probability);
+  } while(generateNext(s.begin(), s.end()));
+
+  fillCPT(name, probabilities);
 }
 
 void Processors::Network::BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
 {
   LOG(LTRACE) << "Filling CPT of node " << name;
+  int node = network.FindNode(name.c_str());
+  DSL_sysCoordinates theCoordinates(*network.GetNode(node)->Definition());
+
+  std::vector<double>::iterator it = probabilities.begin();
+  do {
+    theCoordinates.UncheckedValue() = *it;
+    LOG(LTRACE) << "Probability: " << *it;
+    ++it;
+  } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
 }
 
+/*!
+ * Generate next string of 1 and 0 to find next cell in CPT
+ */
 int Processors::Network::BayesNetwork::generateNext(std::basic_string::iterator start, std::basic_string::iterator end)
 {
-  // Generate next string of 1 and 0 to find next cell in CPT
+  while(start != end)
+  {
+    --end;
+    if ((*end & 1) == 1)
+    {
+      --*end;
+      return true;
+    }
+    else
+    {
+      ++*end;
+    }
+  }
+  return false;
 }
 
 std::string Processors::Network::BayesNetwork::getNodeName(int nodeHandle)
