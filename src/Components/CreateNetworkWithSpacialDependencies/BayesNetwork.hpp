@@ -1,6 +1,8 @@
 #ifndef BAYES_NETWORK_HPP
 #define BAYES_NETWORK_HPP
 
+#include <string>
+
 #include "../../../lib/SMILE/smile.h"
 
 namespace Processors {

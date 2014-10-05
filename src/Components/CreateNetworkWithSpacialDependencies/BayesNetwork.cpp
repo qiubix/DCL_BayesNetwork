@@ -1,3 +1,6 @@
+#include <sstream>
+#include <iostream>
+
 #include "BayesNetwork.hpp"
 #include "Logger.hpp"
 
@@ -105,7 +108,7 @@ void Processors::Network::BayesNetwork::fillCPT(std::string name, std::vector<do
 /*!
  * Generate next string of 1 and 0 to find next cell in CPT
  */
-int Processors::Network::BayesNetwork::generateNext(std::basic_string::iterator start, std::basic_string::iterator end)
+int Processors::Network::BayesNetwork::generateNext(std::string::iterator start, std::string::iterator end)
 {
   while(start != end)
   {
