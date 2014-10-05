@@ -26,6 +26,7 @@ public:
   //getters
   std::string getNodeName(int nodeHandle);
   int getNumberOfChildren(int nodeId);
+  int getNumberOfNodes();
 private:
   DSL_network network;
 

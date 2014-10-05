@@ -80,6 +80,11 @@ int BayesNetwork::getNumberOfChildren(int nodeId)
   LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
 }
 
+int BayesNetwork::getNumberOfNodes()
+{
+  return network.GetNumberOfNodes();
+}
+
 void BayesNetwork::addNode(std::string name)
 {
   LOG(LDEBUG) << "Add node to network: " << name;
