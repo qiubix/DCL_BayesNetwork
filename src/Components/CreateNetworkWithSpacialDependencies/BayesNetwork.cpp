@@ -44,6 +44,16 @@ void Processors::Network::BayesNetwork::setNodeCPT(std::string name, int numberO
   fillCPT(name, probabilities);
 }
 
+std::string Processors::Network::BayesNetwork::getNodeName(int nodeHandle)
+{
+  LOG(LTRACE) << "Get name of node: " << nodeHandle;
+}
+
+int Processors::Network::BayesNetwork::getNumberOfChildren(int nodeId)
+{
+  LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
+}
+
 void Processors::Network::BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
 {
   LOG(LTRACE) << "Filling CPT of node " << name;
@@ -77,14 +87,4 @@ int Processors::Network::BayesNetwork::generateNext(std::basic_string::iterator 
     }
   }
   return false;
-}
-
-std::string Processors::Network::BayesNetwork::getNodeName(int nodeHandle)
-{
-  LOG(LTRACE) << "Get name of node: " << nodeHandle;
-}
-
-int Processors::Network::BayesNetwork::getNumberOfChildren(int nodeId)
-{
-  LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
 }
