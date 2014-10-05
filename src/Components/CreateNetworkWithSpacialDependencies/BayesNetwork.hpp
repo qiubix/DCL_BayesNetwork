@@ -15,6 +15,7 @@ public:
 
   //building network
   void addVoxelNode(int id);
+  void addFeatureNode(int id);
   std::string createVoxelName(int id);
   std::string createFeatureName(int id);
   void addArc(std::string parentName, std::string childName);

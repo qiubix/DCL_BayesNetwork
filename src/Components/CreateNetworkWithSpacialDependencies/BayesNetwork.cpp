@@ -14,6 +14,13 @@ void BayesNetwork::addVoxelNode(int id)
   addNode(voxelName);
 }
 
+void BayesNetwork::addFeatureNode(int id)
+{
+  LOG(LTRACE) << "Adding feature node to network";
+  std::string featureName = createFeatureName(id);
+  addNode(featureName);
+}
+
 std::string BayesNetwork::createVoxelName(int id)
 {
   LOG(LTRACE) << "Creating voxel name";
