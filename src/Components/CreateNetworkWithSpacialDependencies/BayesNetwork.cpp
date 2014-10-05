@@ -9,15 +9,15 @@ namespace Network {
 
 void BayesNetwork::addVoxelNode(int id)
 {
-  LOG(LTRACE) << "Adding voxel node to network";
   std::string voxelName = createVoxelName(id);
+  LOG(LTRACE) << "Adding voxel node to network: " << voxelName;
   addNode(voxelName);
 }
 
 void BayesNetwork::addFeatureNode(int id)
 {
-  LOG(LTRACE) << "Adding feature node to network";
   std::string featureName = createFeatureName(id);
+  LOG(LTRACE) << "Adding feature node to network: " << featureName;
   addNode(featureName);
 }
 

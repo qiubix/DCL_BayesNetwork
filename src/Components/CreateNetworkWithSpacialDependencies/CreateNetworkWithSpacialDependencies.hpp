@@ -15,8 +15,8 @@
 #include "Property.hpp"
 #include "EventHandler2.hpp"
 #include "OctreeContainers.hpp"
+#include "BayesNetwork.hpp"
 
-#include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
 
 #include <pcl/point_cloud.h>
@@ -94,7 +94,7 @@ protected:
     void buildNetwork();
 
 private:
-    DSL_network theNet;
+    BayesNetwork network;
     pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
 
     std::map <int, string> features;
@@ -126,18 +126,6 @@ private:
     void addHypothesisNode();
     
     void createChild(pcl::octree::OctreeNode* child, int parentId);
-    void addVoxelNode(int id);
-    string createVoxelName(int id);
-    string createFeatureName(int id);
-
-    void addNode(string name);
-    
-    void setCPTofAllNodes();
-    void setNodeCPT(string name, int numberOfParents);
-    
-    void addArc(string parentName, string childName);
-    void fillCPT(string name, std::vector<double> probabilities);
-    int generateNext(std::string::iterator start, std::string::iterator end);
 
     std::string getNodeName(int nodeHandle);
     void mapFeaturesNames();
