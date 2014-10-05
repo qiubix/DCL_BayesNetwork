@@ -10,14 +10,14 @@ namespace Network {
 void BayesNetwork::addVoxelNode(int id)
 {
   std::string voxelName = createVoxelName(id);
-  LOG(LTRACE) << "Adding voxel node to network: " << voxelName;
+  LOG(LDEBUG) << "Adding voxel node to network: " << voxelName;
   addNode(voxelName);
 }
 
 void BayesNetwork::addFeatureNode(int id)
 {
   std::string featureName = createFeatureName(id);
-  LOG(LTRACE) << "Adding feature node to network: " << featureName;
+  LOG(LDEBUG) << "Adding feature node to network: " << featureName;
   addNode(featureName);
 }
 
@@ -41,24 +41,23 @@ std::string BayesNetwork::createFeatureName(int id)
 
 void BayesNetwork::addArc(std::string parentName, std::string childName)
 {
-  LOG(LTRACE) << "Adding arc between nodes: " << parentName << "->" << childName;
+  LOG(LDEBUG) << "Adding arc between nodes: " << parentName << "->" << childName;
   int childNode = network.FindNode(childName.c_str());
   int parentNode = network.FindNode(parentName.c_str());
   network.AddArc(parentNode, childNode);
 }
 
-//FIXME: change confusing names - children or ancestors? 
 void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
 {
-  LOG(LTRACE) << "Setting CPTs of all nodes in network";
+  LOG(LDEBUG) << "Setting CPTs of all nodes in network";
   for (unsigned int i=0; i<numberOfVoxels; ++i) {
     LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
-    int numberOfChildren = network.NumParents(i);
-    LOG(LTRACE) << "Number of ancestors: " << numberOfChildren;
-    if(numberOfChildren == 0) 
+    int numberOfParents = network.NumParents(i);
+    LOG(LTRACE) << "Number of ancestors: " << numberOfParents;
+    if(numberOfParents == 0) 
       continue;
     std::string nodeName = createVoxelName(i);
-    setNodeCPT(nodeName, numberOfChildren);
+    setNodeCPT(nodeName, numberOfParents);
   }
 }
 
