@@ -8,28 +8,29 @@ namespace Network {
   
 class BayesNetwork {
 public:
-    BayesNetwork() {}
-    ~BayesNetwork() {}
-    
-    //building network
-    void addVoxelNode(int id);
-    std::string createVoxelName(int id);
-    std::string createFeatureName(int id);
-    void addArc(std::string parentName, std::string childName);
-    
-    //manipulating CPTs
-    void setCPTofAllNodes();
-    void setNodeCPT(std::string name, int numberOfParents);
-    
-    //getters
-    std::string getNodeName(int nodeHandle);
-    int getNumberOfChildren(int nodeId);
-private:
-    DSL_network network;
-    
-    void fillCPT(std::string name, std::vector<double> probabilities);
-    int generateNext(std::string::iterator start, std::string::iterator end);
+  BayesNetwork() {}
+  ~BayesNetwork() {}
 
+  //building network
+  void addVoxelNode(int id);
+  std::string createVoxelName(int id);
+  std::string createFeatureName(int id);
+  void addArc(std::string parentName, std::string childName);
+
+  //manipulating CPTs
+  void setCPTofAllNodes();
+  void setNodeCPT(std::string name, int numberOfParents);
+
+  //getters
+  std::string getNodeName(int nodeHandle);
+  int getNumberOfChildren(int nodeId);
+private:
+  DSL_network network;
+
+  void addNode(std::string name);
+
+  void fillCPT(std::string name, std::vector<double> probabilities);
+  int generateNext(std::string::iterator start, std::string::iterator end);
 };
 
 

@@ -54,6 +54,20 @@ int Processors::Network::BayesNetwork::getNumberOfChildren(int nodeId)
   LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
 }
 
+void Processors::Network::BayesNetwork::addNode(std::string name)
+{
+  LOG(LDEBUG) << "Add node to network: " << name;
+  int newNode = network.AddNode(DSL_CPT, name.c_str());
+  DSL_idArray outcomes;
+  std::vector<std::string> outcomesNames;
+  outcomesNames.push_back("YES");
+  outcomesNames.push_back("NO");
+  for (int i=0; i<outcomesNames.size(); i++) {
+    outcomes.Add(outcomesNames[i].c_str());
+  }
+  network.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
+}
+
 void Processors::Network::BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
 {
   LOG(LTRACE) << "Filling CPT of node " << name;
