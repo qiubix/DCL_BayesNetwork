@@ -27,6 +27,11 @@ public:
   std::string getNodeName(int nodeHandle);
   int getNumberOfChildren(int nodeId);
   int getNumberOfNodes();
+  
+  //exporting network
+  void exportNetworkToFile();
+  DSL_network getNetwork();
+  
 private:
   DSL_network network;
 

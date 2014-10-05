@@ -85,6 +85,17 @@ int BayesNetwork::getNumberOfNodes()
   return network.GetNumberOfNodes();
 }
 
+void BayesNetwork::exportNetworkToFile()
+{
+  LOG(LTRACE) << "Exporting network to file out_network.xdsl";
+  network.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
+}
+
+DSL_network BayesNetwork::getNetwork()
+{
+  return network;
+}
+
 void BayesNetwork::addNode(std::string name)
 {
   LOG(LDEBUG) << "Add node to network: " << name;
