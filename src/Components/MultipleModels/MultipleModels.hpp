@@ -16,7 +16,6 @@
 #include "EventHandler2.hpp"
 #include "OctreeContainers.hpp"
 
-#include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
 
 #include <Types/PointXYZSIFT.hpp>
@@ -33,54 +32,55 @@ namespace Network {
 class MultpleModels: public Base::Component
 {
 public:
-    /*!
-     * Constructor.
-     */
-    MultpleModels(const std::string & name = "CreateNetwork");
+  /*!
+   * Constructor.
+   */
+  MultpleModels(const std::string & name = "CreateNetwork");
 
-    /*!
-     * Destructor
-     */
-    virtual ~MultpleModels();
+  /*!
+   * Destructor
+   */
+  virtual ~MultpleModels();
 
-    /*!
-     * Prepare data streams and handlers
-     */
-    void prepareInterface();
+  /*!
+   * Prepare data streams and handlers
+   */
+  void prepareInterface();
 
 protected:
 
-    /// Input data stream
+  /// Input data stream
 
-    /// Output data stream
+  /// Output data stream
 
-    /*!
-     * Connects source to given device.
-     */
-    bool onInit();
+  /*!
+   * Connects source to given device.
+   */
+  bool onInit();
 
-    /*!
-     * Disconnect source from device, closes streams, etc.
-     */
-    bool onFinish();
+  /*!
+   * Disconnect source from device, closes streams, etc.
+   */
+  bool onFinish();
 
-    /*!
-     * Start component
-     */
-    bool onStart();
+  /*!
+   * Start component
+   */
+  bool onStart();
 
-    /*!
-     * Stop component
-     */
-    bool onStop();
+  /*!
+   * Stop component
+   */
+  bool onStop();
 
-    /// Event handlers
+  /// Event handlers
 
-    /*!
-     * Event handler function.
-     */
+  /*!
+   * Event handler function.
+   */
 
 private:
+
 };
 
 }//: namespace Network
