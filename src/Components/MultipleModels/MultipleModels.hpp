@@ -16,6 +16,7 @@
 #include "EventHandler2.hpp"
 #include "OctreeContainers.hpp"
 
+#include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
 
 #include <Types/PointXYZSIFT.hpp>
@@ -50,6 +51,7 @@ public:
 protected:
 
   /// Input data stream
+  Base::DataStreamIn< std::vector<DSL_network> networks > in_networks;
 
   /// Output data stream
 
