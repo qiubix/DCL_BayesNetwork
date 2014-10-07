@@ -76,10 +76,12 @@ protected:
   bool onStop();
 
   /// Event handlers
+  Base::EventHandler2 h_onNetworks;
 
   /*!
    * Event handler function.
    */
+  void createGrid();
 
 private:
 
