@@ -31,6 +31,9 @@ void MultipleModels::prepareInterface()
 	// Register handlers
 	h_onNetworks.setup(boost::bind(&MultipleModels::createGrid, this));
 	registerHandler("createGrid", &h_onNetworks);
+
+	// Register output data stream
+	registerStream("out_probabilities", &out_probabilities);
 }
 
 bool MultipleModels::onInit()

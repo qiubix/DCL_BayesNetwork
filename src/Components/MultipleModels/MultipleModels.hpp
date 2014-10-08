@@ -51,9 +51,10 @@ public:
 protected:
 
   /// Input data stream
-  Base::DataStreamIn< std::vector<DSL_network> networks > in_networks;
+  Base::DataStreamIn< std::vector<DSL_network> > in_networks;
 
   /// Output data stream
+  Base::DataStreamOut< std::vector<double> > out_probabilities;
 
   /*!
    * Connects source to given device.
