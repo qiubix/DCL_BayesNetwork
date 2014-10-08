@@ -26,8 +26,11 @@ void MultipleModels::prepareInterface()
 	LOG(LTRACE) << "MultipleModels::prepareInterface\n";
 
 	// Register data streams.
+	registerStream("in_networks", &in_networks);
 	
 	// Register handlers
+	h_onNetworks.setup(boost::bind(&MultipleModels::createGrid, this));
+	registerHandler("createGrid", &h_onNetworks);
 }
 
 bool MultipleModels::onInit()
