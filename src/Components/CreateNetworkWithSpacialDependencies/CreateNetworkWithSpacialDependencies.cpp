@@ -160,7 +160,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       }
     }
   }
-//  setCPTofAllNodes();
+  network.setCPTofAllVoxelNodes(numberOfVoxels);
 
 	//	Delete octree data structure (pushes allocated nodes to memory pool!).
 	octree.deleteTree ();
