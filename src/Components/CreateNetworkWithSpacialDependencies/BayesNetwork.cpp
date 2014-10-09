@@ -52,11 +52,12 @@ void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
   LOG(LDEBUG) << "Setting CPTs of all nodes in network";
   for (unsigned int i=0; i<numberOfVoxels; ++i) {
     LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
-    int numberOfParents = network.NumParents(i);
+    std::string nodeName = createVoxelName(i);
+    int nodeId = network.FindNode(nodeName.c_str());
+    int numberOfParents = network.NumParents(nodeId);
     LOG(LTRACE) << "Number of ancestors: " << numberOfParents;
     if(numberOfParents == 0) 
       continue;
-    std::string nodeName = createVoxelName(i);
     setNodeCPT(nodeName, numberOfParents);
   }
 }
