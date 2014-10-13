@@ -15,6 +15,7 @@
 #include "Property.hpp"
 #include "EventHandler2.hpp"
 #include "OctreeContainers.hpp"
+#include "BayesNetwork.hpp"
 
 #include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
