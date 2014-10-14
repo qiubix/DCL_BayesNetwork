@@ -30,13 +30,13 @@ namespace Network {
  * \brief Class used to build Bayes network
  * \author Karol Katerżawa
  */
-class MultpleModels: public Base::Component
+class MultipleModels: public Base::Component
 {
 public:
   /*!
    * Constructor.
    */
-  MultpleModels(const std::string & name = "CreateNetwork");
+  MultipleModels(const std::string & name = "CreateNetwork");
 
   /*!
    * Destructor

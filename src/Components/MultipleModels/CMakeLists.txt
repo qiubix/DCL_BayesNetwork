@@ -5,7 +5,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
-add_library(procMultipleModels SHARED ${files} OctreeContainers.hpp)
+add_library(procMultipleModels SHARED ${files})
 target_link_libraries(procMultipleModels ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS})
 
 INSTALL_COMPONENT(procMultipleModels)
