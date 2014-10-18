@@ -58,6 +58,11 @@ bool MultipleModels::onStop()
     return true;
 }
 
+void MultipleModels::createGrid()
+{
+  //TODO: creating grid of networks 
+}
+
 bool MultipleModels::onStart()
 {
     LOG(LTRACE) << "MultipleModels::onStart\n";
