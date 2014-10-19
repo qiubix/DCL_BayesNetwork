@@ -5,6 +5,8 @@ ADD_COMPONENT(CreateNetworkWithSpacialDependencies)
 
 ADD_COMPONENT(MapMultiplicity)
 
+ADD_COMPONENT(NetworkTester)
+
 ADD_COMPONENT(SIFTFeatureMatcher)
 
 ADD_COMPONENT(SOMEvaluation)

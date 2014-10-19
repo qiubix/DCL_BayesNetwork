@@ -1,0 +1,98 @@
+<Task>
+  <!-- reference task information -->
+  <Reference>
+    <Author>
+      <name>Karol Katerzawa</name>
+      <link></link>
+    </Author>
+
+    <Description>
+      <brief>Test:NetworkTester</brief>
+      <full></full>	
+    </Description>
+  </Reference>
+
+  <!-- task definition -->
+  <Subtasks>
+    <Subtask name="Main">
+      <Executor name="Processing"  period="1">
+        <Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
+          <param name="filenames">/home/qiubix/Objects/cereal_box_1_co5_v2.json</param>
+        </Component>
+        <Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
+          <param name="sequence.directory">/home/qiubix/Objects/cereal_box_1_co5</param>
+          <param name="sequence.pattern">.*\_color.png</param>				
+        </Component>
+        <Component name="SequenceDepth" type="CvBasic:Sequence" priority="3" bump="0">
+          <param name="sequence.directory">/home/qiubix/Objects/cereal_box_1_co5</param>
+          <param name="sequence.pattern">.*\_depth.png</param>	
+        </Component>
+        <Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="5" bump="0">
+          <param name="camera_matrix">525 0 319.5; 0 525 239.5; 0 0 1</param>
+        </Component>
+        <Component name="SIFT" type="CvBasic:CvSIFT" priority="6" bump="0">
+        </Component>
+        <Component name="FeatureCloudConverter" type="PCL:FeatureCloudConverter" priority="8" bump="0">
+        </Component>
+
+        <Component name="Adder" type="PCL:SIFTAdder" priority="9" bump="0">
+        </Component>
+        <Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
+        </Component>
+        <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bumb="0"></Component>
+        <Component name="CreateNetwork" type="BayesNetwork:CreateNetworkWithSpacialDependencies" priority="11" bump="0">
+        </Component>
+        <Component name="Tester" type="BayesNetwork:NetworkTester" priority="12" bump="0">
+        </Component>
+      </Executor>
+    </Subtask>	
+
+  </Subtasks>
+
+  <!-- pipes connecting datastreams -->
+  <DataStreams>
+    <Source name="SequenceRGB.out_img">
+      <sink>SIFT.in_img</sink>
+    </Source>
+    <Source name="SequenceDepth.out_img">	
+      <sink>FeatureCloudConverter.in_depth</sink>	
+    </Source>
+    <Source name="CameraInfo.out_camera_info">
+      <sink>FeatureCloudConverter.in_camera_info</sink>
+    </Source>
+    <Source name="SIFT.out_descriptors">
+      <sink>FeatureCloudConverter.in_descriptors</sink>	
+    </Source>
+    <Source name="SIFT.out_features">
+      <sink>FeatureCloudConverter.in_features</sink>	
+    </Source>		
+    <Source name="FeatureCloudConverter.out_cloud_xyzsift">
+      <sink>SIFTFeatureMatcher.in_instanceCloud</sink>	
+    </Source>
+
+    <!--    <Source name="SIFTFeatureMatcher.out_featuresIndexes">
+      <sink>Tester.in_instanceMatchedFeatures</sink>
+    </Source> -->
+    <Source name="SOMJSONReader.out_models">
+      <sink>Adder.in_models</sink>
+    </Source>
+    <Source name="Adder.out_cloud">
+      <sink>CreateNetwork.in_cloud_xyzsift</sink>
+      <sink>SIFTFeatureMatcher.in_jointCloud</sink>
+      <sink>Mapper.in_jointCloud</sink>
+    </Source>
+    <Source name="Mapper.out_jointMultiplicity">
+      <sink>CreateNetwork.in_jointMultiplicity</sink>
+    </Source>
+<!--				<Source name="PCDReader.out_cloud_xyzsift">
+      <sink>CreateNetwork.in_cloud_xyzsift</sink>
+    </Source>-->
+    <Source name="CreateNetwork.out_network">
+      <sink>Tester.in_network</sink>
+    </Source>
+  </DataStreams>
+</Task>
+
+
+
+

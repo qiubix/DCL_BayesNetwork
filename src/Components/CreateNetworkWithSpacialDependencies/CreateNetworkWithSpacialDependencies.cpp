@@ -25,12 +25,12 @@ namespace Network {
 
 CreateNetworkWithSpacialDependencies::CreateNetworkWithSpacialDependencies(const std::string & name) : Base::Component(name)
 {
-    LOG(LTRACE)<<"Hello CreateNetworkWithSpacialDependencies\n";
-    branchNodeCount = 0;
-    leafNodeCount = 0;
-    maxLeafContainerSize = 0;
-    nextId = 0;
-    numberOfVoxels = 0;
+  LOG(LTRACE)<<"Hello CreateNetworkWithSpacialDependencies\n";
+  branchNodeCount = 0;
+  leafNodeCount = 0;
+  maxLeafContainerSize = 0;
+  nextId = 0;
+  numberOfVoxels = 0;
 }
 
 CreateNetworkWithSpacialDependencies::~CreateNetworkWithSpacialDependencies()
@@ -160,7 +160,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       }
     }
   }
-//  setCPTofAllNodes();
+  network.setCPTofAllVoxelNodes(numberOfVoxels);
 
 	//	Delete octree data structure (pushes allocated nodes to memory pool!).
 	octree.deleteTree ();

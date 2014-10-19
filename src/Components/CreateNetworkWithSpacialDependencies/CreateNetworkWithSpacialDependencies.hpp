@@ -38,98 +38,98 @@ namespace Network {
 class CreateNetworkWithSpacialDependencies: public Base::Component
 {
 public:
-    /*!
-     * Constructor.
-     */
-    CreateNetworkWithSpacialDependencies(const std::string & name = "CreateNetworkWithSpacialDependencies");
+  /*!
+   * Constructor.
+   */
+  CreateNetworkWithSpacialDependencies(const std::string & name = "CreateNetworkWithSpacialDependencies");
 
-    /*!
-     * Destructor
-     */
-    virtual ~CreateNetworkWithSpacialDependencies();
+  /*!
+   * Destructor
+   */
+  virtual ~CreateNetworkWithSpacialDependencies();
 
-    /*!
-     * Prepare data streams and handlers
-     */
-    void prepareInterface();
+  /*!
+   * Prepare data streams and handlers
+   */
+  void prepareInterface();
 
 protected:
 
-    /// Input data stream
-    Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
-    Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
-		Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+  /// Input data stream
+  Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
+  Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
+  Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
 
-    /// Output data stream
-    Base::DataStreamOut<DSL_network> out_network;
+  /// Output data stream
+  Base::DataStreamOut<DSL_network> out_network;
 
-    /*!
-     * Connects source to given device.
-     */
-    bool onInit();
+  /*!
+   * Connects source to given device.
+   */
+  bool onInit();
 
-    /*!
-     * Disconnect source from device, closes streams, etc.
-     */
-    bool onFinish();
+  /*!
+   * Disconnect source from device, closes streams, etc.
+   */
+  bool onFinish();
 
-    /*!
-     * Start component
-     */
-    bool onStart();
+  /*!
+   * Start component
+   */
+  bool onStart();
 
-    /*!
-     * Stop component
-     */
-    bool onStop();
+  /*!
+   * Stop component
+   */
+  bool onStop();
 
-    /// Event handlers
-    Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
-    Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
-		Base::EventHandler2 h_buildNetwork;
+  /// Event handlers
+  Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
+  Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
+  Base::EventHandler2 h_buildNetwork;
 
-    /*!
-     * Event handler function.
-     */
-    void buildNetwork();
+  /*!
+   * Event handler function.
+   */
+  void buildNetwork();
 
 private:
-    BayesNetwork network;
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  BayesNetwork network;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
 
-    std::map <int, string> features;
-    std::vector <int> jointMultiplicityVector;
-    std::vector < std::map<int,int> > models;
-    
-    unsigned int branchNodeCount;
-    unsigned int leafNodeCount;
-    unsigned int maxLeafContainerSize;
-    int nextId;
-    unsigned int numberOfVoxels;
-    std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
-    
-    void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-    
-		void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
-		void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-		void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+  std::map <int, string> features;
+  std::vector <int> jointMultiplicityVector;
+  std::vector < std::map<int,int> > models;
 
-		bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-		bool nextNodeIsAlsoBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-		int getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-		int getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode);
-		void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-		void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
-    
-    void exportNetwork();
+  unsigned int branchNodeCount;
+  unsigned int leafNodeCount;
+  unsigned int maxLeafContainerSize;
+  int nextId;
+  unsigned int numberOfVoxels;
+  std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
 
-    void addHypothesisNode();
+  void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 
-    std::string getNodeName(int nodeHandle);
-    void mapFeaturesNames();
-    void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-    int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-    void logPoint(PointXYZSIFT p, int index);
+  void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+  void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+  void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+
+  bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+  bool nextNodeIsAlsoBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+  int getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+  int getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode);
+  void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+  void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
+
+  void exportNetwork();
+
+  void addHypothesisNode();
+
+  std::string getNodeName(int nodeHandle);
+  void mapFeaturesNames();
+  void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
+  int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
+  void logPoint(PointXYZSIFT p, int index);
 };
 
 }//: namespace Network
