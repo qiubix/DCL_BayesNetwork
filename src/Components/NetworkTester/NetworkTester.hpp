@@ -79,7 +79,10 @@ protected:
   void testNetwork();
 
 private:
+  DSL_network network;
   int result;
+  
+  std::string getNodeName(int nodeId);
 };
 
 }//: namespace Network

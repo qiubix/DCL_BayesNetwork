@@ -70,8 +70,23 @@ bool NetworkTester::onStop()
 void NetworkTester::testNetwork()
 {
   LOG(LTRACE) << "Testing network";
+  network = in_network.read();
+  int nodeId = network.GetFirstNode();
+  while (nodeId != DSL_OUT_OF_RANGE) {
+    string nodeName = getNodeName(nodeId);
+    LOG(LWARNING) << "First node name: " << nodeName;
+    nodeId = network.GetNextNode(nodeId);
+  }
 }
 
+string NetworkTester::getNodeName(int nodeId)
+{
+  DSL_node* node = network.GetNode(nodeId);
+  DSL_nodeInfo info = node->Info();
+  DSL_header header = info.Header();
+  std::string nodeName(header.GetName());
+  return nodeName;
+}
 
 }//: namespace Network
 }//: namespace Processors
