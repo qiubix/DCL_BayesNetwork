@@ -25,51 +25,51 @@ namespace Network {
 class TestNetwork: public Base::Component
 {
 public:
-    /*!
-     * Constructor.
-     */
-    TestNetwork(const std::string & name = "TestNetwork");
+  /*!
+   * Constructor.
+   */
+  TestNetwork(const std::string & name = "TestNetwork");
 
-    /*!
-     * Destructor
-     */
-    virtual ~TestNetwork();
+  /*!
+   * Destructor
+   */
+  virtual ~TestNetwork();
 
-    /*!
-     * Prepare data streams and handlers
-     */
-    void prepareInterface();
+  /*!
+   * Prepare data streams and handlers
+   */
+  void prepareInterface();
 
 protected:
-    ///Input data streams
-    
-    //Output data streams
+  ///Input data streams
 
-    /*!
-     * Connects source to given device.
-     */
-    bool onInit();
+  //Output data streams
 
-    /*!
-     * Disconnect source from device, closes streams, etc.
-     */
-    bool onFinish();
+  /*!
+   * Connects source to given device.
+   */
+  bool onInit();
 
-    /*!
-     * Start component
-     */
-    bool onStart();
+  /*!
+   * Disconnect source from device, closes streams, etc.
+   */
+  bool onFinish();
 
-    /*!
-     * Stop component
-     */
-    bool onStop();
+  /*!
+   * Start component
+   */
+  bool onStart();
 
-    /// Event handlers
+  /*!
+   * Stop component
+   */
+  bool onStop();
 
-    /*!
-     * Event handler function.
-     */
+  /// Event handlers
+
+  /*!
+   * Event handler function.
+   */
 
 private:
 };

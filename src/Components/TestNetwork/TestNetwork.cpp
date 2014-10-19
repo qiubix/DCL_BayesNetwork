@@ -23,41 +23,41 @@ namespace Network {
 
 TestNetwork::TestNetwork(const std::string & name) : Base::Component(name)
 {
-    LOG(LTRACE)<<"Hello TestNetwork";
+  LOG(LTRACE)<<"Hello TestNetwork";
 }
 
 TestNetwork::~TestNetwork()
 {
-    LOG(LTRACE)<<"Good bye TestNetwork";
+  LOG(LTRACE)<<"Good bye TestNetwork";
 }
 
 void TestNetwork::prepareInterface()
 {
-    LOG(LTRACE) << "TestNetwork::prepareInterface";
+  LOG(LTRACE) << "TestNetwork::prepareInterface";
 }
 
 bool TestNetwork::onInit()
 {
-    LOG(LTRACE) << "TestNetwork::initialize";
-    return true;
+  LOG(LTRACE) << "TestNetwork::initialize";
+  return true;
 }
 
 bool TestNetwork::onFinish()
 {
-    LOG(LTRACE) << "TestNetwork::finish";
-    return true;
+  LOG(LTRACE) << "TestNetwork::finish";
+  return true;
 }
 
 bool TestNetwork::onStart()
 {
-    LOG(LTRACE) << "TestNetwork::onStart";
-    return true;
+  LOG(LTRACE) << "TestNetwork::onStart";
+  return true;
 }
 
 bool TestNetwork::onStop()
 {
-    LOG(LTRACE) << "TestNetwork::onStop";
-    return true;
+  LOG(LTRACE) << "TestNetwork::onStop";
+  return true;
 }
 
 
