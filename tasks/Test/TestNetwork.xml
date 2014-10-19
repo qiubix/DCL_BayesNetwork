@@ -70,9 +70,9 @@
       <sink>SIFTFeatureMatcher.in_instanceCloud</sink>	
     </Source>
 
-    <Source name="SIFTFeatureMatcher.out_featuresIndexes">
+    <!--    <Source name="SIFTFeatureMatcher.out_featuresIndexes">
       <sink>Tester.in_instanceMatchedFeatures</sink>
-    </Source>
+    </Source> -->
     <Source name="SOMJSONReader.out_models">
       <sink>Adder.in_models</sink>
     </Source>

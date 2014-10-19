@@ -34,6 +34,10 @@ TestNetwork::~TestNetwork()
 void TestNetwork::prepareInterface()
 {
   LOG(LTRACE) << "TestNetwork::prepareInterface";
+  h_onNetwork.setup(this, &TestNetwork::onNetwork);
+  registerHandler("onNetwork", &h_onNetwork);
+  registerStream("in_network", &in_network);
+  addDependency("onNetwork", &in_network);
 }
 
 bool TestNetwork::onInit()

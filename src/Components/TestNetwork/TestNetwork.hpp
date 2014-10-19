@@ -42,6 +42,7 @@ public:
 
 protected:
   ///Input data streams
+  Base::DataStreamIn<DSL_network> in_network;
 
   //Output data streams
 
@@ -66,10 +67,12 @@ protected:
   bool onStop();
 
   /// Event handlers
+  Base::EventHandler <TestNetwork> h_onNetwork;
 
   /*!
    * Event handler function.
    */
+  void testNetwork();
 
 private:
 };
