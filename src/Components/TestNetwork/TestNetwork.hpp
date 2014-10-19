@@ -13,6 +13,7 @@
 #include "Component.hpp"
 #include "DataStream.hpp"
 #include "Property.hpp"
+#include "../../../lib/SMILE/smile.h"
 
 namespace Processors {
 namespace Network {
