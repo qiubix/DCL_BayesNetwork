@@ -11,4 +11,6 @@ ADD_COMPONENT(SOMEvaluation)
 
 ADD_COMPONENT(SOMSimpleEvaluation)
 
+ADD_COMPONENT(TestNetwork)
+
 add_subdirectory(tests)
