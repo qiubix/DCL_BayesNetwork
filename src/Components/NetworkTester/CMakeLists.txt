@@ -5,7 +5,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
-add_library(procTestNetwork SHARED ${files})
-target_link_libraries(procTestNetwork ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS})
+add_library(procNetworkTester SHARED ${files})
+target_link_libraries(procNetworkTester ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS})
 
-INSTALL_COMPONENT(procTestNetwork)
+INSTALL_COMPONENT(procNetworkTester)

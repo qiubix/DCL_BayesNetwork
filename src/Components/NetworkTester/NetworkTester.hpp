@@ -1,10 +1,10 @@
 /*!
- * \file TestNetwork.hpp
+ * \file NetworkTester.hpp
  * \brief
  */
 
-#ifndef TEST_NETWORK_HPP_
-#define TEST_NETWORK_HPP_
+#ifndef NETWORK_TESTER_HPP_
+#define NETWORK_TESTER_HPP_
 
 #define CV_NO_BACKWARD_COMPATIBILITY
 
@@ -13,28 +13,30 @@
 #include "Component.hpp"
 #include "DataStream.hpp"
 #include "Property.hpp"
+#include "EventHandler2.hpp"
 #include "../../../lib/SMILE/smile.h"
+#include <opencv2/core/core.hpp>
 
 namespace Processors {
 namespace Network {
 
 /*!
- * \class TestNetwork
+ * \class NetworkTester
  * \brief Component for testing purposes
  * \author Karol Katerżawa
  */
-class TestNetwork: public Base::Component
+class NetworkTester: public Base::Component
 {
 public:
   /*!
    * Constructor.
    */
-  TestNetwork(const std::string & name = "TestNetwork");
+  NetworkTester(const std::string & name = "NetworkTester");
 
   /*!
    * Destructor
    */
-  virtual ~TestNetwork();
+  virtual ~NetworkTester();
 
   /*!
    * Prepare data streams and handlers
@@ -46,6 +48,7 @@ protected:
   Base::DataStreamIn<DSL_network> in_network;
 
   //Output data streams
+  Base::DataStreamOut<int> out_result;
 
   /*!
    * Connects source to given device.
@@ -68,7 +71,7 @@ protected:
   bool onStop();
 
   /// Event handlers
-  Base::EventHandler <TestNetwork> h_onNetwork;
+  Base::EventHandler <NetworkTester> h_onNetwork;
 
   /*!
    * Event handler function.
@@ -76,6 +79,7 @@ protected:
   void testNetwork();
 
 private:
+  int result;
 };
 
 }//: namespace Network
@@ -85,7 +89,7 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("TestNetwork", Processors::Network::TestNetwork)
+REGISTER_COMPONENT("NetworkTester", Processors::Network::NetworkTester)
 
-#endif /* TEST_NETWORK_HPP_ */
+#endif /* NETWORK_TESTER_HPP_ */
 

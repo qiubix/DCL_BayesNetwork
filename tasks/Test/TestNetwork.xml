@@ -7,7 +7,7 @@
     </Author>
 
     <Description>
-      <brief>Test:TestNetwork</brief>
+      <brief>Test:NetworkTester</brief>
       <full></full>	
     </Description>
   </Reference>
@@ -42,7 +42,7 @@
         <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bumb="0"></Component>
         <Component name="CreateNetwork" type="BayesNetwork:CreateNetworkWithSpacialDependencies" priority="11" bump="0">
         </Component>
-        <Component name="Tester" type="BayesNetwork:Tester" priority="12" bump="0">
+        <Component name="Tester" type="BayesNetwork:NetworkTester" priority="12" bump="0">
         </Component>
       </Executor>
     </Subtask>	
