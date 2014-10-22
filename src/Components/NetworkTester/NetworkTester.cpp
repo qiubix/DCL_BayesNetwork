@@ -71,14 +71,19 @@ void NetworkTester::testNetwork()
 {
   LOG(LTRACE) << "Testing network";
   network = in_network.read();
+  displayAllNodeNamesInNetwork();
+  observeOneFeatureNode();
+  network.UpdateBeliefs();
+}
+
+void NetworkTester::displayAllNodeNamesInNetwork()
+{
   int nodeId = network.GetFirstNode();
   while (nodeId != DSL_OUT_OF_RANGE) {
     string nodeName = getNodeName(nodeId);
     LOG(LWARNING) << "Node name: " << nodeName;
     nodeId = network.GetNextNode(nodeId);
   }
-  observeOneFeatureNode();
-  network.UpdateBeliefs();
 }
 
 void NetworkTester::observeOneFeatureNode()

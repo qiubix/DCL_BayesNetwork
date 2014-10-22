@@ -82,6 +82,7 @@ private:
   DSL_network network;
   int result;
   
+  void displayAllNodeNamesInNetwork();
   void observeOneFeatureNode();
   
   std::string getNodeName(int nodeId);
