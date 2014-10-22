@@ -77,6 +77,11 @@ void NetworkTester::testNetwork()
     LOG(LWARNING) << "First node name: " << nodeName;
     nodeId = network.GetNextNode(nodeId);
   }
+  int featureNode = findFeatureNode(0);
+  if(featureNode != DSL_OUT_OF_RANGE) {
+    network.GetNode(featureNode)->Value()->SetEvidence(0);
+  }
+  network.UpdateBeliefs();
 }
 
 string NetworkTester::getNodeName(int nodeId)
@@ -86,6 +91,14 @@ string NetworkTester::getNodeName(int nodeId)
   DSL_header header = info.Header();
   std::string nodeName(header.GetName());
   return nodeName;
+}
+
+int NetworkTester::findFeatureNode(int nodeId)
+{
+  std::stringstream ss;
+  ss << "F_" << nodeId;
+  std::string nodeName(ss.str());
+  return network.FindNode(nodeName.c_str());
 }
 
 }//: namespace Network
