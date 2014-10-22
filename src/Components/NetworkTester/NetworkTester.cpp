@@ -79,7 +79,7 @@ void NetworkTester::testNetwork()
   }
   int featureNode = findFeatureNode(0);
   if(featureNode != DSL_OUT_OF_RANGE) {
-    network.GetNode(featureNode)->Value()->SetEvidence(0);
+    observeNode(featureNode);
   }
   network.UpdateBeliefs();
 }
@@ -99,6 +99,11 @@ int NetworkTester::findFeatureNode(int nodeId)
   ss << "F_" << nodeId;
   std::string nodeName(ss.str());
   return network.FindNode(nodeName.c_str());
+}
+
+void NetworkTester::observeNode(int nodeId)
+{
+  network.GetNode(nodeId)->Value()->SetEvidence(0);
 }
 
 }//: namespace Network

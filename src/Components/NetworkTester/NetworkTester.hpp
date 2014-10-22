@@ -85,6 +85,7 @@ private:
   std::string getNodeName(int nodeId);
   int findFeatureNode(int nodeId);
   void displayProbability(std::string nodeName);
+  void observeNode(int nodeId);
 };
 
 }//: namespace Network
