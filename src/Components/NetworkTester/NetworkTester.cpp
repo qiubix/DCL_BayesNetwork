@@ -74,14 +74,19 @@ void NetworkTester::testNetwork()
   int nodeId = network.GetFirstNode();
   while (nodeId != DSL_OUT_OF_RANGE) {
     string nodeName = getNodeName(nodeId);
-    LOG(LWARNING) << "First node name: " << nodeName;
+    LOG(LWARNING) << "Node name: " << nodeName;
     nodeId = network.GetNextNode(nodeId);
   }
+  observeOneFeatureNode();
+  network.UpdateBeliefs();
+}
+
+void NetworkTester::observeOneFeatureNode()
+{
   int featureNode = findFeatureNode(0);
   if(featureNode != DSL_OUT_OF_RANGE) {
     observeNode(featureNode);
   }
-  network.UpdateBeliefs();
 }
 
 string NetworkTester::getNodeName(int nodeId)

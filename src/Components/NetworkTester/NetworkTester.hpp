@@ -82,6 +82,8 @@ private:
   DSL_network network;
   int result;
   
+  void observeOneFeatureNode();
+  
   std::string getNodeName(int nodeId);
   int findFeatureNode(int nodeId);
   void displayProbability(std::string nodeName);
