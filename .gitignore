@@ -24,3 +24,6 @@ dist/
 
 # output network
 out_network.xdsl
+
+# core
+core
