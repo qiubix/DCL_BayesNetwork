@@ -27,6 +27,7 @@ public:
   //manipulating CPTs
   void setCPTofAllVoxelNodes(unsigned int numberOfVoxels);
   void setNodeCPT(std::string name, int numberOfParents);
+  int getNodeChild(int nodeHandle);
 
   //getters
   std::string getNodeName(int nodeHandle);

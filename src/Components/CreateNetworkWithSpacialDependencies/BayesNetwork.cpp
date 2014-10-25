@@ -86,6 +86,12 @@ void BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
   fillCPT(name, probabilities);
 }
 
+int BayesNetwork::getNodeChild(int nodeHandle)
+{
+  DSL_intArray children = network.GetChildren(nodeHandle);
+  return children[0];
+}
+
 std::string BayesNetwork::getNodeName(int nodeHandle)
 {
   LOG(LTRACE) << "Get name of node: " << nodeHandle;
