@@ -10,7 +10,7 @@ namespace Network {
   
 class BayesNetwork {
 public:
-  BayesNetwork() {}
+  BayesNetwork();
   ~BayesNetwork() {}
 
   //building network
