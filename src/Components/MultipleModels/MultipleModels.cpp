@@ -30,14 +30,15 @@ void MultipleModels::prepareInterface()
   LOG(LTRACE) << "MultipleModels::prepareInterface\n";
 
   // Register data streams.
-  registerStream("in_networks", &in_networks);
+  registerStream("in_network", &in_network);
 
   // Register handlers
-  h_onNetworks.setup(boost::bind(&MultipleModels::createGrid, this));
-  registerHandler("createGrid", &h_onNetworks);
+  h_onNetwork.setup(boost::bind(&MultipleModels::addNewNetwork, this));
+  registerHandler("addNewNetwork", &h_onNetwork);
+  addDependency("addNewNetwork", &in_network);
 
   // Register output data stream
-  registerStream("out_probabilities", &out_probabilities);
+  registerStream("out_networks", &out_networks);
 }
 
 bool MultipleModels::onInit()

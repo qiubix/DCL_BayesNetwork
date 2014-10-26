@@ -51,10 +51,10 @@ public:
 protected:
 
   /// Input data stream
-  Base::DataStreamIn< std::vector<DSL_network> > in_networks;
+  Base::DataStreamIn< DSL_network > in_network;
 
   /// Output data stream
-  Base::DataStreamOut< std::vector<double> > out_probabilities;
+  Base::DataStreamOut< std::vector<DSL_network> > out_networks;
 
   /*!
    * Connects source to given device.
@@ -77,15 +77,16 @@ protected:
   bool onStop();
 
   /// Event handlers
-  Base::EventHandler2 h_onNetworks;
+  Base::EventHandler2 h_onNetwork;
 
   /*!
    * Event handler function.
    */
   void createGrid();
+  void addNewNetwork();
 
 private:
-
+  std::vector<DSL_network> networks;
 };
 
 }//: namespace Network
