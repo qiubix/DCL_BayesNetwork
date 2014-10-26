@@ -123,7 +123,7 @@ private:
 
   void exportNetwork();
 
-  void addHypothesisNode();
+  void addHypothesisNode(int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();

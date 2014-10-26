@@ -81,7 +81,7 @@ bool CreateNetworkWithSpacialDependencies::onStart()
 
 void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	LOG(LDEBUG) << "CreateNetworkWithSpacialDependencies::buildNetwork";
-  
+
   if(network.getNumberOfNodes() != 0) {
     return;
   }
@@ -102,7 +102,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	octree.addPointsFromInputCloud ();
 
 //  addHypothesisNode();
-  
+
   LOG(LDEBUG) << "Creating iterators";
 
 	// Use depth-first iterator
@@ -110,12 +110,12 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt_end = octree.depth_end();
 
   LOG(LDEBUG) << "Creating nodes";
-  
+
 	// Root node
-	pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode(); 
+	pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode();
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
   bool reachedLeafNode = false;
-  
+
 	if(node->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* rootNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
     createBranchNode(rootNode);
@@ -123,10 +123,10 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     addParentsToQueue(rootNode);
     ++dfIt;
 	}
-  
+
   for (;dfIt != dfIt_end; ++dfIt) {
     LOG(LDEBUG) << "========== Another node in depth search ==========";
-    pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode(); 
+    pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode();
     if (node->getNodeType() == LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode =   static_cast< OctreeLeafNode<OctreeContainerPointIndicesWithId>* > (node);
@@ -162,7 +162,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 
 	//	Delete octree data structure (pushes allocated nodes to memory pool!).
 	octree.deleteTree ();
-  
+
   exportNetwork();
 }
 
@@ -180,7 +180,7 @@ void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode<Oc
 
 void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
-  //FIXME: Check for correctness and duplication. Is this method even necessary? 
+  //FIXME: Check for correctness and duplication. Is this method even necessary?
   LOG(LDEBUG) << "Creating leaf node: " << nextId;
   leafNode->getContainer().setNodeId(nextId);
   network.addVoxelNode(nextId);
@@ -219,7 +219,7 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
     network.addFeatureNode(featureId);
     string featureName = network.createFeatureName(featureId);
     network.addArc(featureName, parentName);
-  }//: for points		
+  }//: for points
 
 	LOG(LTRACE) << "voxel ID: " << parentId;
 	LOG(LTRACE) << "voxel name: " << network.createVoxelName(parentId);
@@ -232,13 +232,13 @@ bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode<
   LOG(LTRACE) << "Check whether node has only one child";
   int childrenCounter = 0;
   for (unsigned child_idx = 0; child_idx < 8; ++child_idx) {
-    if (branchNode -> hasChild(child_idx)) 
+    if (branchNode -> hasChild(child_idx))
       ++childrenCounter;
   }
   LOG(LTRACE) << "Number of children: " << childrenCounter;
   if (childrenCounter == 1)
     return true;
-  else 
+  else
     return false;
 }
 
@@ -308,12 +308,15 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	out_network.write(network.getNetwork());
 }
 
-void CreateNetworkWithSpacialDependencies::addHypothesisNode() 
+void CreateNetworkWithSpacialDependencies::addHypothesisNode(int modelId)
 {
-	int modelId = 0;
-  
+  LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
+  stringstream name;
+  name << "H_" << modelId;
+  string hypothesisName = name.str();
+
   /*
-   * FIXME: hardcoded modelId! Works only for one model. 
+   * FIXME: hardcoded modelId! Works only for one model.
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
