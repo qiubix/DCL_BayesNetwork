@@ -96,6 +96,7 @@ protected:
 private:
   BayesNetwork network;
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
 
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
