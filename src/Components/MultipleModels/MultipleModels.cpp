@@ -71,5 +71,12 @@ void MultipleModels::createGrid()
   LOG(LTRACE) << "Creating grid of networks";
 }
 
+void MultipleModels::addNewNetwork()
+{
+  LOG(LTRACE) << "New network";
+  DSL_network newNetwork = in_network.read();
+  networks.push_back(newNetwork);
+}
+
 }//: namespace Network
 }//: namespace Processors
