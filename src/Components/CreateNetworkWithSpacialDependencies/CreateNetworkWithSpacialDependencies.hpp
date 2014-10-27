@@ -86,12 +86,12 @@ protected:
   /// Event handlers
   Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
   Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
-  Base::EventHandler2 h_buildNetwork;
+  Base::EventHandler2 h_onNewModel;
 
   /*!
    * Event handler function.
    */
-  void buildNetwork();
+  void onNewModel();
 
 private:
   BayesNetwork network;
@@ -109,6 +109,7 @@ private:
   unsigned int numberOfVoxels;
   std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
 
+  void buildNetwork();
   void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 
   void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);

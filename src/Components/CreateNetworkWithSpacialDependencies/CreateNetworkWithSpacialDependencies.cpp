@@ -47,9 +47,9 @@ void CreateNetworkWithSpacialDependencies::prepareInterface()
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
 	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
-	h_buildNetwork.setup(boost::bind(&CreateNetworkWithSpacialDependencies::buildNetwork, this));
-	registerHandler("buildNetwork", &h_buildNetwork);
-	addDependency("buildNetwork", &in_cloud_xyzsift);
+	h_buildNetwork.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onNewModel, this));
+	registerHandler("onNewModel", &h_onNewModel);
+	addDependency("onNewModel", &in_cloud_xyzsift);
 //	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
@@ -73,6 +73,13 @@ bool CreateNetworkWithSpacialDependencies::onStop()
     return true;
 }
 
+void CreateNetworkWithSpacialDependencies::onNewModel()
+{
+  LOG(LTRACE) << "On new model";
+  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
+  cloudQueue.push(newCloud);
+}
+
 bool CreateNetworkWithSpacialDependencies::onStart()
 {
     LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::onStart\n";
@@ -86,8 +93,9 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     return;
   }
 
-	// Read from dataport.
-	cloud = in_cloud_xyzsift.read();
+	// Read from queue
+	cloud = cloudQueue.top();
+  cloudQueue.pop();
 //  jointMultiplicityVector = in_jointMultiplicity.read();
 
 	// Set voxel resolution.
