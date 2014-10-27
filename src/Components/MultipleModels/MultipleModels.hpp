@@ -14,7 +14,6 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
-#include "OctreeContainers.hpp"
 
 #include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
@@ -41,7 +40,7 @@ public:
   /*!
    * Destructor
    */
-  virtual ~MultpleModels();
+  virtual ~MultipleModels();
 
   /*!
    * Prepare data streams and handlers
@@ -96,7 +95,7 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("MultpleModels", Processors::Network::MultpleModels)
+REGISTER_COMPONENT("MultipleModels", Processors::Network::MultipleModels)
 
 #endif /* MULTIPLE_MODELS_HPP_ */
 
