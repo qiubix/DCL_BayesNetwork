@@ -97,7 +97,7 @@ private:
     void evaluate();
     void deactivateFeatures();
     void activateMatchedFeatureNodes();
-    void displayHypothesisProbability();
+    void displayHypothesisProbability(int modelId = 0);
     int findFeatureNode(int nodeId);
     double getNodeProbability(int nodeId);
 };
