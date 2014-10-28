@@ -67,7 +67,7 @@ bool MultipleModels::onStop()
 
 void MultipleModels::createGrid()
 {
-  //TODO: creating grid of networks 
+  //TODO: creating grid of networks
   LOG(LTRACE) << "Creating grid of networks";
 }
 
@@ -76,6 +76,12 @@ void MultipleModels::addNewNetwork()
   LOG(LTRACE) << "New network";
   DSL_network newNetwork = in_network.read();
   networks.push_back(newNetwork);
+}
+
+void MultipleModels::exportNetworks()
+{
+  LOG(LTRACE) << "Writting networks to output";
+  out_networks.write(networks);
 }
 
 }//: namespace Network

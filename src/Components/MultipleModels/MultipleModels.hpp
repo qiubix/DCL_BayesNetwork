@@ -86,6 +86,8 @@ protected:
 
 private:
   std::vector<DSL_network> networks;
+
+  void exportNetworks();
 };
 
 }//: namespace Network
