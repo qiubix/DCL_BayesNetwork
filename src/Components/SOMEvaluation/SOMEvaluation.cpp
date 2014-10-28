@@ -34,17 +34,17 @@ SOMEvaluation::~SOMEvaluation()
 void SOMEvaluation::prepareInterface()
 {
     LOG(LTRACE) << "SOMEvaluation::prepareInterface";
-    
+
     h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
     registerHandler("onNetwork", &h_onNetwork);
     registerStream("in_network", &in_network);
     addDependency("onNetwork", &in_network);
-    
+
     h_onInstance.setup(this, &SOMEvaluation::onInstance);
     registerHandler("onInstance", &h_onInstance);
     registerStream("in_instanceMatchedFeatures", &in_instanceMatchedFeatures);
     addDependency("onInstance", &in_instanceMatchedFeatures);
-    
+
     registerStream("out_probabilities", &out_probabilities);
 }
 
@@ -101,7 +101,7 @@ void SOMEvaluation::evaluate()
 		theNet.UpdateBeliefs();
 
 		displayHypothesisProbability();
-    
+
 		LOG(LINFO) << " runtime: " << timer.elapsed();
     LOG(LDEBUG) << "SOMEvaluation finished";
 }
@@ -139,13 +139,13 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 void SOMEvaluation::displayHypothesisProbability(int modelId)
 {
   string nodeName = "H_" + modelId;
-		int hypothesis = theNet.FindNode(nodeName);
-    double hypothesisProbability = getNodeProbability(hypothesis);
-    
-		LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
-        
-		hypothesesProbabilities.push_back(hypothesisProbability);
-		out_probabilities.write(hypothesesProbabilities);
+  int hypothesis = theNet.FindNode(nodeName);
+  double hypothesisProbability = getNodeProbability(hypothesis);
+
+  LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
+
+  hypothesesProbabilities.push_back(hypothesisProbability);
+  out_probabilities.write(hypothesesProbabilities);
 }
 
 int SOMEvaluation::findFeatureNode(int nodeId)
@@ -156,7 +156,7 @@ int SOMEvaluation::findFeatureNode(int nodeId)
 		return theNet.FindNode(nodeName.c_str());
 }
 
-double SOMEvaluation::getNodeProbability(int nodeId) 
+double SOMEvaluation::getNodeProbability(int nodeId)
 {
 		theNet.GetNode(nodeId)->Value();
 		DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
