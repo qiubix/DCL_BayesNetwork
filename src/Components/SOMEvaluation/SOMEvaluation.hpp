@@ -50,9 +50,9 @@ public:
 
 protected:
     ///Input data streams
-    Base::DataStreamIn<DSL_network> in_network;
+    Base::DataStreamIn< std::vector<DSL_network> > in_networks;
     Base::DataStreamIn< std::vector<int> > in_instanceMatchedFeatures;
-    
+
     //Output data streams
     Base::DataStreamOut< std::vector<double> > out_probabilities;
 
@@ -91,9 +91,9 @@ private:
     std::vector <int> jointMultiplicityVector;
     std::vector <int> instance;
     std::vector <double> hypothesesProbabilities;
-    
-    DSL_network theNet;
-    
+
+    std::vector<DSL_network> networks;
+
     void evaluate();
     void deactivateFeatures();
     void activateMatchedFeatureNodes();

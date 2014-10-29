@@ -37,8 +37,8 @@ void SOMEvaluation::prepareInterface()
 
     h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
     registerHandler("onNetwork", &h_onNetwork);
-    registerStream("in_network", &in_network);
-    addDependency("onNetwork", &in_network);
+    registerStream("in_networks", &in_networks);
+    addDependency("onNetwork", &in_networks);
 
     h_onInstance.setup(this, &SOMEvaluation::onInstance);
     registerHandler("onInstance", &h_onInstance);
@@ -75,7 +75,7 @@ bool SOMEvaluation::onStop()
 void SOMEvaluation::onNetwork()
 {
     LOG(LWARNING) << "SOMEvaluation::onNetwork";
-    theNet = in_network.read();
+    networks = in_networks.read();
 }
 
 void SOMEvaluation::onInstance()
@@ -91,6 +91,8 @@ void SOMEvaluation::evaluate()
 {
 		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
 		LOG(LDEBUG) << "instance size: " << instance.size();
+
+		DSL_network theNet = networks[0];
 
 		Common::Timer timer;
 		timer.restart();
