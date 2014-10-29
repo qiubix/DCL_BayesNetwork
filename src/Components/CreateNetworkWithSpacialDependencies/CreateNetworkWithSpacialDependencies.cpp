@@ -47,10 +47,11 @@ void CreateNetworkWithSpacialDependencies::prepareInterface()
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
 	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
-	h_buildNetwork.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onNewModel, this));
+	h_onNewModel.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onNewModel, this));
 	registerHandler("onNewModel", &h_onNewModel);
+	registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
 	addDependency("onNewModel", &in_cloud_xyzsift);
-//	addDependency("buildNetwork", &in_jointMultiplicity);
+	addDependency("buildNetwork", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
 }
