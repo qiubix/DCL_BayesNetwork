@@ -92,6 +92,7 @@ protected:
    * Event handler function.
    */
   void onNewModel();
+  void onJointMultiplicity();
 
 private:
   BayesNetwork network;

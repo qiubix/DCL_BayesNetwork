@@ -48,10 +48,11 @@ void CreateNetworkWithSpacialDependencies::prepareInterface()
 	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
 	h_onNewModel.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onNewModel, this));
+	h_onJointMultiplicity.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onJointMultiplicity, this));
 	registerHandler("onNewModel", &h_onNewModel);
 	registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
 	addDependency("onNewModel", &in_cloud_xyzsift);
-	addDependency("buildNetwork", &in_jointMultiplicity);
+	addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
 	registerStream("out_network", &out_network);
 }
@@ -79,6 +80,13 @@ void CreateNetworkWithSpacialDependencies::onNewModel()
   LOG(LTRACE) << "On new model";
   pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
   cloudQueue.push(newCloud);
+}
+
+void CreateNetworkWithSpacialDependencies::onJointMultiplicity()
+{
+  LOG(LTRACE) << "On joint multiplicity";
+  jointMultiplicityVector = in_jointMultiplicity.read();
+  buildNetwork();
 }
 
 bool CreateNetworkWithSpacialDependencies::onStart()
