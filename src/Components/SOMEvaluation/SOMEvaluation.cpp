@@ -141,7 +141,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 void SOMEvaluation::displayHypothesisProbability(int modelId)
 {
   string nodeName = "H_" + modelId;
-  int hypothesis = theNet.FindNode(nodeName);
+  int hypothesis = theNet.FindNode(nodeName.c_str());
   double hypothesisProbability = getNodeProbability(hypothesis);
 
   LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
