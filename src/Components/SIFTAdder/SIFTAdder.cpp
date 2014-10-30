@@ -16,7 +16,7 @@
 #include <pcl/point_representation.h>
 
 #include "pcl/impl/instantiate.hpp"
-#include "pcl/search/kdtree.h" 
+#include "pcl/search/kdtree.h"
 #include "pcl/search/impl/kdtree.hpp"
 #include <pcl/registration/correspondence_estimation.h>
 #include "pcl/registration/correspondence_rejection_sample_consensus.h"
@@ -38,7 +38,7 @@ class SIFTFeatureRepresentation: public pcl::DefaultFeatureRepresentation <Point
 	// Override the copyToFloatArray method to define our feature vector
 	virtual void copyToFloatArray (const PointXYZSIFT &p, float * out) const
 	{
-		//This representation is only for determining correspondences (not for use in Kd-tree for example - so use only SIFT part of the point	
+		//This representation is only for determining correspondences (not for use in Kd-tree for example - so use only SIFT part of the point
 		for (register int i = 0; i < 128 ; i++)
 			out[i] = p.descriptor[i];//p.descriptor.at<float>(0, i) ;
 		//std::cout << "SIFTFeatureRepresentation:copyToFloatArray()" << std::endl ;
@@ -115,7 +115,7 @@ void SIFTAdder::add() {
 			modelsMultiplicity.push_back(modelMultiplicity);
 			continue;
 		}
-        
+
         LOG(LDEBUG) << "Joint cloud size before merge: " << cloud->size();
 
 		pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
@@ -128,9 +128,9 @@ void SIFTAdder::add() {
 		correst.setInputSource(cloud_next) ;
 		correst.setInputTarget(cloud) ;
 		correst.determineReciprocalCorrespondences(*correspondences) ;
-        
+
         LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
-	
+
         if ( correspondences -> size() > 4 ) {
 			//ransac znalezienie blednych dopasowan
 			pcl::Correspondences inliers ;
@@ -153,25 +153,25 @@ void SIFTAdder::add() {
 						iter_correspondences= correspondences->erase(iter_correspondences);
 						break;
 					}
-					else 
+					else
 						++iter_correspondences;
 				}
-				++iter_inliers;	
+				++iter_inliers;
 			}
         }
-		
+
 		LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
 
 		//zliczanie krotnosci
-		for(int i = 0; i< correspondences->size();i++){	
-			if (correspondences->at(i).index_query >=cloud_next->size() ||
-			        correspondences->at(i).index_match >=cloud->size()){
-				continue;
-			}
-			cloud->at(correspondences->at(i).index_match).multiplicity += cloud_next->at(correspondences->at(i).index_query).multiplicity;
-			modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
-			cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
-		}
+    for(int i = 0; i< correspondences->size();i++){
+      if (correspondences->at(i).index_query >=cloud_next->size() ||
+          correspondences->at(i).index_match >=cloud->size()){
+        continue;
+      }
+      cloud->at(correspondences->at(i).index_match).multiplicity += cloud_next->at(correspondences->at(i).index_query).multiplicity;
+      modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
+      cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
+    }
 
 		//usuniecie punktow
 		pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloud_next->begin();
@@ -180,9 +180,9 @@ void SIFTAdder::add() {
 				pt_iter = cloud_next->erase(pt_iter);
 			}
 			else{
-				++pt_iter;	
+				++pt_iter;
 			}
-		} 
+		}
 
 		LOG(LDEBUG) << "Reduced next cloud size: " << cloud_next->size();
         if (cloud_next->empty()) {
