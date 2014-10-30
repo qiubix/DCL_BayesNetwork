@@ -92,7 +92,7 @@ void SOMEvaluation::evaluate()
 		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
 		LOG(LDEBUG) << "instance size: " << instance.size();
 
-		DSL_network theNet = networks[0];
+		theNet = networks[0];
 
 		Common::Timer timer;
 		timer.restart();

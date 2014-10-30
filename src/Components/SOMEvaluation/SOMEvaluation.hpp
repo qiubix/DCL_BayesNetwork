@@ -93,6 +93,7 @@ private:
     std::vector <double> hypothesesProbabilities;
 
     std::vector<DSL_network> networks;
+    DSL_network theNet;
 
     void evaluate();
     void deactivateFeatures();
