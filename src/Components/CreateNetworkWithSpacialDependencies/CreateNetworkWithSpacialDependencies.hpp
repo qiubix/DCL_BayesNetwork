@@ -85,7 +85,7 @@ protected:
 
   /// Event handlers
   Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
-  Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
+  Base::EventHandler2 h_onJointMultiplicity;
   Base::EventHandler2 h_onNewModel;
 
   /*!
