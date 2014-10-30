@@ -22,7 +22,7 @@
 				<Component name="PCDReader" type="PCL:PCDReader" priority="2" bump="0">
 					<param name="filename">/home/qiubix/Objects/SimpleObjects/object_1/feature_0.pcd</param>
 				</Component>
-				<Component name="Adder" type="PCL:SIFTAdder" priority="9" bump="0">
+				<Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
 				</Component>
 				<Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
 				</Component>
