@@ -19,6 +19,9 @@
 #include <Types/SIFTObjectModel.hpp>
 //#include "Types/Features.hpp"
 
+#include <pcl/registration/correspondence_estimation.h>
+#include "pcl/registration/correspondence_rejection_sample_consensus.h"
+
 namespace Processors {
 namespace SIFTAdder {
 
