@@ -114,7 +114,7 @@ void SIFTAdder::add() {
       LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
       modelsMultiplicity.push_back(modelMultiplicity);
       continue;
-    }
+    } //: empty cloud
 
     LOG(LDEBUG) << "Joint cloud size before merge: " << cloud->size();
 
@@ -158,7 +158,7 @@ void SIFTAdder::add() {
         }
         ++iter_inliers;
       }
-    }
+    } //: if more than 4 correspondences
 
     LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
 
@@ -200,12 +200,14 @@ void SIFTAdder::add() {
     LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
     modelsMultiplicity.push_back(modelMultiplicity);
     //		modelMultiplicity.clear();
-  }
+  } //: for models
+
   LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << cloud->size();
   out_cloud.write(cloud);
   LOG(LDEBUG) << "Writing multiplicity vectors of models merged to cloud. Number of vectors: " << modelsMultiplicity.size();
   out_multiplicityOfModels.write(modelsMultiplicity);
-}
+
+} //:add()
 
 } //: namespace SIFTAdder
 } //: namespace Processors
