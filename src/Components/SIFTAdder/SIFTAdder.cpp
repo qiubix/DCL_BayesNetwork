@@ -163,15 +163,8 @@ void SIFTAdder::add() {
     LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
 
     //zliczanie krotnosci
-    for(int i = 0; i< correspondences->size();i++){
-      if (correspondences->at(i).index_query >=cloud_next->size() ||
-          correspondences->at(i).index_match >=cloud->size()){
-        continue;
-      }
-      cloud->at(correspondences->at(i).index_match).multiplicity += cloud_next->at(correspondences->at(i).index_query).multiplicity;
-      modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
-      cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
-    }
+    if(!countMultiplicity(correspondences))
+      continue;
 
     //usuniecie punktow
     pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloud_next->begin();
@@ -208,6 +201,18 @@ void SIFTAdder::add() {
   out_multiplicityOfModels.write(modelsMultiplicity);
 
 } //:add()
+
+bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences) {
+  for(int i = 0; i< correspondences->size();i++){
+    if (correspondences->at(i).index_query >=cloud_next->size() || correspondences->at(i).index_match >=cloud->size()){
+      return false;
+    }
+    cloud->at(correspondences->at(i).index_match).multiplicity += cloud_next->at(correspondences->at(i).index_query).multiplicity;
+    modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
+    cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
+  }
+  return true;
+}
 
 } //: namespace SIFTAdder
 } //: namespace Processors

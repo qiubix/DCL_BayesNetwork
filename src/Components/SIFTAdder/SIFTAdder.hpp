@@ -1,6 +1,6 @@
 /*!
  * \file
- * \brief 
+ * \brief
  * \author Micha Laszkowski
  */
 
@@ -15,7 +15,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include <Types/PointXYZSIFT.hpp> 
+#include <Types/PointXYZSIFT.hpp>
 #include <Types/SIFTObjectModel.hpp>
 //#include "Types/Features.hpp"
 
@@ -42,7 +42,7 @@ public:
 
 	/*!
 	 * Prepare components interface (register streams and handlers).
-	 * At this point, all properties are already initialized and loaded to 
+	 * At this point, all properties are already initialized and loaded to
 	 * values set in config file.
 	 */
 	void prepareInterface();
@@ -68,7 +68,7 @@ protected:
 	 * Stop component
 	 */
 	bool onStop();
-	
+
 	bool matIsEqual(const cv::Mat mat1, const cv::Mat mat2);
 
 
@@ -85,16 +85,18 @@ protected:
 	// Handlers
 	Base::EventHandler2 h_add;
 
-	
+
 	// Handlers
 	void add();
-	
+
 	pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
 //    std::vector <pcl::PointCloud<PointXYZSIFT>::Ptr> models;
     std::vector <AbstractObject*> models;
-	
+
 	//vector<vector<int> > descriptors;
 	//vector<int> multiplicity;
+private:
+  bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences);
 
 };
 
