@@ -92,77 +92,77 @@ bool SIFTAdder::onStart() {
 }
 
 void SIFTAdder::add() {
-	LOG(LDEBUG) << "================= SIFTAdder: adding models to joint cloud =================";
+  LOG(LDEBUG) << "================= SIFTAdder: adding models to joint cloud =================";
 
-	models = in_models.read();
-    std::vector <std::map<int,int> > modelsMultiplicity;
-	LOG(LDEBUG) << "Number of models: " << models.size();
-	for (unsigned n=0; n<models.size(); ++n) {
+  models = in_models.read();
+  std::vector <std::map<int,int> > modelsMultiplicity;
+  LOG(LDEBUG) << "Number of models: " << models.size();
+  for (unsigned n=0; n<models.size(); ++n) {
 
-		std::map<int,int> modelMultiplicity;
-		pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next = dynamic_cast<SIFTObjectModel*>(models.at(n))->cloud_xyzsift;
-        LOG(LDEBUG) << "Model no " << n << ": model's cloud size = " << cloud_next->size();
+    std::map<int,int> modelMultiplicity;
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next = dynamic_cast<SIFTObjectModel*>(models.at(n))->cloud_xyzsift;
+    LOG(LDEBUG) << "Model no " << n << ": model's cloud size = " << cloud_next->size();
 
-		if (cloud->empty()){
-            LOG(LDEBUG) << "Writing new cloud to empty joint cloud. Size: " << cloud_next->size();
-			cloud = cloud_next;
-			out_cloud.write(cloud);
-			for (unsigned k=0; k<cloud_next->size(); ++k) {
-				std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(k, cloud_next->at(k).multiplicity);
-				modelMultiplicity.insert(nextMultiplicity);
-			}
-			LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
-			modelsMultiplicity.push_back(modelMultiplicity);
-			continue;
-		}
+    if (cloud->empty()){
+      LOG(LDEBUG) << "Writing new cloud to empty joint cloud. Size: " << cloud_next->size();
+      cloud = cloud_next;
+      out_cloud.write(cloud);
+      for (unsigned k=0; k<cloud_next->size(); ++k) {
+        std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(k, cloud_next->at(k).multiplicity);
+        modelMultiplicity.insert(nextMultiplicity);
+      }
+      LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
+      modelsMultiplicity.push_back(modelMultiplicity);
+      continue;
+    }
 
-        LOG(LDEBUG) << "Joint cloud size before merge: " << cloud->size();
+    LOG(LDEBUG) << "Joint cloud size before merge: " << cloud->size();
 
-		pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
-		pcl::registration::CorrespondenceEstimation<PointXYZSIFT, PointXYZSIFT> correst ;
+    pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
+    pcl::registration::CorrespondenceEstimation<PointXYZSIFT, PointXYZSIFT> correst ;
 
-		//SIFTFeatureRepresentation point_representation ;
-		//correst.setPointRepresentation (point_representation.makeShared()); //NEVER do like this, makeShared will return DefaultFeatureRepresentation<PointDefault>!
-		SIFTFeatureRepresentation::Ptr point_representation(new SIFTFeatureRepresentation()) ;
-		correst.setPointRepresentation(point_representation) ;
-		correst.setInputSource(cloud_next) ;
-		correst.setInputTarget(cloud) ;
-		correst.determineReciprocalCorrespondences(*correspondences) ;
+    //SIFTFeatureRepresentation point_representation ;
+    //correst.setPointRepresentation (point_representation.makeShared()); //NEVER do like this, makeShared will return DefaultFeatureRepresentation<PointDefault>!
+    SIFTFeatureRepresentation::Ptr point_representation(new SIFTFeatureRepresentation()) ;
+    correst.setPointRepresentation(point_representation) ;
+    correst.setInputSource(cloud_next) ;
+    correst.setInputTarget(cloud) ;
+    correst.determineReciprocalCorrespondences(*correspondences) ;
 
-        LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
+    LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
 
-        if ( correspondences -> size() > 4 ) {
-			//ransac znalezienie blednych dopasowan
-			pcl::Correspondences inliers ;
-			pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
-			sac.setInputSource(cloud_next) ;
-			sac.setInputTarget(cloud) ;
-			sac.setInlierThreshold(0.001f) ;
-			sac.setMaximumIterations(2000) ;
-			sac.setInputCorrespondences(correspondences) ;
-			sac.getCorrespondences(inliers);
+    if ( correspondences -> size() > 4 ) {
+      //ransac znalezienie blednych dopasowan
+      pcl::Correspondences inliers ;
+      pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
+      sac.setInputSource(cloud_next) ;
+      sac.setInputTarget(cloud) ;
+      sac.setInlierThreshold(0.001f) ;
+      sac.setMaximumIterations(2000) ;
+      sac.setInputCorrespondences(correspondences) ;
+      sac.getCorrespondences(inliers);
 
-			LOG(LDEBUG) << "Wrong matches found";
+      LOG(LDEBUG) << "Wrong matches found";
 
-			//usuniecie blednych dopasowan
-			pcl::Correspondences::iterator iter_inliers = inliers.begin();
-			while(iter_inliers!=inliers.end()){
-				pcl::Correspondences::iterator iter_correspondences = correspondences->begin();
-				while(iter_correspondences!=correspondences->end()){
-					if(iter_correspondences->index_query == iter_inliers->index_query){
-						iter_correspondences= correspondences->erase(iter_correspondences);
-						break;
-					}
-					else
-						++iter_correspondences;
-				}
-				++iter_inliers;
-			}
+      //usuniecie blednych dopasowan
+      pcl::Correspondences::iterator iter_inliers = inliers.begin();
+      while(iter_inliers!=inliers.end()){
+        pcl::Correspondences::iterator iter_correspondences = correspondences->begin();
+        while(iter_correspondences!=correspondences->end()){
+          if(iter_correspondences->index_query == iter_inliers->index_query){
+            iter_correspondences= correspondences->erase(iter_correspondences);
+            break;
+          }
+          else
+            ++iter_correspondences;
         }
+        ++iter_inliers;
+      }
+    }
 
-		LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
+    LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
 
-		//zliczanie krotnosci
+    //zliczanie krotnosci
     for(int i = 0; i< correspondences->size();i++){
       if (correspondences->at(i).index_query >=cloud_next->size() ||
           correspondences->at(i).index_match >=cloud->size()){
@@ -173,38 +173,38 @@ void SIFTAdder::add() {
       cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
     }
 
-		//usuniecie punktow
-		pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloud_next->begin();
-		while(pt_iter!=cloud_next->end()){
-			if(pt_iter->multiplicity==-1){
-				pt_iter = cloud_next->erase(pt_iter);
-			}
-			else{
-				++pt_iter;
-			}
-		}
+    //usuniecie punktow
+    pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloud_next->begin();
+    while(pt_iter!=cloud_next->end()){
+      if(pt_iter->multiplicity==-1){
+        pt_iter = cloud_next->erase(pt_iter);
+      }
+      else{
+        ++pt_iter;
+      }
+    }
 
-		LOG(LDEBUG) << "Reduced next cloud size: " << cloud_next->size();
-        if (cloud_next->empty()) {
-			LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
-            modelsMultiplicity.push_back(modelMultiplicity);
-			continue;
-        }
-		for (unsigned k=0; k<cloud_next->size(); ++k) {
-			std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(cloud->size()+k, cloud_next->at(k).multiplicity);
-			modelMultiplicity.insert(nextMultiplicity);
-		}
+    LOG(LDEBUG) << "Reduced next cloud size: " << cloud_next->size();
+    if (cloud_next->empty()) {
+      LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
+      modelsMultiplicity.push_back(modelMultiplicity);
+      continue;
+    }
+    for (unsigned k=0; k<cloud_next->size(); ++k) {
+      std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(cloud->size()+k, cloud_next->at(k).multiplicity);
+      modelMultiplicity.insert(nextMultiplicity);
+    }
 
-		*cloud = *cloud + *cloud_next;
-        LOG(LDEBUG) << "New joint cloud size: " << cloud->size();
-		LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
-        modelsMultiplicity.push_back(modelMultiplicity);
-//		modelMultiplicity.clear();
-	}
-    LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << cloud->size();
-	out_cloud.write(cloud);
-    LOG(LDEBUG) << "Writing multiplicity vectors of models merged to cloud. Number of vectors: " << modelsMultiplicity.size();
-	out_multiplicityOfModels.write(modelsMultiplicity);
+    *cloud = *cloud + *cloud_next;
+    LOG(LDEBUG) << "New joint cloud size: " << cloud->size();
+    LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
+    modelsMultiplicity.push_back(modelMultiplicity);
+    //		modelMultiplicity.clear();
+  }
+  LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << cloud->size();
+  out_cloud.write(cloud);
+  LOG(LDEBUG) << "Writing multiplicity vectors of models merged to cloud. Number of vectors: " << modelsMultiplicity.size();
+  out_multiplicityOfModels.write(modelsMultiplicity);
 }
 
 } //: namespace SIFTAdder
