@@ -23,7 +23,7 @@
 #include "pcl/registration/correspondence_rejection_sample_consensus.h"
 
 namespace Processors {
-namespace SIFTAdder {
+namespace Network {
 
 /*!
  * \class SIFTAdder
@@ -98,16 +98,16 @@ protected:
   //vector<vector<int> > descriptors;
   //vector<int> multiplicity;
 private:
-  bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences);
+  bool countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next);
 
 };
 
-} //: namespace SIFTAdder
+} //: namespace Network
 } //: namespace Processors
 
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("SIFTAdder", Processors::SIFTAdder::SIFTAdder)
+REGISTER_COMPONENT("SIFTAdder", Processors::Network::SIFTAdder)
 
 #endif /* SIFTADDER_HPP_ */

@@ -20,7 +20,7 @@
 #include "pcl/search/impl/kdtree.hpp"
 
 namespace Processors {
-namespace SIFTAdder {
+namespace Network {
 
 class SIFTFeatureRepresentation: public pcl::DefaultFeatureRepresentation <PointXYZSIFT> //could possibly be pcl::PointRepresentation<...> ??
 {
@@ -161,7 +161,7 @@ void SIFTAdder::add() {
     LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
 
     //zliczanie krotnosci
-    if(!countMultiplicity(correspondences))
+    if(!countMultiplicity(correspondences, cloud_next))
       continue;
 
     //usuniecie punktow
@@ -200,17 +200,17 @@ void SIFTAdder::add() {
 
 } //:add()
 
-bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences) {
+bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next) {
   for(int i = 0; i< correspondences->size();i++){
     if (correspondences->at(i).index_query >=cloud_next->size() || correspondences->at(i).index_match >=cloud->size()){
       return false;
     }
     cloud->at(correspondences->at(i).index_match).multiplicity += cloud_next->at(correspondences->at(i).index_query).multiplicity;
-    modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
+    //modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
     cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
   }
   return true;
 }
 
-} //: namespace SIFTAdder
+} //: namespace Network
 } //: namespace Processors
