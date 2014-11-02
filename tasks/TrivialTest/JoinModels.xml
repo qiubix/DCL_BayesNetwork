@@ -17,7 +17,8 @@
 		<Subtask name="Main">
 			<Executor name="Processing"  period="1">
 				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
-					<param name="filenames">/home/qiubix/Objects/SimpleObjects/object_1.json;/home/qiubix/Objects/SimpleObjects/object_2.json;/home/qiubix/Objects/SimpleObjects/object_3.json</param>
+					<!-- <param name="filenames">/home/qiubix/Objects/SimpleObjects/object_1.json;/home/qiubix/Objects/SimpleObjects/object_2.json;/home/qiubix/Objects/SimpleObjects/object_3.json</param> -->
+					<param name="filenames">/home/qiubix/Objects/SimpleObjects/object_1.json;/home/qiubix/Objects/SimpleObjects/object_2.json</param>
 				</Component>
 				<Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
 				</Component>
