@@ -24,23 +24,23 @@ namespace SIFTAdder {
 
 class SIFTFeatureRepresentation: public pcl::DefaultFeatureRepresentation <PointXYZSIFT> //could possibly be pcl::PointRepresentation<...> ??
 {
-	using pcl::PointRepresentation<PointXYZSIFT>::nr_dimensions_;
-	public:
-	SIFTFeatureRepresentation ()
-	{
-		// Define the number of dimensions
-		nr_dimensions_ = 128 ;
-		trivial_ = false ;
-	}
+  using pcl::PointRepresentation<PointXYZSIFT>::nr_dimensions_;
+  public:
+  SIFTFeatureRepresentation ()
+  {
+    // Define the number of dimensions
+    nr_dimensions_ = 128 ;
+    trivial_ = false ;
+  }
 
-	// Override the copyToFloatArray method to define our feature vector
-	virtual void copyToFloatArray (const PointXYZSIFT &p, float * out) const
-	{
-		//This representation is only for determining correspondences (not for use in Kd-tree for example - so use only SIFT part of the point
-		for (register int i = 0; i < 128 ; i++)
-			out[i] = p.descriptor[i];//p.descriptor.at<float>(0, i) ;
-		//std::cout << "SIFTFeatureRepresentation:copyToFloatArray()" << std::endl ;
-	}
+  // Override the copyToFloatArray method to define our feature vector
+  virtual void copyToFloatArray (const PointXYZSIFT &p, float * out) const
+  {
+    //This representation is only for determining correspondences (not for use in Kd-tree for example - so use only SIFT part of the point
+    for (register int i = 0; i < 128 ; i++)
+      out[i] = p.descriptor[i];//p.descriptor.at<float>(0, i) ;
+    //std::cout << "SIFTFeatureRepresentation:copyToFloatArray()" << std::endl ;
+  }
 };
 
 SIFTAdder::SIFTAdder(const std::string & name) :
@@ -52,41 +52,41 @@ SIFTAdder::~SIFTAdder() {
 }
 
 void SIFTAdder::prepareInterface() {
-	// Register data streams, events and event handlers HERE!
-	//registerStream("in_descriptors", &in_descriptors);
-	//registerStream("out_descriptors", &out_descriptors);
-	//registerStream("in_cloud", &in_cloud);
-	registerStream("in_models", &in_models);
-	registerStream("out_cloud", &out_cloud);
-	registerStream("out_multiplicityOfModels", &out_multiplicityOfModels);
-	// Register handlers
-	h_add.setup(boost::bind(&SIFTAdder::add, this));
-	registerHandler("add", &h_add);
-	//	addDependency("add", &in_cloud);
-	addDependency("add", &in_models);
+  // Register data streams, events and event handlers HERE!
+  //registerStream("in_descriptors", &in_descriptors);
+  //registerStream("out_descriptors", &out_descriptors);
+  //registerStream("in_cloud", &in_cloud);
+  registerStream("in_models", &in_models);
+  registerStream("out_cloud", &out_cloud);
+  registerStream("out_multiplicityOfModels", &out_multiplicityOfModels);
+  // Register handlers
+  h_add.setup(boost::bind(&SIFTAdder::add, this));
+  registerHandler("add", &h_add);
+  //	addDependency("add", &in_cloud);
+  addDependency("add", &in_models);
 }
 
 bool SIFTAdder::onInit() {
-	cloud = pcl::PointCloud<PointXYZSIFT>::Ptr (new pcl::PointCloud<PointXYZSIFT>());
-	return true;
+  cloud = pcl::PointCloud<PointXYZSIFT>::Ptr (new pcl::PointCloud<PointXYZSIFT>());
+  return true;
 }
 
 bool SIFTAdder::onFinish() {
-	return true;
+  return true;
 }
 
 bool SIFTAdder::onStop() {
-	//std::fstream plik;
-	//plik.open( "/home/mlaszkow/test.txt", std::ios::out );
-	//plik<<"Deskryptory:"<<endl;
-	//for (int i = 0; i< descriptors.size(); i++)
-		//plik<<descriptors[i]<<endl;
-	//plik.close();
-	return true;
+  //std::fstream plik;
+  //plik.open( "/home/mlaszkow/test.txt", std::ios::out );
+  //plik<<"Deskryptory:"<<endl;
+  //for (int i = 0; i< descriptors.size(); i++)
+  //plik<<descriptors[i]<<endl;
+  //plik.close();
+  return true;
 }
 
 bool SIFTAdder::onStart() {
-	return true;
+  return true;
 }
 
 void SIFTAdder::add() {

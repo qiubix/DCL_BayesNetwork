@@ -33,71 +33,70 @@ namespace SIFTAdder {
  */
 class SIFTAdder: public Base::Component {
 public:
-	/*!
-	 * Constructor.
-	 */
-	SIFTAdder(const std::string & name = "SIFTAdder");
+  /*!
+   * Constructor.
+   */
+  SIFTAdder(const std::string & name = "SIFTAdder");
 
-	/*!
-	 * Destructor
-	 */
-	virtual ~SIFTAdder();
+  /*!
+   * Destructor
+   */
+  virtual ~SIFTAdder();
 
-	/*!
-	 * Prepare components interface (register streams and handlers).
-	 * At this point, all properties are already initialized and loaded to
-	 * values set in config file.
-	 */
-	void prepareInterface();
+  /*!
+   * Prepare components interface (register streams and handlers).
+   * At this point, all properties are already initialized and loaded to
+   * values set in config file.
+   */
+  void prepareInterface();
 
 protected:
 
-	/*!
-	 * Connects source to given device.
-	 */
-	bool onInit();
+  /*!
+   * Connects source to given device.
+   */
+  bool onInit();
 
-	/*!
-	 * Disconnect source from device, closes streams, etc.
-	 */
-	bool onFinish();
+  /*!
+   * Disconnect source from device, closes streams, etc.
+   */
+  bool onFinish();
 
-	/*!
-	 * Start component
-	 */
-	bool onStart();
+  /*!
+   * Start component
+   */
+  bool onStart();
 
-	/*!
-	 * Stop component
-	 */
-	bool onStop();
+  /*!
+   * Stop component
+   */
+  bool onStop();
 
-	bool matIsEqual(const cv::Mat mat1, const cv::Mat mat2);
+  bool matIsEqual(const cv::Mat mat1, const cv::Mat mat2);
 
 
-// Input data streams
-
+  // Input data streams
 //		Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr> in_cloud;
-    Base::DataStreamIn<std::vector<AbstractObject*> > in_models;
+  Base::DataStreamIn<std::vector<AbstractObject*> > in_models;
 
-// Output data streams
-		Base::DataStreamOut<pcl::PointCloud<PointXYZSIFT>::Ptr> out_cloud;
-        Base::DataStreamOut< std::vector<std::map<int,int> > > out_multiplicityOfModels;
-		//Base::DataStreamOut<vector<vector<int> > > out_descriptors;
-		//Base::DataStreamOut<vector<int> > out_multiplicity;
-	// Handlers
-	Base::EventHandler2 h_add;
+  // Output data streams
+  Base::DataStreamOut<pcl::PointCloud<PointXYZSIFT>::Ptr> out_cloud;
+  Base::DataStreamOut< std::vector<std::map<int,int> > > out_multiplicityOfModels;
+  //Base::DataStreamOut<vector<vector<int> > > out_descriptors;
+  //Base::DataStreamOut<vector<int> > out_multiplicity;
 
+  // Handlers
+  Base::EventHandler2 h_add;
 
-	// Handlers
-	void add();
+  // Handlers
+  void add();
 
-	pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
-//    std::vector <pcl::PointCloud<PointXYZSIFT>::Ptr> models;
-    std::vector <AbstractObject*> models;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  //    std::vector <pcl::PointCloud<PointXYZSIFT>::Ptr> models;
+  std::vector <AbstractObject*> models;
 
-	//vector<vector<int> > descriptors;
-	//vector<int> multiplicity;
+  //vector<vector<int> > descriptors;
+  //vector<int> multiplicity;
 private:
   bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences);
 
