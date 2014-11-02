@@ -1,7 +1,7 @@
 /*!
  * \file
  * \brief
- * \author Micha Laszkowski
+ * \author Michał Laszkowski, Karol Katerżawa
  */
 
 #include <memory>
@@ -45,7 +45,7 @@ class SIFTFeatureRepresentation: public pcl::DefaultFeatureRepresentation <Point
 
 SIFTAdder::SIFTAdder(const std::string & name) :
 		Base::Component(name)  {
-
+  nextId = 0;
 }
 
 SIFTAdder::~SIFTAdder() {
@@ -104,13 +104,15 @@ void SIFTAdder::add() {
     if (cloud->empty()){
       LOG(LDEBUG) << "Writing new cloud to empty joint cloud. Size: " << cloud_next->size();
       cloud = cloud_next;
-      out_cloud.write(cloud);
       for (unsigned k=0; k<cloud_next->size(); ++k) {
         std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(k, cloud_next->at(k).multiplicity);
         modelMultiplicity.insert(nextMultiplicity);
+        cloud->at(k).pointId = k;
       }
+      nextId = cloud_next->size();
       LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
       modelsMultiplicity.push_back(modelMultiplicity);
+      out_cloud.write(cloud);
       continue;
     } //: empty cloud
 
@@ -184,6 +186,8 @@ void SIFTAdder::add() {
     for (unsigned k=0; k<cloud_next->size(); ++k) {
       std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(cloud->size()+k, cloud_next->at(k).multiplicity);
       modelMultiplicity.insert(nextMultiplicity);
+      cloud_next->at(k).pointId = nextId;
+      ++nextId;
     }
 
     *cloud = *cloud + *cloud_next;
@@ -195,6 +199,11 @@ void SIFTAdder::add() {
 
   LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << cloud->size();
   out_cloud.write(cloud);
+
+  LOG(LWARNING) << "------ Joint cloud feature ids: ------";
+  for (unsigned l=0; l<cloud->size(); ++l) {
+    LOG(LWARNING) << "Feature id: " << cloud->at(l).pointId;
+  }
   LOG(LDEBUG) << "Writing multiplicity vectors of models merged to cloud. Number of vectors: " << modelsMultiplicity.size();
   out_multiplicityOfModels.write(modelsMultiplicity);
 

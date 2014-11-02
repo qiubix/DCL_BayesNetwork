@@ -1,7 +1,7 @@
 /*!
  * \file
  * \brief
- * \author Micha Laszkowski
+ * \author Michał Laszkowski, Karol Katerżawa
  */
 
 #ifndef SIFTADDER_HPP_
@@ -99,6 +99,8 @@ protected:
   //vector<int> multiplicity;
 private:
   bool countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next);
+
+  unsigned nextId;
 
 };
 
