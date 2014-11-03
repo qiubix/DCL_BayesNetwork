@@ -92,7 +92,7 @@ protected:
   void add();
 
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
-  //    std::vector <pcl::PointCloud<PointXYZSIFT>::Ptr> models;
+  std::vector <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudModels;
   std::vector <AbstractObject*> models;
 
   //vector<vector<int> > descriptors;

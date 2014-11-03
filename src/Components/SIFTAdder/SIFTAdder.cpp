@@ -166,6 +166,9 @@ void SIFTAdder::add() {
     if(!countMultiplicity(correspondences, cloud_next))
       continue;
 
+    pcl::PointCloud<PointXYZSIFT>::Ptr singleModel = cloud_next;
+    cloudModels.push_back(singleModel);
+
     //usuniecie punktow
     pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloud_next->begin();
     while(pt_iter!=cloud_next->end()){
