@@ -164,38 +164,38 @@ void SIFTAdder::add() {
 
     LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << modelCloud->size() << " keypoints";// << std::endl ;
 
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloudPartToJoin = modelCloud;
+    cloudModels.push_back(modelCloud);
+
     //zliczanie krotnosci
-    if(!countMultiplicity(correspondences, modelCloud))
+    if(!countMultiplicity(correspondences, cloudPartToJoin))
       continue;
 
-    pcl::PointCloud<PointXYZSIFT>::Ptr singleModel = modelCloud;
-    cloudModels.push_back(singleModel);
-
     //usuniecie punktow
-    pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = modelCloud->begin();
-    while(pt_iter!=modelCloud->end()){
+    pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloudPartToJoin->begin();
+    while(pt_iter!=cloudPartToJoin->end()){
       if(pt_iter->multiplicity==-1){
-        pt_iter = modelCloud->erase(pt_iter);
+        pt_iter = cloudPartToJoin->erase(pt_iter);
       }
       else{
         ++pt_iter;
       }
     }
 
-    LOG(LDEBUG) << "Reduced next cloud size: " << modelCloud->size();
-    if (modelCloud->empty()) {
+    LOG(LDEBUG) << "Reduced next cloud size: " << cloudPartToJoin->size();
+    if (cloudPartToJoin->empty()) {
       LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
       modelsMultiplicity.push_back(modelMultiplicity);
       continue;
     }
-    for (unsigned k=0; k<modelCloud->size(); ++k) {
-      std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(jointCloud->size()+k, modelCloud->at(k).multiplicity);
+    for (unsigned k=0; k<cloudPartToJoin->size(); ++k) {
+      std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(jointCloud->size()+k, cloudPartToJoin->at(k).multiplicity);
       modelMultiplicity.insert(nextMultiplicity);
-      modelCloud->at(k).pointId = nextId;
+      cloudPartToJoin->at(k).pointId = nextId;
       ++nextId;
     }
 
-    *jointCloud = *jointCloud + *modelCloud;
+    *jointCloud = *jointCloud + *cloudPartToJoin;
     LOG(LDEBUG) << "New joint cloud size: " << jointCloud->size();
     LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
     modelsMultiplicity.push_back(modelMultiplicity);
