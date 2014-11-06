@@ -91,14 +91,14 @@ protected:
   // Handlers
   void add();
 
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud;
   std::vector <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudModels;
   std::vector <AbstractObject*> models;
 
   //vector<vector<int> > descriptors;
   //vector<int> multiplicity;
 private:
-  bool countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next);
+  bool countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud);
 
   unsigned nextId;
 

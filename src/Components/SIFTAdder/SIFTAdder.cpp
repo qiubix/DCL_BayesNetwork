@@ -67,7 +67,7 @@ void SIFTAdder::prepareInterface() {
 }
 
 bool SIFTAdder::onInit() {
-  cloud = pcl::PointCloud<PointXYZSIFT>::Ptr (new pcl::PointCloud<PointXYZSIFT>());
+  jointCloud = pcl::PointCloud<PointXYZSIFT>::Ptr (new pcl::PointCloud<PointXYZSIFT>());
   return true;
 }
 
@@ -98,25 +98,27 @@ void SIFTAdder::add() {
   for (unsigned n=0; n<models.size(); ++n) {
 
     std::map<int,int> modelMultiplicity;
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next = dynamic_cast<SIFTObjectModel*>(models.at(n))->cloud_xyzsift;
-    LOG(LDEBUG) << "Model no " << n << ": model's cloud size = " << cloud_next->size();
+    pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud = dynamic_cast<SIFTObjectModel*>(models.at(n))->cloud_xyzsift;
+    LOG(LDEBUG) << "Model no " << n << ": model's cloud size = " << modelCloud->size();
 
-    if (cloud->empty()){
-      LOG(LDEBUG) << "Writing new cloud to empty joint cloud. Size: " << cloud_next->size();
-      cloud = cloud_next;
-      for (unsigned k=0; k<cloud_next->size(); ++k) {
-        std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(k, cloud_next->at(k).multiplicity);
+    if (jointCloud->empty()){
+      LOG(LDEBUG) << "Writing new cloud to empty joint cloud. Size: " << modelCloud->size();
+      jointCloud = modelCloud;
+      for (unsigned k=0; k<modelCloud->size(); ++k) {
+        std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(k, modelCloud->at(k).multiplicity);
         modelMultiplicity.insert(nextMultiplicity);
-        cloud->at(k).pointId = k;
+        jointCloud->at(k).pointId = k;
+        modelCloud->at(k).pointId = k;
       }
-      nextId = cloud_next->size();
+      nextId = modelCloud->size();
       LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
       modelsMultiplicity.push_back(modelMultiplicity);
-      out_cloud.write(cloud);
+      cloudModels.push_back(modelCloud);
+      out_cloud.write(jointCloud);
       continue;
-    } //: empty cloud
+    } //: empty jointCloud
 
-    LOG(LDEBUG) << "Joint cloud size before merge: " << cloud->size();
+    LOG(LDEBUG) << "Joint cloud size before merge: " << jointCloud->size();
 
     pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
     pcl::registration::CorrespondenceEstimation<PointXYZSIFT, PointXYZSIFT> correst ;
@@ -125,8 +127,8 @@ void SIFTAdder::add() {
     //correst.setPointRepresentation (point_representation.makeShared()); //NEVER do like this, makeShared will return DefaultFeatureRepresentation<PointDefault>!
     SIFTFeatureRepresentation::Ptr point_representation(new SIFTFeatureRepresentation()) ;
     correst.setPointRepresentation(point_representation) ;
-    correst.setInputSource(cloud_next) ;
-    correst.setInputTarget(cloud) ;
+    correst.setInputSource(modelCloud) ;
+    correst.setInputTarget(jointCloud) ;
     correst.determineReciprocalCorrespondences(*correspondences) ;
 
     LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
@@ -135,8 +137,8 @@ void SIFTAdder::add() {
       //ransac znalezienie blednych dopasowan
       pcl::Correspondences inliers ;
       pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
-      sac.setInputSource(cloud_next) ;
-      sac.setInputTarget(cloud) ;
+      sac.setInputSource(modelCloud) ;
+      sac.setInputTarget(jointCloud) ;
       sac.setInlierThreshold(0.001f) ;
       sac.setMaximumIterations(2000) ;
       sac.setInputCorrespondences(correspondences) ;
@@ -160,66 +162,66 @@ void SIFTAdder::add() {
       }
     } //: if more than 4 correspondences
 
-    LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << cloud_next->size() << " keypoints";// << std::endl ;
+    LOG(LINFO) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << modelCloud->size() << " keypoints";// << std::endl ;
 
     //zliczanie krotnosci
-    if(!countMultiplicity(correspondences, cloud_next))
+    if(!countMultiplicity(correspondences, modelCloud))
       continue;
 
-    pcl::PointCloud<PointXYZSIFT>::Ptr singleModel = cloud_next;
+    pcl::PointCloud<PointXYZSIFT>::Ptr singleModel = modelCloud;
     cloudModels.push_back(singleModel);
 
     //usuniecie punktow
-    pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = cloud_next->begin();
-    while(pt_iter!=cloud_next->end()){
+    pcl::PointCloud<PointXYZSIFT>::iterator pt_iter = modelCloud->begin();
+    while(pt_iter!=modelCloud->end()){
       if(pt_iter->multiplicity==-1){
-        pt_iter = cloud_next->erase(pt_iter);
+        pt_iter = modelCloud->erase(pt_iter);
       }
       else{
         ++pt_iter;
       }
     }
 
-    LOG(LDEBUG) << "Reduced next cloud size: " << cloud_next->size();
-    if (cloud_next->empty()) {
+    LOG(LDEBUG) << "Reduced next cloud size: " << modelCloud->size();
+    if (modelCloud->empty()) {
       LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
       modelsMultiplicity.push_back(modelMultiplicity);
       continue;
     }
-    for (unsigned k=0; k<cloud_next->size(); ++k) {
-      std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(cloud->size()+k, cloud_next->at(k).multiplicity);
+    for (unsigned k=0; k<modelCloud->size(); ++k) {
+      std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(jointCloud->size()+k, modelCloud->at(k).multiplicity);
       modelMultiplicity.insert(nextMultiplicity);
-      cloud_next->at(k).pointId = nextId;
+      modelCloud->at(k).pointId = nextId;
       ++nextId;
     }
 
-    *cloud = *cloud + *cloud_next;
-    LOG(LDEBUG) << "New joint cloud size: " << cloud->size();
+    *jointCloud = *jointCloud + *modelCloud;
+    LOG(LDEBUG) << "New joint cloud size: " << jointCloud->size();
     LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
     modelsMultiplicity.push_back(modelMultiplicity);
     //		modelMultiplicity.clear();
   } //: for models
 
-  LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << cloud->size();
-  out_cloud.write(cloud);
+  LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << jointCloud->size();
+  out_cloud.write(jointCloud);
 
   LOG(LWARNING) << "------ Joint cloud feature ids: ------";
-  for (unsigned l=0; l<cloud->size(); ++l) {
-    LOG(LWARNING) << "Feature id: " << cloud->at(l).pointId;
+  for (unsigned l=0; l<jointCloud->size(); ++l) {
+    LOG(LWARNING) << "Feature id: " << jointCloud->at(l).pointId;
   }
   LOG(LDEBUG) << "Writing multiplicity vectors of models merged to cloud. Number of vectors: " << modelsMultiplicity.size();
   out_multiplicityOfModels.write(modelsMultiplicity);
 
 } //:add()
 
-bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr cloud_next) {
+bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud) {
   for(int i = 0; i< correspondences->size();i++){
-    if (correspondences->at(i).index_query >=cloud_next->size() || correspondences->at(i).index_match >=cloud->size()){
+    if (correspondences->at(i).index_query >=modelCloud->size() || correspondences->at(i).index_match >=jointCloud->size()){
       return false;
     }
-    cloud->at(correspondences->at(i).index_match).multiplicity += cloud_next->at(correspondences->at(i).index_query).multiplicity;
-    //modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, cloud_next->at(correspondences->at(i).index_query).multiplicity));
-    cloud_next->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
+    jointCloud->at(correspondences->at(i).index_match).multiplicity += modelCloud->at(correspondences->at(i).index_query).multiplicity;
+    //modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, modelCloud->at(correspondences->at(i).index_query).multiplicity));
+    modelCloud->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
   }
   return true;
 }
