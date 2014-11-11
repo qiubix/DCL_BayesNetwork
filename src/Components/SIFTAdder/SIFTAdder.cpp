@@ -168,7 +168,7 @@ void SIFTAdder::add() {
     cloudModels.push_back(modelCloud);
 
     //zliczanie krotnosci
-    if(!countMultiplicity(correspondences, modelCloud, cloudPartToJoin))
+    if(!appendMultiplicity(correspondences, modelCloud, cloudPartToJoin))
       continue;
 
     //usuniecie punktow
@@ -214,7 +214,7 @@ void SIFTAdder::add() {
 
 } //:add()
 
-bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud, pcl::PointCloud<PointXYZSIFT>::Ptr cloudPartToJoin) {
+bool SIFTAdder::appendMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud, pcl::PointCloud<PointXYZSIFT>::Ptr cloudPartToJoin) {
   for(int i = 0; i< correspondences->size();i++){
     if (correspondences->at(i).index_query >=modelCloud->size() || correspondences->at(i).index_match >=jointCloud->size()){
       return false;
