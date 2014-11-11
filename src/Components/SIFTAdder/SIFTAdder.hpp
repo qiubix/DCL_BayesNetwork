@@ -98,7 +98,7 @@ protected:
   //vector<vector<int> > descriptors;
   //vector<int> multiplicity;
 private:
-  bool countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud);
+  bool countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud, pcl::PointCloud<PointXYZSIFT>::Ptr cloudPartToJoin);
 
   unsigned nextId;
 

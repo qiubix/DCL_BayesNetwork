@@ -168,7 +168,7 @@ void SIFTAdder::add() {
     cloudModels.push_back(modelCloud);
 
     //zliczanie krotnosci
-    if(!countMultiplicity(correspondences, cloudPartToJoin))
+    if(!countMultiplicity(correspondences, modelCloud, cloudPartToJoin))
       continue;
 
     //usuniecie punktow
@@ -214,14 +214,16 @@ void SIFTAdder::add() {
 
 } //:add()
 
-bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud) {
+bool SIFTAdder::countMultiplicity(pcl::CorrespondencesPtr correspondences, pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud, pcl::PointCloud<PointXYZSIFT>::Ptr cloudPartToJoin) {
   for(int i = 0; i< correspondences->size();i++){
     if (correspondences->at(i).index_query >=modelCloud->size() || correspondences->at(i).index_match >=jointCloud->size()){
       return false;
     }
     jointCloud->at(correspondences->at(i).index_match).multiplicity += modelCloud->at(correspondences->at(i).index_query).multiplicity;
     //modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, modelCloud->at(correspondences->at(i).index_query).multiplicity));
-    modelCloud->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
+    cloudPartToJoin->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
+    unsigned nextPointId = jointCloud->(correspondences->at(i).index_match).pointId;
+    modelCloud->at(correspondences->at(i).index_query).pointId = nextPointId;
   }
   return true;
 }
