@@ -115,6 +115,13 @@ void SIFTAdder::add() {
       modelsMultiplicity.push_back(modelMultiplicity);
       cloudModels.push_back(modelCloud);
       out_cloud.write(jointCloud);
+
+      LOG(LWARNING) << "---- Model number: " << n;
+      LOG(LWARNING) << "---- Model size: " << modelCloud->size();
+      for (unsigned k=0; k<modelCloud->size(); ++k) {
+        LOG(LWARNING) << "Feature id: " << modelCloud->at(k).pointId;
+      }
+
       continue;
     } //: empty jointCloud
 
@@ -200,6 +207,12 @@ void SIFTAdder::add() {
     LOG(LDEBUG) << "number of model's features: " << modelMultiplicity.size();
     modelsMultiplicity.push_back(modelMultiplicity);
     //		modelMultiplicity.clear();
+    LOG(LWARNING) << "---- Model number: " << n;
+    LOG(LWARNING) << "---- Model size: " << modelCloud->size();
+    for (unsigned k=0; k<modelCloud->size(); ++k) {
+      LOG(LWARNING) << "Feature id: " << modelCloud->at(k).pointId;
+    }
+
   } //: for models
 
   LOG(LDEBUG) << "Added all models to joint cloud. Joint cloud size: " << jointCloud->size();
@@ -222,7 +235,7 @@ bool SIFTAdder::appendMultiplicity(pcl::CorrespondencesPtr correspondences, pcl:
     jointCloud->at(correspondences->at(i).index_match).multiplicity += modelCloud->at(correspondences->at(i).index_query).multiplicity;
     //modelMultiplicity.insert(std::make_pair<int,int>(correspondences->at(i).index_match, modelCloud->at(correspondences->at(i).index_query).multiplicity));
     cloudPartToJoin->at(correspondences->at(i).index_query).multiplicity=-1; //do usuniecia punkt w nowej chmurze, ktory juz jest zarejestrowany w polaczonej chmurze
-    unsigned nextPointId = jointCloud->(correspondences->at(i).index_match).pointId;
+    unsigned nextPointId = jointCloud->at(correspondences->at(i).index_match).pointId;
     modelCloud->at(correspondences->at(i).index_query).pointId = nextPointId;
   }
   return true;
