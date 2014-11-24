@@ -140,7 +140,8 @@ void SIFTAdder::add() {
 
     LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
 
-    if ( correspondences -> size() > 4 ) {
+    //TODO: FIXME: Something's wrong with removing wrong correspondences. It matches the same exact points
+    if ( correspondences -> size() > 12 ) {
       //ransac znalezienie blednych dopasowan
       pcl::Correspondences inliers ;
       pcl::registration::CorrespondenceRejectorSampleConsensus<PointXYZSIFT> sac ;
