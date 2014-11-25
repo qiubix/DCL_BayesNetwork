@@ -62,6 +62,7 @@ protected:
 
   /// Output data stream
   Base::DataStreamOut<DSL_network> out_network;
+  Base::DataStreamOut<std::vector<DSL_network> > out_networks;
 
   /*!
    * Connects source to given device.

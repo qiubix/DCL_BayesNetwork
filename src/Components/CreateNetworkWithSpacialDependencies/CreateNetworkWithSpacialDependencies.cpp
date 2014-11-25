@@ -54,7 +54,8 @@ void CreateNetworkWithSpacialDependencies::prepareInterface()
 	addDependency("onNewModel", &in_cloud_xyzsift);
 	addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
-	registerStream("out_network", &out_network);
+	//registerStream("out_network", &out_network);
+	registerStream("out_networks", &out_networks);
 }
 
 bool CreateNetworkWithSpacialDependencies::onInit()
@@ -322,7 +323,10 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
 	LOG(LDEBUG) << "after writing network to file";
-	out_network.write(network.getNetwork());
+  std::vector<DSL_network> networks;
+  networks.push_back(network.getNetwork());
+  out_networks.write(networks);
+	//out_network.write(network.getNetwork());
 }
 
 void CreateNetworkWithSpacialDependencies::addHypothesisNode(int modelId)
