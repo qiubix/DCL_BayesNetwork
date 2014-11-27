@@ -35,7 +35,7 @@
 				<Component name="FeatureCloudConverter" type="PCL:FeatureCloudConverter" priority="8" bump="0">
 				</Component>
 				
-				<Component name="Adder" type="PCL:SIFTAdder" priority="9" bump="0">
+				<Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
 				</Component>
 				<Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
 				</Component>
