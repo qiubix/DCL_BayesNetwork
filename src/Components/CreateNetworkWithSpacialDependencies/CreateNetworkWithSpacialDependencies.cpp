@@ -87,7 +87,9 @@ void CreateNetworkWithSpacialDependencies::onJointMultiplicity()
 {
   LOG(LTRACE) << "On joint multiplicity";
   jointMultiplicityVector = in_jointMultiplicity.read();
-  buildNetwork();
+  if (cloudQueue.size() > 0) {
+    buildNetwork();
+  }
 }
 
 bool CreateNetworkWithSpacialDependencies::onStart()
@@ -103,6 +105,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     return;
   }
 
+  LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
 	// Read from queue
 	cloud = cloudQueue.top();
   cloudQueue.pop();

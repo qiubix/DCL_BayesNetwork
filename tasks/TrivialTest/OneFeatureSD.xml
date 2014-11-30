@@ -26,6 +26,7 @@
 				</Component>
 				<Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
 				</Component>
+				<Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bumb="0"></Component>
 				<Component name="CreateNetwork" type="BayesNetwork:CreateNetworkWithSpacialDependencies" priority="11" bump="0">
 				</Component>
 				<Component name="SOMEvaluation" type="BayesNetwork:SOMEvaluation" priority="12" bump="0">
@@ -49,6 +50,10 @@
 		<Source name="Adder.out_cloud">
 			<sink>CreateNetwork.in_cloud_xyzsift</sink>
 			<sink>SIFTFeatureMatcher.in_jointCloud</sink>
+			<sink>Mapper.in_jointCloud</sink>
+		</Source>
+		<Source name="Mapper.out_jointMultiplicity">
+			<sink>CreateNetwork.in_jointMultiplicity</sink>
 		</Source>
 		<Source name="CreateNetwork.out_networks">
 			<sink>SOMEvaluation.in_networks</sink>
