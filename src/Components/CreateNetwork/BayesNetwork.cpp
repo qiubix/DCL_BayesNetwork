@@ -7,6 +7,11 @@
 namespace Processors {
 namespace Network {
 
+BayesNetwork::BayesNetwork() 
+{
+  network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
+}
+
 void BayesNetwork::addVoxelNode(int id)
 {
   std::string voxelName = createVoxelName(id);

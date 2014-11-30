@@ -1,10 +1,10 @@
 /*!
- * \file NetworkTester.hpp
+ * \file MultipleModels.hpp
  * \brief
  */
 
-#ifndef NETWORK_TESTER_HPP_
-#define NETWORK_TESTER_HPP_
+#ifndef MULTIPLE_MODELS_HPP_
+#define MULTIPLE_MODELS_HPP_
 
 #define CV_NO_BACKWARD_COMPATIBILITY
 
@@ -14,29 +14,33 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
+
 #include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
+
+#include <Types/PointXYZSIFT.hpp>
+
 
 namespace Processors {
 namespace Network {
 
 /*!
- * \class NetworkTester
- * \brief Component for testing purposes
+ * \class CreateNetwork
+ * \brief Class used to build Bayes network
  * \author Karol Katerżawa
  */
-class NetworkTester: public Base::Component
+class MultipleModels: public Base::Component
 {
 public:
   /*!
    * Constructor.
    */
-  NetworkTester(const std::string & name = "NetworkTester");
+  MultipleModels(const std::string & name = "CreateNetwork");
 
   /*!
    * Destructor
    */
-  virtual ~NetworkTester();
+  virtual ~MultipleModels();
 
   /*!
    * Prepare data streams and handlers
@@ -44,11 +48,12 @@ public:
   void prepareInterface();
 
 protected:
-  ///Input data streams
-  Base::DataStreamIn<DSL_network> in_network;
 
-  //Output data streams
-  Base::DataStreamOut<int> out_result;
+  /// Input data stream
+  Base::DataStreamIn< DSL_network > in_network;
+
+  /// Output data stream
+  Base::DataStreamOut< std::vector<DSL_network> > out_networks;
 
   /*!
    * Connects source to given device.
@@ -71,24 +76,18 @@ protected:
   bool onStop();
 
   /// Event handlers
-  Base::EventHandler <NetworkTester> h_onNetwork;
+  Base::EventHandler2 h_onNetwork;
 
   /*!
    * Event handler function.
    */
-  void testNetwork();
+  void createGrid();
+  void addNewNetwork();
 
 private:
-  DSL_network network;
-  int result;
-  
-  void displayAllNodeNamesInNetwork();
-  void observeOneFeatureNode();
-  
-  std::string getNodeName(int nodeId);
-  int findFeatureNode(int nodeId);
-  void displayProbability(std::string nodeName);
-  void observeNode(int nodeId);
+  std::vector<DSL_network> networks;
+
+  void exportNetworks();
 };
 
 }//: namespace Network
@@ -98,7 +97,7 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("NetworkTester", Processors::Network::NetworkTester)
+REGISTER_COMPONENT("MultipleModels", Processors::Network::MultipleModels)
 
-#endif /* NETWORK_TESTER_HPP_ */
+#endif /* MULTIPLE_MODELS_HPP_ */
 

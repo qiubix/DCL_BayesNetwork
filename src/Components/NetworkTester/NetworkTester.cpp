@@ -71,11 +71,26 @@ void NetworkTester::testNetwork()
 {
   LOG(LTRACE) << "Testing network";
   network = in_network.read();
+  displayAllNodeNamesInNetwork();
+  observeOneFeatureNode();
+  network.UpdateBeliefs();
+}
+
+void NetworkTester::displayAllNodeNamesInNetwork()
+{
   int nodeId = network.GetFirstNode();
   while (nodeId != DSL_OUT_OF_RANGE) {
     string nodeName = getNodeName(nodeId);
-    LOG(LWARNING) << "First node name: " << nodeName;
+    LOG(LWARNING) << "Node name: " << nodeName;
     nodeId = network.GetNextNode(nodeId);
+  }
+}
+
+void NetworkTester::observeOneFeatureNode()
+{
+  int featureNode = findFeatureNode(0);
+  if(featureNode != DSL_OUT_OF_RANGE) {
+    observeNode(featureNode);
   }
 }
 
@@ -86,6 +101,19 @@ string NetworkTester::getNodeName(int nodeId)
   DSL_header header = info.Header();
   std::string nodeName(header.GetName());
   return nodeName;
+}
+
+int NetworkTester::findFeatureNode(int nodeId)
+{
+  std::stringstream ss;
+  ss << "F_" << nodeId;
+  std::string nodeName(ss.str());
+  return network.FindNode(nodeName.c_str());
+}
+
+void NetworkTester::observeNode(int nodeId)
+{
+  network.GetNode(nodeId)->Value()->SetEvidence(0);
 }
 
 }//: namespace Network

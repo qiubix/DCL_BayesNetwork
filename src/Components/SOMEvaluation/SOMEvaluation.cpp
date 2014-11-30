@@ -34,17 +34,17 @@ SOMEvaluation::~SOMEvaluation()
 void SOMEvaluation::prepareInterface()
 {
     LOG(LTRACE) << "SOMEvaluation::prepareInterface";
-    
+
     h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
     registerHandler("onNetwork", &h_onNetwork);
-    registerStream("in_network", &in_network);
-    addDependency("onNetwork", &in_network);
-    
+    registerStream("in_networks", &in_networks);
+    addDependency("onNetwork", &in_networks);
+
     h_onInstance.setup(this, &SOMEvaluation::onInstance);
     registerHandler("onInstance", &h_onInstance);
     registerStream("in_instanceMatchedFeatures", &in_instanceMatchedFeatures);
     addDependency("onInstance", &in_instanceMatchedFeatures);
-    
+
     registerStream("out_probabilities", &out_probabilities);
 }
 
@@ -75,7 +75,7 @@ bool SOMEvaluation::onStop()
 void SOMEvaluation::onNetwork()
 {
     LOG(LWARNING) << "SOMEvaluation::onNetwork";
-    theNet = in_network.read();
+    networks = in_networks.read();
 }
 
 void SOMEvaluation::onInstance()
@@ -92,6 +92,8 @@ void SOMEvaluation::evaluate()
 		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
 		LOG(LDEBUG) << "instance size: " << instance.size();
 
+		theNet = networks[0];
+
 		Common::Timer timer;
 		timer.restart();
 
@@ -101,7 +103,7 @@ void SOMEvaluation::evaluate()
 		theNet.UpdateBeliefs();
 
 		displayHypothesisProbability();
-    
+
 		LOG(LINFO) << " runtime: " << timer.elapsed();
     LOG(LDEBUG) << "SOMEvaluation finished";
 }
@@ -136,15 +138,16 @@ void SOMEvaluation::activateMatchedFeatureNodes()
     LOG(LDEBUG) << "Finished activating matched features";
 }
 
-void SOMEvaluation::displayHypothesisProbability()
+void SOMEvaluation::displayHypothesisProbability(int modelId)
 {
-		int hypothesis = theNet.FindNode("V_0");
-    double hypothesisProbability = getNodeProbability(hypothesis);
-    
-		LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
-        
-		hypothesesProbabilities.push_back(hypothesisProbability);
-		out_probabilities.write(hypothesesProbabilities);
+  string nodeName = "H_" + modelId;
+  int hypothesis = theNet.FindNode(nodeName.c_str());
+  double hypothesisProbability = getNodeProbability(hypothesis);
+
+  LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
+
+  hypothesesProbabilities.push_back(hypothesisProbability);
+  out_probabilities.write(hypothesesProbabilities);
 }
 
 int SOMEvaluation::findFeatureNode(int nodeId)
@@ -155,7 +158,7 @@ int SOMEvaluation::findFeatureNode(int nodeId)
 		return theNet.FindNode(nodeName.c_str());
 }
 
-double SOMEvaluation::getNodeProbability(int nodeId) 
+double SOMEvaluation::getNodeProbability(int nodeId)
 {
 		theNet.GetNode(nodeId)->Value();
 		DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());

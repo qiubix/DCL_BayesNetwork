@@ -62,6 +62,7 @@ protected:
 
   /// Output data stream
   Base::DataStreamOut<DSL_network> out_network;
+  Base::DataStreamOut<std::vector<DSL_network> > out_networks;
 
   /*!
    * Connects source to given device.
@@ -85,17 +86,19 @@ protected:
 
   /// Event handlers
   Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
-  Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onJointMultiplicity;
-  Base::EventHandler2 h_buildNetwork;
+  Base::EventHandler2 h_onJointMultiplicity;
+  Base::EventHandler2 h_onNewModel;
 
   /*!
    * Event handler function.
    */
-  void buildNetwork();
+  void onNewModel();
+  void onJointMultiplicity();
 
 private:
   BayesNetwork network;
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
 
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
@@ -108,6 +111,7 @@ private:
   unsigned int numberOfVoxels;
   std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
 
+  void buildNetwork();
   void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 
   void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
@@ -123,7 +127,7 @@ private:
 
   void exportNetwork();
 
-  void addHypothesisNode();
+  void addHypothesisNode(int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();

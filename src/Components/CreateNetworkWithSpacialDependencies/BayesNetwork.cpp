@@ -7,6 +7,11 @@
 namespace Processors {
 namespace Network {
 
+BayesNetwork::BayesNetwork() 
+{
+  network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
+}
+
 void BayesNetwork::addVoxelNode(int id)
 {
   std::string voxelName = createVoxelName(id);
@@ -105,7 +110,7 @@ DSL_network BayesNetwork::getNetwork()
 
 void BayesNetwork::addNode(std::string name)
 {
-  LOG(LDEBUG) << "Add node to network: " << name;
+  LOG(LTRACE) << "Add node to network: " << name;
   int newNode = network.AddNode(DSL_CPT, name.c_str());
   DSL_idArray outcomes;
   std::vector<std::string> outcomesNames;

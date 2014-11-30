@@ -7,7 +7,7 @@
 		</Author>
 		
 		<Description>
-			<brief>BayesNetwork:Experiment</brief>
+			<brief>BayesNetwork:TestMatch</brief>
 			<full></full>	
 		</Description>
 	</Reference>
@@ -16,15 +16,15 @@
 	<Subtasks>
 		<Subtask name="Main">
 			<Executor name="Processing"  period="1">
-				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
-					<param name="filenames">/home/qiubix/Objects/cereal_box_1_co5_v2.json</param>
+				<Component name="SOMJSONReader" type="SIFTObjectModel:SOMJSONReader" priority="1" bump="4">
+					<param name="filenames">/home/tkornuta/Objects/cereal_box_1_co5_v2.json</param>
 				</Component>
 				<Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
-					<param name="sequence.directory">/home/qiubix/Objects/cereal_box_1_co5</param>
+					<param name="sequence.directory">/home/tkornuta/Objects/cereal_box_1_co5</param>
 					<param name="sequence.pattern">.*\_color.png</param>				
 				</Component>
 				<Component name="SequenceDepth" type="CvBasic:Sequence" priority="3" bump="0">
-					<param name="sequence.directory">/home/qiubix/Objects/cereal_box_1_co5</param>
+					<param name="sequence.directory">/home/tkornuta/Objects/cereal_box_1_co5</param>
 					<param name="sequence.pattern">.*\_depth.png</param>	
 				</Component>
 				<Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="5" bump="0">
@@ -32,19 +32,19 @@
 				</Component>
 				<Component name="SIFT" type="CvBasic:CvSIFT" priority="6" bump="0">
 				</Component>
-				<Component name="FeatureCloudConverter" type="PCL:FeatureCloudConverter" priority="8" bump="0">
+				<Component name="FeatureCloudConverter" type="SIFTObjectModel:FeatureCloudConverter" priority="8" bump="0">
 				</Component>
 				
-				<Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
+				<Component name="Adder" type="SIFTObjectModel:SIFTAdder" priority="9" bump="0">
 				</Component>
 				<Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
 				</Component>
-				<Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bumb="0"></Component>
+				<Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="3" bumb="0"></Component>
 				<Component name="CreateNetwork" type="BayesNetwork:CreateNetworkWithSpacialDependencies" priority="11" bump="0">
 				</Component>
 				<Component name="SOMEvaluation" type="BayesNetwork:SOMEvaluation" priority="12" bump="0">
 				</Component>
-			</Executor>
+            		</Executor>
 		</Subtask>	
 	
 	</Subtasks>

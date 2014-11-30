@@ -20,3 +20,4 @@ http://opencv.org/
 #### Another DCL dependencies:
 * CvBasic
 * PCL
+* SIFTObjectModel
