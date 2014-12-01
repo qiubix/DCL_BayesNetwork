@@ -11,4 +11,6 @@ macro(create_test name src libs)
   add_test(${name} ${name})
 endmacro(create_test)
 
-
+set(BAYES_NETWORK_TEST_SRC BayesNetworkTest.cpp)
+set(BAYES_NETWORK_TEST_LIB procCreateNetworkWithSpacialDependencies)
+create_test(BayesNetworkTest ${BAYES_NETWORK_TEST_SRC} ${BAYES_NETWORK_TEST_LIB})
