@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 2.6)
 # Find DisCODe installation
 FIND_PACKAGE(DisCODe REQUIRED)
 
+LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib/SMILE)
+SET(SMILE_LIBS smile smilearn)
+
 # Use CMake macros provided with DisCODe
 set(CMAKE_MODULE_PATH ${DisCODe_DIR} ${CMAKE_MODULE_PATH})
 include(DisCODeMacros)
