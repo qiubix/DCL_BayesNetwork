@@ -7,12 +7,29 @@ cmake_minimum_required(VERSION 2.6)
 # Find DisCODe installation
 FIND_PACKAGE(DisCODe REQUIRED)
 
+# Find Boost, at least ver. 1.41
+FIND_PACKAGE(Boost 1.41.0 REQUIRED COMPONENTS system)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib/SMILE)
 SET(SMILE_LIBS smile smilearn)
+
+# OpenCV library
+FIND_PACKAGE( OpenCV REQUIRED )
+
+# PCL library
+FIND_PACKAGE(PCL 1.3 REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+MESSAGE("PCL include: ${PCL_INCLUDE_DIRS}")
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 # Use CMake macros provided with DisCODe
 set(CMAKE_MODULE_PATH ${DisCODe_DIR} ${CMAKE_MODULE_PATH})
 include(DisCODeMacros)
+
+DISCODE_FIND_DCL(CvBasic)
+DISCODE_FIND_DCL(PCL)
 
 # Testing
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})

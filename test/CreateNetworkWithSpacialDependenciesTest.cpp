@@ -7,11 +7,12 @@ using ::testing::Test;
 
 class CreateNetworkWithSpacialDependenciesTest : public Test {
   protected:
-    CreateNetworkWithSpacialDependencies component("name");
+//    Processors::Network::CreateNetworkWithSpacialDependencies* component = new Processors::Network::CreateNetworkWithSpacialDependencies("name");
 };
 
 TEST_F(CreateNetworkWithSpacialDependenciesTest, shouldCreateComponentForTesting)
 {
+  Processors::Network::CreateNetworkWithSpacialDependencies component("name");
   component.prepareInterface();
   EXPECT_TRUE(true);
 }
