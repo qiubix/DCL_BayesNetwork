@@ -14,3 +14,7 @@ endmacro(create_test)
 set(BAYES_NETWORK_TEST_SRC BayesNetworkTest.cpp)
 set(BAYES_NETWORK_TEST_LIB procCreateNetworkWithSpacialDependencies)
 create_test(BayesNetworkTest ${BAYES_NETWORK_TEST_SRC} ${BAYES_NETWORK_TEST_LIB})
+
+set(CREATE_NETWORK_TEST_SRC CreateNetworkWithSpacialDependenciesTest.cpp)
+set(CREATE_NETWORK_TEST_LIB procCreateNetworkWithSpacialDependencies ${PCL_LIBRARY_DIRS})
+create_test(CreateNetworkWithSpacialDependenciesTest ${CREATE_NETWORK_TEST_SRC} ${CREATE_NETWORK_TEST_LIB})
