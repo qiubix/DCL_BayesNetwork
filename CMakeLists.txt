@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 2.6)
 FIND_PACKAGE(DisCODe REQUIRED)
 
 # Find Boost, at least ver. 1.41
-FIND_PACKAGE(Boost 1.41.0 REQUIRED COMPONENTS system)
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+# FIND_PACKAGE(Boost 1.41.0 REQUIRED COMPONENTS system)
+# include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib/SMILE)
 SET(SMILE_LIBS smile smilearn)

@@ -7,8 +7,9 @@ include_directories(.)
 # ##############################################################################
 
 # Find Boost, at least ver. 1.41
-FIND_PACKAGE(Boost 1.41.0 REQUIRED)
+FIND_PACKAGE(Boost 1.41.0 COMPONENTS system REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
 
 # Find another necessary libraries
 
