@@ -15,6 +15,7 @@
 # build directories
 build/
 dist/
+ext/
 
 # user files 
 *.user*
