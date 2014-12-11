@@ -21,3 +21,22 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
   EXPECT_EQ(numberOfNodes, 0);
 }
 
+TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
+{
+  EXPECT_TRUE(true);
+}
+
+TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
+{
+  EXPECT_TRUE(true);
+}
+
+TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
+{
+  EXPECT_TRUE(true);
+}
+
+TEST_F(BayesNetworkTest, shouldFillNodeCPT)
+{
+  EXPECT_TRUE(true);
+}
