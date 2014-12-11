@@ -23,6 +23,13 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
 
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 {
+  /*
+   * create empty network
+   * check if network empty
+   * add node
+   * check if node exists in network
+   * check if number of nodes is 1
+   */
   EXPECT_TRUE(true);
 }
 
