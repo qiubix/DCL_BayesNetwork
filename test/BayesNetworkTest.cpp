@@ -10,9 +10,10 @@ class BayesNetworkTest : public Test {
     Processors::Network::BayesNetwork network;
 };
 
-TEST_F(BayesNetworkTest, shouldTestNothing)
+TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
 {
-  EXPECT_TRUE(true);
+  DSL_network theNet = network.getNetwork();
+  EXPECT_EQ(theNet.GetNumberOfNodes(), 0);
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
