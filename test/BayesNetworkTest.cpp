@@ -31,7 +31,14 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
    * check if node exists in network
    * check if number of nodes is 1
    */
-  EXPECT_TRUE(true);
+  Processors::Network::BayesNetwork newNetwork;
+  ASSERT_EQ(newNetwork.getNumberOfNodes(), 0);
+  const int NODE_ID = 0;
+  const char* NODE_NAME = "V_0";
+  newNetwork.addVoxelNode(NODE_ID);
+  int code = newNetwork.getNetwork().FindNode(NODE_NAME);
+  ASSERT_NE(code, DSL_OUT_OF_RANGE);
+  ASSERT_EQ(newNetwork.getNumberOfNodes(), 1);
 }
 
 TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
