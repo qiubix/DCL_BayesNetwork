@@ -41,6 +41,17 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
   ASSERT_EQ(newNetwork.getNumberOfNodes(), 1);
 }
 
+TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
+{
+  /*
+   * create network with some nodes
+   * add voxel node
+   * check if name correct
+   * check if node is in the right layer
+   */
+  EXPECT_TRUE(true);
+}
+
 TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
 {
   /*
