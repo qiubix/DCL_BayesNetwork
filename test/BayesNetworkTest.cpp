@@ -41,6 +41,34 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
   ASSERT_EQ(newNetwork.getNumberOfNodes(), 1);
 }
 
+TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
+{
+  /*
+   * create network with node
+   * add new node to network
+   * connect two nodes
+   * check if nodes connected
+   * check number of children
+   * check number of parents
+   * check size of CPT
+   */
+  Processors::Network::BayesNetwork newNetwork;
+  ASSERT_EQ(newNetwork.getNumberOfNodes(), 0);
+  const int FIRST_NODE_ID = 0;
+  const int SECOND_NODE_ID = 1;
+  const char* FIRST_NODE_NAME = "V_0";
+  const char* SECOND_NODE_NAME = "V_1";
+  newNetwork.addVoxelNode(FIRST_NODE_ID);
+  newNetwork.addVoxelNode(SECOND_NODE_ID);
+  int firstNodeId = newNetwork.getNetwork().FindNode(FIRST_NODE_NAME);
+  int secondNodeId = newNetwork.getNetwork().FindNode(SECOND_NODE_NAME);
+  int numberOfChildren = newNetwork.getNetwork().NumChildren(firstNodeId);
+  int numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
+  ASSERT_EQ(0, numberOfChildren);
+  ASSERT_EQ(0, numberOfParents);
+  EXPECT_TRUE(true);
+}
+
 TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
 {
   /*
@@ -60,20 +88,6 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
    * check if name correct
    * check if node is in the right layer
    * check if node has proper CPT
-   */
-  EXPECT_TRUE(true);
-}
-
-TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
-{
-  /*
-   * create network with node
-   * add new node to network
-   * connect two nodes
-   * check if nodes connected
-   * check number of children
-   * check number of parents
-   * check size of CPT
    */
   EXPECT_TRUE(true);
 }
