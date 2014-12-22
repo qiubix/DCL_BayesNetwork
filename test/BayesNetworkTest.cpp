@@ -78,6 +78,7 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   //TODO: FIXME: verify whether this assertions are correct
 }
 
+//FIXME: analyze whether this test is necessary at all
 TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
 {
   /*
@@ -89,6 +90,7 @@ TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
   EXPECT_TRUE(true);
 }
 
+//FIXME: analyze whether this test is necessary at all
 TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
 {
   /*
@@ -98,7 +100,14 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
    * check if node is in the right layer
    * check if node has proper CPT
    */
-  EXPECT_TRUE(true);
+  Processors::Network::BayesNetwork newNetwork;
+  ASSERT_EQ(newNetwork.getNumberOfNodes(), 0);
+  const int NODE_ID = 0;
+  const char* NODE_NAME = "F_0";
+  newNetwork.addFeatureNode(NODE_ID);
+  int code = newNetwork.getNetwork().FindNode(NODE_NAME);
+  ASSERT_NE(code, DSL_OUT_OF_RANGE);
+  ASSERT_EQ(newNetwork.getNumberOfNodes(), 1);
 }
 
 TEST_F(BayesNetworkTest, shouldFillNodeCPT)
