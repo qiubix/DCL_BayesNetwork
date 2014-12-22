@@ -71,6 +71,11 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
   EXPECT_EQ(1, numberOfChildren);
   EXPECT_EQ(1, numberOfParents);
+  int parentCPTSize = newNetwork.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  int childCPTSize = newNetwork.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  EXPECT_EQ(2, parentCPTSize);
+  EXPECT_EQ(4, childCPTSize);
+  //TODO: FIXME: verify whether this assertions are correct
 }
 
 TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
