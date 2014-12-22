@@ -66,7 +66,11 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   int numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
   ASSERT_EQ(0, numberOfChildren);
   ASSERT_EQ(0, numberOfParents);
-  EXPECT_TRUE(true);
+  newNetwork.addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
+  numberOfChildren = newNetwork.getNetwork().NumChildren(firstNodeId);
+  numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
+  EXPECT_EQ(1, numberOfChildren);
+  EXPECT_EQ(1, numberOfParents);
 }
 
 TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
