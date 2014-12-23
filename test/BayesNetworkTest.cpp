@@ -121,4 +121,21 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
    * check whether every cell has proper value
    */
   EXPECT_TRUE(true);
+  Processors::Network::BayesNetwork network;
+  ASSERT_EQ(network.getNumberOfNodes(), 0);
+  const int PARENT_NODE_ID = 0;
+  const char* PARENT_NODE_NAME = "V_0";
+  network.addVoxelNode(PARENT_NODE_ID);
+  int parentId = network.getNetwork().FindNode(PARENT_NODE_NAME);
+  const int CHILD_NODE_ID = 1;
+  const char* CHILD_NODE_NAME = "V_1";
+  network.addVoxelNode(CHILD_NODE_ID);
+  int childId = network.getNetwork().FindNode(CHILD_NODE_NAME);
+  network.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
+  DSL_sysCoordinates parentCoordinates(*network.getNetwork().GetNode(parentId)->Definition());
+  DSL_idArray *theNames = network.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
+  parentCoordinates[0] = theNames->FindPosition("YES");
+  parentCoordinates.GoToCurrentPosition();
+  //double value = parentCoordinates.UncheckedValue();
+  //EXPECT_EQ(parentCoordinates.UncheckedValue(), 1.0);
 }
