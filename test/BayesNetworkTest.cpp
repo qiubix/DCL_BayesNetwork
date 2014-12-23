@@ -138,4 +138,5 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   parentCoordinates.GoToCurrentPosition();
   //double value = parentCoordinates.UncheckedValue();
   //EXPECT_EQ(parentCoordinates.UncheckedValue(), 1.0);
+  //FIXME: TODO: finish it!
 }
