@@ -52,34 +52,38 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
    * check number of parents
    * check size of CPT
    */
-  Processors::Network::BayesNetwork newNetwork;
-  ASSERT_EQ(newNetwork.getNumberOfNodes(), 0);
+  Processors::Network::BayesNetwork network;
+  ASSERT_EQ(network.getNumberOfNodes(), 0);
   const int FIRST_NODE_ID = 0;
   const int SECOND_NODE_ID = 1;
   const char* FIRST_NODE_NAME = "V_0";
   const char* SECOND_NODE_NAME = "V_1";
-  newNetwork.addVoxelNode(FIRST_NODE_ID);
-  newNetwork.addVoxelNode(SECOND_NODE_ID);
-  int firstNodeId = newNetwork.getNetwork().FindNode(FIRST_NODE_NAME);
-  int secondNodeId = newNetwork.getNetwork().FindNode(SECOND_NODE_NAME);
-  int numberOfChildren = newNetwork.getNetwork().NumChildren(firstNodeId);
-  int numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
+  network.addVoxelNode(FIRST_NODE_ID);
+  network.addVoxelNode(SECOND_NODE_ID);
+  int firstNodeId = network.getNetwork().FindNode(FIRST_NODE_NAME);
+  int secondNodeId = network.getNetwork().FindNode(SECOND_NODE_NAME);
+
+  int numberOfChildren = network.getNetwork().NumChildren(firstNodeId);
+  int numberOfParents = network.getNetwork().NumParents(secondNodeId);
   ASSERT_EQ(0, numberOfChildren);
   ASSERT_EQ(0, numberOfParents);
-  int parentCPTSize = newNetwork.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  EXPECT_EQ(2, parentCPTSize);
-  int childCPTSize = newNetwork.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
-  EXPECT_EQ(2, childCPTSize);
-  newNetwork.addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
-  numberOfChildren = newNetwork.getNetwork().NumChildren(firstNodeId);
-  numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
+
+  int parentCPTSize = network.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  int childCPTSize = network.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  ASSERT_EQ(2, parentCPTSize);
+  ASSERT_EQ(2, childCPTSize);
+
+  network.addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
+
+  numberOfChildren = network.getNetwork().NumChildren(firstNodeId);
+  numberOfParents = network.getNetwork().NumParents(secondNodeId);
   EXPECT_EQ(1, numberOfChildren);
   EXPECT_EQ(1, numberOfParents);
-  parentCPTSize = newNetwork.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  childCPTSize = newNetwork.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+
+  parentCPTSize = network.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  childCPTSize = network.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
   EXPECT_EQ(2, parentCPTSize);
   EXPECT_EQ(4, childCPTSize);
-  //TODO: FIXME: verify whether this assertions are correct
 }
 
 //FIXME: analyze whether this test is necessary at all
