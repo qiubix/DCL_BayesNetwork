@@ -134,17 +134,25 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   const int PARENT_NODE_ID = 0;
   const char* PARENT_NODE_NAME = "V_0";
   network.addVoxelNode(PARENT_NODE_ID);
-  int parentId = network.getNetwork().FindNode(PARENT_NODE_NAME);
+
   const int CHILD_NODE_ID = 1;
   const char* CHILD_NODE_NAME = "V_1";
   network.addVoxelNode(CHILD_NODE_ID);
   int childId = network.getNetwork().FindNode(CHILD_NODE_NAME);
-  network.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
-  DSL_sysCoordinates parentCoordinates(*network.getNetwork().GetNode(parentId)->Definition());
-  DSL_idArray *theNames = network.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
-  parentCoordinates[0] = theNames->FindPosition("YES");
+
+  //network.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
+
+  int parentId = network.getNetwork().FindNode(PARENT_NODE_NAME);
+  std::vector<double> probabilities;
+  probabilities.push_back(1.0);
+  probabilities.push_back(0.0);
+  //network.fillCPT(PARENT_NODE_NAME, probabilities);
+  DSL_sysCoordinates parentCoordinates(*(network.getNetwork().GetNode(parentId)->Definition()));
+  //DSL_idArray *theNames = network.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
+  //parentCoordinates[0] = theNames->FindPosition("YES");
   parentCoordinates.GoToCurrentPosition();
   //double value = parentCoordinates.UncheckedValue();
+  //parentCoordinates.UncheckedValue() = 1.0;
   //EXPECT_EQ(parentCoordinates.UncheckedValue(), 1.0);
   //FIXME: TODO: finish it!
 }
