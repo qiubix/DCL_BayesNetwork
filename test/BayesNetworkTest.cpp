@@ -66,13 +66,17 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   int numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
   ASSERT_EQ(0, numberOfChildren);
   ASSERT_EQ(0, numberOfParents);
+  int parentCPTSize = newNetwork.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  EXPECT_EQ(2, parentCPTSize);
+  int childCPTSize = newNetwork.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  EXPECT_EQ(2, childCPTSize);
   newNetwork.addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
   numberOfChildren = newNetwork.getNetwork().NumChildren(firstNodeId);
   numberOfParents = newNetwork.getNetwork().NumParents(secondNodeId);
   EXPECT_EQ(1, numberOfChildren);
   EXPECT_EQ(1, numberOfParents);
-  int parentCPTSize = newNetwork.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  int childCPTSize = newNetwork.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  parentCPTSize = newNetwork.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  childCPTSize = newNetwork.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
   EXPECT_EQ(2, parentCPTSize);
   EXPECT_EQ(4, childCPTSize);
   //TODO: FIXME: verify whether this assertions are correct
