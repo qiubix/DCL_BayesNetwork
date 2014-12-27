@@ -319,9 +319,9 @@ void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<Oc
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()
 {
-	LOG(LTRACE) << "ELO! branchNodeCount: " << branchNodeCount;
-	LOG(LTRACE) << "ELO! leafNodeCount: " << leafNodeCount;
-	LOG(LTRACE) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
+	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
+	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
+	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
 
 	LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
