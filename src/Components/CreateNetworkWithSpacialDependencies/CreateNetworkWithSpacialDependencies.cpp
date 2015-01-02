@@ -319,6 +319,7 @@ void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<Oc
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()
 {
+	//TODO: FIXME: count nodes properly, add feature node count
 	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
 	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
 	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
