@@ -74,17 +74,19 @@ bool SOMEvaluation::onStop()
 
 void SOMEvaluation::onNetwork()
 {
-    LOG(LWARNING) << "SOMEvaluation::onNetwork";
-    networks = in_networks.read();
+  LOG(LWARNING) << "SOMEvaluation::onNetwork";
+  networks = in_networks.read();
+  theNet = networks[0];
 }
 
 void SOMEvaluation::onInstance()
 {
-	LOG(LDEBUG) << "SOMEvaluation::onInstance";
-	if(theNet.GetNumberOfNodes() != 0) {
-		instance = in_instanceMatchedFeatures.read();
-		evaluate();
-	}
+  LOG(LDEBUG) << "SOMEvaluation::onInstance";
+  if(theNet.GetNumberOfNodes() != 0) {
+    LOG(LDEBUG) << "There is a network ready to be evaluated";
+    instance = in_instanceMatchedFeatures.read();
+    evaluate();
+  }
 }
 
 void SOMEvaluation::evaluate()
@@ -92,7 +94,7 @@ void SOMEvaluation::evaluate()
 		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
 		LOG(LDEBUG) << "instance size: " << instance.size();
 
-		theNet = networks[0];
+		//theNet = networks[0];
 
 		Common::Timer timer;
 		timer.restart();
