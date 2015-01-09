@@ -132,7 +132,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 {
 		for (unsigned i=0; i<instance.size(); ++i) {
 				int node = findFeatureNode(instance[i]);
-				LOG(LDEBUG) << "Observing node: nodeId = " << node;
+				LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
 				if(node != DSL_OUT_OF_RANGE) {
 						theNet.GetNode(node)->Value()->SetEvidence(0);
 				}
