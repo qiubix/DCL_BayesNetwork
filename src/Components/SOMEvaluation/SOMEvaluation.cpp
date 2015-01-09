@@ -74,17 +74,19 @@ bool SOMEvaluation::onStop()
 
 void SOMEvaluation::onNetwork()
 {
-    LOG(LWARNING) << "SOMEvaluation::onNetwork";
-    networks = in_networks.read();
+  LOG(LWARNING) << "SOMEvaluation::onNetwork";
+  networks = in_networks.read();
+  theNet = networks[0];
 }
 
 void SOMEvaluation::onInstance()
 {
-	LOG(LDEBUG) << "SOMEvaluation::onInstance";
-	if(theNet.GetNumberOfNodes() != 0) {
-		instance = in_instanceMatchedFeatures.read();
-		evaluate();
-	}
+  LOG(LDEBUG) << "SOMEvaluation::onInstance";
+  if(theNet.GetNumberOfNodes() != 0) {
+    LOG(LDEBUG) << "There is a network ready to be evaluated";
+    instance = in_instanceMatchedFeatures.read();
+    evaluate();
+  }
 }
 
 void SOMEvaluation::evaluate()
@@ -92,7 +94,7 @@ void SOMEvaluation::evaluate()
 		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
 		LOG(LDEBUG) << "instance size: " << instance.size();
 
-		theNet = networks[0];
+		//theNet = networks[0];
 
 		Common::Timer timer;
 		timer.restart();
@@ -130,7 +132,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 {
 		for (unsigned i=0; i<instance.size(); ++i) {
 				int node = findFeatureNode(instance[i]);
-				LOG(LDEBUG) << "Observing node: nodeId = " << node;
+				LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
 				if(node != DSL_OUT_OF_RANGE) {
 						theNet.GetNode(node)->Value()->SetEvidence(0);
 				}
@@ -140,7 +142,9 @@ void SOMEvaluation::activateMatchedFeatureNodes()
 
 void SOMEvaluation::displayHypothesisProbability(int modelId)
 {
-  string nodeName = "H_" + modelId;
+  //string nodeName = "H_" + modelId;
+  string nodeName = "V_0";
+  LOG(LTRACE) << "Display probability of hypothesis: " << nodeName;
   int hypothesis = theNet.FindNode(nodeName.c_str());
   double hypothesisProbability = getNodeProbability(hypothesis);
 
