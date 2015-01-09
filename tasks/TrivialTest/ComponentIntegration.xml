@@ -1,0 +1,66 @@
+<Task>
+	<!-- reference task information -->
+	<Reference>
+		<Author>
+			<name>Karol Katerzawa</name>
+			<link></link>
+		</Author>
+		
+		<Description>
+			<brief></brief>
+			<full></full>	
+		</Description>
+	</Reference>
+	
+	<!-- task definition -->
+	<Subtasks>
+		<Subtask name="Main">
+			<Executor name="Processing"  period="1">
+				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
+					<param name="filenames">/home/qiubix/Objects/SimpleObjects/object_1.json</param>
+				</Component>
+				<Component name="PCDReader" type="PCL:PCDReader" priority="2" bump="0">
+					<param name="filename">/home/qiubix/Objects/SimpleObjects/object_1/feature_0.pcd</param>
+				</Component>
+				<Component name="Adder" type="BayesNetwork:MockAdder" priority="9" bump="0">
+				</Component>
+				<Component name="Matcher" type="BayesNetwork:MockFeatureMatcher" priority="10" bump="0">
+				</Component>
+				<Component name="Mapper" type="BayesNetwork:MockMultiplicityMapper" priority="10" bumb="0"></Component>
+				<Component name="Builder" type="BayesNetwork:MockNetworkBuilder" priority="11" bump="0">
+				</Component>
+				<Component name="Evaluator" type="BayesNetwork:MockEvaluator" priority="12" bump="0">
+				</Component>
+			</Executor>
+		</Subtask>	
+	</Subtasks>
+	
+	<!-- pipes connecting datastreams -->
+	<DataStreams>
+		<Source name="PCDReader.out_cloud_xyzsift">
+			<sink>Matcher.in_instanceCloud</sink>	
+		</Source>
+
+		<Source name="Matcher.out_featuresIndexes">
+			<sink>Evaluator.in_instanceMatchedFeatures</sink>
+		</Source>
+		<Source name="SOMJSONReader.out_models">
+			<sink>Adder.in_models</sink>
+		</Source>
+		<Source name="Adder.out_cloud">
+			<sink>Builder.in_cloud_xyzsift</sink>
+			<sink>Matcher.in_jointCloud</sink>
+			<sink>Mapper.in_jointCloud</sink>
+		</Source>
+		<Source name="Mapper.out_jointMultiplicity">
+			<sink>Builder.in_jointMultiplicity</sink>
+		</Source>
+		<Source name="Builder.out_networks">
+			<sink>Evaluator.in_networks</sink>
+		</Source>
+	</DataStreams>
+</Task>
+
+
+
+
