@@ -1,10 +1,10 @@
 /*!
- * \file CreateNetworkWithSpacialDependencies.hpp
+ * \file MockNetworkBuilder.hpp
  * \brief
  */
 
-#ifndef CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_
-#define CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_
+#ifndef MOCK_NETWORK_BUILDER_HPP_
+#define MOCK_NETWORK_BUILDER_HPP_
 
 #define CV_NO_BACKWARD_COMPATIBILITY
 
@@ -31,22 +31,22 @@ namespace Processors {
 namespace Network {
 
 /*!
- * \class CreateNetworkWithSpacialDependencies
+ * \class MockNetworkBuilder
  * \brief Class used to build Bayes network based on features multiplicity and spacial dependencies between them
  * \author Karol Katerżawa
  */
-class CreateNetworkWithSpacialDependencies: public Base::Component
+class MockNetworkBuilder: public Base::Component
 {
 public:
   /*!
    * Constructor.
    */
-  CreateNetworkWithSpacialDependencies(const std::string & name = "CreateNetworkWithSpacialDependencies");
+  MockNetworkBuilder(const std::string & name = "MockNetworkBuilder");
 
   /*!
    * Destructor
    */
-  virtual ~CreateNetworkWithSpacialDependencies();
+  virtual ~MockNetworkBuilder();
 
   /*!
    * Prepare data streams and handlers
@@ -85,7 +85,7 @@ protected:
   bool onStop();
 
   /// Event handlers
-  Base::EventHandler <CreateNetworkWithSpacialDependencies> h_onModels;
+  Base::EventHandler <MockNetworkBuilder> h_onModels;
   Base::EventHandler2 h_onJointMultiplicity;
   Base::EventHandler2 h_onNewModel;
 
@@ -114,26 +114,7 @@ private:
   void buildNetwork();
   void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
 
-  void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
-  void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
-
-  bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  bool nextNodeIsAlsoBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  int getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  int getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode);
-  void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
-
   void exportNetwork();
-
-  void addHypothesisNode(int modelId = 0);
-
-  std::string getNodeName(int nodeHandle);
-  void mapFeaturesNames();
-  void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-  int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-  void logPoint(PointXYZSIFT p, int index);
 };
 
 }//: namespace Network
@@ -143,7 +124,7 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_COMPONENT("CreateNetworkWithSpacialDependencies", Processors::Network::CreateNetworkWithSpacialDependencies)
+REGISTER_COMPONENT("MockNetworkBuilder", Processors::Network::MockNetworkBuilder)
 
-#endif /* CREATE_NETWORK_WITH_SPACIAL_DEPENDENCIES_HPP_ */
+#endif /* MOCK_NETWORK_BUILDER_HPP_ */
 
