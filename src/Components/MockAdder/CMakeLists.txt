@@ -11,9 +11,9 @@ FILE(GLOB files *.cpp)
 
 
 # Create an executable file from sources:
-ADD_LIBRARY(MockAdder SHARED ${files})
+ADD_LIBRARY(procMockAdder SHARED ${files})
 
 # Link external libraries
-TARGET_LINK_LIBRARIES(MockAdder ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
+TARGET_LINK_LIBRARIES(procMockAdder ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
-INSTALL_COMPONENT(MockAdder)
+INSTALL_COMPONENT(procMockAdder)
