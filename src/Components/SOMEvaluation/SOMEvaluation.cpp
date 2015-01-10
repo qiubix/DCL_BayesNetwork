@@ -91,57 +91,60 @@ void SOMEvaluation::onInstance()
 
 void SOMEvaluation::evaluate()
 {
-		LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
-		LOG(LDEBUG) << "instance size: " << instance.size();
+  LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
+  LOG(LDEBUG) << "instance size: " << instance.size();
 
-		//theNet = networks[0];
+  //theNet = networks[0];
 
-		Common::Timer timer;
-		timer.restart();
+  Common::Timer timer;
+  timer.restart();
 
-		theNet.ClearAllEvidence();
-    deactivateFeatures();
-		activateMatchedFeatureNodes();
-		theNet.UpdateBeliefs();
+  theNet.ClearAllEvidence();
+  deactivateFeatures();
+  activateMatchedFeatureNodes();
+  theNet.UpdateBeliefs();
 
-		displayHypothesisProbability();
+  displayHypothesisProbability();
 
-		LOG(LINFO) << " runtime: " << timer.elapsed();
-    LOG(LDEBUG) << "SOMEvaluation finished";
+  LOG(LINFO) << " runtime: " << timer.elapsed();
+  LOG(LDEBUG) << "SOMEvaluation finished";
 }
 
 void SOMEvaluation::deactivateFeatures()
 {
-	int nodeId = 0;
-	while(true) {
-		std::stringstream ss;
-		ss << "F_" << nodeId;
-		std::string nodeName(ss.str());
-		int node = theNet.FindNode(nodeName.c_str());
-		if(node != DSL_OUT_OF_RANGE) {
-			theNet.GetNode(node)->Value()->SetEvidence(1);
-		}
-		else {
-			break;
-		}
-		nodeId++;
-	}
+  LOG(LTRACE) << "Deactivating all features";
+  int nodeId = 0;
+  while(true) {
+    std::stringstream ss;
+    ss << "F_" << nodeId;
+    std::string nodeName(ss.str());
+    int node = theNet.FindNode(nodeName.c_str());
+    if(node != DSL_OUT_OF_RANGE) {
+      theNet.GetNode(node)->Value()->SetEvidence(1);
+    }
+    else {
+      break;
+    }
+    nodeId++;
+  }
 }
 
 void SOMEvaluation::activateMatchedFeatureNodes()
 {
-		for (unsigned i=0; i<instance.size(); ++i) {
-				int node = findFeatureNode(instance[i]);
-				LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
-				if(node != DSL_OUT_OF_RANGE) {
-						theNet.GetNode(node)->Value()->SetEvidence(0);
-				}
-		}
-    LOG(LDEBUG) << "Finished activating matched features";
+  LOG(LTRACE) << "Activating matched feature nodes";
+  for (unsigned i=0; i<instance.size(); ++i) {
+    int node = findFeatureNode(instance[i]);
+    LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
+    if(node != DSL_OUT_OF_RANGE) {
+      theNet.GetNode(node)->Value()->SetEvidence(0);
+    }
+  }
+  LOG(LDEBUG) << "Finished activating matched features";
 }
 
 void SOMEvaluation::displayHypothesisProbability(int modelId)
 {
+  //TODO: adapt for multiple models
   //string nodeName = "H_" + modelId;
   string nodeName = "V_0";
   LOG(LTRACE) << "Display probability of hypothesis: " << nodeName;
@@ -156,21 +159,21 @@ void SOMEvaluation::displayHypothesisProbability(int modelId)
 
 int SOMEvaluation::findFeatureNode(int nodeId)
 {
-		std::stringstream ss;
-		ss << "F_" << nodeId;
-		std::string nodeName(ss.str());
-		return theNet.FindNode(nodeName.c_str());
+  std::stringstream ss;
+  ss << "F_" << nodeId;
+  std::string nodeName(ss.str());
+  return theNet.FindNode(nodeName.c_str());
 }
 
 double SOMEvaluation::getNodeProbability(int nodeId)
 {
-		theNet.GetNode(nodeId)->Value();
-		DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
-		DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
-		theCoordinates[0] = theNames->FindPosition("YES");
-		theCoordinates.GoToCurrentPosition();
-		double probability = theCoordinates.UncheckedValue();
-		return probability;
+  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
+  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
+  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
+  theCoordinates[0] = theNames->FindPosition("YES");
+  theCoordinates.GoToCurrentPosition();
+  double probability = theCoordinates.UncheckedValue();
+  return probability;
 }
 
 }//: namespace Network

@@ -137,6 +137,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
   bool reachedLeafNode = false;
 
+  //TODO: FIXME: use addHypothesisNode() method for root node
+
 	if(node->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* rootNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
     createBranchNode(rootNode);
@@ -333,6 +335,7 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	//out_network.write(network.getNetwork());
 }
 
+//TODO: use this method
 void CreateNetworkWithSpacialDependencies::addHypothesisNode(int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
