@@ -23,53 +23,53 @@ namespace Network {
 
 SOMEvaluation::SOMEvaluation(const std::string & name) : Base::Component(name)
 {
-    LOG(LTRACE)<<"Hello SOMEvaluation";
+  LOG(LTRACE)<<"Hello SOMEvaluation";
 }
 
 SOMEvaluation::~SOMEvaluation()
 {
-    LOG(LTRACE)<<"Good bye SOMEvaluation";
+  LOG(LTRACE)<<"Good bye SOMEvaluation";
 }
 
 void SOMEvaluation::prepareInterface()
 {
-    LOG(LTRACE) << "SOMEvaluation::prepareInterface";
+  LOG(LTRACE) << "SOMEvaluation::prepareInterface";
 
-    h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
-    registerHandler("onNetwork", &h_onNetwork);
-    registerStream("in_networks", &in_networks);
-    addDependency("onNetwork", &in_networks);
+  h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
+  registerHandler("onNetwork", &h_onNetwork);
+  registerStream("in_networks", &in_networks);
+  addDependency("onNetwork", &in_networks);
 
-    h_onInstance.setup(this, &SOMEvaluation::onInstance);
-    registerHandler("onInstance", &h_onInstance);
-    registerStream("in_instanceMatchedFeatures", &in_instanceMatchedFeatures);
-    addDependency("onInstance", &in_instanceMatchedFeatures);
+  h_onInstance.setup(this, &SOMEvaluation::onInstance);
+  registerHandler("onInstance", &h_onInstance);
+  registerStream("in_instanceMatchedFeatures", &in_instanceMatchedFeatures);
+  addDependency("onInstance", &in_instanceMatchedFeatures);
 
-    registerStream("out_probabilities", &out_probabilities);
+  registerStream("out_probabilities", &out_probabilities);
 }
 
 bool SOMEvaluation::onInit()
 {
-    LOG(LTRACE) << "SOMEvaluation::initialize";
-    return true;
+  LOG(LTRACE) << "SOMEvaluation::initialize";
+  return true;
 }
 
 bool SOMEvaluation::onFinish()
 {
-    LOG(LTRACE) << "SOMEvaluation::finish";
-    return true;
+  LOG(LTRACE) << "SOMEvaluation::finish";
+  return true;
 }
 
 bool SOMEvaluation::onStart()
 {
-    LOG(LTRACE) << "SOMEvaluation::onStart";
-    return true;
+  LOG(LTRACE) << "SOMEvaluation::onStart";
+  return true;
 }
 
 bool SOMEvaluation::onStop()
 {
-    LOG(LTRACE) << "SOMEvaluation::onStop";
-    return true;
+  LOG(LTRACE) << "SOMEvaluation::onStop";
+  return true;
 }
 
 void SOMEvaluation::onNetwork()
