@@ -17,6 +17,14 @@ ADD_COMPONENT(SOMEvaluation)
 
 ADD_COMPONENT(SOMSimpleEvaluation)
 
+ADD_COMPONENT(MockAdder)
+
+ADD_COMPONENT(MockEvaluator)
+
+ADD_COMPONENT(MockFeatureMatcher)
+
+ADD_COMPONENT(MockMultiplicityMapper)
+
 ADD_COMPONENT(MockNetworkBuilder)
 
 add_subdirectory(tests)
