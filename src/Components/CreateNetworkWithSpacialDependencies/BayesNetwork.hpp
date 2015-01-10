@@ -34,12 +34,13 @@ public:
   void exportNetworkToFile();
   DSL_network getNetwork();
 
+  //TODO: make private, after it becomes visible for tests
+  void fillCPT(std::string name, std::vector<double> probabilities);
 private:
   DSL_network network;
 
   void addNode(std::string name);
 
-  void fillCPT(std::string name, std::vector<double> probabilities);
   int generateNext(std::string::iterator start, std::string::iterator end);
 
   FRIEND_TEST(BayesNetworkTest, shouldFillNodeCPT);
