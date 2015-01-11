@@ -7,28 +7,16 @@ include_directories(.)
 # ##############################################################################
 
 # Find Boost, at least ver. 1.41
-FIND_PACKAGE(Boost 1.41.0 REQUIRED)
+FIND_PACKAGE(Boost 1.41.0 COMPONENTS system REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
 
 # Find another necessary libraries
-LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib/SMILE)
-SET(SMILE_LIBS smile smilearn)
-
-# OpenCV library
-FIND_PACKAGE( OpenCV REQUIRED )
-
-# PCL library
-FIND_PACKAGE(PCL 1.3 REQUIRED)
-include_directories(${PCL_INCLUDE_DIRS})
-MESSAGE("PCL include: ${PCL_INCLUDE_DIRS}")
-link_directories(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
-
 
 # Find another DCLs our one depends on
 # Use macro: DISCODE_FIND_DCL(<DCL_NAME>)
-DISCODE_FIND_DCL(CvBasic)
-DISCODE_FIND_DCL(PCL)
+# DISCODE_FIND_DCL(CvBasic)
+# DISCODE_FIND_DCL(PCL)
 #DISCODE_FIND_DCL(SIFTObjectModel)
 
 # ##############################################################################

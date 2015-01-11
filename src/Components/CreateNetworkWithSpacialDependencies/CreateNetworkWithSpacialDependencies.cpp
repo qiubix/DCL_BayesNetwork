@@ -111,6 +111,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   cloudQueue.pop();
 //  jointMultiplicityVector = in_jointMultiplicity.read();
 
+  //TODO: wrap octree in separate class
+
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
 	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
@@ -136,6 +138,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
 	pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode();
   OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
   bool reachedLeafNode = false;
+
+  //TODO: FIXME: use addHypothesisNode() method for root node
 
 	if(node->getNodeType() == BRANCH_NODE) {
 		OctreeBranchNode<OctreeContainerEmptyWithId>* rootNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
@@ -319,9 +323,10 @@ void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<Oc
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()
 {
-	LOG(LTRACE) << "ELO! branchNodeCount: " << branchNodeCount;
-	LOG(LTRACE) << "ELO! leafNodeCount: " << leafNodeCount;
-	LOG(LTRACE) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
+	//TODO: FIXME: count nodes properly, add feature node count
+	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
+	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
+	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
 
 	LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
@@ -332,6 +337,7 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	//out_network.write(network.getNetwork());
 }
 
+//TODO: use this method
 void CreateNetworkWithSpacialDependencies::addHypothesisNode(int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;

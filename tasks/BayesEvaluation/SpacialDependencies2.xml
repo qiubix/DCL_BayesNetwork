@@ -17,7 +17,7 @@
 		<Subtask name="Main">
 			<Executor name="Processing"  period="1">
 				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
-					<param name="filenames">/home/qiubix/Objects/cereal_box_1_co5_v2.json</param>
+					<param name="filenames">/home/qiubix/Objects/cereal_box_1_co5_v3.json</param>
 				</Component>
 				<Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
 					<param name="sequence.directory">/home/qiubix/Objects/cereal_box_1_co5</param>

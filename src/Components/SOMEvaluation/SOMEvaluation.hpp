@@ -1,6 +1,6 @@
 /*!
  * \file SOMEvaluation.hpp
- * \brief
+ * \brief Declaration of SOMEvaluation component class
  */
 
 #ifndef SOM_EVALUATION_HPP_
@@ -33,74 +33,74 @@ namespace Network {
 class SOMEvaluation: public Base::Component
 {
 public:
-    /*!
-     * Constructor.
-     */
-    SOMEvaluation(const std::string & name = "SOMEvaluation");
+  /*!
+   * Constructor.
+   */
+  SOMEvaluation(const std::string & name = "SOMEvaluation");
 
-    /*!
-     * Destructor
-     */
-    virtual ~SOMEvaluation();
+  /*!
+   * Destructor
+   */
+  virtual ~SOMEvaluation();
 
-    /*!
-     * Prepare data streams and handlers
-     */
-    void prepareInterface();
+  /*!
+   * Prepare data streams and handlers
+   */
+  void prepareInterface();
 
 protected:
-    ///Input data streams
-    Base::DataStreamIn< std::vector<DSL_network> > in_networks;
-    Base::DataStreamIn< std::vector<int> > in_instanceMatchedFeatures;
+  ///Input data streams
+  Base::DataStreamIn< std::vector<DSL_network> > in_networks;
+  Base::DataStreamIn< std::vector<int> > in_instanceMatchedFeatures;
 
-    //Output data streams
-    Base::DataStreamOut< std::vector<double> > out_probabilities;
+  //Output data streams
+  Base::DataStreamOut< std::vector<double> > out_probabilities;
 
-    /*!
-     * Connects source to given device.
-     */
-    bool onInit();
+  /*!
+   * Connects source to given device.
+   */
+  bool onInit();
 
-    /*!
-     * Disconnect source from device, closes streams, etc.
-     */
-    bool onFinish();
+  /*!
+   * Disconnect source from device, closes streams, etc.
+   */
+  bool onFinish();
 
-    /*!
-     * Start component
-     */
-    bool onStart();
+  /*!
+   * Start component
+   */
+  bool onStart();
 
-    /*!
-     * Stop component
-     */
-    bool onStop();
+  /*!
+   * Stop component
+   */
+  bool onStop();
 
-    /// Event handlers
-    Base::EventHandler <SOMEvaluation> h_onNetwork;
-    Base::EventHandler <SOMEvaluation> h_onInstance;
+  /// Event handlers
+  Base::EventHandler <SOMEvaluation> h_onNetwork;
+  Base::EventHandler <SOMEvaluation> h_onInstance;
 
-    /*!
-     * Event handler function.
-     */
-    void onNetwork();
-    void onInstance();
+  /*!
+   * Event handler function.
+   */
+  void onNetwork();
+  void onInstance();
 
 private:
-    std::map <int, string> features;
-    std::vector <int> jointMultiplicityVector;
-    std::vector <int> instance;
-    std::vector <double> hypothesesProbabilities;
+  std::map <int, string> features;
+  std::vector <int> jointMultiplicityVector;
+  std::vector <int> instance;
+  std::vector <double> hypothesesProbabilities;
 
-    std::vector<DSL_network> networks;
-    DSL_network theNet;
+  std::vector<DSL_network> networks;
+  DSL_network theNet;
 
-    void evaluate();
-    void deactivateFeatures();
-    void activateMatchedFeatureNodes();
-    void displayHypothesisProbability(int modelId = 0);
-    int findFeatureNode(int nodeId);
-    double getNodeProbability(int nodeId);
+  void evaluate();
+  void deactivateFeatures();
+  void activateMatchedFeatureNodes();
+  void displayHypothesisProbability(int modelId = 0);
+  int findFeatureNode(int nodeId);
+  double getNodeProbability(int nodeId);
 };
 
 }//: namespace Network
