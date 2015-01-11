@@ -111,6 +111,8 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   cloudQueue.pop();
 //  jointMultiplicityVector = in_jointMultiplicity.read();
 
+  //TODO: wrap octree in separate class
+
 	// Set voxel resolution.
 	float voxelSize = 0.01f;
 	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);

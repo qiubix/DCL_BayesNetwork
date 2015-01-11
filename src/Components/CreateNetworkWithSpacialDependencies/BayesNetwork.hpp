@@ -39,6 +39,7 @@ public:
 private:
   DSL_network network;
 
+  //TODO: wrap network node in separate class
   void addNode(std::string name);
 
   int generateNext(std::string::iterator start, std::string::iterator end);
