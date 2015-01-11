@@ -151,7 +151,7 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   DSL_idArray *theNames = network.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
   parentCoordinates[0] = theNames->FindPosition("YES");
   parentCoordinates.GoToCurrentPosition();
-  double probability = parentCoordinates.UncheckedValue();
+  //double probability = parentCoordinates.UncheckedValue();
   //parentCoordinates.UncheckedValue() = 1.0;
   //EXPECT_EQ(probability, 1.0);
   //FIXME: TODO: finish it!
