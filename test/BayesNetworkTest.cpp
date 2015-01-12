@@ -4,6 +4,7 @@ using ::testing::Eq;
 using ::testing::Test;
 
 #include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetwork.hpp"
+#include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetworkNode.hpp"
 
 class BayesNetworkTest : public Test {
   protected:
@@ -155,4 +156,13 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   //parentCoordinates.UncheckedValue() = 1.0;
   //EXPECT_EQ(probability, 1.0);
   //FIXME: TODO: finish it!
+}
+
+TEST_F(BayesNetworkTest, shouldGetFirstRootNode) {
+  Processors::Network::BayesNetwork network;
+  BayesNetworkNode node = network.getNextRootNode();
+  const bool NODE_NOT_VISITED = false;
+  const std::string FIRST_ROOT_NODE_NAME = "F_0";
+  ASSERT_EQ(node.isVisited(), NODE_NOT_VISITED);
+  ASSERT_EQ(node.getName(), FIRST_ROOT_NODE_NAME);
 }
