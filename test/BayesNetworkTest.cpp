@@ -160,7 +160,7 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
 
 TEST_F(BayesNetworkTest, shouldGetFirstRootNode) {
   Processors::Network::BayesNetwork network;
-  BayesNetworkNode node = network.getNextRootNode();
+  Processors::Network::BayesNetworkNode node = network.getNextRootNode();
   const bool NODE_NOT_VISITED = false;
   const std::string FIRST_ROOT_NODE_NAME = "F_0";
   ASSERT_EQ(node.isVisited(), NODE_NOT_VISITED);

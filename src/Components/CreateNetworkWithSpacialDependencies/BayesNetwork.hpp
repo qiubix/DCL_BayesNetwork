@@ -6,6 +6,8 @@
 
 #include "../../../lib/SMILE/smile.h"
 
+#include "BayesNetworkNode.hpp"
+
 namespace Processors {
 namespace Network {
 
@@ -29,6 +31,7 @@ public:
   std::string getNodeName(int nodeHandle);
   int getNumberOfChildren(int nodeId);
   int getNumberOfNodes();
+  BayesNetworkNode getNextRootNode();
 
   //exporting network
   void exportNetworkToFile();

@@ -7,7 +7,7 @@
 namespace Processors {
 namespace Network {
 
-BayesNetwork::BayesNetwork() 
+BayesNetwork::BayesNetwork()
 {
   network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
 }
@@ -61,7 +61,7 @@ void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
     int nodeId = network.FindNode(nodeName.c_str());
     int numberOfParents = network.NumParents(nodeId);
     LOG(LTRACE) << "Number of ancestors: " << numberOfParents;
-    if(numberOfParents == 0) 
+    if(numberOfParents == 0)
       continue;
     setNodeCPT(nodeName, numberOfParents);
   }
@@ -95,6 +95,13 @@ int BayesNetwork::getNumberOfChildren(int nodeId)
 int BayesNetwork::getNumberOfNodes()
 {
   return network.GetNumberOfNodes();
+}
+
+BayesNetworkNode BayesNetwork::getNextRootNode()
+{
+  int handle = network.FindNode("F_0");
+  BayesNetworkNode node(network.GetNode(handle));
+  return node;
 }
 
 void BayesNetwork::exportNetworkToFile()
