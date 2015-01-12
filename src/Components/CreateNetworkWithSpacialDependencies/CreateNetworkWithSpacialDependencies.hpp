@@ -106,6 +106,7 @@ private:
 
   unsigned int branchNodeCount;
   unsigned int leafNodeCount;
+  unsigned int featureNodeCount;
   unsigned int maxLeafContainerSize;
   int nextId;
   unsigned int numberOfVoxels;

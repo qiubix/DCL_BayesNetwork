@@ -31,6 +31,7 @@ CreateNetworkWithSpacialDependencies::CreateNetworkWithSpacialDependencies(const
   maxLeafContainerSize = 0;
   nextId = 0;
   numberOfVoxels = 0;
+  featureNodeCount = 0;
 }
 
 CreateNetworkWithSpacialDependencies::~CreateNetworkWithSpacialDependencies()
@@ -147,6 +148,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     parent = rootNode;
     addParentsToQueue(rootNode);
     ++dfIt;
+    ++branchNodeCount;
 	}
 
   for (;dfIt != dfIt_end; ++dfIt) {
@@ -180,6 +182,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
         createBranchNode(branchNode);
         connectBranchNode(branchNode, parent);
         parent = branchNode;
+        ++branchNodeCount;
       }
     }
   }
@@ -229,6 +232,10 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
 	int parentId = leafNode->getContainer().getNodeId();
 	int childrenCounter = leafNode->getContainer().getSize();
 
+	if (childrenCounter > maxLeafContainerSize) {
+	  maxLeafContainerSize = childrenCounter;
+  }
+
 	// Iterate through container elements, i.e. cloud points.
 	std::vector<int> point_indices;
 	leafNode->getContainer().getPointIndices(point_indices);
@@ -244,6 +251,7 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
     network.addFeatureNode(featureId);
     string featureName = network.createFeatureName(featureId);
     network.addArc(featureName, parentName);
+    ++featureNodeCount;
   }//: for points
 
 	LOG(LTRACE) << "voxel ID: " << parentId;
@@ -323,9 +331,10 @@ void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode<Oc
 
 void CreateNetworkWithSpacialDependencies::exportNetwork()
 {
-	//TODO: FIXME: count nodes properly, add feature node count
-	LOG(LWARNING) << "ELO! branchNodeCount: " << branchNodeCount;
-	LOG(LWARNING) << "ELO! leafNodeCount: " << leafNodeCount;
+	LOG(LWARNING) << "ELO! Branch node quantity: " << branchNodeCount;
+	LOG(LWARNING) << "ELO! Leaf node quantity: " << leafNodeCount;
+	LOG(LWARNING) << "ELO! Voxel node quantity: " << numberOfVoxels;
+	LOG(LWARNING) << "ELO! Feature node quantity: " << featureNodeCount;
 	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
 
 	LOG(LDEBUG) << "before writing network to file";
