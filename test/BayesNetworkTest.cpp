@@ -8,17 +8,19 @@ using ::testing::Test;
 
 class BayesNetworkTest : public Test {
   protected:
-    Processors::Network::BayesNetwork network;
+    Processors::Network::BayesNetwork mockNetwork;
 };
 
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
 {
+  Processors::Network::BayesNetwork network;
   DSL_network theNet = network.getNetwork();
   EXPECT_EQ(theNet.GetNumberOfNodes(), 0);
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
 {
+  Processors::Network::BayesNetwork network;
   int numberOfNodes = network.getNumberOfNodes();
   EXPECT_EQ(numberOfNodes, 0);
 }
@@ -130,26 +132,26 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
    * check whether every cell has proper value
    */
   EXPECT_TRUE(true);
-  Processors::Network::BayesNetwork network;
-  ASSERT_EQ(network.getNumberOfNodes(), 0);
+  Processors::Network::BayesNetwork simpleNetwork;
+  ASSERT_EQ(simpleNetwork.getNumberOfNodes(), 0);
   const int PARENT_NODE_ID = 0;
   const char* PARENT_NODE_NAME = "V_0";
-  network.addVoxelNode(PARENT_NODE_ID);
+  simpleNetwork.addVoxelNode(PARENT_NODE_ID);
 
   const int CHILD_NODE_ID = 1;
   const char* CHILD_NODE_NAME = "V_1";
-  network.addVoxelNode(CHILD_NODE_ID);
-  int childId = network.getNetwork().FindNode(CHILD_NODE_NAME);
+  simpleNetwork.addVoxelNode(CHILD_NODE_ID);
+  int childId = simpleNetwork.getNetwork().FindNode(CHILD_NODE_NAME);
 
   //network.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
 
-  int parentId = network.getNetwork().FindNode(PARENT_NODE_NAME);
+  int parentId = simpleNetwork.getNetwork().FindNode(PARENT_NODE_NAME);
   std::vector<double> probabilities;
   probabilities.push_back(1.0);
   probabilities.push_back(0.0);
-  network.fillCPT(PARENT_NODE_NAME, probabilities);
-  DSL_sysCoordinates parentCoordinates(*(network.getNetwork().GetNode(parentId)->Value()));
-  DSL_idArray *theNames = network.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
+  simpleNetwork.fillCPT(PARENT_NODE_NAME, probabilities);
+  DSL_sysCoordinates parentCoordinates(*(simpleNetwork.getNetwork().GetNode(parentId)->Value()));
+  DSL_idArray *theNames = simpleNetwork.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
   parentCoordinates[0] = theNames->FindPosition("YES");
   parentCoordinates.GoToCurrentPosition();
   //double probability = parentCoordinates.UncheckedValue();
