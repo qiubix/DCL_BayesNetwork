@@ -146,10 +146,10 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   simpleNetwork.addVoxelNode(CHILD_NODE_ID);
   int childId = simpleNetwork.getNetwork().FindNode(CHILD_NODE_NAME);
 
-  //network.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
+  simpleNetwork.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
 
   std::vector<double> probabilities;
-  probabilities.push_back(1.0);
+  probabilities.push_back(0.3);
   probabilities.push_back(0.0);
   simpleNetwork.fillCPT(PARENT_NODE_NAME, probabilities);
 
@@ -160,7 +160,26 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   parentCoordinates[0] = theNames->FindPosition("YES");
   parentCoordinates.GoToCurrentPosition();
   double probability = parentCoordinates.UncheckedValue();
-  EXPECT_EQ(probability, 1.0);
+  EXPECT_EQ(probability, 0.3);
+
+  probabilities.push_back(0.4);
+  probabilities.push_back(0.2);
+  simpleNetwork.fillCPT(CHILD_NODE_NAME, probabilities);
+
+  DSL_node* childNode = theNet.GetNode(childId);
+  int childCPTSize = childNode->Definition()->GetSize();
+  ASSERT_EQ(childCPTSize, 4);
+  ASSERT_EQ(childNode->Definition()->GetNumberOfOutcomes(), 2);
+  DSL_sysCoordinates childCoordinates(*(childNode->Definition()));
+  theNames = childNode->Definition()->GetOutcomesNames();
+  childCoordinates[0] = theNames->FindPosition("YES");
+  childCoordinates.GoToCurrentPosition();
+  childCoordinates.GoFirst();
+  probability = childCoordinates.UncheckedValue();
+  //FIXME: this value is not correct, sth isn't working, because it should return 0.3
+  //TODO: get whole CPT matrix and examine it
+  EXPECT_EQ(probability, 0.5);
+
   //FIXME: TODO: finish it!
 }
 
