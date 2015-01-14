@@ -6,21 +6,23 @@ using ::testing::Test;
 #include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetwork.hpp"
 #include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetworkNode.hpp"
 
+using namespace Processors::Network;
+
 class BayesNetworkTest : public Test {
-  protected:
-    Processors::Network::BayesNetwork mockNetwork;
+  //protected:
+  //  BayesNetwork mockNetwork;
 };
 
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
 {
-  Processors::Network::BayesNetwork network;
+  BayesNetwork network;
   DSL_network theNet = network.getNetwork();
   EXPECT_EQ(theNet.GetNumberOfNodes(), 0);
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
 {
-  Processors::Network::BayesNetwork network;
+  BayesNetwork network;
   int numberOfNodes = network.getNumberOfNodes();
   EXPECT_EQ(numberOfNodes, 0);
 }
@@ -34,7 +36,7 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
    * check if node exists in network
    * check if number of nodes is 1
    */
-  Processors::Network::BayesNetwork newNetwork;
+  BayesNetwork newNetwork;
   ASSERT_EQ(newNetwork.getNumberOfNodes(), 0);
   const int NODE_ID = 0;
   const char* NODE_NAME = "V_0";
@@ -55,7 +57,7 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
    * check number of parents
    * check size of CPT
    */
-  Processors::Network::BayesNetwork network;
+  BayesNetwork network;
   ASSERT_EQ(network.getNumberOfNodes(), 0);
   const int FIRST_NODE_ID = 0;
   const int SECOND_NODE_ID = 1;
@@ -111,7 +113,7 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
    * check if node is in the right layer
    * check if node has proper CPT
    */
-  Processors::Network::BayesNetwork newNetwork;
+  BayesNetwork newNetwork;
   ASSERT_EQ(newNetwork.getNumberOfNodes(), 0);
   const int NODE_ID = 0;
   const char* NODE_NAME = "F_0";
@@ -132,7 +134,7 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
    * check whether every cell has proper value
    */
   EXPECT_TRUE(true);
-  Processors::Network::BayesNetwork simpleNetwork;
+  BayesNetwork simpleNetwork;
   ASSERT_EQ(simpleNetwork.getNumberOfNodes(), 0);
   const int PARENT_NODE_ID = 0;
   const char* PARENT_NODE_NAME = "V_0";
@@ -162,9 +164,9 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
 
 TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
 {
-  Processors::Network::BayesNetwork network;
+  BayesNetwork network;
   network.addFeatureNode(0);
-  Processors::Network::BayesNetworkNode node = network.getNextRootNode();
+  BayesNetworkNode node = network.getNextRootNode();
   const bool NODE_NOT_VISITED = false;
   const std::string FIRST_ROOT_NODE_NAME = "F_0";
   ASSERT_EQ(node.isVisited(), NODE_NOT_VISITED);
@@ -173,7 +175,7 @@ TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
 
 TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
 {
-  Processors::Network::BayesNetwork network;
+  BayesNetwork network;
   network.addFeatureNode(0);
   network.addFeatureNode(1);
   network.addFeatureNode(2);
@@ -183,19 +185,19 @@ TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
   const std::string SECOND_ROOT_NODE_NAME = "F_1";
   const std::string THIRD_ROOT_NODE_NAME = "F_2";
 
-  Processors::Network::BayesNetworkNode firstNode = network.getNextRootNode();
+  BayesNetworkNode firstNode = network.getNextRootNode();
   EXPECT_EQ(firstNode.isVisited(), NODE_NOT_VISITED);
   EXPECT_EQ(firstNode.getName(), FIRST_ROOT_NODE_NAME);
   firstNode.visitNode();
   ASSERT_EQ(firstNode.isVisited(), NODE_VISITED);
 
-  Processors::Network::BayesNetworkNode secondNode = network.getNextRootNode();
+  BayesNetworkNode secondNode = network.getNextRootNode();
   EXPECT_EQ(secondNode.isVisited(), NODE_NOT_VISITED);
   EXPECT_EQ(secondNode.getName(), SECOND_ROOT_NODE_NAME);
   secondNode.visitNode();
   ASSERT_EQ(secondNode.isVisited(), NODE_VISITED);
 
-  Processors::Network::BayesNetworkNode thirdNode = network.getNextRootNode();
+  BayesNetworkNode thirdNode = network.getNextRootNode();
   EXPECT_EQ(thirdNode.isVisited(), NODE_NOT_VISITED);
   EXPECT_EQ(thirdNode.getName(), THIRD_ROOT_NODE_NAME);
 
@@ -205,17 +207,17 @@ TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
 
 TEST_F(BayesNetworkTest, shouldGetNodeChild)
 {
-  Processors::Network::BayesNetwork network;
+  BayesNetwork network;
   network.addFeatureNode(0);
   network.addFeatureNode(1);
   network.addVoxelNode(0);
   network.addArc("F_0", "V_0");
   network.addArc("F_1", "V_0");
 
-  Processors::Network::BayesNetworkNode firstNode = network.getNextRootNode();
-  Processors::Network::BayesNetworkNode secondNode = network.getNextRootNode();
+  BayesNetworkNode firstNode = network.getNextRootNode();
+  BayesNetworkNode secondNode = network.getNextRootNode();
 
-  Processors::Network::BayesNetworkNode childNode = network.getChild(firstNode);
+  BayesNetworkNode childNode = network.getChild(firstNode);
   EXPECT_EQ(childNode.getName(), "V_0");
   childNode = network.getChild(secondNode);
   EXPECT_EQ(childNode.getName(), "V_0");
