@@ -133,12 +133,13 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
    * check whether every cell has been updated
    * check whether every cell has proper value
    */
-  EXPECT_TRUE(true);
   BayesNetwork simpleNetwork;
   ASSERT_EQ(simpleNetwork.getNumberOfNodes(), 0);
+
   const int PARENT_NODE_ID = 0;
   const char* PARENT_NODE_NAME = "V_0";
   simpleNetwork.addVoxelNode(PARENT_NODE_ID);
+  int parentId = simpleNetwork.getNetwork().FindNode(PARENT_NODE_NAME);
 
   const int CHILD_NODE_ID = 1;
   const char* CHILD_NODE_NAME = "V_1";
@@ -147,18 +148,19 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
 
   //network.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
 
-  int parentId = simpleNetwork.getNetwork().FindNode(PARENT_NODE_NAME);
   std::vector<double> probabilities;
   probabilities.push_back(1.0);
   probabilities.push_back(0.0);
   simpleNetwork.fillCPT(PARENT_NODE_NAME, probabilities);
-  DSL_sysCoordinates parentCoordinates(*(simpleNetwork.getNetwork().GetNode(parentId)->Value()));
-  DSL_idArray *theNames = simpleNetwork.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
+
+  DSL_network theNet = simpleNetwork.getNetwork();
+  DSL_node* parentNode = theNet.GetNode(parentId);
+  DSL_sysCoordinates parentCoordinates(*(parentNode->Definition()));
+  DSL_idArray *theNames = parentNode->Definition()->GetOutcomesNames();
   parentCoordinates[0] = theNames->FindPosition("YES");
-  //parentCoordinates.GoToCurrentPosition();
-  //double probability = parentCoordinates.UncheckedValue();
-  //parentCoordinates.UncheckedValue() = 1.0;
-  //EXPECT_EQ(probability, 1.0);
+  parentCoordinates.GoToCurrentPosition();
+  double probability = parentCoordinates.UncheckedValue();
+  EXPECT_EQ(probability, 1.0);
   //FIXME: TODO: finish it!
 }
 
