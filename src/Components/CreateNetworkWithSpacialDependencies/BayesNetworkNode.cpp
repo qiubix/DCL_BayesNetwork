@@ -6,6 +6,8 @@ namespace Network {
 BayesNetworkNode::BayesNetworkNode(DSL_node* node) {
   this->node = node;
   visited = false;
+  nodeName = node->GetId();
+  nodeHandle = node->Handle();
 }
 
 bool BayesNetworkNode::isVisited() {
@@ -20,6 +22,15 @@ std::string BayesNetworkNode::getName() {
   std::string name(node->GetId());
   //return "F_0";
   return name;
+}
+
+int BayesNetworkNode::getChildHandle()
+{
+  DSL_network* network = node->Network();
+  DSL_intArray children = network->GetChildren(nodeHandle);
+  //TODO: check if array has any elements at all
+  int childHandle = children[0];
+  return childHandle;
 }
 
 }//: namespace Processors

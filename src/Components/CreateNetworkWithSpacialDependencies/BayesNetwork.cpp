@@ -109,6 +109,13 @@ BayesNetworkNode BayesNetwork::getNextRootNode()
   return node;
 }
 
+BayesNetworkNode BayesNetwork::getChild(BayesNetworkNode parent)
+{
+  int childHandle = parent.getChildHandle();
+  BayesNetworkNode child(network.GetNode(childHandle));
+  return child;
+}
+
 void BayesNetwork::exportNetworkToFile()
 {
   LOG(LTRACE) << "Exporting network to file out_network.xdsl";

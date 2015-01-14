@@ -16,6 +16,7 @@ public:
   void visitNode();
 
   std::string getName();
+  int getChildHandle();
 private:
   //FIXME: this pointer probably should not be stored. See documentation: DSL_network.GetNode()
   DSL_node* node;

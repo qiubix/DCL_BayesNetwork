@@ -33,6 +33,7 @@ public:
   int getNumberOfChildren(int nodeId);
   int getNumberOfNodes();
   BayesNetworkNode getNextRootNode();
+  BayesNetworkNode getChild(BayesNetworkNode parent);
 
   //exporting network
   void exportNetworkToFile();

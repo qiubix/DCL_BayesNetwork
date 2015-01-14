@@ -198,4 +198,25 @@ TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
   Processors::Network::BayesNetworkNode thirdNode = network.getNextRootNode();
   EXPECT_EQ(thirdNode.isVisited(), NODE_NOT_VISITED);
   EXPECT_EQ(thirdNode.getName(), THIRD_ROOT_NODE_NAME);
+
+  //TODO: test for not visited nodes, whether it gets the same node
+  //TODO: test for the last feature node
+}
+
+TEST_F(BayesNetworkTest, shouldGetNodeChild)
+{
+  Processors::Network::BayesNetwork network;
+  network.addFeatureNode(0);
+  network.addFeatureNode(1);
+  network.addVoxelNode(0);
+  network.addArc("F_0", "V_0");
+  network.addArc("F_1", "V_0");
+
+  Processors::Network::BayesNetworkNode firstNode = network.getNextRootNode();
+  Processors::Network::BayesNetworkNode secondNode = network.getNextRootNode();
+
+  Processors::Network::BayesNetworkNode childNode = network.getChild(firstNode);
+  EXPECT_EQ(childNode.getName(), "V_0");
+  childNode = network.getChild(secondNode);
+  EXPECT_EQ(childNode.getName(), "V_0");
 }
