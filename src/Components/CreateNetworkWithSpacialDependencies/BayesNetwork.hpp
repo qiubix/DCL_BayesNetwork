@@ -43,6 +43,7 @@ public:
 private:
   DSL_network network;
   std::vector <BayesNetworkNode> featureNodes;
+  int nextRootNodePosition;
 
   //TODO: wrap network node in separate class
   void addNode(std::string name);

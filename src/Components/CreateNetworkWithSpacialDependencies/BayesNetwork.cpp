@@ -10,6 +10,7 @@ namespace Network {
 BayesNetwork::BayesNetwork()
 {
   network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
+  nextRootNodePosition = 0;
 }
 
 void BayesNetwork::addVoxelNode(int id)
@@ -102,10 +103,10 @@ int BayesNetwork::getNumberOfNodes()
 
 BayesNetworkNode BayesNetwork::getNextRootNode()
 {
-  int handle = network.FindNode("F_0");
-  BayesNetworkNode node(network.GetNode(handle));
-  //return node;
-  return featureNodes[0];
+  BayesNetworkNode node = featureNodes[nextRootNodePosition];
+  if(nextRootNodePosition < featureNodes.size() - 1)
+    ++nextRootNodePosition;
+  return node;
 }
 
 void BayesNetwork::exportNetworkToFile()

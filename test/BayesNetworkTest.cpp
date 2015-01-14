@@ -173,5 +173,29 @@ TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
 
 TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
 {
-  ASSERT_TRUE(true);
+  Processors::Network::BayesNetwork network;
+  network.addFeatureNode(0);
+  network.addFeatureNode(1);
+  network.addFeatureNode(2);
+  const bool NODE_NOT_VISITED = false;
+  const bool NODE_VISITED = true;
+  const std::string FIRST_ROOT_NODE_NAME = "F_0";
+  const std::string SECOND_ROOT_NODE_NAME = "F_1";
+  const std::string THIRD_ROOT_NODE_NAME = "F_2";
+
+  Processors::Network::BayesNetworkNode firstNode = network.getNextRootNode();
+  EXPECT_EQ(firstNode.isVisited(), NODE_NOT_VISITED);
+  EXPECT_EQ(firstNode.getName(), FIRST_ROOT_NODE_NAME);
+  firstNode.visitNode();
+  ASSERT_EQ(firstNode.isVisited(), NODE_VISITED);
+
+  Processors::Network::BayesNetworkNode secondNode = network.getNextRootNode();
+  EXPECT_EQ(secondNode.isVisited(), NODE_NOT_VISITED);
+  EXPECT_EQ(secondNode.getName(), SECOND_ROOT_NODE_NAME);
+  secondNode.visitNode();
+  ASSERT_EQ(secondNode.isVisited(), NODE_VISITED);
+
+  Processors::Network::BayesNetworkNode thirdNode = network.getNextRootNode();
+  EXPECT_EQ(thirdNode.isVisited(), NODE_NOT_VISITED);
+  EXPECT_EQ(thirdNode.getName(), THIRD_ROOT_NODE_NAME);
 }
