@@ -24,6 +24,9 @@ void BayesNetwork::addFeatureNode(int id)
   std::string featureName = createFeatureName(id);
   LOG(LDEBUG) << "Adding feature node to network: " << featureName;
   addNode(featureName);
+  int featureNodeHandle = network.FindNode(featureName.c_str());
+  BayesNetworkNode newNode(network.GetNode(featureNodeHandle));
+  featureNodes.push_back(newNode);
 }
 
 std::string BayesNetwork::createVoxelName(int id)
@@ -101,7 +104,8 @@ BayesNetworkNode BayesNetwork::getNextRootNode()
 {
   int handle = network.FindNode("F_0");
   BayesNetworkNode node(network.GetNode(handle));
-  return node;
+  //return node;
+  return featureNodes[0];
 }
 
 void BayesNetwork::exportNetworkToFile()

@@ -2,6 +2,7 @@
 #define BAYES_NETWORK_HPP
 
 #include <string>
+#include <vector>
 #include <gtest/gtest.h>
 
 #include "../../../lib/SMILE/smile.h"
@@ -41,6 +42,7 @@ public:
   void fillCPT(std::string name, std::vector<double> probabilities);
 private:
   DSL_network network;
+  std::vector <BayesNetworkNode> featureNodes;
 
   //TODO: wrap network node in separate class
   void addNode(std::string name);

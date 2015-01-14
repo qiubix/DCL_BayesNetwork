@@ -17,6 +17,7 @@ public:
 
   std::string getName();
 private:
+  //FIXME: this pointer probably should not be stored. See documentation: DSL_network.GetNode()
   DSL_node* node;
   int nodeHandle;
   bool visited;
