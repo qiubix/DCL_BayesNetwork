@@ -2,9 +2,12 @@
 #define BAYES_NETWORK_HPP
 
 #include <string>
+#include <vector>
 #include <gtest/gtest.h>
 
 #include "../../../lib/SMILE/smile.h"
+
+#include "BayesNetworkNode.hpp"
 
 namespace Processors {
 namespace Network {
@@ -29,6 +32,8 @@ public:
   std::string getNodeName(int nodeHandle);
   int getNumberOfChildren(int nodeId);
   int getNumberOfNodes();
+  BayesNetworkNode getNextRootNode();
+  BayesNetworkNode getChild(BayesNetworkNode parent);
 
   //exporting network
   void exportNetworkToFile();
@@ -38,6 +43,8 @@ public:
   void fillCPT(std::string name, std::vector<double> probabilities);
 private:
   DSL_network network;
+  std::vector <BayesNetworkNode> featureNodes;
+  int nextRootNodePosition;
 
   //TODO: wrap network node in separate class
   void addNode(std::string name);

@@ -7,9 +7,10 @@
 namespace Processors {
 namespace Network {
 
-BayesNetwork::BayesNetwork() 
+BayesNetwork::BayesNetwork()
 {
   network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
+  nextRootNodePosition = 0;
 }
 
 void BayesNetwork::addVoxelNode(int id)
@@ -24,6 +25,9 @@ void BayesNetwork::addFeatureNode(int id)
   std::string featureName = createFeatureName(id);
   LOG(LDEBUG) << "Adding feature node to network: " << featureName;
   addNode(featureName);
+  int featureNodeHandle = network.FindNode(featureName.c_str());
+  BayesNetworkNode newNode(network.GetNode(featureNodeHandle));
+  featureNodes.push_back(newNode);
 }
 
 std::string BayesNetwork::createVoxelName(int id)
@@ -61,7 +65,7 @@ void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
     int nodeId = network.FindNode(nodeName.c_str());
     int numberOfParents = network.NumParents(nodeId);
     LOG(LTRACE) << "Number of ancestors: " << numberOfParents;
-    if(numberOfParents == 0) 
+    if(numberOfParents == 0)
       continue;
     setNodeCPT(nodeName, numberOfParents);
   }
@@ -95,6 +99,21 @@ int BayesNetwork::getNumberOfChildren(int nodeId)
 int BayesNetwork::getNumberOfNodes()
 {
   return network.GetNumberOfNodes();
+}
+
+BayesNetworkNode BayesNetwork::getNextRootNode()
+{
+  BayesNetworkNode node = featureNodes[nextRootNodePosition];
+  if(nextRootNodePosition < featureNodes.size() - 1)
+    ++nextRootNodePosition;
+  return node;
+}
+
+BayesNetworkNode BayesNetwork::getChild(BayesNetworkNode parent)
+{
+  int childHandle = parent.getChildHandle();
+  BayesNetworkNode child(network.GetNode(childHandle));
+  return child;
 }
 
 void BayesNetwork::exportNetworkToFile()
