@@ -153,18 +153,25 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   DSL_sysCoordinates parentCoordinates(*(simpleNetwork.getNetwork().GetNode(parentId)->Value()));
   DSL_idArray *theNames = simpleNetwork.getNetwork().GetNode(parentId)->Definition()->GetOutcomesNames();
   parentCoordinates[0] = theNames->FindPosition("YES");
-  parentCoordinates.GoToCurrentPosition();
+  //parentCoordinates.GoToCurrentPosition();
   //double probability = parentCoordinates.UncheckedValue();
   //parentCoordinates.UncheckedValue() = 1.0;
   //EXPECT_EQ(probability, 1.0);
   //FIXME: TODO: finish it!
 }
 
-TEST_F(BayesNetworkTest, shouldGetFirstRootNode) {
+TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
+{
   Processors::Network::BayesNetwork network;
+  network.addFeatureNode(0);
   Processors::Network::BayesNetworkNode node = network.getNextRootNode();
   const bool NODE_NOT_VISITED = false;
   const std::string FIRST_ROOT_NODE_NAME = "F_0";
   ASSERT_EQ(node.isVisited(), NODE_NOT_VISITED);
   ASSERT_EQ(node.getName(), FIRST_ROOT_NODE_NAME);
+}
+
+TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
+{
+  ASSERT_TRUE(true);
 }

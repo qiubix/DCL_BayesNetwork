@@ -17,7 +17,9 @@ void BayesNetworkNode::visitNode() {
 }
 
 std::string BayesNetworkNode::getName() {
-  return "F_0";
+  std::string name(node->GetId());
+  //return "F_0";
+  return name;
 }
 
 }//: namespace Processors
