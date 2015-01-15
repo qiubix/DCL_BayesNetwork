@@ -15,6 +15,10 @@ set(BAYES_NETWORK_TEST_SRC BayesNetworkTest.cpp)
 set(BAYES_NETWORK_TEST_LIB procCreateNetworkWithSpacialDependencies)
 create_test(BayesNetworkTest ${BAYES_NETWORK_TEST_SRC} ${BAYES_NETWORK_TEST_LIB})
 
+set(OCTREE_TEST_SRC OctreeTest.cpp)
+set(OCTREE_TEST_LIB procCreateNetworkWithSpacialDependencies)
+create_test(OctreeTest ${OCTREE_TEST_SRC} ${OCTREE_TEST_LIB})
+
 set(CREATE_NETWORK_TEST_SRC CreateNetworkWithSpacialDependenciesTest.cpp)
 set(CREATE_NETWORK_TEST_LIB procCreateNetworkWithSpacialDependencies)
 create_test(CreateNetworkWithSpacialDependenciesTest ${CREATE_NETWORK_TEST_SRC} ${CREATE_NETWORK_TEST_LIB})
