@@ -11,16 +11,25 @@
 namespace Processors {
 namespace Network {
 
+enum NodeType {
+  OCTREE_BRANCH_NODE,
+  OCTREE_LEAF_NODE
+};
+
 class OctreeNode {
 public:
   OctreeNode();
   OctreeNode(pcl::octree::OctreeNode* node);
+  OctreeNode(const OctreeNode& copy);
   ~OctreeNode() {}
 
   //TODO: copy constructor
+  NodeType getNodeType();
+
 
 private:
   pcl::octree::OctreeNode* node;
+  NodeType nodeType;
 };
 
 }//:Network

@@ -14,7 +14,7 @@ using ::testing::Test;
 //#include <Types/PointXYZSIFT>
 #include "../src/Types/PointXYZSIFT.hpp"
 
-using namespace Processors::Network;
+//using namespace Processors::Network;
 
 class OctreeTest : public Test {
   public:
@@ -42,7 +42,7 @@ TEST_F(OctreeTest, shouldInitializeOctreeWithCloud) {
    * initialize octree
    * check node count
    */
-  Octree octree(cloud);
+  Processors::Network::Octree octree(cloud);
   octree.init();
   ASSERT_TRUE(true);
 }
@@ -54,10 +54,11 @@ TEST_F(OctreeTest, shouldInitializeIterator) {
    * initialize iterator
    * set it to begining of the cloud
    */
-  Octree octree(cloud);
+  Processors::Network::Octree octree(cloud);
   octree.init();
-  Octree::DepthFirstIterator it = octree.depthBegin();
-  pcl::octree::OctreeNode* node = *it;
-  ASSERT_EQ(node->getNodeType(),BRANCH_NODE);
+  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+  //pcl::octree::OctreeNode* node = *it;
+  Processors::Network::OctreeNode node(*it);
+  ASSERT_EQ(node.getNodeType(), Processors::Network::OCTREE_BRANCH_NODE);
 }
 
