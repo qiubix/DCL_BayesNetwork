@@ -22,6 +22,25 @@ public:
 
   void init();
 
+  class DepthFirstIterator {
+  public:
+    typedef OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator OctreeIterator;
+    DepthFirstIterator(OctreeIterator it) {
+      this->it = it;
+    }
+    DepthFirstIterator operator++() {
+      DepthFirstIterator dfIt = *this;
+      it++;
+      return dfIt;
+    }
+    DepthFirstIterator operator++(int foo) {
+      it++;
+      return *this;
+    }
+  private:
+    OctreeIterator it;
+  };
+
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
   float voxelSize;
