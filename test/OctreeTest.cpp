@@ -58,7 +58,7 @@ TEST_F(OctreeTest, shouldInitializeIterator) {
   octree.init();
   Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
   //pcl::octree::OctreeNode* node = *it;
-  Processors::Network::OctreeNode node(*it);
+  Processors::Network::OctreeNode node = *it;
   ASSERT_EQ(node.getNodeType(), Processors::Network::OCTREE_BRANCH_NODE);
 }
 

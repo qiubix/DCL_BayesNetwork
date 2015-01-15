@@ -18,16 +18,15 @@ enum NodeType {
 
 class OctreeNode {
 public:
-  OctreeNode();
+  //OctreeNode();
   OctreeNode(pcl::octree::OctreeNode* node);
   OctreeNode(const OctreeNode& copy);
-  ~OctreeNode() {}
+  virtual ~OctreeNode() {}
 
-  //TODO: copy constructor
+  //getters
   NodeType getNodeType();
 
-
-private:
+protected:
   pcl::octree::OctreeNode* node;
   NodeType nodeType;
 };
