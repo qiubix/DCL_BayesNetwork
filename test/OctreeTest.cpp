@@ -19,7 +19,7 @@ using namespace Processors::Network;
 class OctreeTest : public Test {
   public:
     OctreeTest(): cloud(new pcl::PointCloud<PointXYZSIFT>) {
-      if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
+      if (pcl::io::loadPCDFile<PointXYZSIFT> ("/home/qiubix/DCL/BayesNetwork/test/test_cloud.pcd", *cloud) == -1) {
         std::cout <<"Error reading file!\n";
       }
     }
@@ -33,5 +33,11 @@ TEST_F(OctreeTest, shouldTestNothing) {
   //if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
   //  std::cout <<"Error reading file!\n";
   //}
+  ASSERT_TRUE(true);
+}
+
+TEST_F(OctreeTest, shouldInitializeCloud) {
+  Octree octree(cloud);
+  octree.init();
   ASSERT_TRUE(true);
 }
