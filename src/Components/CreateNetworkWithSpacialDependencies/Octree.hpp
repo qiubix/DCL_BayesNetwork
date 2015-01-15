@@ -37,9 +37,24 @@ public:
       it++;
       return *this;
     }
+    pcl::octree::OctreeNode* operator*() {
+      return it.getCurrentOctreeNode();
+    }
+    OctreeIterator operator->() {
+      return it;
+    }
+    bool operator==(const DepthFirstIterator& reference) {
+      return it == reference.it;
+    }
+    bool operator!=(const DepthFirstIterator& reference) {
+      return it != reference.it;
+    }
   private:
     OctreeIterator it;
   };
+
+  DepthFirstIterator depthBegin();
+  DepthFirstIterator depthEnd();
 
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;

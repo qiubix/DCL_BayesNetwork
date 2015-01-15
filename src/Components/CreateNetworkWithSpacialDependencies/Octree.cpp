@@ -26,5 +26,13 @@ void Octree::init() {
   octree->addPointsFromInputCloud();
 }
 
+Octree::DepthFirstIterator Octree::depthBegin() {
+  return octree->depth_begin();
+}
+
+Octree::DepthFirstIterator Octree::depthEnd() {
+  return octree->depth_end();
+}
+
 }//:Network
 }//:Processors
