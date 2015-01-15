@@ -1,6 +1,8 @@
 #ifndef OCTREE_HPP
 #define OCTREE_HPP
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
@@ -15,14 +17,15 @@ namespace Network {
 
 class Octree {
 public:
-  Octree();
+  Octree(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
   ~Octree();
 
   void init();
 
 private:
-	float voxelSize;
-	OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>* octree;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  float voxelSize;
+  OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>* octree;
 
 };
 
