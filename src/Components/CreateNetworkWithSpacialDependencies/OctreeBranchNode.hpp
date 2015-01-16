@@ -9,11 +9,17 @@ namespace Network {
 class OctreeBranchNode : public OctreeNode {
   public:
     OctreeBranchNode(pcl::octree::OctreeNode* node);
+    OctreeBranchNode(OctreeNode octreeNode);
     //OctreeBranchNode(const OctreeBranchNode& copy);
     ~OctreeBranchNode() {}
+
+    //getters
+    int getId();
   private:
     pcl::octree::OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode;
 };
+
+//TODO: figure out cast from OctreeNode
 
 }//:Network
 }//:Processors

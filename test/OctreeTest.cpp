@@ -9,6 +9,7 @@ using ::testing::Test;
 
 #include "../src/Components/CreateNetworkWithSpacialDependencies/Octree.hpp"
 #include "../src/Components/CreateNetworkWithSpacialDependencies/OctreeNode.hpp"
+#include "../src/Components/CreateNetworkWithSpacialDependencies/OctreeBranchNode.hpp"
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
@@ -60,5 +61,9 @@ TEST_F(OctreeTest, shouldInitializeIterator) {
   //pcl::octree::OctreeNode* node = *it;
   Processors::Network::OctreeNode node = *it;
   ASSERT_EQ(node.getNodeType(), Processors::Network::OCTREE_BRANCH_NODE);
+  //Processors::Network::OctreeBranchNode& branchNode = static_cast<Processors::Network::OctreeBranchNode&>(node);
+  //Processors::Network::OctreeBranchNode branchNode = octree.getBranchNode(node);
+  Processors::Network::OctreeBranchNode branchNode(node);
+  ASSERT_EQ(branchNode.getId(), 1);
 }
 
