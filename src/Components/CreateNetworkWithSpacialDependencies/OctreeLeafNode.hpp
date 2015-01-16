@@ -16,8 +16,10 @@ class OctreeLeafNode : public OctreeNode {
     //getters
     int getId();
     void setId(int id);
+    int getNumberOfChildren();
+    std::vector<int> getPointIndices();
   private:
-    pcl::octree::OctreeLeafNode<OctreeContainerEmptyWithId>* branchNode;
+    pcl::octree::OctreeLeafNode<OctreeContainerEmptyWithId>* leafNode;
 };
 
 //TODO: figure out cast from OctreeNode
