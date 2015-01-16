@@ -6,6 +6,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(procCreateNetworkWithSpacialDependencies SHARED ${files} OctreeContainers.hpp)
-target_link_libraries(procCreateNetworkWithSpacialDependencies ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(procCreateNetworkWithSpacialDependencies ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS} ${Boost_LIBRARIES} ${PCL_IO_LIBRARIES})
 
 INSTALL_COMPONENT(procCreateNetworkWithSpacialDependencies)
