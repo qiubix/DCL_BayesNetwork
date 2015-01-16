@@ -26,6 +26,7 @@ public:
   //getters
   NodeType getNodeType();
   virtual int getId() {}
+  virtual void setId(int id) {}
 
 protected:
   pcl::octree::OctreeNode* node;

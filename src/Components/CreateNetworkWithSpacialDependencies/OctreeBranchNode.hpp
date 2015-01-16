@@ -15,6 +15,7 @@ class OctreeBranchNode : public OctreeNode {
 
     //getters
     int getId();
+    void setId(int id);
   private:
     pcl::octree::OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode;
 };

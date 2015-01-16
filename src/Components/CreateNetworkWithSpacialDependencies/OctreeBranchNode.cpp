@@ -18,5 +18,9 @@ int OctreeBranchNode::getId() {
   return branchNode->getContainer().getNodeId();
 }
 
+void OctreeBranchNode::setId(int id) {
+  return branchNode->getContainer().setNodeId(id);
+}
+
 }//:Network
 }//:Processors
