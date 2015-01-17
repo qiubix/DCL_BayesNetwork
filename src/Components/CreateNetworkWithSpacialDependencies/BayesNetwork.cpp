@@ -103,9 +103,30 @@ int BayesNetwork::getNumberOfNodes()
 
 BayesNetworkNode BayesNetwork::getNextRootNode()
 {
+  // BayesNetworkNode node = featureNodes[nextRootNodePosition];
+  // //BayesNetworkNode node;
+  // if(nextRootNodePosition < featureNodes.size() - 1 && node.isVisited()) {
+  //   return featureNodes[++nextRootNodePosition];
+  // }
+  // else {
+  //   return node;
+  // }
+  //  ++nextRootNodePosition;
+  //return node;
+
+  // int position = 0;
+  // int endPosition = featureNodes.size() - 1;
+  // BayesNetworkNode node = featureNodes[position];
+  // while( position != endPosition) {
+  //   position++;
+  //   node = featureNodes[position];
+  // }
+  // return node;
+
   BayesNetworkNode node = featureNodes[nextRootNodePosition];
-  if(nextRootNodePosition < featureNodes.size() - 1)
-    ++nextRootNodePosition;
+  // if(nextRootNodePosition < featureNodes.size()-1 && node.isVisited()) {
+  //   ++nextRootNodePosition;
+  // }
   return node;
 }
 
@@ -114,6 +135,21 @@ BayesNetworkNode BayesNetwork::getChild(BayesNetworkNode parent)
   int childHandle = parent.getChildHandle();
   BayesNetworkNode child(network.GetNode(childHandle));
   return child;
+}
+
+bool BayesNetwork::visitNode(BayesNetworkNode& node)
+{
+  bool found = false;
+  for (int i=0; i<featureNodes.size(); ++i) {
+    if (featureNodes[i].getName() == node.getName()) {
+      found = true;
+      featureNodes[i].visitNode();
+      node.visitNode();
+      if (nextRootNodePosition < featureNodes.size()-1)
+        ++nextRootNodePosition;
+    }
+  }
+  return found;
 }
 
 void BayesNetwork::exportNetworkToFile()

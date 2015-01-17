@@ -34,6 +34,7 @@ public:
   int getNumberOfNodes();
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
+  bool visitNode(BayesNetworkNode& node);
 
   //exporting network
   void exportNetworkToFile();
