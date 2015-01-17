@@ -16,6 +16,9 @@
 #include "EventHandler2.hpp"
 #include "OctreeContainers.hpp"
 #include "BayesNetwork.hpp"
+#include "Octree.hpp"
+#include "OctreeBranchNode.hpp"
+#include "OctreeLeafNode.hpp"
 
 #include <opencv2/core/core.hpp>
 
@@ -110,21 +113,21 @@ private:
   unsigned int maxLeafContainerSize;
   int nextId;
   unsigned int numberOfVoxels;
-  std::stack <OctreeBranchNode<OctreeContainerEmptyWithId>*> parentQueue;
+  std::stack <OctreeBranchNode> parentQueue;
 
   void buildNetwork();
-  void addParentsToQueue(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
+  void addParentsToQueue(OctreeBranchNode branchNode);
 
-  void createLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
-  void connectLeafNode(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode, OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  void createLeafNodeChildren(OctreeLeafNode< OctreeContainerPointIndicesWithId >* leafNode);
+  void createLeafNode(OctreeLeafNode leafNode);
+  void connectLeafNode(OctreeLeafNode leafNode, OctreeBranchNode branchNode);
+  void createLeafNodeChildren(OctreeLeafNode leafNode);
 
-  bool nodeHasOnlyOneChild(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  bool nextNodeIsAlsoBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  int getNumberOfChildren(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  int getNumberOfChildren(OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode);
-  void createBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode);
-  void connectBranchNode(OctreeBranchNode<OctreeContainerEmptyWithId>* branchNode, OctreeBranchNode<OctreeContainerEmptyWithId>* parentNode);
+  bool nodeHasOnlyOneChild(OctreeBranchNode branchNode);
+  bool nextNodeIsAlsoBranchNode(OctreeBranchNode branchNode);
+  int getNumberOfChildren(OctreeBranchNode branchNode);
+  int getNumberOfChildren(OctreeLeafNode leafNode);
+  void createBranchNode(OctreeBranchNode branchNode);
+  void connectBranchNode(OctreeBranchNode branchNode, OctreeBranchNode parentNode);
 
   void exportNetwork();
 
@@ -132,8 +135,8 @@ private:
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();
-  void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-  int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
+  //void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
+  //int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
   void logPoint(PointXYZSIFT p, int index);
 };
 
