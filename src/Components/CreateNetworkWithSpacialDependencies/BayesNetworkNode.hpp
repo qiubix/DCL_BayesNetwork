@@ -10,6 +10,7 @@ namespace Network {
 class BayesNetworkNode {
 public:
   BayesNetworkNode(DSL_node* node);
+  BayesNetworkNode(const BayesNetworkNode& copy);
   ~BayesNetworkNode() {}
 
   bool isVisited();

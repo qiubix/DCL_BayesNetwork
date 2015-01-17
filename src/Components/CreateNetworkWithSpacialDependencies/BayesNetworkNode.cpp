@@ -10,6 +10,13 @@ BayesNetworkNode::BayesNetworkNode(DSL_node* node) {
   nodeHandle = node->Handle();
 }
 
+BayesNetworkNode::BayesNetworkNode(const BayesNetworkNode& copy) {
+  this->node = copy.node;
+  visited = copy.visited;
+  nodeName = node->GetId();
+  nodeHandle = node->Handle();
+}
+
 bool BayesNetworkNode::isVisited() {
   return visited;
 }
