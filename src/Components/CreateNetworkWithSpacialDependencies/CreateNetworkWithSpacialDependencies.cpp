@@ -191,7 +191,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
         reachedLeafNode = false;
       }
       Processors::Network::OctreeBranchNode branchNode(node);
-      if(nodeHasOnlyOneChild(branchNode)) {
+      if(branchNode.hasOnlyOneChild()) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
         continue;
       }
