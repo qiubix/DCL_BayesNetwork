@@ -42,7 +42,7 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
   const char* NODE_NAME = "V_0";
   newNetwork.addVoxelNode(NODE_ID);
   int code = newNetwork.getNetwork().FindNode(NODE_NAME);
-  ASSERT_NE(code, DSL_OUT_OF_RANGE);
+  ASSERT_NE(DSL_OUT_OF_RANGE, code);
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
 
@@ -119,7 +119,7 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
   const char* NODE_NAME = "F_0";
   newNetwork.addFeatureNode(NODE_ID);
   int code = newNetwork.getNetwork().FindNode(NODE_NAME);
-  ASSERT_NE(code, DSL_OUT_OF_RANGE);
+  ASSERT_NE(DSL_OUT_OF_RANGE, code);
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
 
@@ -191,6 +191,22 @@ TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
   const std::string FIRST_ROOT_NODE_NAME = "F_0";
   ASSERT_FALSE(node.isVisited());
   ASSERT_EQ(FIRST_ROOT_NODE_NAME, node.getName());
+}
+
+TEST_F(BayesNetworkTest, shouldCopyNodes)
+{
+  BayesNetwork network;
+  network.addFeatureNode(0);
+  BayesNetworkNode node = network.getNextRootNode();
+  ASSERT_FALSE(node.isVisited());
+  ASSERT_EQ("F_0", node.getName());
+  node.visitNode();
+  ASSERT_TRUE(node.isVisited());
+
+  BayesNetworkNode newNode = node;
+  ASSERT_EQ("F_0", newNode.getName());
+  ASSERT_TRUE(newNode.isVisited());
+  //TODO: test for other cases of copying
 }
 
 TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
