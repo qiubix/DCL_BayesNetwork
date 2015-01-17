@@ -1,4 +1,5 @@
 #include "OctreeLeafNode.hpp"
+#include "Logger.hpp"
 
 namespace Processors {
 namespace Network {
@@ -27,6 +28,7 @@ int OctreeLeafNode::getNumberOfChildren() {
 }
 
 std::vector<int> OctreeLeafNode::getPointIndices() {
+  LOG(LTRACE) << "Get point indices";
 	std::vector<int> point_indices;
 	leafNode->getContainer().getPointIndices(point_indices);
 	return point_indices;

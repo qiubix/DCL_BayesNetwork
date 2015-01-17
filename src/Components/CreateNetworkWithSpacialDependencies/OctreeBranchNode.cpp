@@ -1,4 +1,5 @@
 #include "OctreeBranchNode.hpp"
+#include "Logger.hpp"
 
 namespace Processors {
 namespace Network {
@@ -23,6 +24,7 @@ void OctreeBranchNode::setId(int id) {
 }
 
 bool OctreeBranchNode::hasOnlyOneChild() {
+  LOG(LTRACE) << "Check whether node has only one child";
   int childrenCounter = 0;
   for (unsigned child_idx = 0; child_idx < 8; ++child_idx) {
     if (branchNode -> hasChild(child_idx))
@@ -35,6 +37,7 @@ bool OctreeBranchNode::hasOnlyOneChild() {
 }
 
 bool OctreeBranchNode::nextNodeIsAlsoBranchNode() {
+  LOG(LTRACE) << "Check whether next node is also a branch node";
   pcl::octree::OctreeNode* childNode;
   unsigned char index;
   for (index = 0; index < 8; ++index) {
@@ -48,6 +51,7 @@ bool OctreeBranchNode::nextNodeIsAlsoBranchNode() {
 }
 
 int OctreeBranchNode::getNumberOfChildren() {
+  LOG(LTRACE) << "Get number of children";
   unsigned char index;
   int childrenCounter = 0;
   for (index = 0; index < 8; ++index) {
