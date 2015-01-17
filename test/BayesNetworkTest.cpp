@@ -269,6 +269,7 @@ TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
   EXPECT_FALSE(secondNode.isVisited());
   EXPECT_EQ(SECOND_ROOT_NODE_NAME, secondNode.getName());
 
+  //second node wasn't marked as visited
   BayesNetworkNode anotherNode = network.getNextRootNode();
   EXPECT_EQ(SECOND_ROOT_NODE_NAME, anotherNode.getName());
 
@@ -278,8 +279,10 @@ TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
   BayesNetworkNode thirdNode = network.getNextRootNode();
   EXPECT_FALSE(thirdNode.isVisited());
   EXPECT_EQ(THIRD_ROOT_NODE_NAME, thirdNode.getName());
+
   network.visitNode(thirdNode);
 
+  //no more root nodes in network, so method getNextRootNode() returns last node
   BayesNetworkNode lastNode = network.getNextRootNode();
   EXPECT_TRUE(lastNode.isVisited());
   EXPECT_EQ(THIRD_ROOT_NODE_NAME, lastNode.getName());
