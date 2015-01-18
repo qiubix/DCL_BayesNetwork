@@ -145,7 +145,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       Processors::Network::OctreeLeafNode leafNode(node);
       createLeafNode(leafNode);
       Processors::Network::OctreeBranchNode parent(parentQueue.top());
-      connectLeafNode(leafNode, parent);
+      connectNodes(leafNode, parent);
       parentQueue.pop();
       createLeafNodeChildren(leafNode);
     }
@@ -160,7 +160,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createBranchNode(branchNode);
         Processors::Network::OctreeBranchNode parent(parentQueue.top());
-        connectBranchNode(branchNode, parent);
+        connectNodes(branchNode, parent);
         parentQueue.pop();
         addParentsToQueue(branchNode);
         ++branchNodeCount;
@@ -193,15 +193,6 @@ void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode leafNod
   network.addVoxelNode(nextId);
   ++numberOfVoxels;
   ++nextId;
-}
-
-void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode leafNode, OctreeBranchNode branchNode)
-{
-  int leafNodeId = leafNode.getId();
-  string bayesParentNodeName = network.createVoxelName(leafNodeId);
-  int parentId = branchNode.getId();
-  string bayesChildNodeName = network.createVoxelName(parentId);
-  network.addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode leafNode)
@@ -251,11 +242,11 @@ void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode bra
   ++nextId;
 }
 
-void CreateNetworkWithSpacialDependencies::connectBranchNode(OctreeBranchNode branchNode, OctreeBranchNode parentNode)
+void CreateNetworkWithSpacialDependencies::connectNodes(OctreeNode child, OctreeNode parent)
 {
-  int branchNodeId = branchNode.getId();
-  string bayesParentNodeName = network.createVoxelName(branchNodeId);
-  int parentId = parentNode.getId();
+  int childId = child.getId();
+  string bayesParentNodeName = network.createVoxelName(childId);
+  int parentId = parent.getId();
   string bayesChildNodeName = network.createVoxelName(parentId);
   network.addArc(bayesParentNodeName, bayesChildNodeName);
 }
