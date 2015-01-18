@@ -31,6 +31,7 @@ std::vector<int> OctreeLeafNode::getPointIndices() {
   LOG(LTRACE) << "Get point indices";
 	std::vector<int> point_indices;
 	leafNode->getContainer().getPointIndices(point_indices);
+	LOG(LTRACE) << "point indices size: " << point_indices.size();
 	return point_indices;
 }
 

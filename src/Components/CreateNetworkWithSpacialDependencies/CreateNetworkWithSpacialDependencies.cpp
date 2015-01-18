@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <assert.h>
 
 #include "CreateNetworkWithSpacialDependencies.hpp"
 
@@ -262,14 +263,19 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
 	// Iterate through container elements, i.e. cloud points.
 //	std::vector<int> point_indices;
 //	leafNode->getContainer().getPointIndices(point_indices);
-  
+
+  assert(leafNode.getNodeType() == OCTREE_LEAF_NODE);
 	std::vector<int> point_indices = leafNode.getPointIndices();
+	LOG(LTRACE) << "point indices size: " << point_indices.size();
 
 	string parentName = network.createVoxelName(parentId);
+
+	LOG(LTRACE) << "Add all children:";
 
   //FIXME: Change the way coefficients are calculated
   for(unsigned int i=0; i<leafNode.getNumberOfChildren(); i++)
   {
+    LOG(LTRACE) << "Creating child number " << i;
     PointXYZSIFT p = cloud->at(point_indices[i]);
     logPoint(p, point_indices[i]);
     int featureId = p.pointId;

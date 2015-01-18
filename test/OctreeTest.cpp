@@ -64,6 +64,7 @@ TEST_F(OctreeTest, shouldInitializeIterator) {
   //Processors::Network::OctreeBranchNode& branchNode = static_cast<Processors::Network::OctreeBranchNode&>(node);
   //Processors::Network::OctreeBranchNode branchNode = octree.getBranchNode(node);
   Processors::Network::OctreeBranchNode branchNode(node);
+  ASSERT_EQ(branchNode.getNodeType(), Processors::Network::OCTREE_BRANCH_NODE);
   ASSERT_EQ(-1, branchNode.getId());
   branchNode.setId(1);
   ASSERT_EQ(1, branchNode.getId());
