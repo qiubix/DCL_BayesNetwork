@@ -18,14 +18,19 @@ OctreeNode::OctreeNode(pcl::octree::OctreeNode* node) {
 OctreeNode::OctreeNode(const OctreeNode& copy) {
   this->node = copy.node;
   //this->nodeType = node->getNodeType();
-  switch(node->getNodeType()) {
-    case BRANCH_NODE: this->nodeType = OCTREE_BRANCH_NODE; break;
-    case LEAF_NODE: this->nodeType = OCTREE_LEAF_NODE; break;
-  }
+  this->nodeType = copy.getNodeType();
+//  switch(copy.node->getNodeType()) {
+//    case BRANCH_NODE: this->nodeType = OCTREE_BRANCH_NODE; break;
+//    case LEAF_NODE: this->nodeType = OCTREE_LEAF_NODE; break;
+//  }
 }
 
-NodeType OctreeNode::getNodeType() {
+NodeType OctreeNode::getNodeType() const {
   return nodeType;
+}
+
+pcl::octree::OctreeNode* OctreeNode::getNodePtr() {
+  return node;
 }
 
 }//:Network
