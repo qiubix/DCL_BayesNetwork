@@ -5,11 +5,11 @@ namespace Processors {
 namespace Network {
 
 OctreeLeafNode::OctreeLeafNode(pcl::octree::OctreeNode* node) : OctreeNode(node) {
-  leafNode = static_cast<pcl::octree::OctreeLeafNode<OctreeContainerEmptyWithId>* >(node);
+  leafNode = static_cast<pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(node);
 }
 
 OctreeLeafNode::OctreeLeafNode(OctreeNode octreeNode) : OctreeNode(octreeNode) {
-  leafNode = static_cast<pcl::octree::OctreeLeafNode<OctreeContainerEmptyWithId>* >(this->node);
+  leafNode = static_cast<pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(this->node);
 }
 
 //OctreeLeafNode::OctreeLeafNode(const OctreeLeafNode& copy) {

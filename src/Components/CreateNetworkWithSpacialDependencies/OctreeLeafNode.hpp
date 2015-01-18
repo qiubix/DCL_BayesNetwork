@@ -19,7 +19,7 @@ class OctreeLeafNode : public OctreeNode {
     int getNumberOfChildren();
     std::vector<int> getPointIndices();
   private:
-    pcl::octree::OctreeLeafNode<OctreeContainerEmptyWithId>* leafNode;
+    pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId>* leafNode;
 };
 
 //TODO: figure out cast from OctreeNode
