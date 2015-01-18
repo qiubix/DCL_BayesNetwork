@@ -12,9 +12,6 @@ OctreeLeafNode::OctreeLeafNode(OctreeNode octreeNode) : OctreeNode(octreeNode) {
   leafNode = static_cast<pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId>* >(this->node);
 }
 
-//OctreeLeafNode::OctreeLeafNode(const OctreeLeafNode& copy) {
-//}
-
 int OctreeLeafNode::getId() {
   return leafNode->getContainer().getNodeId();
 }

@@ -10,7 +10,6 @@ class OctreeBranchNode : public OctreeNode {
   public:
     OctreeBranchNode(pcl::octree::OctreeNode* node);
     OctreeBranchNode(OctreeNode octreeNode);
-    //OctreeBranchNode(const OctreeBranchNode& copy);
     ~OctreeBranchNode() {}
 
     //getters
