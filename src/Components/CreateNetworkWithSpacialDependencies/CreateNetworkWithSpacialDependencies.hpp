@@ -24,8 +24,6 @@
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/octree/octree.h>
-#include <pcl/octree/octree_impl.h>
 
 #include <Types/PointXYZSIFT.hpp>
 
