@@ -178,19 +178,21 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       LOG(LDEBUG) << "Entering octree leaf node.";
       Processors::Network::OctreeLeafNode leafNode(node);
       createLeafNode(leafNode);
+      parent = &parentQueue.top();
+      parentQueue.pop();
       connectLeafNode(leafNode, *parent);
       createLeafNodeChildren(leafNode);
       reachedLeafNode = true;
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
-      if(reachedLeafNode) {
-        parent = &parentQueue.top();
-        LOG(LDEBUG) << "Leaf node was reached in previous iteration. ";
-        LOG(LDEBUG) << "Changing parent to: V_" << parent->getId();
-        parentQueue.pop();
-        reachedLeafNode = false;
-      }
+//      if(reachedLeafNode) {
+//        parent = &parentQueue.top();
+//        LOG(LDEBUG) << "Leaf node was reached in previous iteration. ";
+//        LOG(LDEBUG) << "Changing parent to: V_" << parent->getId();
+//        parentQueue.pop();
+//        reachedLeafNode = false;
+//      }
       Processors::Network::OctreeBranchNode branchNode(node);
       if(branchNode.hasOnlyOneChild()) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
@@ -198,10 +200,12 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       }
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
-        addParentsToQueue(branchNode);
         createBranchNode(branchNode);
+        parent = &parentQueue.top();
+        parentQueue.pop();
         connectBranchNode(branchNode, *parent);
-        parent = &branchNode;
+        addParentsToQueue(branchNode);
+        //parent = &branchNode;
         ++branchNodeCount;
       }
     }
@@ -219,10 +223,11 @@ void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode br
   LOG(LDEBUG) << "Adding parents to queue";
   if(!branchNode.hasOnlyOneChild()) {
     int numberOfChildren = branchNode.getNumberOfChildren();
-    for (int i=0; i<numberOfChildren-1; i++) {
+    for (int i=0; i<numberOfChildren; i++) {
       parentQueue.push(branchNode);
     }
     LOG(LDEBUG) << "Current node has " << numberOfChildren << " children, it appears in parent's queue " << numberOfChildren << " times";
+    LOG(LTRACE) << "Parent queue size: " << parentQueue.size();
   }
 }
 
