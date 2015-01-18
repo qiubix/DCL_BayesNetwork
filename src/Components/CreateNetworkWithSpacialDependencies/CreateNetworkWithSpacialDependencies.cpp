@@ -101,75 +101,43 @@ bool CreateNetworkWithSpacialDependencies::onStart()
 }
 
 void CreateNetworkWithSpacialDependencies::buildNetwork() {
-	LOG(LDEBUG) << "CreateNetworkWithSpacialDependencies::buildNetwork";
+  LOG(LDEBUG) << "CreateNetworkWithSpacialDependencies::buildNetwork";
 
   if(network.getNumberOfNodes() != 0) {
     return;
   }
 
   LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
-	// Read from queue
-	cloud = cloudQueue.top();
+  // Read from queue
+  cloud = cloudQueue.top();
   cloudQueue.pop();
-//  jointMultiplicityVector = in_jointMultiplicity.read();
-
-  //TODO: wrap octree in separate class
+  //  jointMultiplicityVector = in_jointMultiplicity.read();
 
   Processors::Network::Octree octree(cloud);
   octree.init();
 
-	// // Set voxel resolution.
-	// float voxelSize = 0.01f;
-	// OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> octree (voxelSize);
-	// // Set input cloud.
-	// octree.setInputCloud(cloud);
-	// // Calculate bounding box of input cloud.
-	// octree.defineBoundingBox();
-
-	// // Add points from input cloud to octree.
-	// octree.addPointsFromInputCloud ();
-
-//  addHypothesisNode();
+  //  addHypothesisNode();
 
   LOG(LDEBUG) << "Creating iterators";
 
-	// Use depth-first iterator
+  // Use depth-first iterator
   Processors::Network::Octree::DepthFirstIterator dfIt = octree.depthBegin();
   const Processors::Network::Octree::DepthFirstIterator dfItEnd = octree.depthEnd();
 
-  //OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt = octree.depth_begin();
-	//const OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator dfIt_end = octree.depth_end();
-
   LOG(LDEBUG) << "Creating nodes";
 
-	// Root node
+  // Root node
   Processors::Network::OctreeNode node = *dfIt;
-  Processors::Network::OctreeBranchNode* parent;
-	// pcl::octree::OctreeNode* node = dfIt.getCurrentOctreeNode();
-  // OctreeBranchNode<OctreeContainerEmptyWithId>* parent;
-
-  bool reachedLeafNode = false;
 
   //TODO: FIXME: use addHypothesisNode() method for root node
 
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
     Processors::Network::OctreeBranchNode root(node);
-    parent = &root;
     createBranchNode(root);
     addParentsToQueue(root);
     ++dfIt;
     ++branchNodeCount;
   }
-
-
-//	if(node->getNodeType() == BRANCH_NODE) {
-//		OctreeBranchNode<OctreeContainerEmptyWithId>* rootNode = static_cast<OctreeBranchNode<OctreeContainerEmptyWithId>* > (node);
-//    createBranchNode(rootNode);
-//    parent = rootNode;
-//    addParentsToQueue(rootNode);
-//    ++dfIt;
-//    ++branchNodeCount;
-//	}
 
   for (;dfIt != dfItEnd; ++dfIt) {
     LOG(LDEBUG) << "========== Another node in depth search ==========";
@@ -178,21 +146,13 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       LOG(LDEBUG) << "Entering octree leaf node.";
       Processors::Network::OctreeLeafNode leafNode(node);
       createLeafNode(leafNode);
-      parent = &parentQueue.top();
+      Processors::Network::OctreeBranchNode parent(parentQueue.top());
+      connectLeafNode(leafNode, parent);
       parentQueue.pop();
-      connectLeafNode(leafNode, *parent);
       createLeafNodeChildren(leafNode);
-      reachedLeafNode = true;
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
-//      if(reachedLeafNode) {
-//        parent = &parentQueue.top();
-//        LOG(LDEBUG) << "Leaf node was reached in previous iteration. ";
-//        LOG(LDEBUG) << "Changing parent to: V_" << parent->getId();
-//        parentQueue.pop();
-//        reachedLeafNode = false;
-//      }
       Processors::Network::OctreeBranchNode branchNode(node);
       if(branchNode.hasOnlyOneChild()) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
@@ -201,19 +161,15 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createBranchNode(branchNode);
-        parent = &parentQueue.top();
+        Processors::Network::OctreeBranchNode parent(parentQueue.top());
+        connectBranchNode(branchNode, parent);
         parentQueue.pop();
-        connectBranchNode(branchNode, *parent);
         addParentsToQueue(branchNode);
-        //parent = &branchNode;
         ++branchNodeCount;
       }
     }
   }
   network.setCPTofAllVoxelNodes(numberOfVoxels);
-
-	//	Delete octree data structure (pushes allocated nodes to memory pool!).
-//	octree.deleteTree ();
 
   exportNetwork();
 }
@@ -252,33 +208,24 @@ void CreateNetworkWithSpacialDependencies::connectLeafNode(OctreeLeafNode leafNo
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode leafNode)
 {
-	LOG(LTRACE) << "----- Creating leaf node children -----";
-
-	//int parentId = leafNode->getContainer().getNodeId();
-	//int childrenCounter = leafNode->getContainer().getSize();
+  LOG(LTRACE) << "----- Creating leaf node children -----";
 
   int parentId = leafNode.getId();
-	int childrenCounter = leafNode.getNumberOfChildren();
+  string parentName = network.createVoxelName(parentId);
+  int childrenCounter = leafNode.getNumberOfChildren();
 
-
-	if (childrenCounter > maxLeafContainerSize) {
-	  maxLeafContainerSize = childrenCounter;
+  if (childrenCounter > maxLeafContainerSize) {
+    maxLeafContainerSize = childrenCounter;
   }
 
-	// Iterate through container elements, i.e. cloud points.
-//	std::vector<int> point_indices;
-//	leafNode->getContainer().getPointIndices(point_indices);
+  // Iterate through container elements, i.e. cloud points.
+  std::vector<int> point_indices = leafNode.getPointIndices();
+  LOG(LTRACE) << "point indices size: " << point_indices.size();
 
-  assert(leafNode.getNodeType() == OCTREE_LEAF_NODE);
-	std::vector<int> point_indices = leafNode.getPointIndices();
-	LOG(LTRACE) << "point indices size: " << point_indices.size();
-
-	string parentName = network.createVoxelName(parentId);
-
-	LOG(LTRACE) << "Add all children:";
+  LOG(LTRACE) << "Add all children:";
 
   //FIXME: Change the way coefficients are calculated
-  for(unsigned int i=0; i<leafNode.getNumberOfChildren(); i++)
+  for(unsigned int i=0; i<childrenCounter; i++)
   {
     LOG(LTRACE) << "Creating child number " << i;
     PointXYZSIFT p = cloud->at(point_indices[i]);
@@ -290,61 +237,11 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
     ++featureNodeCount;
   }//: for points
 
-	LOG(LTRACE) << "voxel ID: " << parentId;
-	LOG(LTRACE) << "voxel name: " << network.createVoxelName(parentId);
-	LOG(LTRACE) << "children count: " <<childrenCounter;
-	leafNodeCount++;
+  LOG(LTRACE) << "voxel ID: " << parentId;
+  LOG(LTRACE) << "voxel name: " << network.createVoxelName(parentId);
+  LOG(LTRACE) << "children count: " <<childrenCounter;
+  leafNodeCount++;
 }
-
-//bool CreateNetworkWithSpacialDependencies::nodeHasOnlyOneChild(OctreeBranchNode branchNode)
-//{
-//  LOG(LTRACE) << "Check whether node has only one child";
-//  int childrenCounter = 0;
-//  for (unsigned child_idx = 0; child_idx < 8; ++child_idx) {
-//    if (branchNode -> hasChild(child_idx))
-//      ++childrenCounter;
-//  }
-//  LOG(LTRACE) << "Number of children: " << childrenCounter;
-//  if (childrenCounter == 1)
-//    return true;
-//  else
-//    return false;
-//}
-
-//bool CreateNetworkWithSpacialDependencies::nextNodeIsAlsoBranchNode(OctreeBranchNode branchNode)
-//{
-//  LOG(LTRACE) << "Check whether node's child is also a branch node";
-//  pcl::octree::OctreeNode* childNode;
-//  unsigned char index;
-//  for (index = 0; index < 8; ++index) {
-//    if (branchNode->hasChild(index))
-//			childNode = branchNode -> getChildPtr(index);
-//  }
-//  if (childNode->getNodeType() == BRANCH_NODE)
-//    return true;
-//  else
-//    return false;
-//}
-
-//int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeBranchNode branchNode)
-//{
-//  LOG(LTRACE) << "Get number of children from branch node";
-//  unsigned char index;
-//  int childrenCounter = 0;
-//  for (index = 0; index < 8; ++index) {
-//    if (branchNode->hasChild(index))
-//			++childrenCounter;
-//  }
-//  LOG(LTRACE) << "number of children: " << childrenCounter;
-//  return childrenCounter;
-//}
-
-//int CreateNetworkWithSpacialDependencies::getNumberOfChildren(OctreeLeafNode leafNode)
-//{
-//  LOG(LTRACE) << "Get number of children from leaf node";
-//  LOG(LDEBUG) << "number of children: " << leafNode->getContainer().getSize();
-//  return leafNode->getContainer().getSize();
-//}
 
 void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode branchNode)
 {

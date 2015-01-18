@@ -122,10 +122,6 @@ private:
   void connectLeafNode(OctreeLeafNode leafNode, OctreeBranchNode branchNode);
   void createLeafNodeChildren(OctreeLeafNode leafNode);
 
-//  bool nodeHasOnlyOneChild(OctreeBranchNode branchNode);
-//  bool nextNodeIsAlsoBranchNode(OctreeBranchNode branchNode);
-//  int getNumberOfChildren(OctreeBranchNode branchNode);
-//  int getNumberOfChildren(OctreeLeafNode leafNode);
   void createBranchNode(OctreeBranchNode branchNode);
   void connectBranchNode(OctreeBranchNode branchNode, OctreeBranchNode parentNode);
 
