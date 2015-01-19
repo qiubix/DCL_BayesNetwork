@@ -111,7 +111,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   cloudQueue.pop();
   //  jointMultiplicityVector = in_jointMultiplicity.read();
 
-  Processors::Network::Octree octree(cloud);
+  Octree octree(cloud);
   octree.init();
 
   //  addHypothesisNode();
@@ -119,18 +119,18 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   LOG(LDEBUG) << "Creating iterators";
 
   // Use depth-first iterator
-  Processors::Network::Octree::DepthFirstIterator dfIt = octree.depthBegin();
-  const Processors::Network::Octree::DepthFirstIterator dfItEnd = octree.depthEnd();
+  Octree::DepthFirstIterator dfIt = octree.depthBegin();
+  const Octree::DepthFirstIterator dfItEnd = octree.depthEnd();
 
   LOG(LDEBUG) << "Creating nodes";
 
   // Root node
-  Processors::Network::OctreeNode node = *dfIt;
+  OctreeNode node = *dfIt;
 
   //TODO: FIXME: use addHypothesisNode() method for root node
 
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
-    Processors::Network::OctreeBranchNode root(node);
+    OctreeBranchNode root(node);
     createBranchNode(root);
     addParentsToQueue(root);
     ++dfIt;
@@ -142,16 +142,16 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
     OctreeNode node = *dfIt;
     if (node.getNodeType() == OCTREE_LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
-      Processors::Network::OctreeLeafNode leafNode(node);
+      OctreeLeafNode leafNode(node);
       createLeafNode(leafNode);
-      Processors::Network::OctreeBranchNode parent(parentQueue.top());
+      OctreeBranchNode parent(parentQueue.top());
       connectNodes(&leafNode, &parent);
       parentQueue.pop();
       createLeafNodeChildren(leafNode);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
-      Processors::Network::OctreeBranchNode branchNode(node);
+      OctreeBranchNode branchNode(node);
       if(branchNode.hasOnlyOneChild()) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
         continue;
@@ -159,7 +159,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createBranchNode(branchNode);
-        Processors::Network::OctreeBranchNode parent(parentQueue.top());
+        OctreeBranchNode parent(parentQueue.top());
         connectNodes(&branchNode, &parent);
         parentQueue.pop();
         addParentsToQueue(branchNode);
