@@ -145,7 +145,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       Processors::Network::OctreeLeafNode leafNode(node);
       createLeafNode(leafNode);
       Processors::Network::OctreeBranchNode parent(parentQueue.top());
-      connectNodes(leafNode, parent);
+      connectNodes(&leafNode, &parent);
       parentQueue.pop();
       createLeafNodeChildren(leafNode);
     }
@@ -160,7 +160,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createBranchNode(branchNode);
         Processors::Network::OctreeBranchNode parent(parentQueue.top());
-        connectNodes(branchNode, parent);
+        connectNodes(&branchNode, &parent);
         parentQueue.pop();
         addParentsToQueue(branchNode);
         ++branchNodeCount;
@@ -242,11 +242,11 @@ void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode bra
   ++nextId;
 }
 
-void CreateNetworkWithSpacialDependencies::connectNodes(OctreeNode child, OctreeNode parent)
+void CreateNetworkWithSpacialDependencies::connectNodes(OctreeNode* child, OctreeNode* parent)
 {
-  int childId = child.getId();
+  int childId = child->getId();
   string bayesParentNodeName = network.createVoxelName(childId);
-  int parentId = parent.getId();
+  int parentId = parent->getId();
   string bayesChildNodeName = network.createVoxelName(parentId);
   network.addArc(bayesParentNodeName, bayesChildNodeName);
 }

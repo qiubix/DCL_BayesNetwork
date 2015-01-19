@@ -120,8 +120,8 @@ private:
   void createLeafNodeChildren(OctreeLeafNode leafNode);
 
   void createBranchNode(OctreeBranchNode branchNode);
-  
-  void connectNodes(OctreeNode child, OctreeNode parent);
+
+  void connectNodes(OctreeNode* child, OctreeNode* parent);
 
   void exportNetwork();
 
