@@ -121,7 +121,7 @@ private:
 
   void createBranchNode(OctreeBranchNode branchNode);
 
-  void connectNodes(OctreeNode* child, OctreeNode* parent);
+  void connectNodeToNetwork(OctreeNode* child);
 
   void exportNetwork();
 
