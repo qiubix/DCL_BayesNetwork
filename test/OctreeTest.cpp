@@ -70,3 +70,13 @@ TEST_F(OctreeTest, shouldInitializeIterator) {
   ASSERT_EQ(1, branchNode.getId());
 }
 
+//TODO: implement
+TEST_F(OctreeTest, shouldGetToOctreeLeafNode) {
+  /*
+   * initialize octree with cloud
+   * initialize iterator
+   * get to the leaf node
+   * get it's id
+   */
+}
+
