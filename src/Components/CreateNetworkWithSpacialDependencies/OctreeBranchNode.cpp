@@ -12,9 +12,6 @@ OctreeBranchNode::OctreeBranchNode(OctreeNode octreeNode) : OctreeNode(octreeNod
   branchNode = static_cast<pcl::octree::OctreeBranchNode<OctreeContainerEmptyWithId>* >(this->node);
 }
 
-//OctreeBranchNode::OctreeBranchNode(const OctreeBranchNode& copy) {
-//}
-
 int OctreeBranchNode::getId() {
   return branchNode->getContainer().getNodeId();
 }
