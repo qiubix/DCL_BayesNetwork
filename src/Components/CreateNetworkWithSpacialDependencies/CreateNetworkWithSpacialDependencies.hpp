@@ -125,7 +125,7 @@ private:
 
   void exportNetwork();
 
-  void addHypothesisNode(int modelId = 0);
+  void addHypothesisNode(OctreeBranchNode root, int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();

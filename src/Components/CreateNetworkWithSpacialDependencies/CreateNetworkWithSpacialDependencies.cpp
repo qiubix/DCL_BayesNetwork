@@ -114,8 +114,6 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   Octree octree(cloud);
   octree.init();
 
-  //  addHypothesisNode();
-
   LOG(LDEBUG) << "Creating iterators";
 
   // Use depth-first iterator
@@ -127,14 +125,14 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   // Root node
   OctreeNode node = *dfIt;
 
-  //TODO: FIXME: use addHypothesisNode() method for root node
-
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
     OctreeBranchNode root(node);
-    createBranchNode(root);
-    addParentsToQueue(root);
+    addHypothesisNode(root);
     ++dfIt;
-    ++branchNodeCount;
+  }
+  else {
+    LOG(LDEBUG) << "Error creating hypothesis node!";
+    break;
   }
 
   for (;dfIt != dfItEnd; ++dfIt) {
@@ -266,20 +264,17 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	//out_network.write(network.getNetwork());
 }
 
-//TODO: use this method
-void CreateNetworkWithSpacialDependencies::addHypothesisNode(int modelId)
+void CreateNetworkWithSpacialDependencies::addHypothesisNode(OctreeBranchNode root, int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
-  stringstream name;
-  name << "H_" << modelId;
-  string hypothesisName = name.str();
-
   /*
    * FIXME: hardcoded modelId! Works only for one model.
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  network.addVoxelNode(modelId);
+  createBranchNode(root);
+  addParentsToQueue(root);
+  ++branchNodeCount;
 }
 
 string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
