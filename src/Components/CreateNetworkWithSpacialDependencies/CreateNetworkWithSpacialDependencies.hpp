@@ -116,10 +116,8 @@ private:
   void buildNetwork();
   void addParentsToQueue(OctreeBranchNode branchNode);
 
-  void createLeafNode(OctreeLeafNode leafNode);
+  void createNode(OctreeNode* node);
   void createLeafNodeChildren(OctreeLeafNode leafNode);
-
-  void createBranchNode(OctreeBranchNode branchNode);
 
   void connectNodeToNetwork(OctreeNode* child);
 

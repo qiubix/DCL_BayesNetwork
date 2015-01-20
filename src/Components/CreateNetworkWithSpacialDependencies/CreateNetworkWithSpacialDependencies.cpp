@@ -136,12 +136,12 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   }
 
   for (;dfIt != dfItEnd; ++dfIt) {
-    LOG(LDEBUG) << "========== Another node in depth search ==========";
+    LOG(LDEBUG) << "========= Another node in depth search =========";
     OctreeNode node = *dfIt;
     if (node.getNodeType() == OCTREE_LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
-      createLeafNode(leafNode);
+      createNode(&leafNode);
       connectNodeToNetwork(&leafNode);
       createLeafNodeChildren(leafNode);
     }
@@ -154,7 +154,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
       }
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
-        createBranchNode(branchNode);
+        createNode(&branchNode);
         connectNodeToNetwork(&branchNode);
         addParentsToQueue(branchNode);
         ++branchNodeCount;
@@ -166,6 +166,15 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   exportNetwork();
 }
 
+void CreateNetworkWithSpacialDependencies::createNode(OctreeNode* node)
+{
+  LOG(LDEBUG) << "Creating node: " << nextId;
+  node->setId(nextId);
+  network.addVoxelNode(nextId);
+  ++numberOfVoxels;
+  ++nextId;
+}
+
 void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode branchNode)
 {
   LOG(LDEBUG) << "Adding parents to queue";
@@ -174,19 +183,9 @@ void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode br
     for (int i=0; i<numberOfChildren; i++) {
       parentQueue.push(branchNode);
     }
-    LOG(LDEBUG) << "Current node has " << numberOfChildren << " children, it appears in parent's queue " << numberOfChildren << " times";
+    LOG(LDEBUG) << "Current node's children quantinty: " << numberOfChildren;
     LOG(LTRACE) << "Parent queue size: " << parentQueue.size();
   }
-}
-
-void CreateNetworkWithSpacialDependencies::createLeafNode(OctreeLeafNode leafNode)
-{
-  //FIXME: Check for correctness and duplication. Is this method even necessary?
-  LOG(LDEBUG) << "Creating leaf node: " << nextId;
-  leafNode.setId(nextId);
-  network.addVoxelNode(nextId);
-  ++numberOfVoxels;
-  ++nextId;
 }
 
 void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode leafNode)
@@ -226,16 +225,6 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
   leafNodeCount++;
 }
 
-void CreateNetworkWithSpacialDependencies::createBranchNode(OctreeBranchNode branchNode)
-{
-  //FIXME: duplication with createLeafNode method
-  LOG(LDEBUG) << "Creating branch node: " << nextId;
-  branchNode.setId(nextId);
-  network.addVoxelNode(nextId);
-  ++numberOfVoxels;
-  ++nextId;
-}
-
 void CreateNetworkWithSpacialDependencies::connectNodeToNetwork(OctreeNode* child)
 {
   int childId = child->getId();
@@ -272,14 +261,14 @@ void CreateNetworkWithSpacialDependencies::addHypothesisNode(OctreeBranchNode ro
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  createBranchNode(root);
+  createNode(&root);
   addParentsToQueue(root);
   ++branchNodeCount;
 }
 
 string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
 {
-    return features[nodeHandle];
+  return features[nodeHandle];
 }
 
 /*
@@ -308,20 +297,20 @@ int CreateNetworkWithSpacialDependencies::sumMultiplicityInsideVoxel(pcl::octree
 
 void CreateNetworkWithSpacialDependencies::logPoint(PointXYZSIFT p, int index)
 {
-		LOG(LTRACE) << "Point index = " << index;
-		LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
-		LOG(LTRACE) << "multiplicity: " << p.multiplicity;
-		LOG(LTRACE) << "pointId " << p.pointId;
+  LOG(LTRACE) << "Point index = " << index;
+  LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
+  LOG(LTRACE) << "multiplicity: " << p.multiplicity;
+  LOG(LTRACE) << "pointId " << p.pointId;
 }
 
 void CreateNetworkWithSpacialDependencies::mapFeaturesNames()
 {
-    for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
-        std::stringstream name;
-        name << "F" << i;
-        string featureName(name.str());
-        features.insert(std::make_pair<int,string>(i,featureName));
-    }
+  for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
+    std::stringstream name;
+    name << "F" << i;
+    string featureName(name.str());
+    features.insert(std::make_pair<int,string>(i,featureName));
+  }
 }
 
 }//: namespace Network
