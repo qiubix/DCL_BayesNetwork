@@ -99,7 +99,7 @@ bool CreateNetworkWithSpacialDependencies::onStart()
 }
 
 void CreateNetworkWithSpacialDependencies::buildNetwork() {
-  LOG(LDEBUG) << "CreateNetworkWithSpacialDependencies::buildNetwork";
+  LOG(LDEBUG) << " #################### Building network ################### ";
 
   if(network.getNumberOfNodes() != 0) {
     return;
@@ -114,25 +114,25 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   Octree octree(cloud);
   octree.init();
 
-  LOG(LDEBUG) << "Creating iterators";
+  LOG(LTRACE) << "Creating iterators...";
 
   // Use depth-first iterator
   Octree::DepthFirstIterator dfIt = octree.depthBegin();
   const Octree::DepthFirstIterator dfItEnd = octree.depthEnd();
 
-  LOG(LDEBUG) << "Creating nodes";
+  LOG(LTRACE) << "Creating nodes:";
 
-  // Root node
   OctreeNode node = *dfIt;
 
+  // Root node
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
     OctreeBranchNode root(node);
     addHypothesisNode(root);
     ++dfIt;
   }
   else {
-    LOG(LDEBUG) << "Error creating hypothesis node!";
-    break;
+    LOG(LDEBUG) << "Error creating hypothesis node. First node is not a branch node!";
+    return;
   }
 
   for (;dfIt != dfItEnd; ++dfIt) {
