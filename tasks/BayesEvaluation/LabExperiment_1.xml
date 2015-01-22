@@ -87,8 +87,8 @@
 <!--				<Source name="PCDReader.out_cloud_xyzsift">
 			<sink>CreateNetwork.in_cloud_xyzsift</sink>
 		</Source>-->
-		<Source name="CreateNetwork.out_network">
-			<sink>SOMEvaluation.in_network</sink>
+		<Source name="CreateNetwork.out_networks">
+			<sink>SOMEvaluation.in_networks</sink>
 		</Source>
 
 
