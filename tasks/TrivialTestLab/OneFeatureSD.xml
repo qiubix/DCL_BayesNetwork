@@ -55,8 +55,8 @@
 		<Source name="Mapper.out_jointMultiplicity">
 			<sink>CreateNetwork.in_jointMultiplicity</sink>
 		</Source>
-		<Source name="CreateNetwork.out_network">
-			<sink>SOMEvaluation.in_network</sink>
+		<Source name="CreateNetwork.out_networks">
+			<sink>SOMEvaluation.in_networks</sink>
 		</Source>
 	</DataStreams>
 </Task>
