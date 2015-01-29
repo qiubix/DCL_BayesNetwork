@@ -1,0 +1,7 @@
+{
+    "name": "object_2",
+    "type": "SIFTObjectModel",
+    "mean_viewpoint_features_number": "413",
+    "cloud_xyzrgb": "\/home\/qiubix\/Objects\/SimpleObjects\/\/object_2_xyzrgb.pcd",
+    "cloud_xyzsift": "\/home\/qiubix\/Objects\/SimpleObjects\/\/object_2_xyzsift.pcd"
+}
