@@ -25,7 +25,9 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-#include <Types/PointXYZSIFT.hpp>
+//TODO: FIXME: include types from PCL
+//#include <Types/PointXYZSIFT>
+#include "../../Types/PointXYZSIFT.hpp"
 
 
 namespace Processors {

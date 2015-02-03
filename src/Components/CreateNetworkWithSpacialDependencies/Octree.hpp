@@ -6,7 +6,9 @@
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
-#include <Types/PointXYZSIFT.hpp>
+//TODO: FIXME: include types from PCL
+//#include <Types/PointXYZSIFT>
+#include "../../Types/PointXYZSIFT.hpp"
 
 #include "OctreeContainers.hpp"
 
