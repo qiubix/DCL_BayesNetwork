@@ -16,5 +16,7 @@ ADD_COMPONENT(SIFTFeatureMatcher)
 ADD_COMPONENT(SOMEvaluation)
 
 ADD_COMPONENT(SOMSimpleEvaluation)
+ADD_COMPONENT(SOMJSONReader)
+ADD_COMPONENT(PCDReader)
 
 add_subdirectory(tests)

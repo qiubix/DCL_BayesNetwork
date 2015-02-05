@@ -17,8 +17,8 @@ namespace Processors {
 namespace PCDReader {
 
 PCDReader::PCDReader(const std::string & name) :
-		Base::Component(name), 
-		filename("filename", std::string("")) 
+		Base::Component(name),
+		filename("filename", std::string(""))
 		{
 		registerProperty(filename);
 
@@ -40,7 +40,7 @@ void PCDReader::prepareInterface() {
 }
 
 bool PCDReader::onInit() {
-
+ Read();
 	return true;
 }
 
@@ -63,20 +63,20 @@ void PCDReader::Read() {
 		cout <<"Błąd"<<endl;
 	  }
 	  out_cloud_xyz.write(cloud_xyz);
-	  
+
 	  pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzrgb (new pcl::PointCloud<pcl::PointXYZRGB>);
 	  if (pcl::io::loadPCDFile<pcl::PointXYZRGB> (filename, *cloud_xyzrgb) == -1) //* load the file
 	  {
 		cout <<"Błąd"<<endl;
 	  }
 	  out_cloud_xyzrgb.write(cloud_xyzrgb);
-	  
+
 	  pcl::PointCloud<PointXYZSIFT>::Ptr cloud_xyzsift (new pcl::PointCloud<PointXYZSIFT>);
 	  if (pcl::io::loadPCDFile<PointXYZSIFT> (filename, *cloud_xyzsift) == -1) //* load the file
 	  {
 		cout <<"Błąd"<<endl;
 	  }
-	  out_cloud_xyzsift.write(cloud_xyzsift);	
+	  out_cloud_xyzsift.write(cloud_xyzsift);
 }
 
 
