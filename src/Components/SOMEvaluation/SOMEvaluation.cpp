@@ -99,10 +99,11 @@ void SOMEvaluation::evaluate()
   Common::Timer timer;
   timer.restart();
 
-  theNet.ClearAllEvidence();
+  theNet.UpdateBeliefs();
+  //theNet.ClearAllEvidence();
   deactivateFeatures();
   activateMatchedFeatureNodes();
-  theNet.UpdateBeliefs();
+  //theNet.UpdateBeliefs();
 
   displayHypothesisProbability();
 
@@ -121,6 +122,7 @@ void SOMEvaluation::deactivateFeatures()
     int node = theNet.FindNode(nodeName.c_str());
     if(node != DSL_OUT_OF_RANGE) {
       theNet.GetNode(node)->Value()->SetEvidence(1);
+      theNet.UpdateBeliefs();
     }
     else {
       break;
@@ -137,6 +139,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
     LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
     if(node != DSL_OUT_OF_RANGE) {
       theNet.GetNode(node)->Value()->SetEvidence(0);
+      theNet.UpdateBeliefs();
     }
   }
   LOG(LDEBUG) << "Finished activating matched features";
