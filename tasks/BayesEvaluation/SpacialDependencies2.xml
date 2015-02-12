@@ -16,7 +16,7 @@
 	<Subtasks>
 		<Subtask name="Main">
 			<Executor name="Processing"  period="1">
-				<Component name="SOMJSONReader" type="PCL:SOMJSONReader" priority="1" bump="4">
+				<Component name="SOMJSONReader" type="BayesNetwork:SOMJSONReader" priority="1" bump="4">
 					<param name="filenames">/home/qiubix/Objects/cereal_box_1_co5_v3.json</param>
 				</Component>
 				<Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
@@ -32,7 +32,7 @@
 				</Component>
 				<Component name="SIFT" type="CvBasic:CvSIFT" priority="6" bump="0">
 				</Component>
-				<Component name="FeatureCloudConverter" type="PCL:FeatureCloudConverter" priority="8" bump="0">
+				<Component name="FeatureCloudConverter" type="SIFTObjectModel:FeatureCloudConverter" priority="8" bump="0">
 				</Component>
 				
 				<Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
