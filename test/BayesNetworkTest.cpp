@@ -3,8 +3,8 @@ using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
-#include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetwork.hpp"
-#include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetworkNode.hpp"
+#include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
+#include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
 
 using namespace Processors::Network;
 

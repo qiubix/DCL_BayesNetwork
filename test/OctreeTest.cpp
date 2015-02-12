@@ -7,9 +7,9 @@ using ::testing::Test;
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 
-#include "../src/Components/CreateNetworkWithSpacialDependencies/Octree.hpp"
-#include "../src/Components/CreateNetworkWithSpacialDependencies/OctreeNode.hpp"
-#include "../src/Components/CreateNetworkWithSpacialDependencies/OctreeBranchNode.hpp"
+#include "../src/Components/NetworkBuilder/Octree.hpp"
+#include "../src/Components/NetworkBuilder/OctreeNode.hpp"
+#include "../src/Components/NetworkBuilder/OctreeBranchNode.hpp"
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>

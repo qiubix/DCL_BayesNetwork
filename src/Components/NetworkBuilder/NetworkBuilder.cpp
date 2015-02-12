@@ -1,5 +1,5 @@
 /*!
- * \file CreateNetworkWithSpacialDependencies.cpp
+ * \file NetworkBuilder.cpp
  * \brief
  */
 
@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "CreateNetworkWithSpacialDependencies.hpp"
+#include "NetworkBuilder.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
@@ -22,9 +22,9 @@
 namespace Processors {
 namespace Network {
 
-CreateNetworkWithSpacialDependencies::CreateNetworkWithSpacialDependencies(const std::string & name) : Base::Component(name)
+NetworkBuilder::NetworkBuilder(const std::string & name) : Base::Component(name)
 {
-  LOG(LTRACE)<<"Hello CreateNetworkWithSpacialDependencies\n";
+  LOG(LTRACE)<<"Hello NetworkBuilder\n";
   branchNodeCount = 0;
   leafNodeCount = 0;
   maxLeafContainerSize = 0;
@@ -33,22 +33,22 @@ CreateNetworkWithSpacialDependencies::CreateNetworkWithSpacialDependencies(const
   featureNodeCount = 0;
 }
 
-CreateNetworkWithSpacialDependencies::~CreateNetworkWithSpacialDependencies()
+NetworkBuilder::~NetworkBuilder()
 {
-    LOG(LTRACE)<<"Good bye CreateNetworkWithSpacialDependencies\n";
+  LOG(LTRACE)<<"Good bye NetworkBuilder\n";
 }
 
-void CreateNetworkWithSpacialDependencies::prepareInterface()
+void NetworkBuilder::prepareInterface()
 {
-	LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::prepareInterface\n";
+	LOG(LTRACE) << "NetworkBuilder::prepareInterface\n";
 
 	// Register data streams.
 	//	registerStream("in_cloud", &in_cloud_xyz);
 	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
 	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
 	// Register handlers
-	h_onNewModel.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onNewModel, this));
-	h_onJointMultiplicity.setup(boost::bind(&CreateNetworkWithSpacialDependencies::onJointMultiplicity, this));
+	h_onNewModel.setup(boost::bind(&NetworkBuilder::onNewModel, this));
+	h_onJointMultiplicity.setup(boost::bind(&NetworkBuilder::onJointMultiplicity, this));
 	registerHandler("onNewModel", &h_onNewModel);
 	registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
 	addDependency("onNewModel", &in_cloud_xyzsift);
@@ -58,32 +58,32 @@ void CreateNetworkWithSpacialDependencies::prepareInterface()
 	registerStream("out_networks", &out_networks);
 }
 
-bool CreateNetworkWithSpacialDependencies::onInit()
+bool NetworkBuilder::onInit()
 {
-    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::initialize\n";
-    return true;
+  LOG(LTRACE) << "NetworkBuilder::initialize\n";
+  return true;
 }
 
-bool CreateNetworkWithSpacialDependencies::onFinish()
+bool NetworkBuilder::onFinish()
 {
-    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::finish\n";
-    return true;
+  LOG(LTRACE) << "NetworkBuilder::finish\n";
+  return true;
 }
 
-bool CreateNetworkWithSpacialDependencies::onStop()
+bool NetworkBuilder::onStop()
 {
-    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::onStop\n";
-    return true;
+  LOG(LTRACE) << "NetworkBuilder::onStop\n";
+  return true;
 }
 
-void CreateNetworkWithSpacialDependencies::onNewModel()
+void NetworkBuilder::onNewModel()
 {
   LOG(LTRACE) << "On new model";
   pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
   cloudQueue.push(newCloud);
 }
 
-void CreateNetworkWithSpacialDependencies::onJointMultiplicity()
+void NetworkBuilder::onJointMultiplicity()
 {
   LOG(LTRACE) << "On joint multiplicity";
   jointMultiplicityVector = in_jointMultiplicity.read();
@@ -92,13 +92,13 @@ void CreateNetworkWithSpacialDependencies::onJointMultiplicity()
   }
 }
 
-bool CreateNetworkWithSpacialDependencies::onStart()
+bool NetworkBuilder::onStart()
 {
-    LOG(LTRACE) << "CreateNetworkWithSpacialDependencies::onStart\n";
-    return true;
+  LOG(LTRACE) << "NetworkBuilder::onStart\n";
+  return true;
 }
 
-void CreateNetworkWithSpacialDependencies::buildNetwork() {
+void NetworkBuilder::buildNetwork() {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if(network.getNumberOfNodes() != 0) {
@@ -166,7 +166,7 @@ void CreateNetworkWithSpacialDependencies::buildNetwork() {
   exportNetwork();
 }
 
-void CreateNetworkWithSpacialDependencies::createNode(OctreeNode* node)
+void NetworkBuilder::createNode(OctreeNode* node)
 {
   LOG(LDEBUG) << "Creating node: " << nextId;
   node->setId(nextId);
@@ -175,7 +175,7 @@ void CreateNetworkWithSpacialDependencies::createNode(OctreeNode* node)
   ++nextId;
 }
 
-void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode branchNode)
+void NetworkBuilder::addParentsToQueue(OctreeBranchNode branchNode)
 {
   LOG(LDEBUG) << "Adding parents to queue";
   if(!branchNode.hasOnlyOneChild()) {
@@ -188,7 +188,7 @@ void CreateNetworkWithSpacialDependencies::addParentsToQueue(OctreeBranchNode br
   }
 }
 
-void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode leafNode)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
@@ -225,7 +225,7 @@ void CreateNetworkWithSpacialDependencies::createLeafNodeChildren(OctreeLeafNode
   leafNodeCount++;
 }
 
-void CreateNetworkWithSpacialDependencies::connectNodeToNetwork(OctreeNode* child)
+void NetworkBuilder::connectNodeToNetwork(OctreeNode* child)
 {
   int childId = child->getId();
   string bayesParentNodeName = network.createVoxelName(childId);
@@ -236,7 +236,7 @@ void CreateNetworkWithSpacialDependencies::connectNodeToNetwork(OctreeNode* chil
   network.addArc(bayesParentNodeName, bayesChildNodeName);
 }
 
-void CreateNetworkWithSpacialDependencies::exportNetwork()
+void NetworkBuilder::exportNetwork()
 {
 	LOG(LWARNING) << "ELO! Branch node quantity: " << branchNodeCount;
 	LOG(LWARNING) << "ELO! Leaf node quantity: " << leafNodeCount;
@@ -253,7 +253,7 @@ void CreateNetworkWithSpacialDependencies::exportNetwork()
 	//out_network.write(network.getNetwork());
 }
 
-void CreateNetworkWithSpacialDependencies::addHypothesisNode(OctreeBranchNode root, int modelId)
+void NetworkBuilder::addHypothesisNode(OctreeBranchNode root, int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
   /*
@@ -266,13 +266,13 @@ void CreateNetworkWithSpacialDependencies::addHypothesisNode(OctreeBranchNode ro
   ++branchNodeCount;
 }
 
-string CreateNetworkWithSpacialDependencies::getNodeName(int nodeHandle)
+string NetworkBuilder::getNodeName(int nodeHandle)
 {
   return features[nodeHandle];
 }
 
 /*
-void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
+void NetworkBuilder::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
 	int containter_size = leafNode->getContainer().getSize();
 	if(containter_size >8) {
@@ -282,7 +282,7 @@ void CreateNetworkWithSpacialDependencies::logLeafNodeContainerSize(OctreeLeafNo
     maxLeafContainerSize = containter_size;
 }
 
-int CreateNetworkWithSpacialDependencies::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
+int NetworkBuilder::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
   int summedFeaturesMultiplicity = 0;
 	std::vector<int> point_indices;
@@ -295,7 +295,7 @@ int CreateNetworkWithSpacialDependencies::sumMultiplicityInsideVoxel(pcl::octree
 }
 */
 
-void CreateNetworkWithSpacialDependencies::logPoint(PointXYZSIFT p, int index)
+void NetworkBuilder::logPoint(PointXYZSIFT p, int index)
 {
   LOG(LTRACE) << "Point index = " << index;
   LOG(LTRACE) << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z;
@@ -303,7 +303,7 @@ void CreateNetworkWithSpacialDependencies::logPoint(PointXYZSIFT p, int index)
   LOG(LTRACE) << "pointId " << p.pointId;
 }
 
-void CreateNetworkWithSpacialDependencies::mapFeaturesNames()
+void NetworkBuilder::mapFeaturesNames()
 {
   for (unsigned i=0; i<jointMultiplicityVector.size(); ++i) {
     std::stringstream name;
