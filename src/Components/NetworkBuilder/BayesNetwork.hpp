@@ -41,6 +41,7 @@ public:
   DSL_network getNetwork();
 
   //TODO: make private, after it becomes visible for tests
+  //TODO: maybe extract new class: i.e. CPTManager
   void fillCPT(std::string name, std::vector<double> probabilities);
 private:
   DSL_network network;
