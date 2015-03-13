@@ -33,16 +33,16 @@ class BayesNetworkTest : public Test {
 
   protected:
     int NODE_ID;
-    char* VOXEL_NODE_NAME;
-    char* FEATURE_NODE_NAME;
+    const char* VOXEL_NODE_NAME;
+    const char* FEATURE_NODE_NAME;
     int FIRST_NODE_ID;
     int SECOND_NODE_ID;
-    char* FIRST_NODE_NAME;
-    char* SECOND_NODE_NAME;
+    const char* FIRST_NODE_NAME;
+    const char* SECOND_NODE_NAME;
     int PARENT_NODE_ID;
-    char* PARENT_NODE_NAME;
+    const char* PARENT_NODE_NAME;
     int CHILD_NODE_ID;
-    char* CHILD_NODE_NAME;
+    const char* CHILD_NODE_NAME;
     std::string FIRST_ROOT_NODE_NAME;
     std::string SECOND_ROOT_NODE_NAME;
     std::string THIRD_ROOT_NODE_NAME;
