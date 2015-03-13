@@ -15,11 +15,12 @@ then
   tmux send-keys -t thesis-dev:3 'cd ~/DCL/BayesNetwork/build' C-m
   tmux new-window -n browse -t thesis-dev
   tmux send-keys -t thesis-dev:4 'cd ~/DCL/' C-m
-  tmux new-window -n browse -t thesis-dev
-  tmux send-keys -t thesis-dev:5 'cd ~/DCL/BayesNetwork/build' C-m
-  tmux split-window -v
-  tmux send-keys -t thesis-dev:5:0 'make test' C-m
-  tmux send-keys -t thesis-dev:5:1 'ls | grep Test$' C-m
+  tmux new-window -n test -t thesis-dev
+  tmux split-window -h
+  tmux send-keys -t thesis-dev:5.1 'cd ~/DCL/BayesNetwork/build' C-m
+  tmux send-keys -t thesis-dev:5.2 'cd ~/DCL/BayesNetwork/build/test' C-m
+  tmux send-keys -t thesis-dev:5.1 'make test' C-m
+  tmux send-keys -t thesis-dev:5.2 'ls | grep Test$' C-m
   echo "Select starting window"
   tmux select-window -t thesis-dev:1
 fi
