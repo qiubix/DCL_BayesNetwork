@@ -61,6 +61,12 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
   EXPECT_EQ(0, numberOfNodes);
 }
 
+TEST_F(BayesNetworkTest, shouldCheckIfNetworkHasNode)
+{
+  BayesNetwork newNetwork;
+  ASSERT_FALSE(newNetwork.hasNode(VOXEL_NODE_NAME));
+}
+
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 {
   /*
