@@ -51,8 +51,7 @@ class BayesNetworkTest : public Test {
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
 {
   BayesNetwork network;
-  DSL_network theNet = network.getNetwork();
-  EXPECT_EQ(0, theNet.GetNumberOfNodes());
+  EXPECT_TRUE(network.isEmpty());
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
