@@ -19,6 +19,12 @@ bool BayesNetwork::isEmpty()
   return network.GetNumberOfNodes() == 0;
 }
 
+bool BayesNetwork::hasNode(const char* nodeName)
+{
+  int nodeId = network.FindNode(nodeName);
+  return nodeId != DSL_OUT_OF_RANGE;
+}
+
 void BayesNetwork::addVoxelNode(int id)
 {
   std::string voxelName = createVoxelName(id);

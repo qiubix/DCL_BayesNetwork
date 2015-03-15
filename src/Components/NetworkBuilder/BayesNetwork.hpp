@@ -18,6 +18,7 @@ public:
   ~BayesNetwork() {}
 
   bool isEmpty();
+  bool hasNode(const char* nodeName);
   //building network
   //TODO: extract BayesNetworkBuilder class
   void addVoxelNode(int id);
