@@ -14,6 +14,11 @@ BayesNetwork::BayesNetwork()
   nextRootNodePosition = 0;
 }
 
+bool BayesNetwork::isEmpty()
+{
+  return network.GetNumberOfNodes() == 0;
+}
+
 void BayesNetwork::addVoxelNode(int id)
 {
   std::string voxelName = createVoxelName(id);
