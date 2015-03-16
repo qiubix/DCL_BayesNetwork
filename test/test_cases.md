@@ -1,7 +1,10 @@
 # Test cases
 
 1. BayesNetwork class
-- should initialize empty network
++ should initialize empty network
++ should get number of nodes
++ should check if network has node
+- should get number of children
 - should add one node to empty network
 - should add node to network with only one node
 - should connect two nodes
@@ -9,8 +12,6 @@
 - should add node in the middle of the chain
 - should return child of a node
 - should return next root node
-- should get number of children
-- should get number of nodes
 
 2. CPTManager class
 + should display whole CPT
