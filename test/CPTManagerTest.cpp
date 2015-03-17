@@ -10,18 +10,21 @@ using ::testing::Test;
 using namespace Processors::Network;
 
 class CPTManagerTest : public Test {
-
+public:
+  DSL_node* createNewNode() {
+    DSL_network network;
+    int nodeHandle = network.AddNode(DSL_CPT, "Node1");
+    DSL_node* node = network.GetNode(nodeHandle);
+    DSL_stringArray outcomes;
+    outcomes.Add("true");
+    outcomes.Add("false");
+    node->Definition()->SetNumberOfOutcomes(outcomes);
+  }
 };
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
 {
-  DSL_network network;
-  int nodeHandle = network.AddNode(DSL_CPT, "Node1");
-  DSL_node* node = network.GetNode(nodeHandle);
-  DSL_stringArray outcomes;
-  outcomes.Add("true");
-  outcomes.Add("false");
-  node->Definition()->SetNumberOfOutcomes(outcomes);
+  DSL_node* node = createNewNode();
   CPTManager manager(node);
   ASSERT_TRUE(true);
 }
