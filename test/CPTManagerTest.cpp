@@ -11,20 +11,32 @@ using namespace Processors::Network;
 
 class CPTManagerTest : public Test {
 public:
+  CPTManagerTest() {
+    network = new DSL_network();
+  }
+  ~CPTManagerTest() {}
   DSL_node* createNewNode() {
-    DSL_network network;
-    int nodeHandle = network.AddNode(DSL_CPT, "Node1");
-    DSL_node* node = network.GetNode(nodeHandle);
+    int nodeHandle = network->AddNode(DSL_CPT, "Node1");
+    node = network->GetNode(nodeHandle);
     DSL_stringArray outcomes;
     outcomes.Add("true");
     outcomes.Add("false");
     node->Definition()->SetNumberOfOutcomes(outcomes);
+    return node;
   }
+  std::vector<double> getNodeCPT(DSL_node* node) {
+    DSL_Dmatrix* matrix = node->Definition()->GetMatrix();
+    std::vector<double> probs;
+    return probs;
+  }
+protected:
+  DSL_network* network;
+  DSL_node* node;
 };
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
 {
-  DSL_node* node = createNewNode();
+  ASSERT_EQ(2, node->Definition()->GetSize());
   CPTManager manager(node);
   ASSERT_TRUE(true);
 }
