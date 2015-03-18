@@ -29,6 +29,11 @@ public:
 
   DSL_node* createNodeWithCPT() {
     DSL_node* node = createNodeWithoutCPT();
+    DSL_doubleArray theProbs;
+    theProbs.SetSize(2);
+    theProbs[0] = 0.8;
+    theProbs[1] = 0.2;
+    node->Definition()->SetDefinition(theProbs);
     return node;
   }
 
@@ -45,6 +50,7 @@ protected:
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNode)
 {
   DSL_node* node = createNodeWithCPT();
+  ASSERT_EQ(2, node->Definition()->GetSize());
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
