@@ -17,7 +17,7 @@ public:
   ~CPTManagerTest() {}
   DSL_node* createNewNode() {
     int nodeHandle = network->AddNode(DSL_CPT, "Node1");
-    node = network->GetNode(nodeHandle);
+    DSL_node* node = network->GetNode(nodeHandle);
     DSL_stringArray outcomes;
     outcomes.Add("true");
     outcomes.Add("false");
@@ -31,11 +31,11 @@ public:
   }
 protected:
   DSL_network* network;
-  DSL_node* node;
 };
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
 {
+  DSL_node* node = createNewNode();
   ASSERT_EQ(2, node->Definition()->GetSize());
   CPTManager manager(node);
   ASSERT_TRUE(true);
