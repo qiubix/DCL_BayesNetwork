@@ -37,9 +37,15 @@ public:
     return node;
   }
 
-  std::vector<double> getNodeCPT(DSL_node* node) {
-    DSL_Dmatrix* matrix = node->Definition()->GetMatrix();
+  std::vector<double> displayNodeCPT(DSL_node* node) {
     std::vector<double> probs;
+    DSL_sysCoordinates coordinates(*node->Definition());
+    while(true) {
+      probs.push_back(coordinates.UncheckedValue());
+      int position = coordinates.Next();
+      if(position == DSL_OUT_OF_RANGE)
+        break;
+    }
     return probs;
   }
 
@@ -51,6 +57,10 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNode)
 {
   DSL_node* node = createNodeWithCPT();
   ASSERT_EQ(2, node->Definition()->GetSize());
+  std::vector<double> p;
+  p.push_back(0.8);
+  p.push_back(0.3);
+  ASSERT_EQ(p, displayNodeCPT(node));
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
