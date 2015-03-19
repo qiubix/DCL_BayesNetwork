@@ -11,8 +11,13 @@ CPTManager::CPTManager(DSL_node* node) {
 std::vector<double> CPTManager::displayCPT()
 {
   std::vector<double> probabilities;
-  probabilities.push_back(0.8);
-  probabilities.push_back(0.2);
+  DSL_sysCoordinates coordinates(*node->Definition());
+  while(true) {
+    probabilities.push_back(coordinates.UncheckedValue());
+    int position = coordinates.Next();
+    if(position == DSL_OUT_OF_RANGE)
+      break;
+  }
   return probabilities;
 }
 
