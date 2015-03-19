@@ -27,7 +27,7 @@ public:
     return node;
   }
 
-  DSL_node* createNodeWithCPT() {
+  DSL_node* createNodeWithCPTOfSize2() {
     DSL_node* node = createNodeWithoutCPT();
     DSL_doubleArray theProbs;
     theProbs.SetSize(2);
@@ -53,14 +53,21 @@ protected:
   DSL_network* network;
 };
 
-TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNode)
+TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
 {
-  DSL_node* node = createNodeWithCPT();
+  DSL_node* node = createNodeWithCPTOfSize2();
   ASSERT_EQ(2, node->Definition()->GetSize());
+  CPTManager manager(node);
+
   std::vector<double> p;
   p.push_back(0.8);
-  p.push_back(0.3);
+  p.push_back(0.2);
   ASSERT_EQ(p, displayNodeCPT(node));
+}
+
+TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
+{
+  ASSERT_TRUE(true);
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
