@@ -9,18 +9,23 @@ then
   tmux new-session -s thesis-dev -n vim -d
   tmux send-keys -t thesis-dev 'cd ~/DCL/BayesNetwork/build' C-m
   tmux send-keys -t thesis-dev 'vim' C-m
+
   tmux new-window -n console -t thesis-dev
   tmux send-keys -t thesis-dev:2 'cd ~/DCL/BayesNetwork' C-m
-  tmux new-window -n discode -t thesis-dev
-  tmux send-keys -t thesis-dev:3 'cd ~/DCL/BayesNetwork/build' C-m
-  tmux new-window -n browse -t thesis-dev
-  tmux send-keys -t thesis-dev:4 'cd ~/DCL/' C-m
+
   tmux new-window -n test -t thesis-dev
   tmux split-window -h
-  tmux send-keys -t thesis-dev:5.1 'cd ~/DCL/BayesNetwork/build' C-m
-  tmux send-keys -t thesis-dev:5.2 'cd ~/DCL/BayesNetwork/build/test' C-m
-  tmux send-keys -t thesis-dev:5.1 'make test' C-m
-  tmux send-keys -t thesis-dev:5.2 'ls | grep Test$' C-m
+  tmux send-keys -t thesis-dev:3.1 'cd ~/DCL/BayesNetwork/build' C-m
+  tmux send-keys -t thesis-dev:3.2 'cd ~/DCL/BayesNetwork/build/test' C-m
+  tmux send-keys -t thesis-dev:3.1 'make test' C-m
+  tmux send-keys -t thesis-dev:3.2 'ls | grep Test$' C-m
+
+  tmux new-window -n discode -t thesis-dev
+  tmux send-keys -t thesis-dev:4 'cd ~/DCL/BayesNetwork/build' C-m
+
+  tmux new-window -n browse -t thesis-dev
+  tmux send-keys -t thesis-dev:5 'cd ~/DCL/' C-m
+
   echo "Select starting window"
   tmux select-window -t thesis-dev:1
 fi
