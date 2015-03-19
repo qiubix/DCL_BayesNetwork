@@ -37,6 +37,22 @@ public:
     return node;
   }
 
+  DSL_node* createNodeWithCPTOfSize4() {
+    DSL_node* parentNode = createNodeWithoutCPT();
+    int parentNodeHandle = parentNode->Handle();
+    DSL_node* childNode = createNodeWithoutCPT();
+    int childNodeHandle = childNode->Handle();
+    network->AddArc(parentNodeHandle, childNodeHandle);
+    DSL_doubleArray theProbs;
+    theProbs.SetSize(4);
+    theProbs[0] = 0.5;
+    theProbs[1] = 0.3;
+    theProbs[2] = 0.2;
+    theProbs[3] = 0.1;
+    childNode->Definition()->SetDefinition(theProbs);
+    return childNode;
+  }
+
   std::vector<double> displayNodeCPT(DSL_node* node) {
     std::vector<double> probs;
     DSL_sysCoordinates coordinates(*node->Definition());
