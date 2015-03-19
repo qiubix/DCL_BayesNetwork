@@ -59,10 +59,9 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
   ASSERT_EQ(2, node->Definition()->GetSize());
   CPTManager manager(node);
 
-  std::vector<double> p;
-  p.push_back(0.8);
-  p.push_back(0.2);
-  ASSERT_EQ(p, displayNodeCPT(node));
+  std::vector<double> cpt = manager.displayCPT();
+
+  ASSERT_EQ(displayNodeCPT(node), cpt);
 }
 
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)

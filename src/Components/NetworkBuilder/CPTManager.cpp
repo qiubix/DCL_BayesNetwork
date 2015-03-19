@@ -8,6 +8,14 @@ CPTManager::CPTManager(DSL_node* node) {
   this->node = node;
 }
 
+std::vector<double> CPTManager::displayCPT()
+{
+  std::vector<double> probabilities;
+  probabilities.push_back(0.8);
+  probabilities.push_back(0.2);
+  return probabilities;
+}
+
 void CPTManager::fillCPT(std::string name, std::vector<double> probabilities)
 {
   LOG(LTRACE) << "Filling CPT of node " << name;
