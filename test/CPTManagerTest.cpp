@@ -19,7 +19,8 @@ public:
   ~CPTManagerTest() {}
 
   DSL_node* createNodeWithoutCPT() {
-    int nodeHandle = network->AddNode(DSL_CPT, "Node1");
+    std::string nodeName = "Node" + nextId++;
+    int nodeHandle = network->AddNode(DSL_CPT, nodeName.c_str());
     DSL_node* node = network->GetNode(nodeHandle);
     DSL_stringArray outcomes;
     outcomes.Add("true");
