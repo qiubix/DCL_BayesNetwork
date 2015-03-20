@@ -13,6 +13,7 @@ class CPTManagerTest : public Test {
 public:
   CPTManagerTest() {
     network = new DSL_network();
+    nextId = 0;
   }
 
   ~CPTManagerTest() {}
@@ -45,7 +46,7 @@ public:
     network->AddArc(parentNodeHandle, childNodeHandle);
     DSL_doubleArray theProbs;
     theProbs.SetSize(4);
-    theProbs[0] = 0.5;
+    theProbs[0] = 0.4;
     theProbs[1] = 0.3;
     theProbs[2] = 0.2;
     theProbs[3] = 0.1;
@@ -67,6 +68,7 @@ public:
 
 protected:
   DSL_network* network;
+  int nextId;
 };
 
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
