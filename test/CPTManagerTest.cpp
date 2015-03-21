@@ -99,7 +99,12 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
   DSL_node* node = createNodeWithoutCPT();
   ASSERT_EQ(2, node->Definition()->GetSize());
   CPTManager manager(node);
-  ASSERT_TRUE(true);
+  std::vector<double> probabilities;
+  probabilities.push_back(0.8);
+  probabilities.push_back(0.2);
+
+  manager.fillCPT("Node1", probabilities);
+  ASSERT_EQ(probabilities, displayNodeCPT(node));
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithChildren)
