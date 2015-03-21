@@ -85,7 +85,13 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
 
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
 {
-  ASSERT_TRUE(true);
+  DSL_node* node = createNodeWithCPTOfSize4();
+  ASSERT_EQ(4, node->Definition()->GetSize());
+  CPTManager manager(node);
+
+  std::vector<double> cpt = manager.displayCPT();
+
+  ASSERT_EQ(displayNodeCPT(node), cpt);
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
