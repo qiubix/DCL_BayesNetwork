@@ -103,7 +103,7 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
   ASSERT_EQ(displayNodeCPT(node), cpt);
 }
 
-TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
+TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutParents)
 {
   DSL_node* node = createNodeWithoutCPT();
   ASSERT_EQ(2, node->Definition()->GetSize());
@@ -116,7 +116,17 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutChildren)
   ASSERT_EQ(probabilities, displayNodeCPT(node));
 }
 
-TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithChildren)
+TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
 {
-  ASSERT_TRUE(true);
+  DSL_node* node = createNodeWithoutCPTWithParent();
+  ASSERT_EQ(4, node->Definition()->GetSize());
+  CPTManager manager(node);
+  std::vector<double> probabilities;
+  probabilities.push_back(0.4);
+  probabilities.push_back(0.3);
+  probabilities.push_back(0.2);
+  probabilities.push_back(0.1);
+
+  manager.fillCPT("Node1", probabilities);
+  ASSERT_EQ(probabilities, displayNodeCPT(node));
 }
