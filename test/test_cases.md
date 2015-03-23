@@ -13,7 +13,7 @@
 - should get number of nodes
 
 2. CPTManager class
-- should set CPT of the node
++ should display whole CPT
++ should set CPT of the node
 - should display node probability
-- should display whole CPT
 - should modify only one cell

@@ -18,10 +18,12 @@ public:
   ~BayesNetwork() {}
 
   //building network
+  //TODO: extract BayesNetworkBuilder class
   void addVoxelNode(int id);
   void addFeatureNode(int id);
   std::string createVoxelName(int id);
   std::string createFeatureName(int id);
+  //TODO: rename method to connect nodes
   void addArc(std::string parentName, std::string childName);
 
   //manipulating CPTs
