@@ -3,6 +3,7 @@
 
 #include "BayesNetwork.hpp"
 #include "Logger.hpp"
+#include "CPTManager.hpp"
 
 namespace Processors {
 namespace Network {
@@ -83,7 +84,9 @@ void BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
     probabilities.push_back(1-probability);
   } while(generateNext(s.begin(), s.end()));
 
-  fillCPT(name, probabilities);
+  int nodeId = network.FindNode(name.c_str());
+  CPTManager cptManager(network.GetNode(nodeId));
+  cptManager.fillCPT(name, probabilities);
 }
 
 std::string BayesNetwork::getNodeName(int nodeHandle)

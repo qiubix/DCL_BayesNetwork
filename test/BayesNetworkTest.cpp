@@ -10,21 +10,42 @@ using namespace Processors::Network;
 
 class BayesNetworkTest : public Test {
   //  BayesNetwork mockNetwork;
+
+  public:
+    BayesNetworkTest() {
+      NODE_ID = 0;
+      VOXEL_NODE_NAME = "V_0";
+      FEATURE_NODE_NAME = "F_0";
+      FIRST_NODE_ID = 0;
+      SECOND_NODE_ID = 1;
+      FIRST_NODE_NAME = "V_0";
+      SECOND_NODE_NAME = "V_1";
+      PARENT_NODE_ID = 0;
+      PARENT_NODE_NAME = "V_0";
+      CHILD_NODE_ID = 1;
+      CHILD_NODE_NAME = "V_1";
+      FIRST_ROOT_NODE_NAME = "F_0";
+      SECOND_ROOT_NODE_NAME = "F_1";
+      THIRD_ROOT_NODE_NAME = "F_2";
+    }
+
+    ~BayesNetworkTest() {}
+
   protected:
-    const int NODE_ID = 0;
-    const char* VOXEL_NODE_NAME = "V_0";
-    const char* FEATURE_NODE_NAME = "F_0";
-    const int FIRST_NODE_ID = 0;
-    const int SECOND_NODE_ID = 1;
-    const char* FIRST_NODE_NAME = "V_0";
-    const char* SECOND_NODE_NAME = "V_1";
-    const int PARENT_NODE_ID = 0;
-    const char* PARENT_NODE_NAME = "V_0";
-    const int CHILD_NODE_ID = 1;
-    const char* CHILD_NODE_NAME = "V_1";
-    const std::string FIRST_ROOT_NODE_NAME = "F_0";
-    const std::string SECOND_ROOT_NODE_NAME = "F_1";
-    const std::string THIRD_ROOT_NODE_NAME = "F_2";
+    int NODE_ID;
+    const char* VOXEL_NODE_NAME;
+    const char* FEATURE_NODE_NAME;
+    int FIRST_NODE_ID;
+    int SECOND_NODE_ID;
+    const char* FIRST_NODE_NAME;
+    const char* SECOND_NODE_NAME;
+    int PARENT_NODE_ID;
+    const char* PARENT_NODE_NAME;
+    int CHILD_NODE_ID;
+    const char* CHILD_NODE_NAME;
+    std::string FIRST_ROOT_NODE_NAME;
+    std::string SECOND_ROOT_NODE_NAME;
+    std::string THIRD_ROOT_NODE_NAME;
 };
 
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)

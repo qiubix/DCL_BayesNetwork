@@ -11,6 +11,10 @@ macro(create_test name src libs)
   add_test(${name} ${name})
 endmacro(create_test)
 
+set(CPT_MANAGER_TEST_SRC CPTManagerTest.cpp)
+set(CPT_MANAGER_TEST_LIB procNetworkBuilder)
+create_test(CPTManagerTest ${CPT_MANAGER_TEST_SRC} ${CPT_MANAGER_TEST_LIB})
+
 set(BAYES_NETWORK_TEST_SRC BayesNetworkTest.cpp)
 set(BAYES_NETWORK_TEST_LIB procNetworkBuilder)
 create_test(BayesNetworkTest ${BAYES_NETWORK_TEST_SRC} ${BAYES_NETWORK_TEST_LIB})
