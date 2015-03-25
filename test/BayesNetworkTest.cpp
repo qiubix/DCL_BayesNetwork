@@ -78,9 +78,10 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
    */
   BayesNetwork newNetwork;
   ASSERT_EQ(0, newNetwork.getNumberOfNodes());
+
   newNetwork.addVoxelNode(NODE_ID);
-  int code = newNetwork.getNetwork().FindNode(VOXEL_NODE_NAME);
-  ASSERT_NE(DSL_OUT_OF_RANGE, code);
+
+  ASSERT_TRUE(network.hasNode(VOXEL_NODE_NAME));
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
 
@@ -149,9 +150,10 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
    */
   BayesNetwork newNetwork;
   ASSERT_EQ(0, newNetwork.getNumberOfNodes());
+
   newNetwork.addFeatureNode(NODE_ID);
-  int code = newNetwork.getNetwork().FindNode(FEATURE_NODE_NAME);
-  ASSERT_NE(DSL_OUT_OF_RANGE, code);
+
+  ASSERT_TRUE(network.hasNode(FEATURE_NODE_NAME));
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
 
@@ -215,7 +217,9 @@ TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
 {
   BayesNetwork network;
   network.addFeatureNode(0);
+
   BayesNetworkNode node = network.getNextRootNode();
+
   ASSERT_FALSE(node.isVisited());
   ASSERT_EQ(FIRST_ROOT_NODE_NAME, node.getName());
 }
