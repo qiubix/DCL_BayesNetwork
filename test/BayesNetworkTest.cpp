@@ -31,6 +31,12 @@ class BayesNetworkTest : public Test {
 
     ~BayesNetworkTest() {}
 
+    DSL_node* getNode(const char* NODE_NAME) {
+      BayesNetwork network;
+      int nodeHandle = network.getNetwork().FindNode(NODE_NAME);
+      return network.getNetwork().GetNode(nodeHandle);
+    }
+
   protected:
     int NODE_ID;
     const char* VOXEL_NODE_NAME;
