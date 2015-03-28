@@ -125,32 +125,31 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
    * check number of parents
    * check size of CPT
    */
-  BayesNetwork network;
-  ASSERT_EQ(0, network.getNumberOfNodes());
-  network.addVoxelNode(FIRST_NODE_ID);
-  network.addVoxelNode(SECOND_NODE_ID);
-  int firstNodeId = network.getNetwork().FindNode(FIRST_NODE_NAME);
-  int secondNodeId = network.getNetwork().FindNode(SECOND_NODE_NAME);
+  BayesNetwork* network = createNetworkWithOneNode();
+  network->addVoxelNode(SECOND_NODE_ID);
+  ASSERT_EQ(2, network->getNumberOfNodes());
+  int firstNodeId = network->getNetwork().FindNode(FIRST_NODE_NAME);
+  int secondNodeId = network->getNetwork().FindNode(SECOND_NODE_NAME);
 
-  int numberOfChildren = network.getNetwork().NumChildren(firstNodeId);
-  int numberOfParents = network.getNetwork().NumParents(secondNodeId);
+  int numberOfChildren = network->getNetwork().NumChildren(firstNodeId);
+  int numberOfParents = network->getNetwork().NumParents(secondNodeId);
   ASSERT_EQ(0, numberOfChildren);
   ASSERT_EQ(0, numberOfParents);
 
-  int parentCPTSize = network.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  int childCPTSize = network.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  int parentCPTSize = network->getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  int childCPTSize = network->getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
   ASSERT_EQ(2, parentCPTSize);
   ASSERT_EQ(2, childCPTSize);
 
-  network.addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
+  network->addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
 
-  numberOfChildren = network.getNetwork().NumChildren(firstNodeId);
-  numberOfParents = network.getNetwork().NumParents(secondNodeId);
+  numberOfChildren = network->getNetwork().NumChildren(firstNodeId);
+  numberOfParents = network->getNetwork().NumParents(secondNodeId);
   EXPECT_EQ(1, numberOfChildren);
   EXPECT_EQ(1, numberOfParents);
 
-  parentCPTSize = network.getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  childCPTSize = network.getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  parentCPTSize = network->getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
+  childCPTSize = network->getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
   EXPECT_EQ(2, parentCPTSize);
   EXPECT_EQ(4, childCPTSize);
 }
