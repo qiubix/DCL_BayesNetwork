@@ -52,6 +52,12 @@ class BayesNetworkTest : public Test {
       return new BayesNetwork();
     }
 
+    BayesNetwork* createNetworkWithOneNode() {
+      network = new BayesNetwork();
+      network->addVoxelNode(FIRST_NODE_ID);
+      return network;
+    }
+
   protected:
     int NODE_ID;
     const char* VOXEL_NODE_NAME;
