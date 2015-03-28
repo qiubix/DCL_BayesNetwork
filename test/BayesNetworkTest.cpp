@@ -88,13 +88,13 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
    * check if node exists in network
    * check if number of nodes is 1
    */
-  BayesNetwork newNetwork;
-  ASSERT_EQ(0, newNetwork.getNumberOfNodes());
+  BayesNetwork* newNetwork = createEmptyNetwork();
+  ASSERT_EQ(0, newNetwork->getNumberOfNodes());
 
-  newNetwork.addVoxelNode(NODE_ID);
+  newNetwork->addVoxelNode(NODE_ID);
 
-  ASSERT_TRUE(newNetwork.hasNode(VOXEL_NODE_NAME));
-  ASSERT_EQ(1, newNetwork.getNumberOfNodes());
+  ASSERT_TRUE(newNetwork->hasNode(VOXEL_NODE_NAME));
+  ASSERT_EQ(1, newNetwork->getNumberOfNodes());
 }
 
 TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
