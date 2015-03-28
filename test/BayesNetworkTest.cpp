@@ -134,28 +134,26 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   BayesNetwork* network = createNetworkWithOneNode();
   network->addVoxelNode(SECOND_NODE_ID);
   ASSERT_EQ(2, network->getNumberOfNodes());
-  int firstNodeId = network->getNetwork().FindNode(FIRST_NODE_NAME);
-  int secondNodeId = network->getNetwork().FindNode(SECOND_NODE_NAME);
 
-  int numberOfChildren = network->getNetwork().NumChildren(firstNodeId);
-  int numberOfParents = network->getNetwork().NumParents(secondNodeId);
+  int numberOfChildren = getNumberOfChildren(FIRST_NODE_NAME);
+  int numberOfParents = getNumberOfParents(SECOND_NODE_NAME);
   ASSERT_EQ(0, numberOfChildren);
   ASSERT_EQ(0, numberOfParents);
 
-  int parentCPTSize = network->getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  int childCPTSize = network->getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  int parentCPTSize = getCPTSize(FIRST_NODE_NAME);
+  int childCPTSize = getCPTSize(SECOND_NODE_NAME);
   ASSERT_EQ(2, parentCPTSize);
   ASSERT_EQ(2, childCPTSize);
 
   network->addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
 
-  numberOfChildren = network->getNetwork().NumChildren(firstNodeId);
-  numberOfParents = network->getNetwork().NumParents(secondNodeId);
+  numberOfChildren = getNumberOfChildren(FIRST_NODE_NAME);
+  numberOfParents = getNumberOfParents(SECOND_NODE_NAME);
   EXPECT_EQ(1, numberOfChildren);
   EXPECT_EQ(1, numberOfParents);
 
-  parentCPTSize = network->getNetwork().GetNode(firstNodeId)->Definition()->GetSize();
-  childCPTSize = network->getNetwork().GetNode(secondNodeId)->Definition()->GetSize();
+  parentCPTSize = getCPTSize(FIRST_NODE_NAME);
+  childCPTSize = getCPTSize(SECOND_NODE_NAME);
   EXPECT_EQ(2, parentCPTSize);
   EXPECT_EQ(4, childCPTSize);
 }
