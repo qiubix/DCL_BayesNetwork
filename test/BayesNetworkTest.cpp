@@ -32,9 +32,14 @@ class BayesNetworkTest : public Test {
     ~BayesNetworkTest() {}
 
     DSL_node* getNode(const char* NODE_NAME) {
-      BayesNetwork network;
-      int nodeHandle = network.getNetwork().FindNode(NODE_NAME);
-      return network.getNetwork().GetNode(nodeHandle);
+      int nodeHandle = network->getNetwork().FindNode(NODE_NAME);
+      return network->getNetwork().GetNode(nodeHandle);
+    }
+
+    int getCPTSize(const char* NODE_NAME) {
+      int nodeHandle = network->getNetwork().FindNode(NODE_NAME);
+      int CPTSize = network->getNetwork().GetNode(nodeHandle)->Definition()->GetSize();
+      return CPTSize;
     }
 
     BayesNetwork* createEmptyNetwork() {
