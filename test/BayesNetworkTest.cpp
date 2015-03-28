@@ -37,6 +37,10 @@ class BayesNetworkTest : public Test {
       return network.getNetwork().GetNode(nodeHandle);
     }
 
+    BayesNetwork* createEmptyNetwork() {
+      return new BayesNetwork();
+    }
+
   protected:
     int NODE_ID;
     const char* VOXEL_NODE_NAME;
@@ -52,6 +56,8 @@ class BayesNetworkTest : public Test {
     std::string FIRST_ROOT_NODE_NAME;
     std::string SECOND_ROOT_NODE_NAME;
     std::string THIRD_ROOT_NODE_NAME;
+
+    BayesNetwork* network;
 };
 
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
@@ -87,7 +93,7 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 
   newNetwork.addVoxelNode(NODE_ID);
 
-  ASSERT_TRUE(network.hasNode(VOXEL_NODE_NAME));
+  ASSERT_TRUE(newNetwork.hasNode(VOXEL_NODE_NAME));
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
 
@@ -159,7 +165,7 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
 
   newNetwork.addFeatureNode(NODE_ID);
 
-  ASSERT_TRUE(network.hasNode(FEATURE_NODE_NAME));
+  ASSERT_TRUE(newNetwork.hasNode(FEATURE_NODE_NAME));
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
 
