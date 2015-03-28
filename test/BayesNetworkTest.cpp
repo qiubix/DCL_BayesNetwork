@@ -48,6 +48,12 @@ class BayesNetworkTest : public Test {
       return numberOfChildren;
     }
 
+    int getNumberOfParents(const char* NODE_NAME) {
+      int nodeHandle = network->getNetwork().FindNode(NODE_NAME);
+      int numberOfChildren = network->getNetwork().NumParents(nodeHandle);
+      return numberOfChildren;
+    }
+
     BayesNetwork* createEmptyNetwork() {
       return new BayesNetwork();
     }
