@@ -28,6 +28,8 @@ void CPTManager::fillCPT(std::vector<double> probabilities)
   DSL_sysCoordinates theCoordinates(*node->Definition());
 
   std::vector<double>::iterator it = probabilities.begin();
+  //TODO: switch do-while to for.
+  // this is somehow problematic because Next() method automatically increments coordinates
   do {
     theCoordinates.UncheckedValue() = *it;
     LOG(LTRACE) << "Probability: " << *it;
