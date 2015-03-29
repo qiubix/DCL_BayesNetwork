@@ -90,7 +90,10 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
 
   std::vector<double> cpt = manager.displayCPT();
 
-  ASSERT_EQ(displayNodeCPT(node), cpt);
+  //TODO: in C++11 it'll be much simpler
+  const double probs[] = { 0.8,0.2 };
+  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  ASSERT_EQ(probabilities, cpt);
 }
 
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
@@ -101,7 +104,10 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
 
   std::vector<double> cpt = manager.displayCPT();
 
-  ASSERT_EQ(displayNodeCPT(node), cpt);
+  //TODO: in C++11 it'll be much simpler
+  const double probs[] = { 0.4, 0.3, 0.2, 0.1 };
+  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  ASSERT_EQ(probabilities, cpt);
 }
 
 TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingVectorOfIncorrectSize)
