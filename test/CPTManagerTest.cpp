@@ -65,18 +65,6 @@ public:
     return childNode;
   }
 
-  std::vector<double> displayNodeCPT(DSL_node* node) {
-    std::vector<double> probs;
-    DSL_sysCoordinates coordinates(*node->Definition());
-    while(true) {
-      probs.push_back(coordinates.UncheckedValue());
-      int position = coordinates.Next();
-      if(position == DSL_OUT_OF_RANGE)
-        break;
-    }
-    return probs;
-  }
-
 protected:
   DSL_network* network;
   int nextId;
@@ -136,7 +124,7 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutParents)
   probabilities.push_back(0.2);
 
   manager.fillCPT(probabilities);
-  ASSERT_EQ(probabilities, displayNodeCPT(node));
+  ASSERT_EQ(probabilities, manager.displayCPT());
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
@@ -151,5 +139,5 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
   probabilities.push_back(0.1);
 
   manager.fillCPT(probabilities);
-  ASSERT_EQ(probabilities, displayNodeCPT(node));
+  ASSERT_EQ(probabilities, manager.displayCPT());
 }
