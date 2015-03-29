@@ -1,5 +1,6 @@
 #include "CPTManager.hpp"
 #include "Logger.hpp"
+#include "CPTManagerExceptions.hpp"
 
 namespace Processors {
 namespace Network {
@@ -25,8 +26,13 @@ void CPTManager::fillCPT(std::vector<double> probabilities)
 {
   std::string name(node->Info().Header().GetId());
   LOG(LTRACE) << "Filling CPT of node " << name;
-  DSL_sysCoordinates coordinates(*node->Definition());
 
+  int cptSize = node->Definition()->GetSize();
+  if (cptSize != probabilities.size() ) {
+    throw DivergentCPTSizeException();
+  }
+
+  DSL_sysCoordinates coordinates(*node->Definition());
   std::vector<double>::iterator it = probabilities.begin();
   //TODO: switch do-while to for.
   // this is somehow problematic because Next() method automatically increments coordinates

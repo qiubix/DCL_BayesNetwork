@@ -5,6 +5,7 @@ using ::testing::Test;
 
 #include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
 #include "../src/Components/NetworkBuilder/CPTManager.hpp"
+#include "../src/Components/NetworkBuilder/CPTManagerExceptions.hpp"
 #include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
 
 using namespace Processors::Network;
@@ -101,6 +102,22 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
   std::vector<double> cpt = manager.displayCPT();
 
   ASSERT_EQ(displayNodeCPT(node), cpt);
+}
+
+TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingVectorOfIncorrectSize)
+{
+  DSL_node* node = createNodeWithoutCPT();
+  ASSERT_EQ(2, node->Definition()->GetSize());
+  CPTManager manager(node);
+  std::vector<double> probabilities;
+  probabilities.push_back(0.8);
+
+  ASSERT_THROW(manager.fillCPT(probabilities), DivergentCPTSizeException);
+
+  probabilities.push_back(0.2);
+  probabilities.push_back(0.1);
+
+  ASSERT_THROW(manager.fillCPT(probabilities), DivergentCPTSizeException);
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutParents)
