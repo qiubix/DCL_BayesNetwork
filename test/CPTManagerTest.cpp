@@ -82,7 +82,7 @@ protected:
   int nextId;
 };
 
-TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
+TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
 {
   DSL_node* node = createNodeWithCPTOfSize2();
   ASSERT_EQ(2, node->Definition()->GetSize());
@@ -96,7 +96,7 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutChildren)
   ASSERT_EQ(probabilities, cpt);
 }
 
-TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithChildren)
+TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithParents)
 {
   DSL_node* node = createNodeWithCPTOfSize4();
   ASSERT_EQ(4, node->Definition()->GetSize());
