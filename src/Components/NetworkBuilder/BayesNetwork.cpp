@@ -86,7 +86,7 @@ void BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
 
   int nodeId = network.FindNode(name.c_str());
   CPTManager cptManager(network.GetNode(nodeId));
-  cptManager.fillCPT(name, probabilities);
+  cptManager.fillCPT(probabilities);
 }
 
 std::string BayesNetwork::getNodeName(int nodeHandle)

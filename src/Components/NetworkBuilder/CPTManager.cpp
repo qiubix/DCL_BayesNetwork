@@ -21,8 +21,9 @@ std::vector<double> CPTManager::displayCPT()
   return probabilities;
 }
 
-void CPTManager::fillCPT(std::string name, std::vector<double> probabilities)
+void CPTManager::fillCPT(std::vector<double> probabilities)
 {
+  std::string name(node->Info().Header().GetId());
   LOG(LTRACE) << "Filling CPT of node " << name;
   DSL_sysCoordinates theCoordinates(*node->Definition());
 

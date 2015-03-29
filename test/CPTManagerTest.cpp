@@ -112,7 +112,7 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutParents)
   probabilities.push_back(0.8);
   probabilities.push_back(0.2);
 
-  manager.fillCPT("Node1", probabilities);
+  manager.fillCPT(probabilities);
   ASSERT_EQ(probabilities, displayNodeCPT(node));
 }
 
@@ -127,6 +127,6 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
   probabilities.push_back(0.2);
   probabilities.push_back(0.1);
 
-  manager.fillCPT("Node1", probabilities);
+  manager.fillCPT(probabilities);
   ASSERT_EQ(probabilities, displayNodeCPT(node));
 }
