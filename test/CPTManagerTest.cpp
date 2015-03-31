@@ -141,3 +141,7 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
   manager.fillCPT(probabilities);
   ASSERT_EQ(probabilities, manager.displayCPT());
 }
+
+//TODO: test for adding incorrect probabilities:
+// not summing up to 1
+// values are not from <0,1>
