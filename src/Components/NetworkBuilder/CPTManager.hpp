@@ -13,7 +13,7 @@ public:
   CPTManager(DSL_node* node);
   ~CPTManager() {}
   std::vector<double> displayCPT();
-  void fillCPT(std::string name, std::vector<double> probabilities);
+  void fillCPT(std::vector<double> probabilities);
 private:
   DSL_node* node;
 };

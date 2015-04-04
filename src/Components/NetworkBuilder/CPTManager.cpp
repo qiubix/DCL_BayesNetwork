@@ -1,5 +1,6 @@
 #include "CPTManager.hpp"
 #include "Logger.hpp"
+#include "CPTManagerExceptions.hpp"
 
 namespace Processors {
 namespace Network {
@@ -12,26 +13,36 @@ std::vector<double> CPTManager::displayCPT()
 {
   std::vector<double> probabilities;
   DSL_sysCoordinates coordinates(*node->Definition());
-  while(true) {
+  coordinates.GoFirst();
+  int position = coordinates.GoToCurrentPosition();
+  while(position != DSL_OUT_OF_RANGE) {
     probabilities.push_back(coordinates.UncheckedValue());
-    int position = coordinates.Next();
-    if(position == DSL_OUT_OF_RANGE)
-      break;
+    position = coordinates.Next();
   }
   return probabilities;
 }
 
-void CPTManager::fillCPT(std::string name, std::vector<double> probabilities)
+void CPTManager::fillCPT(std::vector<double> probabilities)
 {
+  std::string name(node->Info().Header().GetId());
   LOG(LTRACE) << "Filling CPT of node " << name;
-  DSL_sysCoordinates theCoordinates(*node->Definition());
 
+  int cptSize = node->Definition()->GetSize();
+  if (cptSize != probabilities.size() ) {
+    throw DivergentCPTSizeException();
+  }
+
+  DSL_sysCoordinates coordinates(*node->Definition());
+  coordinates.GoFirst();
+  int position = coordinates.GoToCurrentPosition();
   std::vector<double>::iterator it = probabilities.begin();
-  do {
-    theCoordinates.UncheckedValue() = *it;
+
+  for ( ; position != DSL_OUT_OF_RANGE && it != probabilities.end(); ++it, position = coordinates.Next() ) {
+    if (*it < 0 || *it > 1)
+      throw IncorrectProbabilityValueException();
+    coordinates.UncheckedValue() = *it;
     LOG(LTRACE) << "Probability: " << *it;
-    ++it;
-  } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+  }
 }
 
 } //: namespace Network
