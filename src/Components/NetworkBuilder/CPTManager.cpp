@@ -33,16 +33,16 @@ void CPTManager::fillCPT(std::vector<double> probabilities)
   }
 
   DSL_sysCoordinates coordinates(*node->Definition());
+  coordinates.GoFirst();
+  int position = coordinates.GoToCurrentPosition();
   std::vector<double>::iterator it = probabilities.begin();
-  //TODO: switch do-while to for.
-  // this is somehow problematic because Next() method automatically increments coordinates
-  do {
+
+  for ( ; position != DSL_OUT_OF_RANGE && it != probabilities.end(); ++it, position = coordinates.Next() ) {
     if (*it < 0 || *it > 1)
       throw IncorrectProbabilityValueException();
     coordinates.UncheckedValue() = *it;
     LOG(LTRACE) << "Probability: " << *it;
-    ++it;
-  } while(coordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+  }
 }
 
 } //: namespace Network
