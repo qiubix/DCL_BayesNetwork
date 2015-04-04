@@ -28,3 +28,6 @@ out_network.xdsl
 
 # core
 core
+
+# IntelliJ files
+.idea/
