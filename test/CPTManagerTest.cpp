@@ -39,6 +39,18 @@ public:
     return childNode;
   }
 
+  DSL_node* createNodeWithoutCPTWithTwoParents() {
+    DSL_node* firstParentNode = createNodeWithoutCPT();
+    int firstParentNodeHandle = firstParentNode->Handle();
+    DSL_node* secondParentNode = createNodeWithoutCPT();
+    int secondParentNodeHandle = secondParentNode->Handle();
+    DSL_node* childNode = createNodeWithoutCPT();
+    int childNodeHandle = childNode->Handle();
+    network->AddArc(firstParentNodeHandle, childNodeHandle);
+    network->AddArc(secondParentNodeHandle, childNodeHandle);
+    return childNode;
+  }
+
   DSL_node* createNodeWithCPTOfSize2() {
     DSL_node* node = createNodeWithoutCPT();
     DSL_doubleArray theProbs;
