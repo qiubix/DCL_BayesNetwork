@@ -145,3 +145,17 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
 //TODO: test for adding incorrect probabilities:
 // not summing up to 1
 // values are not from <0,1>
+TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingIncorrectProbabilityValue)
+{
+  DSL_node* node = createNodeWithoutCPT();
+  CPTManager manager(node);
+  std::vector<double> probabilities;
+  probabilities.push_back(1.8);
+  probabilities.push_back(0.2);
+
+  ASSERT_THROW(manager.fillCPT(probabilities), IncorrectProbabilityValueException);
+
+  probabilities[0] = 0.8;
+  probabilities[1] = -0.2;
+  ASSERT_THROW(manager.fillCPT(probabilities), IncorrectProbabilityValueException);
+}

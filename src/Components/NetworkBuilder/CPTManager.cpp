@@ -37,6 +37,8 @@ void CPTManager::fillCPT(std::vector<double> probabilities)
   //TODO: switch do-while to for.
   // this is somehow problematic because Next() method automatically increments coordinates
   do {
+    if (*it < 0 || *it > 1)
+      throw IncorrectProbabilityValueException();
     coordinates.UncheckedValue() = *it;
     LOG(LTRACE) << "Probability: " << *it;
     ++it;
