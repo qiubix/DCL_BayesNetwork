@@ -24,8 +24,12 @@ add_definitions(${PCL_DEFINITIONS})
 set(CMAKE_MODULE_PATH ${DisCODe_DIR} ${CMAKE_MODULE_PATH})
 include(DisCODeMacros)
 
-# Testing
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
+# C++11 support
+include(C++11Compiling)
+
+# Testing
 include(GoogleMock)
 set(CMAKE_AUTOMOC ON)
 

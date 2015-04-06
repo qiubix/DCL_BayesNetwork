@@ -112,8 +112,7 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
   std::vector<double> cpt = manager.displayCPT();
 
   //TODO: in C++11 it'll be much simpler
-  const double probs[] = { 0.8,0.2 };
-  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  std::vector<double> probabilities = { 0.8,0.2 };
   ASSERT_EQ(probabilities, cpt);
 }
 
