@@ -22,6 +22,7 @@ create_test(BayesNetworkTest ${BAYES_NETWORK_TEST_SRC} ${BAYES_NETWORK_TEST_LIB}
 set(OCTREE_TEST_SRC OctreeTest.cpp)
 set(OCTREE_TEST_LIB procNetworkBuilder)
 create_test(OctreeTest ${OCTREE_TEST_SRC} ${OCTREE_TEST_LIB})
+file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(NETWORK_BUILDER_TEST_SRC NetworkBuilderTest.cpp)
 set(NETWORK_BUILDER_TEST_LIB procNetworkBuilder)

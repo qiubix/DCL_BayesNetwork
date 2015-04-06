@@ -20,7 +20,7 @@ using ::testing::Test;
 class OctreeTest : public Test {
   public:
     OctreeTest(): cloud(new pcl::PointCloud<PointXYZSIFT>) {
-      if (pcl::io::loadPCDFile<PointXYZSIFT> ("/home/qiubix/DCL/BayesNetwork/test/test_cloud.pcd", *cloud) == -1) {
+      if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
         std::cout <<"Error reading file!\n";
       }
     }
