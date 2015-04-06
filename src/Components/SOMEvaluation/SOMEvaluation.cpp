@@ -99,10 +99,12 @@ void SOMEvaluation::evaluate()
   Common::Timer timer;
   timer.restart();
 
+  theNet.UpdateBeliefs();
   theNet.ClearAllEvidence();
+  theNet.UpdateBeliefs();
   deactivateFeatures();
   activateMatchedFeatureNodes();
-  theNet.UpdateBeliefs();
+  //theNet.UpdateBeliefs();
 
   displayHypothesisProbability();
 
@@ -120,7 +122,9 @@ void SOMEvaluation::deactivateFeatures()
     std::string nodeName(ss.str());
     int node = theNet.FindNode(nodeName.c_str());
     if(node != DSL_OUT_OF_RANGE) {
+      LOG(LWARNING) << "Deactivating node " << nodeName;
       theNet.GetNode(node)->Value()->SetEvidence(1);
+      theNet.UpdateBeliefs();
     }
     else {
       break;
@@ -136,7 +140,15 @@ void SOMEvaluation::activateMatchedFeatureNodes()
     int node = findFeatureNode(instance[i]);
     LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
     if(node != DSL_OUT_OF_RANGE) {
+      LOG(LWARNING) << "Activating node " << instance[i];
+      LOG(LWARNING) << "CPT size " << theNet.GetNode(node)->Definition()->GetSize();
+      LOG(LWARNING) << "children " << theNet.GetChildren(node).GetSize();
+      LOG(LWARNING) << "parents " << theNet.GetParents(node).GetSize();
+      LOG(LWARNING) << "children " << theNet.NumChildren(node);
+      LOG(LWARNING) << "parents " << theNet.NumParents(node);
+      //LOG(LWARNING) << "parents " << theNet.GetNode(node)->Parents().GetSize();
       theNet.GetNode(node)->Value()->SetEvidence(0);
+      theNet.UpdateBeliefs();
     }
   }
   LOG(LDEBUG) << "Finished activating matched features";

@@ -3,14 +3,49 @@ using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
-#include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetwork.hpp"
-#include "../src/Components/CreateNetworkWithSpacialDependencies/BayesNetworkNode.hpp"
+#include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
+#include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
 
 using namespace Processors::Network;
 
 class BayesNetworkTest : public Test {
-  //protected:
   //  BayesNetwork mockNetwork;
+
+  public:
+    BayesNetworkTest() {
+      NODE_ID = 0;
+      VOXEL_NODE_NAME = "V_0";
+      FEATURE_NODE_NAME = "F_0";
+      FIRST_NODE_ID = 0;
+      SECOND_NODE_ID = 1;
+      FIRST_NODE_NAME = "V_0";
+      SECOND_NODE_NAME = "V_1";
+      PARENT_NODE_ID = 0;
+      PARENT_NODE_NAME = "V_0";
+      CHILD_NODE_ID = 1;
+      CHILD_NODE_NAME = "V_1";
+      FIRST_ROOT_NODE_NAME = "F_0";
+      SECOND_ROOT_NODE_NAME = "F_1";
+      THIRD_ROOT_NODE_NAME = "F_2";
+    }
+
+    ~BayesNetworkTest() {}
+
+  protected:
+    int NODE_ID;
+    const char* VOXEL_NODE_NAME;
+    const char* FEATURE_NODE_NAME;
+    int FIRST_NODE_ID;
+    int SECOND_NODE_ID;
+    const char* FIRST_NODE_NAME;
+    const char* SECOND_NODE_NAME;
+    int PARENT_NODE_ID;
+    const char* PARENT_NODE_NAME;
+    int CHILD_NODE_ID;
+    const char* CHILD_NODE_NAME;
+    std::string FIRST_ROOT_NODE_NAME;
+    std::string SECOND_ROOT_NODE_NAME;
+    std::string THIRD_ROOT_NODE_NAME;
 };
 
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
@@ -38,10 +73,8 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
    */
   BayesNetwork newNetwork;
   ASSERT_EQ(0, newNetwork.getNumberOfNodes());
-  const int NODE_ID = 0;
-  const char* NODE_NAME = "V_0";
   newNetwork.addVoxelNode(NODE_ID);
-  int code = newNetwork.getNetwork().FindNode(NODE_NAME);
+  int code = newNetwork.getNetwork().FindNode(VOXEL_NODE_NAME);
   ASSERT_NE(DSL_OUT_OF_RANGE, code);
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
@@ -59,10 +92,6 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
    */
   BayesNetwork network;
   ASSERT_EQ(0, network.getNumberOfNodes());
-  const int FIRST_NODE_ID = 0;
-  const int SECOND_NODE_ID = 1;
-  const char* FIRST_NODE_NAME = "V_0";
-  const char* SECOND_NODE_NAME = "V_1";
   network.addVoxelNode(FIRST_NODE_ID);
   network.addVoxelNode(SECOND_NODE_ID);
   int firstNodeId = network.getNetwork().FindNode(FIRST_NODE_NAME);
@@ -115,10 +144,8 @@ TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
    */
   BayesNetwork newNetwork;
   ASSERT_EQ(0, newNetwork.getNumberOfNodes());
-  const int NODE_ID = 0;
-  const char* NODE_NAME = "F_0";
   newNetwork.addFeatureNode(NODE_ID);
-  int code = newNetwork.getNetwork().FindNode(NODE_NAME);
+  int code = newNetwork.getNetwork().FindNode(FEATURE_NODE_NAME);
   ASSERT_NE(DSL_OUT_OF_RANGE, code);
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
 }
@@ -136,13 +163,9 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   BayesNetwork simpleNetwork;
   ASSERT_EQ(0, simpleNetwork.getNumberOfNodes());
 
-  const int PARENT_NODE_ID = 0;
-  const char* PARENT_NODE_NAME = "V_0";
   simpleNetwork.addVoxelNode(PARENT_NODE_ID);
   int parentId = simpleNetwork.getNetwork().FindNode(PARENT_NODE_NAME);
 
-  const int CHILD_NODE_ID = 1;
-  const char* CHILD_NODE_NAME = "V_1";
   simpleNetwork.addVoxelNode(CHILD_NODE_ID);
   int childId = simpleNetwork.getNetwork().FindNode(CHILD_NODE_NAME);
 
@@ -188,7 +211,6 @@ TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
   BayesNetwork network;
   network.addFeatureNode(0);
   BayesNetworkNode node = network.getNextRootNode();
-  const std::string FIRST_ROOT_NODE_NAME = "F_0";
   ASSERT_FALSE(node.isVisited());
   ASSERT_EQ(FIRST_ROOT_NODE_NAME, node.getName());
 }
@@ -215,8 +237,6 @@ TEST_F(BayesNetworkTest, shouldGetTheSameNode)
   BayesNetwork network;
   network.addFeatureNode(0);
   network.addFeatureNode(1);
-  const std::string FIRST_ROOT_NODE_NAME = "F_0";
-  const std::string SECOND_ROOT_NODE_NAME = "F_1";
 
   BayesNetworkNode firstNode = network.getNextRootNode();
   EXPECT_FALSE(firstNode.isVisited());
@@ -234,8 +254,6 @@ TEST_F(BayesNetworkTest, shouldGetNextRootNode)
   BayesNetwork network;
   network.addFeatureNode(0);
   network.addFeatureNode(1);
-  const std::string FIRST_ROOT_NODE_NAME = "F_0";
-  const std::string SECOND_ROOT_NODE_NAME = "F_1";
 
   BayesNetworkNode firstNode = network.getNextRootNode();
   EXPECT_FALSE(firstNode.isVisited());
@@ -254,9 +272,6 @@ TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
   network.addFeatureNode(0);
   network.addFeatureNode(1);
   network.addFeatureNode(2);
-  const std::string FIRST_ROOT_NODE_NAME = "F_0";
-  const std::string SECOND_ROOT_NODE_NAME = "F_1";
-  const std::string THIRD_ROOT_NODE_NAME = "F_2";
   ASSERT_EQ(3, network.getNumberOfNodes());
 
   BayesNetworkNode firstNode = network.getNextRootNode();

@@ -7,9 +7,9 @@ using ::testing::Test;
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 
-#include "../src/Components/CreateNetworkWithSpacialDependencies/Octree.hpp"
-#include "../src/Components/CreateNetworkWithSpacialDependencies/OctreeNode.hpp"
-#include "../src/Components/CreateNetworkWithSpacialDependencies/OctreeBranchNode.hpp"
+#include "../src/Components/NetworkBuilder/Octree.hpp"
+#include "../src/Components/NetworkBuilder/OctreeNode.hpp"
+#include "../src/Components/NetworkBuilder/OctreeBranchNode.hpp"
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
@@ -20,7 +20,7 @@ using ::testing::Test;
 class OctreeTest : public Test {
   public:
     OctreeTest(): cloud(new pcl::PointCloud<PointXYZSIFT>) {
-      if (pcl::io::loadPCDFile<PointXYZSIFT> ("/home/qiubix/DCL/BayesNetwork/test/test_cloud.pcd", *cloud) == -1) {
+      if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
         std::cout <<"Error reading file!\n";
       }
     }
@@ -68,5 +68,15 @@ TEST_F(OctreeTest, shouldInitializeIterator) {
   ASSERT_EQ(-1, branchNode.getId());
   branchNode.setId(1);
   ASSERT_EQ(1, branchNode.getId());
+}
+
+//TODO: implement
+TEST_F(OctreeTest, shouldGetToOctreeLeafNode) {
+  /*
+   * initialize octree with cloud
+   * initialize iterator
+   * get to the leaf node
+   * get it's id
+   */
 }
 

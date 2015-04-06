@@ -89,6 +89,7 @@ bool SIFTAdder::onStart() {
   return true;
 }
 
+//TODO: refactor
 void SIFTAdder::add() {
   LOG(LDEBUG) << "================= SIFTAdder: adding models to joint cloud =================";
 
@@ -97,8 +98,17 @@ void SIFTAdder::add() {
   LOG(LDEBUG) << "Number of models: " << models.size();
   for (unsigned n=0; n<models.size(); ++n) {
 
+    //TODO: handle errors
+    LOG(LDEBUG) << "inside for loop " << n << "model name: " << models.at(n)->name;
     std::map<int,int> modelMultiplicity;
-    pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud = dynamic_cast<SIFTObjectModel*>(models.at(n))->cloud_xyzsift;
+    pcl::PointCloud<PointXYZSIFT>::Ptr modelCloud;
+    LOG(LDEBUG) << "before cast";
+    SIFTObjectModel* som = NULL;
+    som = dynamic_cast<SIFTObjectModel*>(models.at(n));
+    LOG(LDEBUG) << "after cast";
+    if(som == NULL)
+      LOG(LERROR) << "som jest nullem";
+    modelCloud = som->cloud_xyzsift;
     LOG(LDEBUG) << "Model no " << n << ": model's cloud size = " << modelCloud->size();
 
     if (jointCloud->empty()){
