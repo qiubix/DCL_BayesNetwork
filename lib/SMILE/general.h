@@ -17,7 +17,7 @@
 #define DSL_FILE_TOKEN_LENGTH (10 * DSL_FILE_LINE_LENGTH)
 
 #define DSL_NUMBER_PRECISION 8
-#define DSL_EPSILON    0.000005 
+#define DSL_EPSILON    0.000005
 
 #if defined(_WIN32)
 	#define DSL_stricmp _stricmp
@@ -26,7 +26,7 @@
 #else
 	#define DSL_stricmp strcasecmp
 	#define DSL_strnicmp strncasecmp
-	inline bool DSL_isnan(double x) { using namespace std; return isnan(x) != 0; }
+	inline bool DSL_isnan(double x) { return std::isnan(x) != 0; }
 #endif
 
 #ifdef WINCE
@@ -39,7 +39,7 @@ clock_t DSL_clock();
 
 inline bool DSL_isFinite(double x)
 {
-	return !DSL_isnan(x) && x <= DBL_MAX && x >= -DBL_MAX; 
+	return !DSL_isnan(x) && x <= DBL_MAX && x >= -DBL_MAX;
 }
 
 // Global Functions

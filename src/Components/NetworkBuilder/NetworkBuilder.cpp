@@ -294,7 +294,7 @@ void NetworkBuilder::mapFeaturesNames()
     std::stringstream name;
     name << "F" << i;
     string featureName(name.str());
-    features.insert(std::make_pair<int,string>(i,featureName));
+    features.insert(std::make_pair(i,featureName));
   }
 }
 
