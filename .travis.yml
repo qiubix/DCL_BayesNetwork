@@ -2,10 +2,10 @@ language: cpp
 compiler:
   - gcc
   - cmake
-#branches:
-#  only:
-#    - master
-#    - develop
+branches:
+  only:
+    - master
+    - develop
 
 cache:
   apt: true
