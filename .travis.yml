@@ -1,0 +1,28 @@
+language: cpp
+compiler:
+  - gcc
+  - cmake
+#branches:
+#  only:
+#    - master
+#    - develop
+
+cache:
+  apt: true
+  directories:
+    - /usr/local/share/cmake-3.2
+    - ~/src
+
+before_script:
+  - sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
+  - sudo apt-get update -qq
+  - sudo apt-get install libboost-all-dev libopencv-dev libpcl-all
+  - wget http://www.cmake.org/files/v3.2/cmake-3.2.1.tar.gz
+  - tar xzf cmake-3.2.1.tar.gz
+  - cd cmake-3.2.1 && cmake . && make -j3 && sudo make install
+  - export PATH=$PATH:/home/travis/src/DisCODe/build/inst/bin
+  - export DISCODE_DCL_DIR=/home/travis/src/DCL/
+  - cd ~/build/qiubix/DCL_BayesNetwork
+  - ./install_discode.sh
+# Change this to your needs
+script: cmake . && make && make test
