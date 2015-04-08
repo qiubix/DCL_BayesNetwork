@@ -1,0 +1,11 @@
+language: cpp
+compiler:
+  - gcc
+  - cmake
+
+before_script:
+  - sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
+  - sudo apt-get update -qq
+  - sudo apt-get install libpcl-all libboost-all-dev
+# Change this to your needs
+script: cmake . && make
