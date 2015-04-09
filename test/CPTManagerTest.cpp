@@ -86,10 +86,10 @@ public:
     network->AddArc(parentNodeHandle, childNodeHandle);
     DSL_doubleArray probs;
     probs.SetSize(4);
-    probs[0] = 0.4;
-    probs[1] = 0.3;
+    probs[0] = 0.6;
+    probs[1] = 0.4;
     probs[2] = 0.2;
-    probs[3] = 0.1;
+    probs[3] = 0.8;
     childNode->Definition()->SetDefinition(probs);
     network->UpdateBeliefs();
     parentNode->Value()->SetEvidence(0);

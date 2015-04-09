@@ -19,5 +19,5 @@
 - should throw exception when probabilities vector incorrect
   + values not from <0,1> range
   - values don't add up to 1
-- should display node probability
++ should display node probability
 - should modify only one cell
