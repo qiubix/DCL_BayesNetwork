@@ -77,9 +77,29 @@ public:
     return childNode;
   }
 
+  DSL_node* createNodeWithObservedParent() {
+    DSL_node* parent = createNodeWithoutCPT();
+    int parentNodeHandle = parent->Handle();
+    DSL_node* child = createNodeWithoutCPT();
+    int childNodeHandle = child->Handle();
+    network->AddArc(parentNodeHandle, childNodeHandle);
+    DSL_doubleArray theProbs;
+    theProbs.SetSize(4);
+    theProbs[0] = 0.4;
+    theProbs[1] = 0.3;
+    theProbs[2] = 0.2;
+    theProbs[3] = 0.1;
+    childNode->Definition()->SetDefinition(theProbs);
+    network->GetNetwork()->UpdateBeliefs();
+    parentNode->Value()->SetEvidence(0);
+    network->GetNetwork()->UpdateBeliefs();
+    return child;
+  }
+
 protected:
   DSL_network* network;
   int nextId;
+  double PROBABILITY_VALUE = 0.6;
 };
 
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
