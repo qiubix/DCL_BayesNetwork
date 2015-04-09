@@ -14,6 +14,7 @@ public:
   ~CPTManager() {}
   std::vector<double> displayCPT();
   void fillCPT(std::vector<double> probabilities);
+  double getProbability();
 private:
   DSL_node* node;
 };

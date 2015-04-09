@@ -45,5 +45,16 @@ void CPTManager::fillCPT(std::vector<double> probabilities)
   }
 }
 
+double CPTManager::getProbability()
+{
+  DSL_sysCoordinates coordinates(*node->Value());
+  DSL_idArray* names;
+  names = node->Definition()->GetOutcomesNames();
+  int index = names->FindPosition("YES");
+  coordinates[0] = index;
+  coordinates.GoToCurrentPosition();
+  return coordinates.UncheckedValue();
+}
+
 } //: namespace Network
 } //: namespace Processors

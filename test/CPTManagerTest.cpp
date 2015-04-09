@@ -15,6 +15,7 @@ public:
   CPTManagerTest() {
     network = new DSL_network();
     nextId = 0;
+    PROBABILITY_VALUE = 0.6;
   }
 
   ~CPTManagerTest() {}
@@ -53,11 +54,11 @@ public:
 
   DSL_node* createNodeWithCPTOfSize2() {
     DSL_node* node = createNodeWithoutCPT();
-    DSL_doubleArray theProbs;
-    theProbs.SetSize(2);
-    theProbs[0] = 0.8;
-    theProbs[1] = 0.2;
-    node->Definition()->SetDefinition(theProbs);
+    DSL_doubleArray probs;
+    probs.SetSize(2);
+    probs[0] = 0.8;
+    probs[1] = 0.2;
+    node->Definition()->SetDefinition(probs);
     return node;
   }
 
@@ -67,19 +68,39 @@ public:
     DSL_node* childNode = createNodeWithoutCPT();
     int childNodeHandle = childNode->Handle();
     network->AddArc(parentNodeHandle, childNodeHandle);
-    DSL_doubleArray theProbs;
-    theProbs.SetSize(4);
-    theProbs[0] = 0.4;
-    theProbs[1] = 0.3;
-    theProbs[2] = 0.2;
-    theProbs[3] = 0.1;
-    childNode->Definition()->SetDefinition(theProbs);
+    DSL_doubleArray probs;
+    probs.SetSize(4);
+    probs[0] = 0.4;
+    probs[1] = 0.3;
+    probs[2] = 0.2;
+    probs[3] = 0.1;
+    childNode->Definition()->SetDefinition(probs);
+    return childNode;
+  }
+
+  DSL_node* createNodeWithObservedParent() {
+    DSL_node* parentNode = createNodeWithoutCPT();
+    int parentNodeHandle = parentNode->Handle();
+    DSL_node* childNode = createNodeWithoutCPT();
+    int childNodeHandle = childNode->Handle();
+    network->AddArc(parentNodeHandle, childNodeHandle);
+    DSL_doubleArray probs;
+    probs.SetSize(4);
+    probs[0] = 0.6;
+    probs[1] = 0.4;
+    probs[2] = 0.2;
+    probs[3] = 0.8;
+    childNode->Definition()->SetDefinition(probs);
+    network->UpdateBeliefs();
+    parentNode->Value()->SetEvidence(0);
+    network->UpdateBeliefs();
     return childNode;
   }
 
 protected:
   DSL_network* network;
   int nextId;
+  double PROBABILITY_VALUE;
 };
 
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
@@ -170,4 +191,13 @@ TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingIncorrectProbabilityValue)
   probabilities[0] = 0.8;
   probabilities[1] = -0.2;
   ASSERT_THROW(manager.fillCPT(probabilities), IncorrectProbabilityValueException);
+}
+
+TEST_F(CPTManagerTest, shouldDisplayNodeProbability)
+{
+  DSL_node* node = createNodeWithObservedParent();
+  CPTManager manager(node);
+
+  double probability = manager.getProbability();
+  ASSERT_EQ(PROBABILITY_VALUE, probability);
 }
