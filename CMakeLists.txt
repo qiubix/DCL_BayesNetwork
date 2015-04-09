@@ -24,6 +24,7 @@ add_definitions(${PCL_DEFINITIONS})
 set(CMAKE_MODULE_PATH ${DisCODe_DIR} ${CMAKE_MODULE_PATH})
 include(DisCODeMacros)
 
+# TODO: remove another DCL dependencies
 DISCODE_FIND_DCL(CvBasic)
 DISCODE_FIND_DCL(PCL)
 
