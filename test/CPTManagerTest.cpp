@@ -191,3 +191,12 @@ TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingIncorrectProbabilityValue)
   probabilities[1] = -0.2;
   ASSERT_THROW(manager.fillCPT(probabilities), IncorrectProbabilityValueException);
 }
+
+TEST_F(CPTManagerTest, shouldDisplayNodeProbability)
+{
+  DSL_node* node = createNodeWithObservedParent();
+  CPTManager(node);
+
+  double probability = node.getProbability();
+  ASSERT_EQ(PROBABILITY_VALUE, probability);
+}
