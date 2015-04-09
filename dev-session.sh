@@ -18,6 +18,7 @@ then
   tmux send-keys -t thesis-dev:3.1 'cd ~/src/DCL/BayesNetwork/build' C-m
   tmux send-keys -t thesis-dev:3.2 'cd ~/src/DCL/BayesNetwork/build/test' C-m
   tmux send-keys -t thesis-dev:3.1 'make test' C-m
+  tmux send-keys -t thesis-dev:3.2 'find | grep Test$ | sh' C-m
   tmux send-keys -t thesis-dev:3.2 'find | grep Test$' C-m
 
   tmux new-window -n discode -t thesis-dev
