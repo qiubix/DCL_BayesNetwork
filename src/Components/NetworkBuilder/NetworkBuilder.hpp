@@ -119,7 +119,7 @@ private:
   void addParentsToQueue(OctreeBranchNode branchNode);
 
   void createNode(OctreeNode* node);
-  void createLeafNodeChildren(OctreeLeafNode leafNode);
+  void createLeafNodeChildren(OctreeLeafNode* leafNode);
 
   void connectNodeToNetwork(OctreeNode* child);
 

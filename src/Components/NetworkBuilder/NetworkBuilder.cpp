@@ -143,7 +143,7 @@ void NetworkBuilder::buildNetwork() {
       OctreeLeafNode* leafNode = new OctreeLeafNode(node);
       createNode(leafNode);
       connectNodeToNetwork(leafNode);
-      createLeafNodeChildren(*leafNode);
+      createLeafNodeChildren(leafNode);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
@@ -188,20 +188,20 @@ void NetworkBuilder::addParentsToQueue(OctreeBranchNode branchNode)
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode* leafNode)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
-  int parentId = leafNode.getId();
+  int parentId = leafNode->getId();
   string parentName = network.createVoxelName(parentId);
-  int childrenCounter = leafNode.getNumberOfChildren();
+  int childrenCounter = leafNode->getNumberOfChildren();
 
   if (childrenCounter > maxLeafContainerSize) {
     maxLeafContainerSize = childrenCounter;
   }
 
   // Iterate through container elements, i.e. cloud points.
-  std::vector<int> point_indices = leafNode.getPointIndices();
+  std::vector<int> point_indices = leafNode->getPointIndices();
   LOG(LTRACE) << "point indices size: " << point_indices.size();
 
   LOG(LTRACE) << "Add all children:";
