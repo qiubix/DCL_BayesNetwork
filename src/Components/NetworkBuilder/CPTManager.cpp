@@ -45,5 +45,10 @@ void CPTManager::fillCPT(std::vector<double> probabilities)
   }
 }
 
+double CPTManager::getProbability()
+{
+  return 0.6;
+}
+
 } //: namespace Network
 } //: namespace Processors
