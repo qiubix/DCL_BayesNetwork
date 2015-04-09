@@ -40,22 +40,22 @@ NetworkBuilder::~NetworkBuilder()
 
 void NetworkBuilder::prepareInterface()
 {
-	LOG(LTRACE) << "NetworkBuilder::prepareInterface\n";
+  LOG(LTRACE) << "NetworkBuilder::prepareInterface\n";
 
-	// Register data streams.
-	//	registerStream("in_cloud", &in_cloud_xyz);
-	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
-	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
-	// Register handlers
-	h_onNewModel.setup(boost::bind(&NetworkBuilder::onNewModel, this));
-	h_onJointMultiplicity.setup(boost::bind(&NetworkBuilder::onJointMultiplicity, this));
-	registerHandler("onNewModel", &h_onNewModel);
-	registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
-	addDependency("onNewModel", &in_cloud_xyzsift);
-	addDependency("onJointMultiplicity", &in_jointMultiplicity);
+  // Register data streams.
+  //  registerStream("in_cloud", &in_cloud_xyz);
+  registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+  registerStream("in_jointMultiplicity", &in_jointMultiplicity);
+  // Register handlers
+  h_onNewModel.setup(boost::bind(&NetworkBuilder::onNewModel, this));
+  h_onJointMultiplicity.setup(boost::bind(&NetworkBuilder::onJointMultiplicity, this));
+  registerHandler("onNewModel", &h_onNewModel);
+  registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
+  addDependency("onNewModel", &in_cloud_xyzsift);
+  addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
-	//registerStream("out_network", &out_network);
-	registerStream("out_networks", &out_networks);
+  //registerStream("out_network", &out_network);
+  registerStream("out_networks", &out_networks);
 }
 
 bool NetworkBuilder::onInit()
@@ -140,10 +140,10 @@ void NetworkBuilder::buildNetwork() {
     OctreeNode node = *dfIt;
     if (node.getNodeType() == OCTREE_LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
-      OctreeLeafNode leafNode(node);
-      createNode(&leafNode);
-      connectNodeToNetwork(&leafNode);
-      createLeafNodeChildren(leafNode);
+      OctreeLeafNode* leafNode = new OctreeLeafNode(node);
+      createNode(leafNode);
+      connectNodeToNetwork(leafNode);
+      createLeafNodeChildren(*leafNode);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
@@ -238,19 +238,19 @@ void NetworkBuilder::connectNodeToNetwork(OctreeNode* child)
 
 void NetworkBuilder::exportNetwork()
 {
-	LOG(LWARNING) << "ELO! Branch node quantity: " << branchNodeCount;
-	LOG(LWARNING) << "ELO! Leaf node quantity: " << leafNodeCount;
-	LOG(LWARNING) << "ELO! Voxel node quantity: " << numberOfVoxels;
-	LOG(LWARNING) << "ELO! Feature node quantity: " << featureNodeCount;
-	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
+  LOG(LWARNING) << "ELO! Branch node quantity: " << branchNodeCount;
+  LOG(LWARNING) << "ELO! Leaf node quantity: " << leafNodeCount;
+  LOG(LWARNING) << "ELO! Voxel node quantity: " << numberOfVoxels;
+  LOG(LWARNING) << "ELO! Feature node quantity: " << featureNodeCount;
+  LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
 
-	LOG(LDEBUG) << "before writing network to file";
+  LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
-	LOG(LDEBUG) << "after writing network to file";
+  LOG(LDEBUG) << "after writing network to file";
   std::vector<DSL_network> networks;
   networks.push_back(network.getNetwork());
   out_networks.write(networks);
-	//out_network.write(network.getNetwork());
+  //out_network.write(network.getNetwork());
 }
 
 void NetworkBuilder::addHypothesisNode(OctreeBranchNode root, int modelId)
@@ -274,23 +274,23 @@ string NetworkBuilder::getNodeName(int nodeHandle)
 /*
 void NetworkBuilder::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
-	int containter_size = leafNode->getContainer().getSize();
-	if(containter_size >8) {
-		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
-	}//: if
-	if(containter_size > maxLeafContainerSize)
+  int containter_size = leafNode->getContainer().getSize();
+  if(containter_size >8) {
+    LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
+  }//: if
+  if(containter_size > maxLeafContainerSize)
     maxLeafContainerSize = containter_size;
 }
 
 int NetworkBuilder::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
 {
   int summedFeaturesMultiplicity = 0;
-	std::vector<int> point_indices;
-	leafNode->getContainer().getPointIndices(point_indices);
-	for(unsigned int j=0; j<leafNode->getContainer().getSize(); j++) {
-		PointXYZSIFT p = cloud->at(point_indices[j]);
-		summedFeaturesMultiplicity += p.multiplicity;
-	}
+  std::vector<int> point_indices;
+  leafNode->getContainer().getPointIndices(point_indices);
+  for(unsigned int j=0; j<leafNode->getContainer().getSize(); j++) {
+    PointXYZSIFT p = cloud->at(point_indices[j]);
+    summedFeaturesMultiplicity += p.multiplicity;
+  }
   return summedFeaturesMultiplicity;
 }
 */
