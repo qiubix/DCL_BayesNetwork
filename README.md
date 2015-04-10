@@ -21,13 +21,13 @@ SVN:
 https://subversion.apache.org/
 
 ### Another DCL dependencies:
-This DCL depends on couple other DisCODe libraries, so they have to be present in `DISCODE_DCL_DIRECTORY` before building. Currently it depends on the following ones, but in the future releases it will surely become more independent.
+This DCL depends on couple other DisCODe libraries, so they have to be present in `DISCODE_DCL_DIR` before building. Currently it depends on the following ones, but in the future releases it will surely become more independent.
 * CvBasic
 * PCL
 * SIFTObjectModel
 
 ## Installation
 Repository contains script `install_discode.sh`, which checks all dependencies and installs them, if necessary.
-After installing all dependencies just clone this repository to `DISCODE_DCL_DIRECTORY` and then run:
+After installing all dependencies just clone this repository to `DISCODE_DCL_DIR` and then run:
 
 `mkdir build && cd build && cmake .. && make -j5 && make install`
