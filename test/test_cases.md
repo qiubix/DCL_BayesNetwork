@@ -21,3 +21,12 @@
   - values don't add up to 1
 + should display node probability
 - should modify only one cell
+
+3. OctreeNode
+  - should set id
+  - should get number of children
+-> leaf
+  - should return point indices
+-> branch
+  - should check whether node has only one child
+  - should check whether node is branch node
