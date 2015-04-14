@@ -147,16 +147,16 @@ void NetworkBuilder::buildNetwork() {
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
-      OctreeBranchNode branchNode(node);
-      if(branchNode.hasOnlyOneChild()) {
+      OctreeBranchNode* branchNode = new OctreeBranchNode(node);
+      if(branchNode->hasOnlyOneChild()) {
         LOG(LDEBUG) << "Skipping octree node, that has only one child";
         continue;
       }
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
-        createNode(&branchNode);
-        connectNodeToNetwork(&branchNode);
-        addParentsToQueue(branchNode);
+        createNode(branchNode);
+        connectNodeToNetwork(branchNode);
+        addParentsToQueue(*branchNode);
         ++branchNodeCount;
       }
     }
