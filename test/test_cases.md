@@ -21,3 +21,8 @@
   - values don't add up to 1
 + should display node probability
 - should modify only one cell
+
+3. Octree class
+- should initialize octree with cloud
+- should init iterator to first node of octree
+- should move to next node in octree
