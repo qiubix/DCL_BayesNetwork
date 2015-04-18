@@ -25,4 +25,8 @@
 3. Octree class
 - should initialize octree with cloud
 - should init iterator to first node of octree
+- should throw exception when no file found
 - should move to next node in octree
+- should test iterator
+  - should move to next node in depth search
+  - should access element
