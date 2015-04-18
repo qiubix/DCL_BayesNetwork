@@ -5,7 +5,9 @@ Description
 -----------
 DisCODe components for creating bayesian network and conducting reasoning based on this network.
 
-[![Build Status](https://travis-ci.org/qiubix/DCL_BayesNetwork.svg?branch=develop)](https://travis-ci.org/qiubix/DCL_BayesNetwork)
+master: [![Build Status](https://travis-ci.org/qiubix/DCL_BayesNetwork.svg?branch=master)](https://travis-ci.org/qiubix/DCL_BayesNetwork)
+
+develop: [![Build Status](https://travis-ci.org/qiubix/DCL_BayesNetwork.svg?branch=develop)](https://travis-ci.org/qiubix/DCL_BayesNetwork)
 
 ##Dependencies
 SMILE library:
