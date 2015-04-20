@@ -5,7 +5,7 @@
 + should get number of nodes
 + should check if network has node
 + should get number of children
-- should add one node to empty network
++ should add one node to empty network
 - should add node to network with only one node
 - should connect two nodes
 - should add node to the end of the chain
