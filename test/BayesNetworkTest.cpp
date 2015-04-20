@@ -65,13 +65,13 @@ class BayesNetworkTest : public Test {
     }
 
     BayesNetwork createNetworkWithOneParentAndTwoChildren() {
-      network = new BayesNetwork();
-      network->addVoxelNode(FIRST_NODE_ID);
-      network->addFeatureNode(FIRST_NODE_ID);
-      network->addFeatureNode(SECOND_NODE_ID);
-      network->addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
-      network->addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
-      return *network;
+      BayesNetwork network;
+      network.addVoxelNode(FIRST_NODE_ID);
+      network.addFeatureNode(FIRST_NODE_ID);
+      network.addFeatureNode(SECOND_NODE_ID);
+      network.addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
+      network.addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
+      return network;
     }
 
   protected:
@@ -129,6 +129,19 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 
   ASSERT_TRUE(newNetwork.hasNode(VOXEL_NODE_NAME));
   ASSERT_EQ(1, newNetwork.getNumberOfNodes());
+}
+
+TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
+{
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  network.addVoxelNode(SECOND_NODE_ID);
+  EXPECT_TRUE(network.hasNode(SECOND_NODE_NAME));
+  ASSERT_EQ(4, network.getNumberOfNodes());
+
+  network.addFeatureNode(2);
+  EXPECT_TRUE(network.hasNode("F_2"));
+  ASSERT_EQ(5, network.getNumberOfNodes());
 }
 
 TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
