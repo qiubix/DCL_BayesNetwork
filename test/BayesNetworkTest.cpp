@@ -69,8 +69,8 @@ class BayesNetworkTest : public Test {
       network.addVoxelNode(FIRST_NODE_ID);
       network.addFeatureNode(FIRST_NODE_ID);
       network.addFeatureNode(SECOND_NODE_ID);
-      network.addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
-      network.addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
+      network.connectNodes(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
+      network.connectNodes(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
       return network;
     }
 
@@ -120,7 +120,6 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
   ASSERT_EQ(2, numberOfChildren);
 }
 
-
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 {
   BayesNetwork newNetwork;
@@ -169,7 +168,7 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   ASSERT_EQ(2, parentCPTSize);
   ASSERT_EQ(2, childCPTSize);
 
-  network->addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
+  network->connectNodes(FIRST_NODE_NAME, SECOND_NODE_NAME);
 
   numberOfChildren = getNumberOfChildren(FIRST_NODE_NAME);
   numberOfParents = getNumberOfParents(SECOND_NODE_NAME);
@@ -201,7 +200,7 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   simpleNetwork.addVoxelNode(CHILD_NODE_ID);
   int childId = simpleNetwork.getNetwork().FindNode(CHILD_NODE_NAME);
 
-  simpleNetwork.addArc(PARENT_NODE_NAME, CHILD_NODE_NAME);
+  simpleNetwork.connectNodes(PARENT_NODE_NAME, CHILD_NODE_NAME);
 
   std::vector<double> probabilities;
   probabilities.push_back(0.3);
@@ -344,8 +343,8 @@ TEST_F(BayesNetworkTest, shouldGetNodeChild)
   network.addFeatureNode(0);
   network.addFeatureNode(1);
   network.addVoxelNode(0);
-  network.addArc("F_0", "V_0");
-  network.addArc("F_1", "V_0");
+  network.connectNodes("F_0", "V_0");
+  network.connectNodes("F_1", "V_0");
 
   BayesNetworkNode firstNode = network.getNextRootNode();
   BayesNetworkNode secondNode = network.getNextRootNode();

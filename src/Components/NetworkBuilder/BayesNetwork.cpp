@@ -60,7 +60,7 @@ std::string BayesNetwork::createFeatureName(int id)
   return featureName;
 }
 
-void BayesNetwork::addArc(std::string parentName, std::string childName)
+void BayesNetwork::connectNodes(std::string parentName, std::string childName)
 {
   LOG(LDEBUG) << "Adding arc between nodes: " << parentName << "->" << childName;
   int childNode = network.FindNode(childName.c_str());
