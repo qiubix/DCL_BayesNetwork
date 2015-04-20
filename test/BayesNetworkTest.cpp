@@ -182,37 +182,6 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   EXPECT_EQ(4, childCPTSize);
 }
 
-//FIXME: analyze whether this test is necessary at all
-TEST_F(BayesNetworkTest, shouldAddVoxelNodeToNetworkWithNodes)
-{
-  /*
-   * create network with some nodes
-   * add voxel node
-   * check if name correct
-   * check if node is in the right layer
-   */
-  EXPECT_TRUE(true);
-}
-
-//FIXME: analyze whether this test is necessary at all
-TEST_F(BayesNetworkTest, shouldAddFeatureNodeToNetwork)
-{
-  /*
-   * create network with some nodes
-   * add feature node
-   * check if name correct
-   * check if node is in the right layer
-   * check if node has proper CPT
-   */
-  BayesNetwork newNetwork;
-  ASSERT_EQ(0, newNetwork.getNumberOfNodes());
-
-  newNetwork.addFeatureNode(NODE_ID);
-
-  ASSERT_TRUE(newNetwork.hasNode(FEATURE_NODE_NAME));
-  ASSERT_EQ(1, newNetwork.getNumberOfNodes());
-}
-
 TEST_F(BayesNetworkTest, shouldFillNodeCPT)
 {
   /*

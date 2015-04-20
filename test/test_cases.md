@@ -14,6 +14,9 @@
 - should return child of a node
 - should return next root node
 
+BayesNetworkNode class
+- should copy nodes properly
+
 2. CPTManager class
 + should display whole CPT
 + should set CPT of the node

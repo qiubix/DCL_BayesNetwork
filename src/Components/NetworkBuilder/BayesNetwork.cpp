@@ -105,6 +105,7 @@ std::string BayesNetwork::getNodeName(int nodeHandle)
   LOG(LTRACE) << "Get name of node: " << nodeHandle;
 }
 
+//FIXME: change interface of this method for much more intuitive
 int BayesNetwork::getNumberOfChildren(int nodeId)
 {
   LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
