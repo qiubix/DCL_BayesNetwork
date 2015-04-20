@@ -64,6 +64,16 @@ class BayesNetworkTest : public Test {
       return network;
     }
 
+    BayesNetwork createNetworkWithOneParentAndTwoChildren() {
+      network = new BayesNetwork();
+      network->addVoxelNode(FIRST_NODE_ID);
+      network->addFeatureNode(FIRST_NODE_ID);
+      network->addFeatureNode(SECOND_NODE_ID);
+      network->addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
+      network->addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
+      return *network;
+    }
+
   protected:
     int NODE_ID;
     const char* VOXEL_NODE_NAME;
@@ -101,6 +111,15 @@ TEST_F(BayesNetworkTest, shouldCheckIfNetworkHasNode)
   BayesNetwork newNetwork;
   ASSERT_FALSE(newNetwork.hasNode(VOXEL_NODE_NAME));
 }
+
+TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
+{
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  const int parentNodeId = 0;
+  int numberOfChildren = network.getNumberOfChildren(parentNodeId);
+  ASSERT_EQ(2, numberOfChildren);
+}
+
 
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 {
