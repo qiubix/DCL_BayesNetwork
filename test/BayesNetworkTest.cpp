@@ -73,6 +73,7 @@ class BayesNetworkTest : public Test {
       int firstChild = network.getNetwork().FindNode("F_0");
       int secondChild = network.getNetwork().FindNode("F_1");
       //FIXME: use SMILE API, because addArc wasn't tested yet
+      //getNetwork() returns a COPY of a network, so running AddArc will not change network stored in BN class
  //     network.getNetwork().AddArc(parent,firstChild);
  //     network.getNetwork().AddArc(parent,secondChild);
       network.addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
@@ -116,44 +117,6 @@ TEST_F(BayesNetworkTest, shouldCheckIfNetworkHasNode)
 {
   BayesNetwork newNetwork;
   ASSERT_FALSE(newNetwork.hasNode(VOXEL_NODE_NAME));
-}
-
-TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
-{
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
-  int numberOfChildren = network.getNumberOfChildren("V_0");
-  ASSERT_EQ(2, numberOfChildren);
-//  BayesNetwork net;
-//  net.addVoxelNode(0);
-//  net.addVoxelNode(1);
-//  ASSERT_EQ(2, net.getNumberOfNodes());
-//  int parent = net.getNetwork().FindNode("V_0");
-//  ASSERT_EQ(0, parent);
-//  int firstChild = net.getNetwork().FindNode("V_1");
-//  ASSERT_EQ(1, firstChild);
-//  int code = net.getNetwork().AddArc(parent,firstChild);
-//  ASSERT_NE(DSL_OUT_OF_RANGE, code);
-//  int numberOfChildren = net.getNumberOfChildren("V_0");
-//  //int numberOfChildren = getNumberOfChildren("V_0");
-//  ASSERT_EQ(1, numberOfChildren);
-
-  //BayesNetwork* network = createNetworkWithOneNode();
-//  BayesNetwork* network = new BayesNetwork();
-//  network->addVoxelNode(FIRST_NODE_ID);
-//  network->addVoxelNode(SECOND_NODE_ID);
-//  ASSERT_EQ(2, network->getNumberOfNodes());
-//
-//  int numberOfChildren = network->getNumberOfChildren("V_0"); //getNumberOfChildren(FIRST_NODE_NAME);
-//  ASSERT_EQ(0, numberOfChildren);
-//
-//  int parent = network->getNetwork().FindNode("V_0");
-//  int firstChild = network->getNetwork().FindNode("V_1");
-//  int code = network->getNetwork().AddArc(parent, firstChild);
-//  //ASSERT_EQ(3, code);
-//  //network->addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
-//
-//  numberOfChildren = network->getNumberOfChildren("V_0"); //getNumberOfChildren(FIRST_NODE_NAME);
-//  EXPECT_EQ(1, numberOfChildren);
 }
 
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
@@ -215,6 +178,13 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
   childCPTSize = getCPTSize(SECOND_NODE_NAME);
   EXPECT_EQ(2, parentCPTSize);
   EXPECT_EQ(4, childCPTSize);
+}
+
+TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
+{
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  int numberOfChildren = network.getNumberOfChildren("V_0");
+  ASSERT_EQ(2, numberOfChildren);
 }
 
 TEST_F(BayesNetworkTest, shouldFillNodeCPT)

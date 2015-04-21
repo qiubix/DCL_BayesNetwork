@@ -4,11 +4,12 @@
 + should initialize empty network
 + should get number of nodes
 + should check if network has node
-+ should get number of children
 + should add one node to empty network
 + should add node to network with nodes
 - should throw exception when adding already existing node
+- should throw exception when node doesn't exist
 - should connect two nodes
++ should get number of children
 - should add node to the end of the chain
 - should add node in the middle of the chain
 - should return child of a node
