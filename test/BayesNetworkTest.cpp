@@ -72,10 +72,11 @@ class BayesNetworkTest : public Test {
       int parent = network.getNetwork().FindNode("V_0");
       int firstChild = network.getNetwork().FindNode("F_0");
       int secondChild = network.getNetwork().FindNode("F_1");
-      network.getNetwork().AddArc(parent,firstChild);
-      network.getNetwork().AddArc(parent,secondChild);
-//      network.addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
-//      network.addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
+      //FIXME: use SMILE API, because addArc wasn't tested yet
+ //     network.getNetwork().AddArc(parent,firstChild);
+ //     network.getNetwork().AddArc(parent,secondChild);
+      network.addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
+      network.addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
       return network;
     }
 
@@ -119,25 +120,40 @@ TEST_F(BayesNetworkTest, shouldCheckIfNetworkHasNode)
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
 {
-  //BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
-  BayesNetwork network;
-  network.addVoxelNode(0);
-  network.addFeatureNode(0);
-  network.addFeatureNode(1);
-  ASSERT_EQ(3, network.getNumberOfNodes());
-  int parent = network.getNetwork().FindNode("V_0");
-  ASSERT_EQ(0, parent);
-  int firstChild = network.getNetwork().FindNode("F_0");
-  ASSERT_EQ(1, firstChild);
-  int secondChild = network.getNetwork().FindNode("F_1");
-  ASSERT_EQ(2, secondChild);
-  int code = network.getNetwork().AddArc(parent,firstChild);
-  ASSERT_NE(DSL_OUT_OF_RANGE, code);
-  code = network.getNetwork().AddArc(parent,secondChild);
-  ASSERT_NE(DSL_OUT_OF_RANGE, code);
-  const int parentNodeId = 0;
-  int numberOfChildren = network.getNumberOfChildren(parentNodeId);
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  int numberOfChildren = network.getNumberOfChildren("V_0");
   ASSERT_EQ(2, numberOfChildren);
+//  BayesNetwork net;
+//  net.addVoxelNode(0);
+//  net.addVoxelNode(1);
+//  ASSERT_EQ(2, net.getNumberOfNodes());
+//  int parent = net.getNetwork().FindNode("V_0");
+//  ASSERT_EQ(0, parent);
+//  int firstChild = net.getNetwork().FindNode("V_1");
+//  ASSERT_EQ(1, firstChild);
+//  int code = net.getNetwork().AddArc(parent,firstChild);
+//  ASSERT_NE(DSL_OUT_OF_RANGE, code);
+//  int numberOfChildren = net.getNumberOfChildren("V_0");
+//  //int numberOfChildren = getNumberOfChildren("V_0");
+//  ASSERT_EQ(1, numberOfChildren);
+
+  //BayesNetwork* network = createNetworkWithOneNode();
+//  BayesNetwork* network = new BayesNetwork();
+//  network->addVoxelNode(FIRST_NODE_ID);
+//  network->addVoxelNode(SECOND_NODE_ID);
+//  ASSERT_EQ(2, network->getNumberOfNodes());
+//
+//  int numberOfChildren = network->getNumberOfChildren("V_0"); //getNumberOfChildren(FIRST_NODE_NAME);
+//  ASSERT_EQ(0, numberOfChildren);
+//
+//  int parent = network->getNetwork().FindNode("V_0");
+//  int firstChild = network->getNetwork().FindNode("V_1");
+//  int code = network->getNetwork().AddArc(parent, firstChild);
+//  //ASSERT_EQ(3, code);
+//  //network->addArc(FIRST_NODE_NAME, SECOND_NODE_NAME);
+//
+//  numberOfChildren = network->getNumberOfChildren("V_0"); //getNumberOfChildren(FIRST_NODE_NAME);
+//  EXPECT_EQ(1, numberOfChildren);
 }
 
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)

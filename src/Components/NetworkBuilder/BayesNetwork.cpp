@@ -105,14 +105,11 @@ std::string BayesNetwork::getNodeName(int nodeHandle)
   LOG(LTRACE) << "Get name of node: " << nodeHandle;
 }
 
-//FIXME: change interface of this method for much more intuitive
-int BayesNetwork::getNumberOfChildren(int nodeId)
+int BayesNetwork::getNumberOfChildren(const char* nodeName)
 {
-  LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
-  int numberOfChildren = 0;
-  int nodeHandle = network.FindNode(createVoxelName(nodeId).c_str());
-  numberOfChildren = network.NumChildren(nodeHandle);
-  return numberOfChildren;
+  LOG(LTRACE) << "Get number of children of node: " << nodeName;
+  int nodeHandle = network.FindNode(nodeName);
+  return network.NumChildren(nodeHandle);
 }
 
 int BayesNetwork::getNumberOfNodes()

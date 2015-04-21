@@ -33,7 +33,7 @@ public:
 
   //getters
   std::string getNodeName(int nodeHandle);
-  int getNumberOfChildren(int nodeId);
+  int getNumberOfChildren(const char* nodeName);
   int getNumberOfNodes();
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
