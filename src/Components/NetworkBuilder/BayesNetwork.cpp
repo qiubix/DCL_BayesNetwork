@@ -185,6 +185,9 @@ void BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
     LOG(LTRACE) << "Probability: " << *it;
     ++it;
   } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+
+  // FIXME: probably after filling CPT it's good to run UpdateBeliefs
+  // network.UpdateBeliefs();
 }
 
 /*!

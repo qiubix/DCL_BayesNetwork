@@ -73,12 +73,12 @@ class BayesNetworkTest : public Test {
       int parent = network.getNetwork().FindNode("V_0");
       int firstChild = network.getNetwork().FindNode("F_0");
       int secondChild = network.getNetwork().FindNode("F_1");
-      //FIXME: use SMILE API, because addArc wasn't tested yet
+      //FIXME: use SMILE API, because connectNodes wasn't tested yet
       //getNetwork() returns a COPY of a network, so running AddArc will not change network stored in BN class
  //     network.getNetwork().AddArc(parent,firstChild);
  //     network.getNetwork().AddArc(parent,secondChild);
-      network.addArc(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
-      network.addArc(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
+      network.connectNodes(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
+      network.connectNodes(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
       return network;
     }
 
@@ -179,6 +179,7 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
   ASSERT_EQ(2, numberOfChildren);
 }
 
+//TODO: plough, it's redundant with CPTManager handling this issue
 TEST_F(BayesNetworkTest, shouldFillNodeCPT)
 {
   /*
@@ -189,27 +190,23 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
    * check whether every cell has been updated
    * check whether every cell has proper value
    */
-  BayesNetwork simpleNetwork;
-  ASSERT_EQ(0, simpleNetwork.getNumberOfNodes());
-
-  simpleNetwork.addVoxelNode(PARENT_NODE_ID);
+  BayesNetwork simpleNetwork = *createNetworkWithTwoNodes();
   int parentId = simpleNetwork.getNetwork().FindNode(PARENT_NODE_NAME);
-
-  simpleNetwork.addVoxelNode(CHILD_NODE_ID);
   int childId = simpleNetwork.getNetwork().FindNode(CHILD_NODE_NAME);
 
   simpleNetwork.connectNodes(PARENT_NODE_NAME, CHILD_NODE_NAME);
 
   std::vector<double> probabilities;
   probabilities.push_back(0.3);
-  probabilities.push_back(0.0);
+  probabilities.push_back(0.1);
   simpleNetwork.fillCPT(PARENT_NODE_NAME, probabilities);
 
   DSL_network theNet = simpleNetwork.getNetwork();
   DSL_node* parentNode = theNet.GetNode(parentId);
-  DSL_sysCoordinates parentCoordinates(*(parentNode->Definition()));
-  DSL_idArray *theNames = parentNode->Definition()->GetOutcomesNames();
-  parentCoordinates[0] = theNames->FindPosition("YES");
+  //FIXME: should have been Value, not Definition:
+  DSL_sysCoordinates parentCoordinates(*parentNode->Definition());
+  DSL_idArray *names = parentNode->Definition()->GetOutcomesNames();
+  parentCoordinates[0] = 0; //names->FindPosition("YES");
   parentCoordinates.GoToCurrentPosition();
   double probability = parentCoordinates.UncheckedValue();
   EXPECT_EQ(0.3, probability);
@@ -218,19 +215,19 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   probabilities.push_back(0.2);
   simpleNetwork.fillCPT(CHILD_NODE_NAME, probabilities);
 
+  theNet = simpleNetwork.getNetwork();
   DSL_node* childNode = theNet.GetNode(childId);
   int childCPTSize = childNode->Definition()->GetSize();
   ASSERT_EQ(4, childCPTSize);
   ASSERT_EQ(2, childNode->Definition()->GetNumberOfOutcomes());
-  DSL_sysCoordinates childCoordinates(*(childNode->Definition()));
-  theNames = childNode->Definition()->GetOutcomesNames();
-  childCoordinates[0] = theNames->FindPosition("YES");
+  //FIXME: should have been Value, not Definition:
+  DSL_sysCoordinates childCoordinates(*childNode->Definition());
+  names = childNode->Definition()->GetOutcomesNames();
+  childCoordinates[0] = 0; //names->FindPosition("YES");
   childCoordinates.GoToCurrentPosition();
-  childCoordinates.GoFirst();
   probability = childCoordinates.UncheckedValue();
-  //FIXME: this value is not correct, sth isn't working, because it should return 0.3
-  //TODO: get whole CPT matrix and examine it
-  EXPECT_EQ(0.5, probability);
+  //FIXME: this value is not correct, sth isn't working, because it's definition, not value
+  EXPECT_EQ(0.3, probability);
 
   //FIXME: TODO: finish it!
 }
