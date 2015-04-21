@@ -8,7 +8,8 @@
 + should add node to network with nodes
 - should throw exception when adding already existing node
 - should throw exception when node doesn't exist
-- should connect two nodes
++ should connect two nodes
+  - should throw exception when nodes can't be connected
 + should get number of children
 - should add node to the end of the chain
 - should add node in the middle of the chain

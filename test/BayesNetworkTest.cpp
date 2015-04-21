@@ -58,9 +58,10 @@ class BayesNetworkTest : public Test {
       return new BayesNetwork();
     }
 
-    BayesNetwork* createNetworkWithOneNode() {
+    BayesNetwork* createNetworkWithTwoNodes() {
       network = new BayesNetwork();
       network->addVoxelNode(FIRST_NODE_ID);
+      network->addVoxelNode(SECOND_NODE_ID);
       return network;
     }
 
@@ -142,19 +143,10 @@ TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
   ASSERT_EQ(5, network.getNumberOfNodes());
 }
 
+//TODO: get rid of this pointer, clean up this test
 TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
 {
-  /*
-   * create network with node
-   * add new node to network
-   * connect two nodes
-   * check if nodes connected
-   * check number of children
-   * check number of parents
-   * check size of CPT
-   */
-  BayesNetwork* network = createNetworkWithOneNode();
-  network->addVoxelNode(SECOND_NODE_ID);
+  BayesNetwork* network = createNetworkWithTwoNodes();
   ASSERT_EQ(2, network->getNumberOfNodes());
 
   int numberOfChildren = getNumberOfChildren(FIRST_NODE_NAME);
