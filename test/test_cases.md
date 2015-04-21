@@ -15,6 +15,10 @@
 - should add node in the middle of the chain
 - should return child of a node
 - should return next root node
+  - should return first root node
+  - should return next not visited node
+  - should return the same node if last root node still wasn't visited
+  - should stop at the last node
 
 BayesNetworkNode class
 - should copy nodes properly
