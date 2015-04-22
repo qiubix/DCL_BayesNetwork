@@ -5,6 +5,7 @@ using ::testing::Test;
 
 #include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
 #include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
+#include "../src/Components/NetworkBuilder/BayesNetworkExceptions.hpp"
 
 using namespace Processors::Network;
 
@@ -141,6 +142,14 @@ TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
   network.addFeatureNode(2);
   EXPECT_TRUE(network.hasNode("F_2"));
   ASSERT_EQ(5, network.getNumberOfNodes());
+}
+
+TEST_F(BayesNetworkTest, shouldThrowExceptionWhenAddingAlreadyExistingNode)
+{
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  EXPECT_THROW(network.addVoxelNode(SECOND_NODE_ID), NodeAlreadyExistsException);
+  EXPECT_THROW(network.addFeatureNode(2), NodeAlreadyExistsException);
 }
 
 //TODO: get rid of this pointer, clean up this test

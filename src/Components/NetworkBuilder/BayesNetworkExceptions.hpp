@@ -3,6 +3,13 @@
 
 #include <exception>
 
+class NodeAlreadyExistsException : public std::exception
+{
+  virtual const char* what() const throw() {
+    return "This node already exists in network.";
+  }
+};
+
 class NodeNotFoundException : public std::exception
 {
   virtual const char* what() const throw() {
