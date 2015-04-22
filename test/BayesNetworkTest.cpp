@@ -183,17 +183,21 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
 
 //TODO: split this test
 //TODO: make this exceptions more informative
-//FIXME: missing test case: cycle
 TEST_F(BayesNetworkTest, shouldThrowExceptionWhenNodesCanNotBeConnected)
 {
   BayesNetwork network;
   network.addVoxelNode(0);
   EXPECT_THROW(network.connectNodes("V_0","V_1"), UnableToConnectNodesException);
+  EXPECT_THROW(network.connectNodes("V_1","V_0"), UnableToConnectNodesException);
 
   network.addVoxelNode(1);
   network.connectNodes("V_0","V_1");
   EXPECT_THROW(network.connectNodes("V_0","V_1"), UnableToConnectNodesException);
   EXPECT_THROW(network.connectNodes("V_1","V_0"), UnableToConnectNodesException);
+
+  network.addVoxelNode(2);
+  network.connectNodes("V_1","V_2");
+  EXPECT_THROW(network.connectNodes("V_2","V_0"), UnableToConnectNodesException);
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
