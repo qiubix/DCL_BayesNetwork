@@ -8,11 +8,15 @@
 + should add node to network with nodes
 - should throw exception when adding already existing node
 - should throw exception when node doesn't exist
+- should add node to the end of the chain
+- should add node in the middle of the chain
 + should connect two nodes
   - should throw exception when nodes can't be connected
 + should get number of children
-- should add node to the end of the chain
-- should add node in the middle of the chain
+- should export network to file
+- should throw exception when trying to create incorrect node name
+
+New interface for alternative CPT:
 - should return child of a node
 - should return next root node
   - should return first root node
@@ -21,7 +25,9 @@
   - should stop at the last node
 
 BayesNetworkNode class
+- should init node
 - should copy nodes properly
+- should change node state to visited
 
 2. CPTManager class
 + should display whole CPT

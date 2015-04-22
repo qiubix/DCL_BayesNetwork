@@ -179,7 +179,9 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
   ASSERT_EQ(2, numberOfChildren);
 }
 
+// **********************************************************************
 //TODO: plough, it's redundant with CPTManager handling this issue
+// **********************************************************************
 TEST_F(BayesNetworkTest, shouldFillNodeCPT)
 {
   /*
@@ -232,6 +234,10 @@ TEST_F(BayesNetworkTest, shouldFillNodeCPT)
   //FIXME: TODO: finish it!
 }
 
+// **********************************************************************
+// TODO: add new fixture class, or move all tests below to new test suite
+// **********************************************************************
+
 TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
 {
   BayesNetwork network;
@@ -243,6 +249,7 @@ TEST_F(BayesNetworkTest, shouldGetFirstRootNode)
   ASSERT_EQ(FIRST_ROOT_NODE_NAME, node.getName());
 }
 
+//FIXME: this should belong to BayesNetworkNode test suite
 TEST_F(BayesNetworkTest, shouldCopyNodes)
 {
   BayesNetwork network;
@@ -258,24 +265,6 @@ TEST_F(BayesNetworkTest, shouldCopyNodes)
   ASSERT_TRUE(newNode.isVisited());
   //TODO: test for other cases of copying
 }
-
-/*
-TEST_F(BayesNetworkTest, shouldGetTheSameNode)
-{
-  BayesNetwork network;
-  network.addFeatureNode(0);
-  network.addFeatureNode(1);
-
-  BayesNetworkNode firstNode = network.getNextRootNode();
-  EXPECT_FALSE(firstNode.isVisited());
-  EXPECT_EQ(FIRST_ROOT_NODE_NAME, firstNode.getName());
-  network.visitNode(firstNode);
-  ASSERT_TRUE(firstNode.isVisited());
-  BayesNetworkNode secondNode = network.getNextRootNode();
-  EXPECT_TRUE(secondNode.isVisited());
-  EXPECT_EQ(FIRST_ROOT_NODE_NAME, secondNode.getName());
-}
-*/
 
 TEST_F(BayesNetworkTest, shouldGetNextRootNode)
 {
@@ -294,6 +283,13 @@ TEST_F(BayesNetworkTest, shouldGetNextRootNode)
   EXPECT_EQ(SECOND_ROOT_NODE_NAME, secondNode.getName());
 }
 
+/*TODO: FIXME: split to multiple tests, see test_cases.md
+ * - should return first root node
+ * - should return next not visited node
+ * - should return the same node if last root node still wasn't visited
+ * - should stop at the last node
+ * Probably it's a good idea to implement iterator for root nodes
+ */
 TEST_F(BayesNetworkTest, shouldGetNextNotVisitedRootNode)
 {
   BayesNetwork network;
