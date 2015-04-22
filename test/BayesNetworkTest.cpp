@@ -207,6 +207,14 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
   ASSERT_EQ(2, numberOfChildren);
 }
 
+TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName)
+{
+  BayesNetwork network;
+
+  EXPECT_THROW(network.createVoxelName(-1), UnableToCreateNodeNameWithThisIdException);
+  EXPECT_THROW(network.createFeatureName(-1), UnableToCreateNodeNameWithThisIdException);
+}
+
 // **********************************************************************
 //TODO: plough, it's redundant with CPTManager handling this issue
 // **********************************************************************
