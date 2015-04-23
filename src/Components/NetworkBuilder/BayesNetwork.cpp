@@ -66,10 +66,11 @@ void BayesNetwork::connectNodes(std::string parentName, std::string childName)
   LOG(LDEBUG) << "Adding arc between nodes: " << parentName << "->" << childName;
   int childNode = network.FindNode(childName.c_str());
   int parentNode = network.FindNode(parentName.c_str());
-  if ( childNode == DSL_OUT_OF_RANGE || parentNode == DSL_OUT_OF_RANGE ) {
+  int code = network.AddArc(parentNode, childNode);
+  //FIXME: AddArc method doesn't return proper code when creating cycle
+  if ( code == DSL_OUT_OF_RANGE ) {
     throw UnableToConnectNodesException();
   }
-  network.AddArc(parentNode, childNode);
 }
 
 void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
