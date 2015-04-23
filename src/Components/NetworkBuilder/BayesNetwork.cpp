@@ -45,6 +45,9 @@ void BayesNetwork::addFeatureNode(int id)
 
 std::string BayesNetwork::createVoxelName(int id)
 {
+  if ( id < 0 ) {
+    throw UnableToCreateNodeNameWithThisIdException();
+  }
   LOG(LTRACE) << "Creating voxel name";
   std::stringstream name;
   name << "V_" << id;
@@ -54,6 +57,9 @@ std::string BayesNetwork::createVoxelName(int id)
 
 std::string BayesNetwork::createFeatureName(int id)
 {
+  if ( id < 0 ) {
+    throw UnableToCreateNodeNameWithThisIdException();
+  }
   LOG(LTRACE) << "Creating feature name";
   std::stringstream name;
   name << "F_" << id;
