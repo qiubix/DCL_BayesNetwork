@@ -4,6 +4,7 @@
 #include "BayesNetwork.hpp"
 #include "Logger.hpp"
 #include "CPTManager.hpp"
+#include "BayesNetworkExceptions.hpp"
 
 namespace Processors {
 namespace Network {
@@ -163,6 +164,9 @@ void BayesNetwork::addNode(std::string name)
 {
   LOG(LTRACE) << "Add node to network: " << name;
   int newNode = network.AddNode(DSL_CPT, name.c_str());
+  if ( newNode == DSL_OUT_OF_RANGE ) {
+    throw NodeAlreadyExistsException();
+  }
   DSL_idArray outcomes;
   std::vector<std::string> outcomesNames;
   outcomesNames.push_back("YES");

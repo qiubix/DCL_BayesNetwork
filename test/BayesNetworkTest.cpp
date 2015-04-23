@@ -148,8 +148,8 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenAddingAlreadyExistingNode)
 {
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
 
-  EXPECT_THROW(network.addVoxelNode(SECOND_NODE_ID), NodeAlreadyExistsException);
-  EXPECT_THROW(network.addFeatureNode(2), NodeAlreadyExistsException);
+  EXPECT_THROW(network.addVoxelNode(FIRST_NODE_ID), NodeAlreadyExistsException);
+  EXPECT_THROW(network.addFeatureNode(1), NodeAlreadyExistsException);
 }
 
 //TODO: get rid of this pointer, clean up this test
