@@ -101,7 +101,7 @@ bool NetworkBuilder::onStart()
 void NetworkBuilder::buildNetwork() {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
-  if(network.getNumberOfNodes() != 0) {
+  if( !network.isEmpty() ) {
     return;
   }
 
@@ -125,6 +125,7 @@ void NetworkBuilder::buildNetwork() {
   OctreeNode node = *dfIt;
 
   // Root node
+  // TODO: extract to method
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
     OctreeBranchNode root(node);
     addHypothesisNode(root);
