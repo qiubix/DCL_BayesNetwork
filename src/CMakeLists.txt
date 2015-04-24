@@ -13,6 +13,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 # Find another necessary libraries
 
+# TODO: remove another DCL dependencies
 # Find another DCLs our one depends on
 # Use macro: DISCODE_FIND_DCL(<DCL_NAME>)
 # DISCODE_FIND_DCL(CvBasic)

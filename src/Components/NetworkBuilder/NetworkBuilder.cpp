@@ -101,7 +101,7 @@ bool NetworkBuilder::onStart()
 void NetworkBuilder::buildNetwork() {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
-  if(network.getNumberOfNodes() != 0) {
+  if( !network.isEmpty() ) {
     return;
   }
 
@@ -125,6 +125,7 @@ void NetworkBuilder::buildNetwork() {
   OctreeNode node = *dfIt;
 
   // Root node
+  // TODO: extract to method
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
     OctreeBranchNode root(node);
     addHypothesisNode(root);
@@ -215,7 +216,7 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode)
     int featureId = p.pointId;
     network.addFeatureNode(featureId);
     string featureName = network.createFeatureName(featureId);
-    network.addArc(featureName, parentName);
+    network.connectNodes(featureName, parentName);
     ++featureNodeCount;
   }//: for points
 
@@ -233,7 +234,7 @@ void NetworkBuilder::connectNodeToNetwork(OctreeNode* child)
   int parentId = parent.getId();
   string bayesChildNodeName = network.createVoxelName(parentId);
   parentQueue.pop();
-  network.addArc(bayesParentNodeName, bayesChildNodeName);
+  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
 }
 
 void NetworkBuilder::exportNetwork()

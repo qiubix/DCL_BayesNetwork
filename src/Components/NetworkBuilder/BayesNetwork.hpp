@@ -17,14 +17,15 @@ public:
   BayesNetwork();
   ~BayesNetwork() {}
 
+  bool isEmpty();
+  bool hasNode(const char* nodeName);
   //building network
   //TODO: extract BayesNetworkBuilder class
   void addVoxelNode(int id);
   void addFeatureNode(int id);
   std::string createVoxelName(int id);
   std::string createFeatureName(int id);
-  //TODO: rename method to connect nodes
-  void addArc(std::string parentName, std::string childName);
+  void connectNodes(std::string parentName, std::string childName);
 
   //manipulating CPTs
   void setCPTofAllVoxelNodes(unsigned int numberOfVoxels);
@@ -32,7 +33,7 @@ public:
 
   //getters
   std::string getNodeName(int nodeHandle);
-  int getNumberOfChildren(int nodeId);
+  int getNumberOfChildren(const char* nodeName);
   int getNumberOfNodes();
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
