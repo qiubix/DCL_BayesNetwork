@@ -4,6 +4,7 @@
 #include "BayesNetwork.hpp"
 #include "Logger.hpp"
 #include "CPTManager.hpp"
+#include "BayesNetworkExceptions.hpp"
 
 namespace Processors {
 namespace Network {
@@ -12,6 +13,17 @@ BayesNetwork::BayesNetwork()
 {
   network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
   nextRootNodePosition = 0;
+}
+
+bool BayesNetwork::isEmpty()
+{
+  return network.GetNumberOfNodes() == 0;
+}
+
+bool BayesNetwork::hasNode(const char* nodeName)
+{
+  int nodeId = network.FindNode(nodeName);
+  return nodeId != DSL_OUT_OF_RANGE;
 }
 
 void BayesNetwork::addVoxelNode(int id)
@@ -33,6 +45,9 @@ void BayesNetwork::addFeatureNode(int id)
 
 std::string BayesNetwork::createVoxelName(int id)
 {
+  if ( id < 0 ) {
+    throw UnableToCreateNodeNameWithThisIdException();
+  }
   LOG(LTRACE) << "Creating voxel name";
   std::stringstream name;
   name << "V_" << id;
@@ -42,6 +57,9 @@ std::string BayesNetwork::createVoxelName(int id)
 
 std::string BayesNetwork::createFeatureName(int id)
 {
+  if ( id < 0 ) {
+    throw UnableToCreateNodeNameWithThisIdException();
+  }
   LOG(LTRACE) << "Creating feature name";
   std::stringstream name;
   name << "F_" << id;
@@ -49,12 +67,16 @@ std::string BayesNetwork::createFeatureName(int id)
   return featureName;
 }
 
-void BayesNetwork::addArc(std::string parentName, std::string childName)
+void BayesNetwork::connectNodes(std::string parentName, std::string childName)
 {
   LOG(LDEBUG) << "Adding arc between nodes: " << parentName << "->" << childName;
   int childNode = network.FindNode(childName.c_str());
   int parentNode = network.FindNode(parentName.c_str());
-  network.AddArc(parentNode, childNode);
+  int code = network.AddArc(parentNode, childNode);
+  //FIXME: AddArc method doesn't return proper code when creating cycle
+  if ( code == DSL_OUT_OF_RANGE ) {
+    throw UnableToConnectNodesException();
+  }
 }
 
 void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
@@ -94,9 +116,11 @@ std::string BayesNetwork::getNodeName(int nodeHandle)
   LOG(LTRACE) << "Get name of node: " << nodeHandle;
 }
 
-int BayesNetwork::getNumberOfChildren(int nodeId)
+int BayesNetwork::getNumberOfChildren(const char* nodeName)
 {
-  LOG(LTRACE) << "Get number of children of node nr: " << nodeId;
+  LOG(LTRACE) << "Get number of children of node: " << nodeName;
+  int nodeHandle = network.FindNode(nodeName);
+  return network.NumChildren(nodeHandle);
 }
 
 int BayesNetwork::getNumberOfNodes()
@@ -150,6 +174,9 @@ void BayesNetwork::addNode(std::string name)
 {
   LOG(LTRACE) << "Add node to network: " << name;
   int newNode = network.AddNode(DSL_CPT, name.c_str());
+  if ( newNode == DSL_OUT_OF_RANGE ) {
+    throw NodeAlreadyExistsException();
+  }
   DSL_idArray outcomes;
   std::vector<std::string> outcomesNames;
   outcomesNames.push_back("YES");
@@ -172,6 +199,9 @@ void BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
     LOG(LTRACE) << "Probability: " << *it;
     ++it;
   } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
+
+  // FIXME: probably after filling CPT it's good to run UpdateBeliefs
+  // network.UpdateBeliefs();
 }
 
 /*!

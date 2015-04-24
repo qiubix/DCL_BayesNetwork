@@ -1,16 +1,31 @@
 # Test cases
 
 1. BayesNetwork class
-- should initialize empty network
-- should add one node to empty network
-- should add node to network with only one node
-- should connect two nodes
-- should add node to the end of the chain
-- should add node in the middle of the chain
++ should initialize empty network
++ should get number of nodes
++ should check if network has node
++ should add one node to empty network
++ should add node to network with nodes
++ should throw exception when adding already existing node
++ should connect two nodes
+  + should throw exception when nodes can't be connected
+    ?- should add node to the end of the chain
+    ?- should add node in the middle of the chain
++ should get number of children
++ should throw exception when trying to create incorrect node name
+
+New interface for alternative CPT:
 - should return child of a node
 - should return next root node
-- should get number of children
-- should get number of nodes
+  - should return first root node
+  - should return next not visited node
+  - should return the same node if last root node still wasn't visited
+  - should stop at the last node
+
+BayesNetworkNode class
+- should init node
+- should copy nodes properly
+- should change node state to visited
 
 2. CPTManager class
 + should display whole CPT
