@@ -19,6 +19,10 @@ set(BAYES_NETWORK_TEST_SRC BayesNetworkTest.cpp)
 set(BAYES_NETWORK_TEST_LIB procNetworkBuilder)
 create_test(BayesNetworkTest ${BAYES_NETWORK_TEST_SRC} ${BAYES_NETWORK_TEST_LIB})
 
+set(BAYES_NETWORK_NODE_TEST_SRC BayesNetworkNodeTest.cpp)
+set(BAYES_NETWORK_NODE_TEST_LIB procNetworkBuilder)
+create_test(BayesNetworkNodeTest ${BAYES_NETWORK_NODE_TEST_SRC} ${BAYES_NETWORK_NODE_TEST_LIB})
+
 set(OCTREE_TEST_SRC OctreeTest.cpp)
 set(OCTREE_TEST_LIB procNetworkBuilder)
 create_test(OctreeTest ${OCTREE_TEST_SRC} ${OCTREE_TEST_LIB})
