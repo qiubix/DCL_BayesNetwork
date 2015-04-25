@@ -13,14 +13,6 @@ class BayesNetworkNodeTest : public Test {
 
 public:
   BayesNetworkNodeTest() :
-    FIRST_NODE_ID(0),
-    SECOND_NODE_ID(1),
-    FIRST_NODE_NAME("V_0"),
-    SECOND_NODE_NAME("V_1"),
-    PARENT_NODE_ID(0),
-    PARENT_NODE_NAME("V_0"),
-    CHILD_NODE_ID(1),
-    CHILD_NODE_NAME("V_1"),
     FIRST_ROOT_NODE_NAME("F_0"),
     SECOND_ROOT_NODE_NAME("F_1"),
     THIRD_ROOT_NODE_NAME("F_2")
@@ -29,14 +21,6 @@ public:
   ~BayesNetworkNodeTest() {}
 
 protected:
-  const int FIRST_NODE_ID;
-  const int SECOND_NODE_ID;
-  const char* FIRST_NODE_NAME;
-  const char* SECOND_NODE_NAME;
-  const int PARENT_NODE_ID;
-  const char* PARENT_NODE_NAME;
-  const int CHILD_NODE_ID;
-  const char* CHILD_NODE_NAME;
   const std::string FIRST_ROOT_NODE_NAME;
   const std::string SECOND_ROOT_NODE_NAME;
   const std::string THIRD_ROOT_NODE_NAME;
