@@ -187,23 +187,6 @@ void BayesNetwork::addNode(std::string name)
   network.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
-void BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
-{
-  LOG(LTRACE) << "Filling CPT of node " << name;
-  int node = network.FindNode(name.c_str());
-  DSL_sysCoordinates theCoordinates(*network.GetNode(node)->Definition());
-
-  std::vector<double>::iterator it = probabilities.begin();
-  do {
-    theCoordinates.UncheckedValue() = *it;
-    LOG(LTRACE) << "Probability: " << *it;
-    ++it;
-  } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
-
-  // FIXME: probably after filling CPT it's good to run UpdateBeliefs
-  // network.UpdateBeliefs();
-}
-
 /*!
  * Generate next string of 1 and 0 to find next cell in CPT
  */
