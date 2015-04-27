@@ -24,8 +24,10 @@ TEST(OctreeNodeTest, shouldInitWithPclOctreeNode) {
   octree.setInputCloud(cloud);
   octree.addPointsFromInputCloud();
   Octree::DepthFirstIterator it = octree.depth_begin();
+  
   Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
-  ASSERT_TRUE(true);
+  
+  ASSERT_EQ(pcl::octree::BRANCH_NODE, node.getNodePtr()->getNodeType());
 }
 
 TEST(OctreeNodeTest, shouldCopyNode) {

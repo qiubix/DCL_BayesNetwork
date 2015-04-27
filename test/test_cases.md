@@ -38,10 +38,17 @@ BayesNetworkNode class
 - should modify only one cell
 
 3. OctreeNode
-  - should set id
-  - should get number of children
++ should init node
+- should copy node
+- should get number of children
+
 -> leaf
   - should return point indices
+  - should set id
+
 -> branch
+  - should set id
   - should check whether node has only one child
   - should check whether node is branch node
+
+- should set id
