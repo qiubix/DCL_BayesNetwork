@@ -24,14 +24,29 @@ TEST(OctreeNodeTest, shouldInitWithPclOctreeNode) {
   octree.setInputCloud(cloud);
   octree.addPointsFromInputCloud();
   Octree::DepthFirstIterator it = octree.depth_begin();
-  
+
   Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
-  
+
   ASSERT_EQ(pcl::octree::BRANCH_NODE, node.getNodePtr()->getNodeType());
 }
 
 TEST(OctreeNodeTest, shouldCopyNode) {
-  ASSERT_TRUE(true);
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
+    std::cout <<"Error reading file!\n";
+  }
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  Octree octree(128.0f);
+  octree.setInputCloud(cloud);
+  octree.addPointsFromInputCloud();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
+
+  Processors::Network::OctreeNode copy = node;
+  Processors::Network::OctreeNode secondCopy(node);
+
+  ASSERT_EQ(pcl::octree::BRANCH_NODE, copy.getNodePtr()->getNodeType());
+  ASSERT_EQ(pcl::octree::BRANCH_NODE, secondCopy.getNodePtr()->getNodeType());
 }
 
 TEST(OctreeNodeTest, shouldGetNumberOfChildren) {
