@@ -49,6 +49,42 @@ TEST(OctreeNodeTest, shouldCopyNode) {
   ASSERT_EQ(pcl::octree::BRANCH_NODE, secondCopy.getNodePtr()->getNodeType());
 }
 
+TEST(OctreeLeafNodeTest, shouldReturnPointIndices) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeBranchNodeTest, shouldBeBranchNode) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeBranchNodeTest, shouldHaveOnlyOneChild) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeLeafNodeTest, shouldSetId) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeBranchNodeTest, shouldSetId) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeNodeTest, shouldSetId) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
+  ASSERT_TRUE(true);
+}
+
+TEST(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
+  ASSERT_TRUE(true);
+}
+
 TEST(OctreeNodeTest, shouldGetNumberOfChildren) {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
   if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
@@ -62,34 +98,6 @@ TEST(OctreeNodeTest, shouldGetNumberOfChildren) {
   Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
 
   int numberOfChildren = node.getNumberOfChildren();
-  ASSERT_EQ(3,numberOfChildren);
-  ASSERT_TRUE(true);
-}
 
-TEST(OctreeLeafNodeTest, shouldReturnPointIndices) {
-  ASSERT_TRUE(true);
-}
-
-TEST(OctreeLeafNodeTest, shouldSetId) {
-  ASSERT_TRUE(true);
-}
-
-TEST(OctreeBranchNodeTest, shouldBeBranchNode) {
-  ASSERT_TRUE(true);
-}
-
-TEST(OctreeBranchNodeTest, shouldSetId) {
-  ASSERT_TRUE(true);
-}
-
-TEST(OctreeBranchNodeTest, shouldHaveOnlyOneChild) {
-  ASSERT_TRUE(true);
-}
-
-TEST(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
-  ASSERT_TRUE(true);
-}
-
-TEST(OctreeNodeTest, shouldSetId) {
-  ASSERT_TRUE(true);
+  ASSERT_EQ(3, numberOfChildren);
 }
