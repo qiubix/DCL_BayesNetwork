@@ -39,7 +39,7 @@ BayesNetworkNode class
 
 3. OctreeNode
 + should init node
-- should copy node
++ should copy node
 - should get number of children
 
 -> leaf

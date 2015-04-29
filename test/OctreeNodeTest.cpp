@@ -50,6 +50,19 @@ TEST(OctreeNodeTest, shouldCopyNode) {
 }
 
 TEST(OctreeNodeTest, shouldGetNumberOfChildren) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
+    std::cout <<"Error reading file!\n";
+  }
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  Octree octree(128.0f);
+  octree.setInputCloud(cloud);
+  octree.addPointsFromInputCloud();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
+
+  int numberOfChildren = node.getNumberOfChildren();
+  ASSERT_EQ(3,numberOfChildren);
   ASSERT_TRUE(true);
 }
 

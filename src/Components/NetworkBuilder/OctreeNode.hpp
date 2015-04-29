@@ -27,6 +27,7 @@ public:
   //getters
   NodeType getNodeType() const;
   pcl::octree::OctreeNode* getNodePtr();
+  int getNumberOfChildren() { return 3; }
   virtual int getId() {}
   virtual void setId(int id) {}
 
