@@ -57,7 +57,23 @@ TEST_F(OctreeNodeTest, shouldCopyNode) {
 }
 
 TEST(OctreeLeafNodeTest, shouldReturnPointIndices) {
-  ASSERT_TRUE(true);
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
+    std::cout <<"Error reading file!\n";
+  }
+  Octree octree(128.0f);
+  octree.setInputCloud(cloud);
+  octree.addPointsFromInputCloud();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
+  Processors::Network::OctreeLeafNode node = it.getCurrentOctreeNode();
+  //FIXME: initialize Octree with specific point indices, instead of reading from file and guessing
+  std::vector<int> pointIndices;
+  pointIndices.push_back(2);
+  pointIndices.push_back(3);
+
+  ASSERT_EQ(pointIndices, node.getPointIndices());
 }
 
 TEST(OctreeBranchNodeTest, shouldReturnTrueIfNextNodeIsAlsoBranchNode) {
