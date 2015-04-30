@@ -16,43 +16,36 @@ using ::testing::Test;
 class OctreeNodeTest : public Test
 {
 public:
-  OctreeNodeTest() {}
-  ~OctreeNodeTest() {}
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
 
-  Processors::Network::OctreeNode getFirstOctreeNode() {
+  OctreeNodeTest() : octree(128.0f) {
     pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
     if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
       std::cout <<"Error reading file!\n";
     }
-    Octree octree(128.0f);
     octree.setInputCloud(cloud);
     octree.addPointsFromInputCloud();
-    Octree::DepthFirstIterator it = octree.depth_begin();
-    Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
-    return node;
   }
 
-private:
-  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  ~OctreeNodeTest() {}
+
+  Octree::DepthFirstIterator getSampleOctreeFirstNode() {
+    Octree::DepthFirstIterator it = octree.depth_begin();
+    return it;
+  }
+
+protected:
+  Octree octree;
 };
 
-TEST(OctreeNodeTest, shouldInitWithPclOctreeNode) {
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-    std::cout <<"Error reading file!\n";
-  }
-  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
-  Octree octree(128.0f);
-  octree.setInputCloud(cloud);
-  octree.addPointsFromInputCloud();
-  Octree::DepthFirstIterator it = octree.depth_begin();
-
+TEST_F(OctreeNodeTest, shouldInitWithPclOctreeNode) {
+  Octree::DepthFirstIterator it = getSampleOctreeFirstNode();
   Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
 
   ASSERT_EQ(pcl::octree::BRANCH_NODE, node.getNodePtr()->getNodeType());
 }
 
-TEST(OctreeNodeTest, shouldCopyNode) {
+TEST_F(OctreeNodeTest, shouldCopyNode) {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
   if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
     std::cout <<"Error reading file!\n";
@@ -95,7 +88,7 @@ TEST(OctreeBranchNodeTest, shouldSetId) {
   ASSERT_TRUE(true);
 }
 
-TEST(OctreeNodeTest, shouldSetId) {
+TEST_F(OctreeNodeTest, shouldSetId) {
   ASSERT_TRUE(true);
 }
 
@@ -107,7 +100,7 @@ TEST(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
   ASSERT_TRUE(true);
 }
 
-TEST(OctreeNodeTest, shouldGetNumberOfChildren) {
+TEST_F(OctreeNodeTest, shouldGetNumberOfChildren) {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
   if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
     std::cout <<"Error reading file!\n";
