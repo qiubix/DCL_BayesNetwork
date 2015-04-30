@@ -49,6 +49,6 @@ BayesNetworkNode class
 -> branch
   - should set id
   - should check whether node has only one child
-  - should check whether node is branch node
+  - should check whether next node is also branch node
 
 - should set id

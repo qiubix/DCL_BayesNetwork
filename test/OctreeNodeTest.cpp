@@ -60,7 +60,7 @@ TEST(OctreeLeafNodeTest, shouldReturnPointIndices) {
   ASSERT_TRUE(true);
 }
 
-TEST(OctreeBranchNodeTest, shouldBeBranchNode) {
+TEST(OctreeBranchNodeTest, shouldReturnTrueIfNextNodeIsAlsoBranchNode) {
   ASSERT_TRUE(true);
 }
 
