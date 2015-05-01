@@ -123,7 +123,20 @@ TEST(OctreeLeafNodeTest, shouldSetId) {
 }
 
 TEST(OctreeBranchNodeTest, shouldSetId) {
-  ASSERT_TRUE(true);
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
+    std::cout <<"Error reading file!\n";
+  }
+  Octree octree(128.0f);
+  octree.setInputCloud(cloud);
+  octree.addPointsFromInputCloud();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  Processors::Network::OctreeBranchNode node = it.getCurrentOctreeNode();
+
+  node.setId(4);
+
+  ASSERT_EQ(4, node.getId());
 }
 
 TEST_F(OctreeNodeTest, shouldSetId) {
