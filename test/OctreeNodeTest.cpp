@@ -79,9 +79,15 @@ TEST(OctreeLeafNodeTest, shouldReturnPointIndices) {
 TEST(OctreeBranchNodeTest, shouldReturnTrueIfNextNodeIsAlsoBranchNode) {
   typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-    std::cout <<"Error reading file!\n";
-  }
+  cloud->width = 1;
+  cloud->height = 1;
+  cloud->points.resize(cloud->width * cloud->height);
+  cloud->points[0].x = 0.1;
+  cloud->points[0].y = 0.2;
+  cloud->points[0].z = 0.3;
+  for(int i=0; i<128; i++)
+    cloud->points[0].descriptor[i] = i;
+
   Octree octree(128.0f);
   octree.setInputCloud(cloud);
   octree.addPointsFromInputCloud();
@@ -117,6 +123,7 @@ TEST(OctreeBranchNodeTest, shouldHaveOnlyOneChild) {
   int numberOfChildren = node.getNumberOfChildren();
 
   ASSERT_EQ(1, numberOfChildren);
+  ASSERT_EQ(1, octree.getLeafCount());
 }
 
 TEST(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
