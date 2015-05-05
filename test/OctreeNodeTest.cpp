@@ -140,15 +140,7 @@ TEST(OctreeBranchNodeTest, shouldSetId) {
 }
 
 TEST_F(OctreeNodeTest, shouldSetId) {
-  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-    std::cout <<"Error reading file!\n";
-  }
-  Octree octree(128.0f);
-  octree.setInputCloud(cloud);
-  octree.addPointsFromInputCloud();
-  Octree::DepthFirstIterator it = octree.depth_begin();
+  Octree::DepthFirstIterator it = getSampleOctreeFirstNode();
   Processors::Network::OctreeNode* first = new Processors::Network::OctreeBranchNode(it.getCurrentOctreeNode());
   while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
   Processors::Network::OctreeNode* second = new Processors::Network::OctreeLeafNode(it.getCurrentOctreeNode());
