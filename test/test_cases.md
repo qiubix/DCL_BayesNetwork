@@ -44,11 +44,12 @@ BayesNetworkNode class
 
 -> leaf
   - should return point indices
-  - should set id
+  + should set id
 
 -> branch
-  - should set id
+  + should set id
   - should check whether node has only one child
   - should check whether next node is also branch node
+  - should throw exception when child node is null
 
-- should set id
++ should set id
