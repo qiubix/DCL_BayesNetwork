@@ -76,6 +76,28 @@ TEST(OctreeLeafNodeTest, shouldReturnPointIndices) {
   ASSERT_EQ(pointIndices, node.getPointIndices());
 }
 
+TEST(OctreeLeafNodeTest, shouldSetId) {
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
+    std::cout <<"Error reading file!\n";
+  }
+  Octree octree(128.0f);
+  octree.setInputCloud(cloud);
+  octree.addPointsFromInputCloud();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
+  Processors::Network::OctreeLeafNode node = it.getCurrentOctreeNode();
+
+  node.setId(3);
+
+  ASSERT_EQ(3, node.getId());
+}
+
+TEST(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
+  ASSERT_TRUE(true);
+}
+
 class OctreeBranchNodeTest : public Test
 {
 public:
@@ -172,24 +194,6 @@ TEST_F(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
   ASSERT_EQ(2, numberOfChildren);
 }
 
-TEST(OctreeLeafNodeTest, shouldSetId) {
-  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-    std::cout <<"Error reading file!\n";
-  }
-  Octree octree(128.0f);
-  octree.setInputCloud(cloud);
-  octree.addPointsFromInputCloud();
-  Octree::DepthFirstIterator it = octree.depth_begin();
-  while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
-  Processors::Network::OctreeLeafNode node = it.getCurrentOctreeNode();
-
-  node.setId(3);
-
-  ASSERT_EQ(3, node.getId());
-}
-
 TEST_F(OctreeBranchNodeTest, shouldSetId) {
   typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
@@ -207,6 +211,10 @@ TEST_F(OctreeBranchNodeTest, shouldSetId) {
   ASSERT_EQ(4, node.getId());
 }
 
+TEST_F(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
+  ASSERT_TRUE(true);
+}
+
 TEST_F(OctreeNodeTest, shouldSetId) {
   Octree::DepthFirstIterator it = getSampleOctreeFirstNode();
   Processors::Network::OctreeNode* first = new Processors::Network::OctreeBranchNode(it.getCurrentOctreeNode());
@@ -222,14 +230,6 @@ TEST_F(OctreeNodeTest, shouldSetId) {
 
   ASSERT_EQ(0, nodes[0]->getId());
   ASSERT_EQ(1, nodes[1]->getId());
-}
-
-TEST(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
-  ASSERT_TRUE(true);
-}
-
-TEST_F(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
-  ASSERT_TRUE(true);
 }
 
 TEST_F(OctreeNodeTest, shouldGetNumberOfChildren) {
