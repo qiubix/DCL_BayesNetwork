@@ -1,5 +1,16 @@
 # Test cases
 
+0. NetworkBuilder
+- should read SIFT point cloud from input port
+- should build network with only one feature node
+- should build network with multiple feature nodes
+- should fill CPTs acording to number of parents
+- should set default probability values for feature nodes
+- should have only one child node
+- should not have cycles
+- should have nodes with unique names
+- should write network to output port
+
 1. BayesNetwork class
 + should initialize empty network
 + should get number of nodes
@@ -41,14 +52,21 @@ BayesNetworkNode class
 + should init node
 + should copy node
 + should get number of children
++ should set id
 
 -> leaf
+
   + should return point indices
   + should set id
 
 -> branch
+
   + should set id
   + should check whether node has only one child
   + should check whether next node is also branch node
 
-+ should set id
+4. Octree
+- should init octree with point cloud
+- should get first octree node
+- should get next octree node in depth-search
+- should get last octree node in depth-search
