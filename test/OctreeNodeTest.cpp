@@ -97,7 +97,26 @@ TEST(OctreeBranchNodeTest, shouldReturnTrueIfNextNodeIsAlsoBranchNode) {
 }
 
 TEST(OctreeBranchNodeTest, shouldHaveOnlyOneChild) {
-  ASSERT_TRUE(true);
+  typedef pcl::octree::OctreePointCloud<PointXYZSIFT, Processors::Network::OctreeContainerPointIndicesWithId, Processors::Network::OctreeContainerEmptyWithId> Octree;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  cloud->width = 1;
+  cloud->height = 1;
+  cloud->points.resize(cloud->width * cloud->height);
+  cloud->points[0].x = 0.1;
+  cloud->points[0].y = 0.2;
+  cloud->points[0].z = 0.3;
+  for(int i=0; i<128; i++)
+    cloud->points[0].descriptor[i] = i;
+
+  Octree octree(128.0f);
+  octree.setInputCloud(cloud);
+  octree.addPointsFromInputCloud();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+
+  Processors::Network::OctreeBranchNode node = it.getCurrentOctreeNode();
+  int numberOfChildren = node.getNumberOfChildren();
+
+  ASSERT_EQ(1, numberOfChildren);
 }
 
 TEST(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
