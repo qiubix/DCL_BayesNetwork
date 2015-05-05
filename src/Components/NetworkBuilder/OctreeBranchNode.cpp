@@ -23,14 +23,11 @@ void OctreeBranchNode::setId(int id) {
 bool OctreeBranchNode::hasOnlyOneChild() {
   LOG(LTRACE) << "Check whether node has only one child";
   int childrenCounter = 0;
-  for (unsigned child_idx = 0; child_idx < 8; ++child_idx) {
+  for (unsigned char child_idx = 0; child_idx < 8; ++child_idx) {
     if (branchNode -> hasChild(child_idx))
       ++childrenCounter;
   }
-  if (childrenCounter == 1)
-    return true;
-  else
-    return false;
+  return childrenCounter == 1;
 }
 
 bool OctreeBranchNode::nextNodeIsAlsoBranchNode() {
@@ -39,12 +36,9 @@ bool OctreeBranchNode::nextNodeIsAlsoBranchNode() {
   unsigned char index;
   for (index = 0; index < 8; ++index) {
     if (branchNode -> hasChild(index))
-			childNode = branchNode -> getChildPtr(index);
+      childNode = branchNode -> getChildPtr(index);
   }
-  if (childNode -> getNodeType() == BRANCH_NODE)
-    return true;
-  else
-    return false;
+  return childNode -> getNodeType() == BRANCH_NODE;
 }
 
 int OctreeBranchNode::getNumberOfChildren() {
@@ -53,7 +47,7 @@ int OctreeBranchNode::getNumberOfChildren() {
   int childrenCounter = 0;
   for (index = 0; index < 8; ++index) {
     if (branchNode -> hasChild(index))
-			++childrenCounter;
+      ++childrenCounter;
   }
   return childrenCounter;
 }

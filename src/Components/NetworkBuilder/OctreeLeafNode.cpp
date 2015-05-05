@@ -17,7 +17,7 @@ int OctreeLeafNode::getId() {
 }
 
 void OctreeLeafNode::setId(int id) {
-  return leafNode->getContainer().setNodeId(id);
+  leafNode->getContainer().setNodeId(id);
 }
 
 int OctreeLeafNode::getNumberOfChildren() {
