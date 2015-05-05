@@ -149,19 +149,19 @@ TEST_F(OctreeNodeTest, shouldSetId) {
   octree.setInputCloud(cloud);
   octree.addPointsFromInputCloud();
   Octree::DepthFirstIterator it = octree.depth_begin();
-  Processors::Network::OctreeBranchNode branchNode = it.getCurrentOctreeNode();
+  Processors::Network::OctreeNode* first = new Processors::Network::OctreeBranchNode(it.getCurrentOctreeNode());
   while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
-  Processors::Network::OctreeLeafNode leafNode = it.getCurrentOctreeNode();
-  std::vector<Processors::Network::OctreeNode> nodes;
-  nodes.push_back(branchNode);
-  nodes.push_back(leafNode);
+  Processors::Network::OctreeNode* second = new Processors::Network::OctreeLeafNode(it.getCurrentOctreeNode());
+  std::vector<Processors::Network::OctreeNode*> nodes;
+  nodes.push_back(first);
+  nodes.push_back(second);
 
   for (int i = 0; i < nodes.size(); i++) {
-    nodes[i].setId(i);
+    nodes[i]->setId(i);
   }
 
-  ASSERT_EQ(0, nodes[0].getId());
-  ASSERT_EQ(1, nodes[1].getId());
+  ASSERT_EQ(0, nodes[0]->getId());
+  ASSERT_EQ(1, nodes[1]->getId());
 }
 
 TEST(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
