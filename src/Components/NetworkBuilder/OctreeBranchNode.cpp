@@ -38,7 +38,6 @@ bool OctreeBranchNode::nextNodeIsAlsoBranchNode() {
     if (branchNode -> hasChild(index))
       childNode = branchNode -> getChildPtr(index);
   }
-  //TODO: throw exception when childNode is null
   return childNode -> getNodeType() == BRANCH_NODE;
 }
 

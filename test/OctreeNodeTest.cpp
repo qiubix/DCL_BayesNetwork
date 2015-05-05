@@ -128,7 +128,12 @@ TEST_F(OctreeLeafNodeTest, shouldSetId) {
 }
 
 TEST_F(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
-  ASSERT_TRUE(true);
+  Octree octree = createOctreeWithOnePoint();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
+  Processors::Network::OctreeLeafNode node = it.getCurrentOctreeNode();
+
+  ASSERT_EQ(1, node.getNumberOfChildren());
 }
 
 class OctreeBranchNodeTest : public OctreeNodeTest
@@ -183,7 +188,11 @@ TEST_F(OctreeBranchNodeTest, shouldSetId) {
 }
 
 TEST_F(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
-  ASSERT_TRUE(true);
+  Octree octree = createOctreeWithTwoPoints();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  Processors::Network::OctreeBranchNode node = it.getCurrentOctreeNode();
+
+  ASSERT_EQ(2, node.getNumberOfChildren());
 }
 
 TEST_F(OctreeNodeTest, shouldSetId) {
@@ -204,10 +213,11 @@ TEST_F(OctreeNodeTest, shouldSetId) {
 }
 
 TEST_F(OctreeNodeTest, shouldGetNumberOfChildren) {
-  Octree::DepthFirstIterator it = getSampleOctreeFirstNode();
-  Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
+  Octree octree = createOctreeWithTwoPoints();
+  Octree::DepthFirstIterator it = octree.depth_begin();
+  Processors::Network::OctreeNode* node = new Processors::Network::OctreeBranchNode(it.getCurrentOctreeNode());
 
-  int numberOfChildren = node.getNumberOfChildren();
+  int numberOfChildren = node->getNumberOfChildren();
 
-  ASSERT_EQ(3, numberOfChildren);
+  ASSERT_EQ(2, numberOfChildren);
 }

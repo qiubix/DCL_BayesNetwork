@@ -29,7 +29,7 @@ public:
   pcl::octree::OctreeNode* getNodePtr();
   //FIXME: it should have throw exception, or somehow calculate number of children
   // maybe this class should be abstract, so this method would be pure virtual
-  virtual int getNumberOfChildren() { return 3; }
+  virtual int getNumberOfChildren() {}
   virtual int getId() {}
   virtual void setId(int id) {}
 
