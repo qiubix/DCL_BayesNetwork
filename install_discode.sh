@@ -19,7 +19,7 @@ fi
 if [ ! -d ~/src/DCL/CvBasic ]; then
   git clone https://github.com/DisCODe/DCL_CvBasic ~/src/DCL/CvBasic
   cd ~/src/DCL/CvBasic && mkdir build && cd build
-  cmake .. && make -j3 && make install
+  cmake .. && make Sequence CvSIFT -j3 && make install
 fi
 
 if [ ! -d ~/src/DCL/PCLCoreTypes ]; then
@@ -31,11 +31,11 @@ fi
 if [ ! -d ~/src/DCL/PCL ]; then
   git clone https://github.com/DisCODe/PCL ~/src/DCL/PCL
   cd ~/src/DCL/PCL && mkdir build && cd build
-  cmake .. && make -j3 && make install
+  cmake .. && make PCDReader -j3 && make install
 fi
 
 if [ ! -d ~/src/DCL/SIFTObjectModel ]; then
   git clone https://github.com/DisCODe/SIFTObjectModel ~/src/DCL/SIFTObjectModel
   cd ~/src/DCL/SIFTObjectModel && mkdir build && cd build
-  cmake .. && make -j3 && make install
+  cmake .. && make SOMJSONReader FeatureCloudConverter SIFTAdder -j3 && make install
 fi
