@@ -37,8 +37,7 @@ void SOMJSONReader::prepareInterface() {
 	registerStream("out_models", &out_models);
 
 	// Register handlers
-	h_loadModels.setup(boost::bind(&SOMJSONReader::loadModels, this));
-	registerHandler("loadModels", &h_loadModels);
+	registerHandler("loadModels", boost::bind(&SOMJSONReader::loadModels, this));
 
 }
 

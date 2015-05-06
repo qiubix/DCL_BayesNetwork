@@ -60,8 +60,7 @@ void SIFTAdder::prepareInterface() {
   registerStream("out_cloud", &out_cloud);
   registerStream("out_multiplicityOfModels", &out_multiplicityOfModels);
   // Register handlers
-  h_add.setup(boost::bind(&SIFTAdder::add, this));
-  registerHandler("add", &h_add);
+  registerHandler("add", boost::bind(&SIFTAdder::add, this));
   //	addDependency("add", &in_cloud);
   addDependency("add", &in_models);
 }

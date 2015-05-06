@@ -86,9 +86,6 @@ protected:
   //Base::DataStreamOut<vector<int> > out_multiplicity;
 
   // Handlers
-  Base::EventHandler2 h_add;
-
-  // Handlers
   void add();
 
   pcl::PointCloud<PointXYZSIFT>::Ptr jointCloud;

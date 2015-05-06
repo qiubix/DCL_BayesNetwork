@@ -87,11 +87,6 @@ protected:
    */
   bool onStop();
 
-  /// Event handlers
-  Base::EventHandler <NetworkBuilder> h_onModels;
-  Base::EventHandler2 h_onJointMultiplicity;
-  Base::EventHandler2 h_onNewModel;
-
   /*!
    * Event handler function.
    */

@@ -40,22 +40,21 @@ NetworkBuilder::~NetworkBuilder()
 
 void NetworkBuilder::prepareInterface()
 {
-	LOG(LTRACE) << "NetworkBuilder::prepareInterface\n";
+  LOG(LTRACE) << "NetworkBuilder::prepareInterface";
 
-	// Register data streams.
-	//	registerStream("in_cloud", &in_cloud_xyz);
-	registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
-	registerStream("in_jointMultiplicity", &in_jointMultiplicity);
-	// Register handlers
-	h_onNewModel.setup(boost::bind(&NetworkBuilder::onNewModel, this));
-	h_onJointMultiplicity.setup(boost::bind(&NetworkBuilder::onJointMultiplicity, this));
-	registerHandler("onNewModel", &h_onNewModel);
-	registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
-	addDependency("onNewModel", &in_cloud_xyzsift);
-	addDependency("onJointMultiplicity", &in_jointMultiplicity);
+  // Register data streams.
+  //registerStream("in_cloud", &in_cloud_xyz);
+  registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+  registerStream("in_jointMultiplicity", &in_jointMultiplicity);
+  // Register handlers
+  registerHandler("onNewModel", boost::bind(&NetworkBuilder::onNewModel, this));
+  addDependency("onNewModel", &in_cloud_xyzsift);
 
-	//registerStream("out_network", &out_network);
-	registerStream("out_networks", &out_networks);
+  registerHandler("onJointMultiplicity", boost::bind(&NetworkBuilder::onJointMultiplicity, this));
+  addDependency("onJointMultiplicity", &in_jointMultiplicity);
+
+  //registerStream("out_network", &out_network);
+  registerStream("out_networks", &out_networks);
 }
 
 bool NetworkBuilder::onInit()

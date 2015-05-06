@@ -35,13 +35,11 @@ void SOMEvaluation::prepareInterface()
 {
   LOG(LTRACE) << "SOMEvaluation::prepareInterface";
 
-  h_onNetwork.setup(this, &SOMEvaluation::onNetwork);
-  registerHandler("onNetwork", &h_onNetwork);
+  registerHandler("onNetwork", boost::bind(&SOMEvaluation::onNetwork, this));
   registerStream("in_networks", &in_networks);
   addDependency("onNetwork", &in_networks);
 
-  h_onInstance.setup(this, &SOMEvaluation::onInstance);
-  registerHandler("onInstance", &h_onInstance);
+  registerHandler("onInstance", boost::bind(&SOMEvaluation::onInstance, this));
   registerStream("in_instanceMatchedFeatures", &in_instanceMatchedFeatures);
   addDependency("onInstance", &in_instanceMatchedFeatures);
 

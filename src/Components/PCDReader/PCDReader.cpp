@@ -33,8 +33,7 @@ void PCDReader::prepareInterface() {
 	registerStream("out_cloud_xyzrgb", &out_cloud_xyzrgb);
 	registerStream("out_cloud_xyzsift", &out_cloud_xyzsift);
 	// Register handlers
-	h_Read.setup(boost::bind(&PCDReader::Read, this));
-	registerHandler("Read", &h_Read);
+	registerHandler("Read", boost::bind(&PCDReader::Read, this));
 	//addDependency("Read", NULL);
 
 }

@@ -74,9 +74,6 @@ protected:
      */
     bool onStop();
 
-    /// Event handlers
-    Base::EventHandler <MapMultiplicity> h_onJointMultiplicity;
-
     /*!
      * Event handler function.
      */
