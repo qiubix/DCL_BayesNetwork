@@ -19,23 +19,23 @@ fi
 if [ ! -d ~/src/DCL/CvBasic ]; then
   git clone https://github.com/DisCODe/DCL_CvBasic ~/src/DCL/CvBasic
   cd ~/src/DCL/CvBasic && mkdir build && cd build
-  cmake .. && make Sequence CvSIFT -j3 && make install
+  cmake .. -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=true && make Sequence CvSIFT -j3 && make Sequence CvSIFT TypesCircles install
 fi
 
 if [ ! -d ~/src/DCL/PCLCoreTypes ]; then
   git clone https://github.com/DisCODe/PCLCoreTypes ~/src/DCL/PCLCoreTypes
   cd ~/src/DCL/PCLCoreTypes && mkdir build && cd build
-  cmake .. && make -j3 && make install
+  cmake .. -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=true && make -j3 && make install
 fi
 
 if [ ! -d ~/src/DCL/PCL ]; then
   git clone https://github.com/DisCODe/PCL ~/src/DCL/PCL
   cd ~/src/DCL/PCL && mkdir build && cd build
-  cmake .. && make PCDReader -j3 && make install
+  cmake .. -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=true && make PCDReader -j3 && make PCDReader install
 fi
 
 if [ ! -d ~/src/DCL/SIFTObjectModel ]; then
   git clone https://github.com/DisCODe/SIFTObjectModel ~/src/DCL/SIFTObjectModel
   cd ~/src/DCL/SIFTObjectModel && mkdir build && cd build
-  cmake .. && make SOMJSONReader FeatureCloudConverter SIFTAdder -j3 && make install
+  cmake .. -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=true && make SOMJSONReader FeatureCloudConverter SIFTAdder -j3 && make SOMJSONReader FeatureCloudConverter SIFTAdder install
 fi
