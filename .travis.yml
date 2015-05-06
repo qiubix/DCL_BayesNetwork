@@ -1,7 +1,5 @@
 language: cpp
-compiler:
-  - gcc
-  - cmake
+compiler: gcc
 branches:
   only:
     - master
