@@ -42,8 +42,8 @@ public:
     pcl::octree::OctreeNode* operator*() {
       return it.getCurrentOctreeNode();
     }
-    OctreeIterator operator->() {
-      return it;
+    OctreeIterator* operator->() {
+      return &it;
     }
     bool operator==(const DepthFirstIterator& reference) {
       return it == reference.it;
