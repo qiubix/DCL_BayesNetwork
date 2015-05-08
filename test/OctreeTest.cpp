@@ -46,14 +46,28 @@ TEST(OctreeTest, shouldGetFirstOctreeNode) {
   octree.init();
 
   Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+
   ASSERT_TRUE(it->isBranchNode());
   ASSERT_EQ(0, it->getCurrentOctreeDepth());
-  ASSERT_EQ(0, it->getNodeID());
 }
 
-//TODO: implement
 TEST(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
-  ASSERT_TRUE(true);
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  cloud->width = 1;
+  cloud->height = 1;
+  cloud->points.resize(cloud->width * cloud->height);
+  cloud->points[0].x = 0.1;
+  cloud->points[0].y = 0.2;
+  cloud->points[0].z = 0.3;
+  for(int i=0; i<128; i++) cloud->points[0].descriptor[i] = i;
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+
+  ++it;
+
+  EXPECT_TRUE(it->isLeafNode());
+  EXPECT_EQ(1, it->getCurrentOctreeDepth());
 }
 
 //TODO: implement
