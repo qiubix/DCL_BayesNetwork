@@ -4,7 +4,7 @@ using ::testing::Eq;
 using ::testing::Test;
 
 #include <pcl/point_cloud.h>
-#include <pcl/io/pcd_io.h>
+//#include <pcl/io/pcd_io.h>
 
 #include "../src/Components/NetworkBuilder/Octree.hpp"
 
@@ -12,19 +12,23 @@ using ::testing::Test;
 //#include <Types/PointXYZSIFT>
 #include "../src/Types/PointXYZSIFT.hpp"
 
-//TODO: implement
 TEST(OctreeTest, shouldInitializeOctreeWithPointCloud) {
-  /*
-   * initialize octree
-   * check node count
-   */
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-    std::cout <<"Error reading file!\n";
-  }
+  cloud->width = 1;
+  cloud->height = 1;
+  cloud->points.resize(cloud->width * cloud->height);
+  cloud->points[0].x = 0.1;
+  cloud->points[0].y = 0.2;
+  cloud->points[0].z = 0.3;
+  for(int i=0; i<128; i++) cloud->points[0].descriptor[i] = i;
   Processors::Network::Octree octree(cloud);
   octree.init();
-  ASSERT_TRUE(true);
+
+  Processors::Network::Octree::OctreeWithSIFT octreeWithSIFT = octree.getOctreeWithSIFT();
+  EXPECT_EQ(1, octreeWithSIFT.getBranchCount());
+  EXPECT_EQ(1, octreeWithSIFT.getLeafCount());
+  EXPECT_EQ(0.01f, octreeWithSIFT.getResolution());
+  EXPECT_EQ(1, octreeWithSIFT.getTreeDepth());
 }
 
 TEST(OctreeTest, shouldGetFirstOctreeNode) {

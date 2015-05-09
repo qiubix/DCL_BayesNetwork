@@ -66,7 +66,7 @@ BayesNetworkNode class
   + should check whether next node is also branch node
 
 4. Octree
-- should init octree with point cloud
++ should init octree with point cloud
 + should get first octree node
 + should get next octree node in depth-search
 - should get last octree node in depth-search
