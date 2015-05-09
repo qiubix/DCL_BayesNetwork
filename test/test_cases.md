@@ -1,15 +1,15 @@
 # Test cases
 
 0. NetworkBuilder
-- should read SIFT point cloud from input port
 - should build network with only one feature node
+- should have the same number of feature nodes as points in cloud
+- should have unique ids
 - should build network with multiple feature nodes
 - should fill CPTs acording to number of parents
 - should set default probability values for feature nodes
 - should have only one child node
 - should not have cycles
 - should have nodes with unique names
-- should write network to output port
 
 1. BayesNetwork class
 + should initialize empty network
@@ -70,3 +70,7 @@ BayesNetworkNode class
 + should get first octree node
 + should get next octree node in depth-search
 + should get last octree node in depth-search
+
+Integration tests
+- should read SIFT point cloud from input port
+- should write network to output port
