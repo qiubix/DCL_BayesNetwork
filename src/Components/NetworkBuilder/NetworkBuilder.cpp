@@ -97,6 +97,14 @@ bool NetworkBuilder::onStart()
   return true;
 }
 
+void NetworkBuilder::setCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
+  cloudQueue.push(cloud);
+}
+
+BayesNetwork NetworkBuilder::getNetwork() {
+  return network;
+}
+
 void NetworkBuilder::buildNetwork() {
   LOG(LDEBUG) << " #################### Building network ################### ";
 

@@ -20,7 +20,7 @@
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
 
-#include <opencv2/core/core.hpp>
+//#include <opencv2/core/core.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -55,6 +55,12 @@ public:
    * Prepare data streams and handlers
    */
   void prepareInterface();
+
+  void setCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+
+  void buildNetwork();
+
+  BayesNetwork getNetwork();
 
 protected:
 
@@ -110,7 +116,6 @@ private:
   unsigned int numberOfVoxels;
   std::stack <OctreeBranchNode> parentQueue;
 
-  void buildNetwork();
   void addParentsToQueue(OctreeBranchNode branchNode);
 
   void createNode(OctreeNode* node);
