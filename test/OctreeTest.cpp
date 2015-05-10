@@ -12,6 +12,8 @@ using ::testing::Test;
 //#include <Types/PointXYZSIFT>
 #include "../src/Types/PointXYZSIFT.hpp"
 
+//TODO: remove duplication in tests - create fixture
+
 TEST(OctreeTest, shouldInitializeOctreeWithPointCloud) {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
   cloud->width = 1;
@@ -74,7 +76,33 @@ TEST(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
   EXPECT_EQ(1, it->getCurrentOctreeDepth());
 }
 
-//TODO: implement
 TEST(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
-  ASSERT_TRUE(true);
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+  cloud->width = 2;
+  cloud->height = 1;
+  cloud->points.resize(cloud->width * cloud->height);
+  cloud->points[0].x = 0.1;
+  cloud->points[0].y = 0.2;
+  cloud->points[0].z = 0.3;
+  cloud->points[1].x = 1.1;
+  cloud->points[1].y = 1.2;
+  cloud->points[1].z = 1.3;
+  for(int i=0; i<128; i++) {
+    cloud->points[0].descriptor[i] = i;
+    cloud->points[1].descriptor[i] = i;
+  }
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+  Processors::Network::Octree::DepthFirstIterator next = octree.depthBegin();
+
+  const Processors::Network::Octree::DepthFirstIterator end = octree.depthEnd();
+  ++next;
+  while(next != end) {
+    ++next;
+    ++it;
+  }
+
+  EXPECT_TRUE(it->isLeafNode());
+  EXPECT_EQ(7, it->getCurrentOctreeDepth());
 }
