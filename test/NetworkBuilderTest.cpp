@@ -3,19 +3,8 @@ using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
-#include <pcl/io/pcd_io.h>
+//#include <pcl/io/pcd_io.h>
 #include "../src/Components/NetworkBuilder/NetworkBuilder.hpp"
-
-TEST(NetworkBuilderTest, shouldCreateComponentForTesting)
-{
-  Processors::Network::NetworkBuilder component("name");
-  component.prepareInterface();
-  EXPECT_TRUE(true);
-}
-
-TEST(NetworkBuilderTest, shouldReadSIFTPointCloudFromInputDataPort) {
-  EXPECT_TRUE(true);
-}
 
 TEST(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
   /*
@@ -36,7 +25,7 @@ TEST(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
   cloud->points[1].z = 1.3;
   for(int i=0; i<128; i++) {
     cloud->points[0].descriptor[i] = i;
-    cloud->points[1].descriptor[i] = i;
+    cloud->points[1].descriptor[i] = 128-i;
   }
 //  if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
 //    std::cout <<"Error reading file!\n";

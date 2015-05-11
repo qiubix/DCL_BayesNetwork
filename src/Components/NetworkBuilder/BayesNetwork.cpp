@@ -175,7 +175,7 @@ void BayesNetwork::addNode(std::string name)
   LOG(LTRACE) << "Add node to network: " << name;
   int newNode = network.AddNode(DSL_CPT, name.c_str());
   if ( newNode == DSL_OUT_OF_RANGE ) {
-    throw NodeAlreadyExistsException();
+    throw NodeAlreadyExistsException(name.c_str());
   }
   DSL_idArray outcomes;
   std::vector<std::string> outcomesNames;
