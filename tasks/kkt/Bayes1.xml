@@ -16,7 +16,7 @@
   <Subtasks>
     <Subtask name="Main">
       <Executor name="Processing"  period="1">
-        <Component name="SOMJSONReader" type="BayesNetwork:SOMJSONReader" priority="1" bump="4">
+        <Component name="SOMJSONReader" type="SIFTObjectModel:SOMJSONReader" priority="1" bump="4">
           <param name="filenames">/home/kkt/Objects/cereal_box_1_co5_v2.json</param>
         </Component>
         <Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
