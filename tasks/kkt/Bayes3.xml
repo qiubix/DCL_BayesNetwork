@@ -7,7 +7,7 @@
     </Author>
 
     <Description>
-      <brief>BayesNetwork:HomeTest</brief>
+      <brief>BayesNetwork:Experiment</brief>
       <full></full>
     </Description>
   </Reference>
@@ -17,11 +17,12 @@
     <Subtask name="Main">
       <Executor name="Processing"  period="1">
         <Component name="SOMJSONReader" type="SIFTObjectModel:SOMJSONReader" priority="1" bump="4">
-          <param name="filenames">../../BayesNetwork/data/SimpleObjects/object_1.json</param>
+          <param name="filenames">/home/kkt/Objects/cereal_box_1_co5_v2.json</param>
         </Component>
-        <Component name="InstanceReader" type="PCL:PCDReader" priority="2" bump="0">
-          <param name="filename">../../BayesNetwork/data/SimpleObjects/object_1/feature_0.pcd</param>
+        <Component name="InstanceReader" type="PCL:PCDReader" priority="1" bump="4">
+          <param name="filename">/home/kkt/Objects/views/cereal_box_instance_cloud_xyzsift.pcd</param>
         </Component>
+
         <Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
         </Component>
         <Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
@@ -33,6 +34,7 @@
         </Component>
       </Executor>
     </Subtask>
+
   </Subtasks>
 
   <!-- pipes connecting datastreams -->
@@ -55,6 +57,9 @@
     <Source name="Mapper.out_jointMultiplicity">
       <sink>CreateNetwork.in_jointMultiplicity</sink>
     </Source>
+<!--        <Source name="PCDReader.out_cloud_xyzsift">
+      <sink>CreateNetwork.in_cloud_xyzsift</sink>
+    </Source>-->
     <Source name="CreateNetwork.out_networks">
       <sink>SOMEvaluation.in_networks</sink>
     </Source>
