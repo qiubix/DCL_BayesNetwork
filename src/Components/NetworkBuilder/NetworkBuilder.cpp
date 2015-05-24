@@ -154,7 +154,7 @@ void NetworkBuilder::buildNetwork() {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createNode(&branchNode);
         connectNodeToNetwork(&branchNode);
-        addParentsToQueue(branchNode);
+        addNodeToParentStack(branchNode);
         ++branchNodeCount;
       }
     }
@@ -173,16 +173,16 @@ void NetworkBuilder::createNode(OctreeNode* node)
   ++nextId;
 }
 
-void NetworkBuilder::addParentsToQueue(OctreeBranchNode branchNode)
+void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
 {
-  LOG(LDEBUG) << "Adding parents to queue";
+  LOG(LDEBUG) << "Adding parents to stack";
   if(!branchNode.hasOnlyOneChild() || branchNode.getId() == 0) {
     int numberOfChildren = branchNode.getNumberOfChildren();
     for (int i=0; i<numberOfChildren; i++) {
-      parentQueue.push(branchNode);
+      parentStack.push(branchNode);
     }
     LOG(LDEBUG) << "Current node's children quantinty: " << numberOfChildren;
-    LOG(LTRACE) << "Parent queue size: " << parentQueue.size();
+    LOG(LTRACE) << "Parent stack size: " << parentStack.size();
   }
 }
 
@@ -227,10 +227,10 @@ void NetworkBuilder::connectNodeToNetwork(OctreeNode* child)
 {
   int childId = child->getId();
   string bayesParentNodeName = network.createVoxelName(childId);
-  OctreeBranchNode parent(parentQueue.top());
+  OctreeBranchNode parent(parentStack.top());
   int parentId = parent.getId();
   string bayesChildNodeName = network.createVoxelName(parentId);
-  parentQueue.pop();
+  parentStack.pop();
   network.connectNodes(bayesParentNodeName, bayesChildNodeName);
 }
 
@@ -263,7 +263,7 @@ void NetworkBuilder::addHypothesisNode(Octree::DepthFirstIterator it, int modelI
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
     OctreeBranchNode root(*it);
     createNode(&root);
-    addParentsToQueue(root);
+    addNodeToParentStack(root);
     ++branchNodeCount;
   }
   else {
