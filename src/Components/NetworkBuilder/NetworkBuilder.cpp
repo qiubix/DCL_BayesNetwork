@@ -186,7 +186,7 @@ void NetworkBuilder::createNode(OctreeNode* node)
 void NetworkBuilder::addParentsToQueue(OctreeBranchNode branchNode)
 {
   LOG(LDEBUG) << "Adding parents to queue";
-  if(!branchNode.hasOnlyOneChild()) {
+  if(!branchNode.hasOnlyOneChild() || branchNode.getId() == 0) {
     int numberOfChildren = branchNode.getNumberOfChildren();
     for (int i=0; i<numberOfChildren; i++) {
       parentQueue.push(branchNode);
