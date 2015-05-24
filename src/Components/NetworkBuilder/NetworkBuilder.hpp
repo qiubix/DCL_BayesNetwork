@@ -129,8 +129,6 @@ private:
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();
-  //void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-  //int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
   void logPoint(PointXYZSIFT p, int index);
 };
 
