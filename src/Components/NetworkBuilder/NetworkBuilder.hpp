@@ -125,7 +125,7 @@ private:
 
   void exportNetwork();
 
-  void addHypothesisNode(OctreeBranchNode root, int modelId = 0);
+  void addHypothesisNode(Octree::DepthFirstIterator it, int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();

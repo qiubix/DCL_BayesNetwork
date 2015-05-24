@@ -129,19 +129,9 @@ void NetworkBuilder::buildNetwork() {
 
   LOG(LTRACE) << "Creating nodes:";
 
-  OctreeNode node = *dfIt;
-
   // Root node
-  // TODO: extract to method
-  if(node.getNodeType() == OCTREE_BRANCH_NODE) {
-    OctreeBranchNode root(node);
-    addHypothesisNode(root);
-    ++dfIt;
-  }
-  else {
-    LOG(LDEBUG) << "Error creating hypothesis node. First node is not a branch node!";
-    return;
-  }
+  addHypothesisNode(octree.depthBegin());
+  ++dfIt;
 
   for (;dfIt != dfItEnd; ++dfIt) {
     LOG(LDEBUG) << "========= Another node in depth search =========";
@@ -261,7 +251,7 @@ void NetworkBuilder::exportNetwork()
 	//out_network.write(network.getNetwork());
 }
 
-void NetworkBuilder::addHypothesisNode(OctreeBranchNode root, int modelId)
+void NetworkBuilder::addHypothesisNode(Octree::DepthFirstIterator it, int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
   /*
@@ -269,9 +259,17 @@ void NetworkBuilder::addHypothesisNode(OctreeBranchNode root, int modelId)
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  createNode(&root);
-  addParentsToQueue(root);
-  ++branchNodeCount;
+  OctreeNode node = *it;
+  if(node.getNodeType() == OCTREE_BRANCH_NODE) {
+    OctreeBranchNode root(*it);
+    createNode(&root);
+    addParentsToQueue(root);
+    ++branchNodeCount;
+  }
+  else {
+    LOG(LDEBUG) << "Error creating hypothesis node. First node is not a branch node!";
+    return;
+  }
 }
 
 string NetworkBuilder::getNodeName(int nodeHandle)
