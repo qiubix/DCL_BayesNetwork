@@ -14,6 +14,7 @@
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
+#include "NetworkBuilderExceptions.hpp"
 
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
@@ -109,6 +110,10 @@ void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
 
   if( !network.isEmpty() ) {
     return;
+  }
+
+  if (cloud->empty()) {
+    throw PointCloudIsEmptyException();
   }
 
   Octree octree(cloud);

@@ -5,6 +5,14 @@ using ::testing::Test;
 
 //#include <pcl/io/pcd_io.h>
 #include "../src/Components/NetworkBuilder/NetworkBuilder.hpp"
+#include "../src/Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
+
+TEST(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
+  Processors::Network::NetworkBuilder component("name");
+  pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
+
+  EXPECT_THROW(component.buildNetwork(emptyCloud), PointCloudIsEmptyException);
+}
 
 TEST(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
   Processors::Network::NetworkBuilder component("name");
