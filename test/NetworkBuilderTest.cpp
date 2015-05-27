@@ -23,7 +23,7 @@ TEST(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
   component.buildNetwork();
 
   Processors::Network::BayesNetwork network = component.getNetwork();
-  EXPECT_TRUE(network.hasNode("V_0"));
+  EXPECT_THAT(network.hasNode("V_0"), Eq(true));
 }
 
 TEST(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
