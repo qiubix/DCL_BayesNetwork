@@ -56,9 +56,7 @@ public:
    */
   void prepareInterface();
 
-  void setCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
-
-  void buildNetwork();
+  void buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
 
   BayesNetwork getNetwork();
 
@@ -101,7 +99,6 @@ protected:
 
 private:
   BayesNetwork network;
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
   std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
 
   std::map <int, string> features;
@@ -119,7 +116,7 @@ private:
   void addNodeToParentStack(OctreeBranchNode branchNode);
 
   void createNode(OctreeNode* node);
-  void createLeafNodeChildren(OctreeLeafNode leafNode);
+  void createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
 
   void connectNodeToNetwork(OctreeNode* child);
 

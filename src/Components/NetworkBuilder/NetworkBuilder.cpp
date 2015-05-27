@@ -87,7 +87,10 @@ void NetworkBuilder::onJointMultiplicity()
   LOG(LTRACE) << "On joint multiplicity";
   jointMultiplicityVector = in_jointMultiplicity.read();
   if (cloudQueue.size() > 0) {
-    buildNetwork();
+    LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
+    cloudQueue.pop();
+    buildNetwork(cloud);
   }
 }
 
@@ -97,26 +100,16 @@ bool NetworkBuilder::onStart()
   return true;
 }
 
-void NetworkBuilder::setCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
-  cloudQueue.push(cloud);
-}
-
 BayesNetwork NetworkBuilder::getNetwork() {
   return network;
 }
 
-void NetworkBuilder::buildNetwork() {
+void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if( !network.isEmpty() ) {
     return;
   }
-
-  LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
-  // Read from queue
-  cloud = cloudQueue.top();
-  cloudQueue.pop();
-  //  jointMultiplicityVector = in_jointMultiplicity.read();
 
   Octree octree(cloud);
   octree.init();
@@ -141,7 +134,7 @@ void NetworkBuilder::buildNetwork() {
       OctreeLeafNode leafNode(node);
       createNode(&leafNode);
       connectNodeToNetwork(&leafNode);
-      createLeafNodeChildren(leafNode);
+      createLeafNodeChildren(leafNode, cloud);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
@@ -186,7 +179,7 @@ void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 

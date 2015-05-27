@@ -18,9 +18,8 @@ TEST(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
   for(int i=0; i<128; i++) {
     cloud->points[0].descriptor[i] = i;
   }
-  component.setCloud(cloud);
 
-  component.buildNetwork();
+  component.buildNetwork(cloud);
 
   Processors::Network::BayesNetwork network = component.getNetwork();
   EXPECT_THAT(network.hasNode("V_0"), Eq(true));
