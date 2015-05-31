@@ -116,6 +116,7 @@ void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
     throw PointCloudIsEmptyException();
   }
 
+  //TODO: move outside build() method
   Octree octree(cloud);
   octree.init();
 
@@ -138,7 +139,6 @@ void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
       createNode(&leafNode);
-      connectNodeToNetwork(&leafNode);
       createLeafNodeChildren(leafNode, cloud);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
@@ -151,7 +151,6 @@ void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createNode(&branchNode);
-        connectNodeToNetwork(&branchNode);
         addNodeToParentStack(branchNode);
         ++branchNodeCount;
       }
@@ -167,8 +166,25 @@ void NetworkBuilder::createNode(OctreeNode* node)
   LOG(LDEBUG) << "Creating node: " << nextId;
   node->setId(nextId);
   network.addVoxelNode(nextId);
+  string bayesParentNodeName = network.createVoxelName(nextId);
   ++numberOfVoxels;
   ++nextId;
+
+  if (bayesParentNodeName == "V_0") {
+    return;
+  }
+  else {
+    connectNodeToNetwork(bayesParentNodeName);
+  }
+}
+
+void NetworkBuilder::connectNodeToNetwork(string bayesParentNodeName)
+{
+  OctreeBranchNode parent(parentStack.top());
+  int parentId = parent.getId();
+  string bayesChildNodeName = network.createVoxelName(parentId);
+  parentStack.pop();
+  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
 }
 
 void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
@@ -219,17 +235,6 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointC
   LOG(LTRACE) << "voxel name: " << network.createVoxelName(parentId);
   LOG(LTRACE) << "children count: " <<childrenCounter;
   leafNodeCount++;
-}
-
-void NetworkBuilder::connectNodeToNetwork(OctreeNode* child)
-{
-  int childId = child->getId();
-  string bayesParentNodeName = network.createVoxelName(childId);
-  OctreeBranchNode parent(parentStack.top());
-  int parentId = parent.getId();
-  string bayesChildNodeName = network.createVoxelName(parentId);
-  parentStack.pop();
-  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
 }
 
 void NetworkBuilder::exportNetwork()

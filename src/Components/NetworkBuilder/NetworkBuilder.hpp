@@ -116,9 +116,9 @@ private:
   void addNodeToParentStack(OctreeBranchNode branchNode);
 
   void createNode(OctreeNode* node);
+  void connectNodeToNetwork(string bayesParentNodeName);
   void createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
 
-  void connectNodeToNetwork(OctreeNode* child);
 
   void exportNetwork();
 
