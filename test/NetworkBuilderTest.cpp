@@ -46,14 +46,13 @@ TEST(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
     cloud->points[0].descriptor[i] = i;
   }
 
-//  component.setCloud(cloud);
-//
-//  component.buildNetwork();
-//
-//  Processors::Network::BayesNetwork network = component.getNetwork();
-//  EXPECT_TRUE(network.hasNode("V_0"));
-//  EXPECT_TRUE(network.hasNode("F_0"));
-  EXPECT_TRUE(true);
+  component.buildNetwork(cloud);
+
+  Processors::Network::BayesNetwork network = component.getNetwork();
+  ASSERT_THAT(network.hasNode("V_0"), Eq(true));
+  ASSERT_THAT(network.hasNode("V_1"), Eq(true));
+  ASSERT_THAT(network.hasNode("F_0"), Eq(true));
+  ASSERT_THAT(network.getNumberOfNodes(), Eq(3));
 }
 
 TEST(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
