@@ -1,7 +1,7 @@
 # Test cases
 
 0. NetworkBuilder
-- should build network with only one feature node
++ should build network with only one feature node
 - should have the same number of feature nodes as points in cloud
 - should have unique ids
 - should build network with multiple feature nodes
