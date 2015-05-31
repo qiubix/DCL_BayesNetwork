@@ -9,46 +9,49 @@ using ::testing::Test;
 
 class NetworkBuilderTest : public Test {
 public:
+  NetworkBuilderTest() {
+    networkBuilder = new Processors::Network::NetworkBuilder("name");
+  }
+
   pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloudWithOnePoint() {
     pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-    cloud->width = 1;
-    cloud->height = 1;
-    cloud->points.resize(cloud->width * cloud->height);
-    cloud->points[0].x = 0.1;
-    cloud->points[0].y = 0.2;
-    cloud->points[0].z = 0.3;
+    cloud -> width = 1;
+    cloud -> height = 1;
+    cloud -> points.resize(cloud -> width * cloud -> height);
+    cloud -> points[0].x = 0.1;
+    cloud -> points[0].y = 0.2;
+    cloud -> points[0].z = 0.3;
     for(int i=0; i<128; i++) {
-      cloud->points[0].descriptor[i] = i;
+      cloud -> points[0].descriptor[i] = i;
     }
     return cloud;
   }
 
+  Processors::Network::NetworkBuilder* networkBuilder;
+
 };
 
 TEST_F(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
-  Processors::Network::NetworkBuilder networkBuilder("name");
   pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
 
-  EXPECT_THROW(networkBuilder.buildNetwork(emptyCloud), PointCloudIsEmptyException);
+  EXPECT_THROW(networkBuilder -> buildNetwork(emptyCloud), PointCloudIsEmptyException);
 }
 
 TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
-  Processors::Network::NetworkBuilder networkBuilder("name");
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithOnePoint();
 
-  networkBuilder.buildNetwork(cloud);
+  networkBuilder -> buildNetwork(cloud);
 
-  Processors::Network::BayesNetwork network = networkBuilder.getNetwork();
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
   EXPECT_THAT(network.hasNode("V_0"), Eq(true));
 }
 
 TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
-  Processors::Network::NetworkBuilder networkBuilder("name");
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithOnePoint();
 
-  networkBuilder.buildNetwork(cloud);
+  networkBuilder -> buildNetwork(cloud);
 
-  Processors::Network::BayesNetwork network = networkBuilder.getNetwork();
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
   ASSERT_THAT(network.hasNode("V_0"), Eq(true));
   ASSERT_THAT(network.hasNode("V_1"), Eq(true));
   ASSERT_THAT(network.hasNode("F_0"), Eq(true));
