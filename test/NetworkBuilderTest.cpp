@@ -96,6 +96,15 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
   ASSERT_THAT(network.hasNode("F_4"), Eq(true));
 }
 
+TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsCloudPoints) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithThreePoints();
+
+  networkBuilder -> buildNetwork(cloud);
+
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  ASSERT_THAT(network.getNumberOfFeatureNodes(), Eq(3));
+}
+
 TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithOnePoint();
 

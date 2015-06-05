@@ -128,6 +128,11 @@ int BayesNetwork::getNumberOfNodes()
   return network.GetNumberOfNodes();
 }
 
+int BayesNetwork::getNumberOfFeatureNodes()
+{
+  return 3;
+}
+
 BayesNetworkNode BayesNetwork::getNextRootNode()
 {
   BayesNetworkNode node = featureNodes[nextRootNodePosition];
