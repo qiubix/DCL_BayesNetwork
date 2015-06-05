@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../../../lib/SMILE/smile.h"
+#include "CPTManager.hpp"
 
 namespace Processors {
 namespace Network {
@@ -18,6 +19,7 @@ public:
 
   std::string getName();
   int getChildHandle();
+  CPTManager getNodeCPTManager();
 private:
   //FIXME: this pointer probably should not be stored. See documentation: DSL_network.GetNode()
   DSL_node* node;

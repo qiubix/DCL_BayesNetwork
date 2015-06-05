@@ -6,6 +6,7 @@ using ::testing::Test;
 //#include <pcl/io/pcd_io.h>
 #include "../src/Components/NetworkBuilder/NetworkBuilder.hpp"
 #include "../src/Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
+#include "../src/Components/NetworkBuilder/CPTManager.hpp"
 
 class NetworkBuilderTest : public Test {
 public:
@@ -68,7 +69,7 @@ TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
   networkBuilder -> buildNetwork(cloud);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
-  EXPECT_THAT(network.hasNode("V_0"), Eq(true));
+  ASSERT_THAT(network.hasNode("V_0"), Eq(true));
 }
 
 TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
@@ -95,11 +96,20 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
   ASSERT_THAT(network.hasNode("F_4"), Eq(true));
 }
 
-TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
-  EXPECT_TRUE(true);
+TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithOnePoint();
+
+  networkBuilder -> buildNetwork(cloud);
+
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  Processors::Network::CPTManager manager = network.getNextRootNode().getNodeCPTManager();
+  //TODO: in C++11 it'll be much simpler
+  const double probs[] = { 0.5,0.5 };
+  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
 }
 
-TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
+TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
   EXPECT_TRUE(true);
 }
 

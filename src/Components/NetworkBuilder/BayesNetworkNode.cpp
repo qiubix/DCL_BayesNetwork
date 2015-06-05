@@ -40,5 +40,11 @@ int BayesNetworkNode::getChildHandle()
   return childHandle;
 }
 
+CPTManager BayesNetworkNode::getNodeCPTManager()
+{
+  CPTManager manager(node);
+  return manager;
+}
+
 }//: namespace Processors
 }//: namespace Network

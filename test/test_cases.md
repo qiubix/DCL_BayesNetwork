@@ -4,9 +4,9 @@
 + should build network with only one feature node
 - should have the same number of feature nodes as points in cloud
 - should have unique ids
-- should build network with multiple feature nodes
++ should build network with multiple feature nodes
 - should fill CPTs acording to number of parents
-- should set default probability values for feature nodes
++ should set default probability values for feature nodes
 - should have only one child node
 - should not have cycles
 - should have nodes with unique names
