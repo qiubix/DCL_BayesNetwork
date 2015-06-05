@@ -134,6 +134,12 @@ TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
   ASSERT_EQ(5, network.getNumberOfNodes());
 }
 
+TEST_F(BayesNetworkTest, shouldGetNumberOfFeatureNodesInNetwork)
+{
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  ASSERT_THAT(network.getNumberOfFeatureNodes(), Eq(2));
+}
+
 TEST_F(BayesNetworkTest, shouldThrowExceptionWhenAddingAlreadyExistingNode)
 {
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
