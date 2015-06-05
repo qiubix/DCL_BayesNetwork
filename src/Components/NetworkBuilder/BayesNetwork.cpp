@@ -130,7 +130,7 @@ int BayesNetwork::getNumberOfNodes()
 
 int BayesNetwork::getNumberOfFeatureNodes()
 {
-  return 3;
+  return featureNodes.size();
 }
 
 BayesNetworkNode BayesNetwork::getNextRootNode()
