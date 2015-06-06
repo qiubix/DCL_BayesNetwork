@@ -52,5 +52,13 @@ CPTManager BayesNetworkNode::getNodeCPTManager()
   return manager;
 }
 
+BayesNetworkNode BayesNetworkNode::getChild()
+{
+  DSL_network* network = node -> Network();
+  DSL_node* networkNode = network -> GetNode(getChildHandle());
+  BayesNetworkNode node(networkNode);
+  return node;
+}
+
 }//: namespace Processors
 }//: namespace Network

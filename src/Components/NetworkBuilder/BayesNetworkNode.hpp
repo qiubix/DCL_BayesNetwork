@@ -21,6 +21,7 @@ public:
   int getNumberOfChildren();
   int getChildHandle();
   CPTManager getNodeCPTManager();
+  BayesNetworkNode getChild();
 private:
   //FIXME: this pointer probably should not be stored. See documentation: DSL_network.GetNode()
   DSL_node* node;
