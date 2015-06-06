@@ -35,6 +35,8 @@ public:
   std::string getNodeName(int nodeHandle);
   int getNumberOfChildren(const char* nodeName);
   int getNumberOfNodes();
+  int getNumberOfFeatureNodes();
+  BayesNetworkNode getNode(std::string name);
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
   bool visitNode(BayesNetworkNode& node);

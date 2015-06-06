@@ -14,6 +14,7 @@
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
+#include "NetworkBuilderExceptions.hpp"
 
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
@@ -87,7 +88,10 @@ void NetworkBuilder::onJointMultiplicity()
   LOG(LTRACE) << "On joint multiplicity";
   jointMultiplicityVector = in_jointMultiplicity.read();
   if (cloudQueue.size() > 0) {
-    buildNetwork();
+    LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
+    cloudQueue.pop();
+    buildNetwork(cloud);
   }
 }
 
@@ -97,19 +101,22 @@ bool NetworkBuilder::onStart()
   return true;
 }
 
-void NetworkBuilder::buildNetwork() {
+BayesNetwork NetworkBuilder::getNetwork() {
+  return network;
+}
+
+void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if( !network.isEmpty() ) {
     return;
   }
 
-  LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
-  // Read from queue
-  cloud = cloudQueue.top();
-  cloudQueue.pop();
-  //  jointMultiplicityVector = in_jointMultiplicity.read();
+  if (cloud->empty()) {
+    throw PointCloudIsEmptyException();
+  }
 
+  //TODO: move outside build() method
   Octree octree(cloud);
   octree.init();
 
@@ -121,19 +128,9 @@ void NetworkBuilder::buildNetwork() {
 
   LOG(LTRACE) << "Creating nodes:";
 
-  OctreeNode node = *dfIt;
-
   // Root node
-  // TODO: extract to method
-  if(node.getNodeType() == OCTREE_BRANCH_NODE) {
-    OctreeBranchNode root(node);
-    addHypothesisNode(root);
-    ++dfIt;
-  }
-  else {
-    LOG(LDEBUG) << "Error creating hypothesis node. First node is not a branch node!";
-    return;
-  }
+  addHypothesisNode(octree.depthBegin());
+  ++dfIt;
 
   for (;dfIt != dfItEnd; ++dfIt) {
     LOG(LDEBUG) << "========= Another node in depth search =========";
@@ -142,8 +139,7 @@ void NetworkBuilder::buildNetwork() {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
       createNode(&leafNode);
-      connectNodeToNetwork(&leafNode);
-      createLeafNodeChildren(leafNode);
+      createLeafNodeChildren(leafNode, cloud);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
@@ -155,8 +151,7 @@ void NetworkBuilder::buildNetwork() {
       else {
         LOG(LDEBUG) << "Node has multiple children, adding to Bayes network";
         createNode(&branchNode);
-        connectNodeToNetwork(&branchNode);
-        addParentsToQueue(branchNode);
+        addNodeToParentStack(branchNode);
         ++branchNodeCount;
       }
     }
@@ -171,24 +166,41 @@ void NetworkBuilder::createNode(OctreeNode* node)
   LOG(LDEBUG) << "Creating node: " << nextId;
   node->setId(nextId);
   network.addVoxelNode(nextId);
+  string bayesParentNodeName = network.createVoxelName(nextId);
   ++numberOfVoxels;
   ++nextId;
-}
 
-void NetworkBuilder::addParentsToQueue(OctreeBranchNode branchNode)
-{
-  LOG(LDEBUG) << "Adding parents to queue";
-  if(!branchNode.hasOnlyOneChild()) {
-    int numberOfChildren = branchNode.getNumberOfChildren();
-    for (int i=0; i<numberOfChildren; i++) {
-      parentQueue.push(branchNode);
-    }
-    LOG(LDEBUG) << "Current node's children quantinty: " << numberOfChildren;
-    LOG(LTRACE) << "Parent queue size: " << parentQueue.size();
+  if (bayesParentNodeName == "V_0") {
+    return;
+  }
+  else {
+    connectNodeToNetwork(bayesParentNodeName);
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode)
+void NetworkBuilder::connectNodeToNetwork(string bayesParentNodeName)
+{
+  OctreeBranchNode parent(parentStack.top());
+  int parentId = parent.getId();
+  string bayesChildNodeName = network.createVoxelName(parentId);
+  parentStack.pop();
+  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
+}
+
+void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
+{
+  LOG(LDEBUG) << "Adding parents to stack";
+  if(!branchNode.hasOnlyOneChild() || branchNode.getId() == 0) {
+    int numberOfChildren = branchNode.getNumberOfChildren();
+    for (int i=0; i<numberOfChildren; i++) {
+      parentStack.push(branchNode);
+    }
+    LOG(LDEBUG) << "Current node's children quantinty: " << numberOfChildren;
+    LOG(LTRACE) << "Parent stack size: " << parentStack.size();
+  }
+}
+
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
@@ -225,35 +237,24 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode)
   leafNodeCount++;
 }
 
-void NetworkBuilder::connectNodeToNetwork(OctreeNode* child)
-{
-  int childId = child->getId();
-  string bayesParentNodeName = network.createVoxelName(childId);
-  OctreeBranchNode parent(parentQueue.top());
-  int parentId = parent.getId();
-  string bayesChildNodeName = network.createVoxelName(parentId);
-  parentQueue.pop();
-  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
-}
-
 void NetworkBuilder::exportNetwork()
 {
-	LOG(LWARNING) << "ELO! Branch node quantity: " << branchNodeCount;
-	LOG(LWARNING) << "ELO! Leaf node quantity: " << leafNodeCount;
-	LOG(LWARNING) << "ELO! Voxel node quantity: " << numberOfVoxels;
-	LOG(LWARNING) << "ELO! Feature node quantity: " << featureNodeCount;
-	LOG(LWARNING) << "ELO! maxLeafContainerSize: " << maxLeafContainerSize;
+  LOG(LWARNING) << "Branch node quantity: " << branchNodeCount;
+  LOG(LWARNING) << "Leaf node quantity: " << leafNodeCount;
+  LOG(LWARNING) << "Voxel node quantity: " << numberOfVoxels;
+  LOG(LWARNING) << "Feature node quantity: " << featureNodeCount;
+  LOG(LWARNING) << "maxLeafContainerSize: " << maxLeafContainerSize;
 
-	LOG(LDEBUG) << "before writing network to file";
+  LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
-	LOG(LDEBUG) << "after writing network to file";
+  LOG(LDEBUG) << "after writing network to file";
   std::vector<DSL_network> networks;
   networks.push_back(network.getNetwork());
   out_networks.write(networks);
-	//out_network.write(network.getNetwork());
+  //out_network.write(network.getNetwork());
 }
 
-void NetworkBuilder::addHypothesisNode(OctreeBranchNode root, int modelId)
+void NetworkBuilder::addHypothesisNode(Octree::DepthFirstIterator it, int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
   /*
@@ -261,39 +262,23 @@ void NetworkBuilder::addHypothesisNode(OctreeBranchNode root, int modelId)
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  createNode(&root);
-  addParentsToQueue(root);
-  ++branchNodeCount;
+  OctreeNode node = *it;
+  if(node.getNodeType() == OCTREE_BRANCH_NODE) {
+    OctreeBranchNode root(*it);
+    createNode(&root);
+    addNodeToParentStack(root);
+    ++branchNodeCount;
+  }
+  else {
+    LOG(LDEBUG) << "Error creating hypothesis node. First node is not a branch node!";
+    return;
+  }
 }
 
 string NetworkBuilder::getNodeName(int nodeHandle)
 {
   return features[nodeHandle];
 }
-
-/*
-void NetworkBuilder::logLeafNodeContainerSize(OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
-{
-	int containter_size = leafNode->getContainer().getSize();
-	if(containter_size >8) {
-		LOG(LWARNING) << "Leaf containter has big number of features! (" << containter_size << ")";
-	}//: if
-	if(containter_size > maxLeafContainerSize)
-    maxLeafContainerSize = containter_size;
-}
-
-int NetworkBuilder::sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode<OctreeContainerPointIndicesWithId> *leafNode)
-{
-  int summedFeaturesMultiplicity = 0;
-	std::vector<int> point_indices;
-	leafNode->getContainer().getPointIndices(point_indices);
-	for(unsigned int j=0; j<leafNode->getContainer().getSize(); j++) {
-		PointXYZSIFT p = cloud->at(point_indices[j]);
-		summedFeaturesMultiplicity += p.multiplicity;
-	}
-  return summedFeaturesMultiplicity;
-}
-*/
 
 void NetworkBuilder::logPoint(PointXYZSIFT p, int index)
 {

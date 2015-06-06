@@ -20,7 +20,7 @@
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
 
-#include <opencv2/core/core.hpp>
+//#include <opencv2/core/core.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -55,6 +55,10 @@ public:
    * Prepare data streams and handlers
    */
   void prepareInterface();
+
+  void buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+
+  BayesNetwork getNetwork();
 
 protected:
 
@@ -95,7 +99,6 @@ protected:
 
 private:
   BayesNetwork network;
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
   std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
 
   std::map <int, string> features;
@@ -108,24 +111,21 @@ private:
   unsigned int maxLeafContainerSize;
   int nextId;
   unsigned int numberOfVoxels;
-  std::stack <OctreeBranchNode> parentQueue;
+  std::stack <OctreeBranchNode> parentStack;
 
-  void buildNetwork();
-  void addParentsToQueue(OctreeBranchNode branchNode);
+  void addNodeToParentStack(OctreeBranchNode branchNode);
 
   void createNode(OctreeNode* node);
-  void createLeafNodeChildren(OctreeLeafNode leafNode);
+  void connectNodeToNetwork(string bayesParentNodeName);
+  void createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
 
-  void connectNodeToNetwork(OctreeNode* child);
 
   void exportNetwork();
 
-  void addHypothesisNode(OctreeBranchNode root, int modelId = 0);
+  void addHypothesisNode(Octree::DepthFirstIterator it, int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();
-  //void logLeafNodeContainerSize(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
-  //int sumMultiplicityInsideVoxel(pcl::octree::OctreeLeafNode< OctreeContainerPointIndicesWithId >* leaf_node);
   void logPoint(PointXYZSIFT p, int index);
 };
 

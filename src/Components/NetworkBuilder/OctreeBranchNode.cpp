@@ -17,7 +17,7 @@ int OctreeBranchNode::getId() {
 }
 
 void OctreeBranchNode::setId(int id) {
-  return branchNode->getContainer().setNodeId(id);
+  branchNode->getContainer().setNodeId(id);
 }
 
 bool OctreeBranchNode::hasOnlyOneChild() {

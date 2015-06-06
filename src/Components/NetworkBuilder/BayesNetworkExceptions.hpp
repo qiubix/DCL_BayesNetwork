@@ -5,9 +5,15 @@
 
 class NodeAlreadyExistsException : public std::exception
 {
+public:
+  NodeAlreadyExistsException(const char* nodeName) : name(nodeName) {}
+  ~NodeAlreadyExistsException() throw() {}
   virtual const char* what() const throw() {
-    return "This node already exists in network.";
+    std::string message = "This node already exists in network: " + name;
+    return message.c_str();
   }
+private:
+  std::string name;
 };
 
 class NodeNotFoundException : public std::exception
