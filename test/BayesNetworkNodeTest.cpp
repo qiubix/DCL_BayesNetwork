@@ -115,6 +115,18 @@ TEST_F(BayesNetworkNodeTest, shouldGetNextNotVisitedRootNode)
   EXPECT_EQ(THIRD_ROOT_NODE_NAME, lastNode.getName());
 }
 
+TEST_F(BayesNetworkNodeTest, shouldGetNumberOfChildren)
+{
+  BayesNetwork network;
+  network.addFeatureNode(0);
+  network.addVoxelNode(0);
+  network.connectNodes("F_0", "V_0");
+  BayesNetworkNode firstNode = network.getNextRootNode();
+
+  int numberOfChildren = firstNode.getNumberOfChildren();
+
+  ASSERT_THAT(numberOfChildren, Eq(1));
+}
 
 TEST_F(BayesNetworkNodeTest, shouldGetNodeChild)
 {

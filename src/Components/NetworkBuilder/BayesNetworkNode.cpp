@@ -31,6 +31,12 @@ std::string BayesNetworkNode::getName() {
   return name;
 }
 
+int BayesNetworkNode::getNumberOfChildren() {
+  DSL_network* network = node->Network();
+  //DSL_intArray& children = network->GetChildren(nodeHandle);
+  return network -> NumChildren(nodeHandle);
+}
+
 int BayesNetworkNode::getChildHandle()
 {
   DSL_network* network = node->Network();

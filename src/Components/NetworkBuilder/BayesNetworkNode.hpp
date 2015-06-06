@@ -18,6 +18,7 @@ public:
   void visitNode();
 
   std::string getName();
+  int getNumberOfChildren();
   int getChildHandle();
   CPTManager getNodeCPTManager();
 private:
