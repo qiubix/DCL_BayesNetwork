@@ -2,7 +2,7 @@
 
 0. NetworkBuilder
 + should build network with only one feature node
-- should have the same number of feature nodes as points in cloud
++ should have the same number of feature nodes as points in cloud
 - should have unique ids
 + should build network with multiple feature nodes
 - should fill CPTs acording to number of parents
@@ -10,6 +10,9 @@
 - should have only one child node
 - should not have cycles
 - should have nodes with unique names
+- should build network on new cloud
+- should not build network if one is already being build
+- should wait for joint multiplicity before building network
 
 1. BayesNetwork class
 + should initialize empty network
