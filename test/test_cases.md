@@ -27,6 +27,7 @@
     ?- should add node in the middle of the chain
 + should get number of children
 + should throw exception when trying to create incorrect node name
+- should throw exception when trying to get not existing node
 
 New interface for alternative CPT:
 - should return child of a node

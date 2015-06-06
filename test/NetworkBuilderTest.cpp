@@ -123,6 +123,12 @@ TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
 }
 
 TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithThreePoints();
+
+  networkBuilder -> buildNetwork(cloud);
+
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  Processors::Network::BayesNetworkNode firstNode = network.getNode("V_1");
   EXPECT_TRUE(true);
 }
 

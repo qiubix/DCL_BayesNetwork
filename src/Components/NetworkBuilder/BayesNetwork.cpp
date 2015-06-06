@@ -133,6 +133,14 @@ int BayesNetwork::getNumberOfFeatureNodes()
   return featureNodes.size();
 }
 
+BayesNetworkNode BayesNetwork::getNode(std::string name)
+{
+  int nodeHandle = network.FindNode(name.c_str());
+  //TODO: throw exception when node not found
+  BayesNetworkNode node(network.GetNode(nodeHandle));
+  return node;
+}
+
 BayesNetworkNode BayesNetwork::getNextRootNode()
 {
   BayesNetworkNode node = featureNodes[nextRootNodePosition];
