@@ -118,10 +118,6 @@ TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
   ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
 }
 
-TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
-  EXPECT_TRUE(true);
-}
-
 TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithThreePoints();
 
@@ -140,6 +136,15 @@ TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
 }
 
 TEST_F(NetworkBuilderTest, shouldNotHaveCycles) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithThreePoints();
+
+  networkBuilder -> buildNetwork(cloud);
+
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  ASSERT_THAT(network.getNetwork().IsAcyclic(), Eq(1));
+}
+
+TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
   EXPECT_TRUE(true);
 }
 
