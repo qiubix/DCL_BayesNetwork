@@ -130,11 +130,13 @@ TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
   Processors::Network::BayesNetworkNode firstNode = network.getNode("V_1");
   Processors::Network::BayesNetworkNode secondNode = network.getNode("V_2");
+  Processors::Network::BayesNetworkNode childNode = network.getNode("V_0");
 
-  EXPECT_THAT(firstNode.getChild().getName(), Eq("V_0"));
-  EXPECT_THAT(secondNode.getChild().getName(), Eq("V_0"));
-  EXPECT_THAT(firstNode.getNumberOfChildren(), Eq(1));
-  EXPECT_THAT(secondNode.getNumberOfChildren(), Eq(1));
+  ASSERT_THAT(firstNode.getChild().getName(), Eq("V_0"));
+  ASSERT_THAT(secondNode.getChild().getName(), Eq("V_0"));
+  ASSERT_THAT(firstNode.getNumberOfChildren(), Eq(1));
+  ASSERT_THAT(secondNode.getNumberOfChildren(), Eq(1));
+  ASSERT_THAT(childNode.getNumberOfChildren(), Eq(0));
 }
 
 TEST_F(NetworkBuilderTest, shouldNotHaveCycles) {
