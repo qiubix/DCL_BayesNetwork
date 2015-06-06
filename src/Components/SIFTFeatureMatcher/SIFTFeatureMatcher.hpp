@@ -79,12 +79,6 @@ protected:
      */
     bool onStop();
 
-    /// Event handlers
-    Base::EventHandler <SIFTFeatureMatcher> h_onJointCloud;
-    Base::EventHandler <SIFTFeatureMatcher> h_onInstances;
-    Base::EventHandler <SIFTFeatureMatcher> h_onInstance;
-    Base::EventHandler <SIFTFeatureMatcher> h_onInstanceCloud;
-
     /*!
      * Event handler function.
      */

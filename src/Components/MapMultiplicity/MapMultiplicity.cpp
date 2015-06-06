@@ -33,8 +33,7 @@ void MapMultiplicity::prepareInterface()
 {
     LOG(LTRACE) << "MapMultiplicity::prepareInterface\n";
 
-    h_onJointMultiplicity.setup(this, &MapMultiplicity::onJointMultiplicity);
-    registerHandler("onJointMultiplicity", &h_onJointMultiplicity);
+    registerHandler("onJointMultiplicity", boost::bind(&MapMultiplicity::onJointMultiplicity, this));
 
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointMultiplicity", &in_jointCloud);

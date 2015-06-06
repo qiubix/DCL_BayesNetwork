@@ -1,0 +1,1 @@
+- kolejnosc stanow w feature node

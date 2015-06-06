@@ -2,7 +2,7 @@
 #define OCTREE_HPP
 
 #include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
+//#include <pcl/point_types.h>
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
@@ -19,6 +19,7 @@ namespace Network {
 
 class Octree {
 public:
+  typedef OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> OctreeWithSIFT;
   Octree(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
   ~Octree();
 
@@ -42,8 +43,8 @@ public:
     pcl::octree::OctreeNode* operator*() {
       return it.getCurrentOctreeNode();
     }
-    OctreeIterator operator->() {
-      return it;
+    OctreeIterator* operator->() {
+      return &it;
     }
     bool operator==(const DepthFirstIterator& reference) {
       return it == reference.it;
@@ -58,10 +59,12 @@ public:
   DepthFirstIterator depthBegin();
   DepthFirstIterator depthEnd();
 
+  OctreeWithSIFT getOctreeWithSIFT();
+
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
   float voxelSize;
-  OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>* octree;
+  OctreeWithSIFT* octree;
 
 };
 

@@ -69,10 +69,6 @@ protected:
 	/// Output data stream containing models.
 	Base::DataStreamOut<std::vector<AbstractObject*> > out_models;
 
-
-	// Handlers
-	Base::EventHandler2 h_loadModels;
-
 	/// List of the files containing models to be read.
 	Base::Property<string> filenames;
 

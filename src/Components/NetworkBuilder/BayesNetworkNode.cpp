@@ -31,6 +31,12 @@ std::string BayesNetworkNode::getName() {
   return name;
 }
 
+int BayesNetworkNode::getNumberOfChildren() {
+  DSL_network* network = node->Network();
+  //DSL_intArray& children = network->GetChildren(nodeHandle);
+  return network -> NumChildren(nodeHandle);
+}
+
 int BayesNetworkNode::getChildHandle()
 {
   DSL_network* network = node->Network();
@@ -38,6 +44,20 @@ int BayesNetworkNode::getChildHandle()
   //TODO: check if array has any elements at all
   int childHandle = children[0];
   return childHandle;
+}
+
+CPTManager BayesNetworkNode::getNodeCPTManager()
+{
+  CPTManager manager(node);
+  return manager;
+}
+
+BayesNetworkNode BayesNetworkNode::getChild()
+{
+  DSL_network* network = node -> Network();
+  DSL_node* networkNode = network -> GetNode(getChildHandle());
+  BayesNetworkNode node(networkNode);
+  return node;
 }
 
 }//: namespace Processors

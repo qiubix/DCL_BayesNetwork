@@ -62,25 +62,21 @@ void SIFTFeatureMatcher::prepareInterface()
 {
     LOG(LTRACE) << "SIFTFeatureMatcher::prepareInterface";
 
-    h_onJointCloud.setup(this, &SIFTFeatureMatcher::onJointCloud);
-    registerHandler("onJointCloud", &h_onJointCloud);
+    registerHandler("onJointCloud", boost::bind(&SIFTFeatureMatcher::onJointCloud, this));
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointCloud", &in_jointCloud);
     
-    h_onInstances.setup(this, &SIFTFeatureMatcher::onInstances);
-    registerHandler("onInstances", &h_onInstances);
+    registerHandler("onInstances", boost::bind(&SIFTFeatureMatcher::onInstances, this));
     registerStream("in_instances", &in_instances);
     addDependency("onInstances", &in_instances);
 //    addDependency("onInstances", &in_jointCloud);
     
-    h_onInstance.setup(this, &SIFTFeatureMatcher::onInstance);
-    registerHandler("onInstance", &h_onInstance);
+    registerHandler("onInstance", boost::bind(&SIFTFeatureMatcher::onInstance, this));
     registerStream("in_instance", &in_instance);
     addDependency("onInstance", &in_instance);
 //    addDependency("onInstance", &in_jointCloud);
     
-    h_onInstanceCloud.setup(this, &SIFTFeatureMatcher::onInstanceCloud);
-    registerHandler("onInstanceCloud", &h_onInstanceCloud);
+    registerHandler("onInstanceCloud", boost::bind(&SIFTFeatureMatcher::onInstanceCloud, this));
     registerStream("in_instanceCloud", &in_instanceCloud);
     addDependency("onInstanceCloud", &in_instanceCloud);
 //    addDependency("onInstanceCloud", &in_jointCloud);

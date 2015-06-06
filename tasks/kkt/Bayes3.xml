@@ -17,22 +17,10 @@
     <Subtask name="Main">
       <Executor name="Processing"  period="1">
         <Component name="SOMJSONReader" type="SIFTObjectModel:SOMJSONReader" priority="1" bump="4">
-          <param name="filenames">/home/kkt/Objects/cereal_box_1_co5_v3.json</param>
+          <param name="filenames">/home/kkt/Objects/cereal_box_1_co5_v2.json</param>
         </Component>
-        <Component name="SequenceRGB" type="CvBasic:Sequence" priority="2" bump="0">
-          <param name="sequence.directory">/home/kkt/Objects/cereal_box_1_co5</param>
-          <param name="sequence.pattern">.*\_color.png</param>
-        </Component>
-        <Component name="SequenceDepth" type="CvBasic:Sequence" priority="3" bump="0">
-          <param name="sequence.directory">/home/kkt/Objects/cereal_box_1_co5</param>
-          <param name="sequence.pattern">.*\_depth.png</param>
-        </Component>
-        <Component name="CameraInfo" type="CvCoreTypes:CameraInfoProvider" priority="5" bump="0">
-          <param name="camera_matrix">525 0 319.5; 0 525 239.5; 0 0 1</param>
-        </Component>
-        <Component name="SIFT" type="CvBasic:CvSIFT" priority="6" bump="0">
-        </Component>
-        <Component name="FeatureCloudConverter" type="SIFTObjectModel:FeatureCloudConverter" priority="8" bump="0">
+        <Component name="InstanceReader" type="PCL:PCDReader" priority="1" bump="4">
+          <param name="filename">/home/kkt/Objects/views/cereal_box_instance_cloud_xyzsift.pcd</param>
         </Component>
 
         <Component name="Adder" type="BayesNetwork:SIFTAdder" priority="9" bump="0">
@@ -51,22 +39,7 @@
 
   <!-- pipes connecting datastreams -->
   <DataStreams>
-    <Source name="SequenceRGB.out_img">
-      <sink>SIFT.in_img</sink>
-    </Source>
-    <Source name="SequenceDepth.out_img">
-      <sink>FeatureCloudConverter.in_depth</sink>
-    </Source>
-    <Source name="CameraInfo.out_camera_info">
-      <sink>FeatureCloudConverter.in_camera_info</sink>
-    </Source>
-    <Source name="SIFT.out_descriptors">
-      <sink>FeatureCloudConverter.in_descriptors</sink>
-    </Source>
-    <Source name="SIFT.out_features">
-      <sink>FeatureCloudConverter.in_features</sink>
-    </Source>
-    <Source name="FeatureCloudConverter.out_cloud_xyzsift">
+    <Source name="InstanceReader.out_cloud_xyzsift">
       <sink>SIFTFeatureMatcher.in_instanceCloud</sink>
     </Source>
 
@@ -92,3 +65,7 @@
     </Source>
   </DataStreams>
 </Task>
+
+
+
+

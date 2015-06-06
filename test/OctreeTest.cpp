@@ -4,79 +4,98 @@ using ::testing::Eq;
 using ::testing::Test;
 
 #include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/io/pcd_io.h>
+//#include <pcl/io/pcd_io.h>
 
 #include "../src/Components/NetworkBuilder/Octree.hpp"
-#include "../src/Components/NetworkBuilder/OctreeNode.hpp"
-#include "../src/Components/NetworkBuilder/OctreeBranchNode.hpp"
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
 #include "../src/Types/PointXYZSIFT.hpp"
 
-//using namespace Processors::Network;
-
 class OctreeTest : public Test {
-  public:
-    OctreeTest(): cloud(new pcl::PointCloud<PointXYZSIFT>) {
-      if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-        std::cout <<"Error reading file!\n";
-      }
+public:
+  typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
+  PointCloud getPointCloudWithOnePoint() {
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+    cloud->width = 1;
+    cloud->height = 1;
+    cloud->points.resize(cloud->width * cloud->height);
+    cloud->points[0].x = 0.1;
+    cloud->points[0].y = 0.2;
+    cloud->points[0].z = 0.3;
+    for(int i=0; i<128; i++) cloud->points[0].descriptor[i] = i;
+    return cloud;
+  }
+
+  PointCloud getPointCloudWithTwoPoints() {
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
+    cloud->width = 2;
+    cloud->height = 1;
+    cloud->points.resize(cloud->width * cloud->height);
+    cloud->points[0].x = 0.1;
+    cloud->points[0].y = 0.2;
+    cloud->points[0].z = 0.3;
+    cloud->points[1].x = 1.1;
+    cloud->points[1].y = 1.2;
+    cloud->points[1].z = 1.3;
+    for(int i=0; i<128; i++) {
+      cloud->points[0].descriptor[i] = i;
+      cloud->points[1].descriptor[i] = i;
     }
-    ~OctreeTest() {}
-  protected:
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+    return cloud;
+  }
+
 };
 
-TEST_F(OctreeTest, shouldTestNothing) {
-  //pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  //if (pcl::io::loadPCDFile<PointXYZSIFT> ("test_cloud.pcd", *cloud) == -1) {
-  //  std::cout <<"Error reading file!\n";
-  //}
-  ASSERT_TRUE(true);
-}
-
-//TODO: implement
-TEST_F(OctreeTest, shouldInitializeOctreeWithCloud) {
-  /*
-   * initialize octree
-   * check node count
-   */
+TEST_F(OctreeTest, shouldInitializeOctreeWithPointCloud) {
+  PointCloud cloud = getPointCloudWithOnePoint();
   Processors::Network::Octree octree(cloud);
   octree.init();
-  ASSERT_TRUE(true);
+
+  Processors::Network::Octree::OctreeWithSIFT octreeWithSIFT = octree.getOctreeWithSIFT();
+  EXPECT_EQ(1, octreeWithSIFT.getBranchCount());
+  EXPECT_EQ(1, octreeWithSIFT.getLeafCount());
+  EXPECT_EQ(0.01f, octreeWithSIFT.getResolution());
+  EXPECT_EQ(1, octreeWithSIFT.getTreeDepth());
 }
 
-//TODO: implement
-TEST_F(OctreeTest, shouldInitializeIterator) {
-  /*
-   * initialize octree with cloud
-   * initialize iterator
-   * set it to begining of the cloud
-   */
+TEST_F(OctreeTest, shouldGetFirstOctreeNode) {
+  PointCloud cloud = getPointCloudWithTwoPoints();
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+
+  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+
+  ASSERT_TRUE(it->isBranchNode());
+  ASSERT_EQ(0, it->getCurrentOctreeDepth());
+}
+
+TEST_F(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
+  PointCloud cloud = getPointCloudWithOnePoint();
   Processors::Network::Octree octree(cloud);
   octree.init();
   Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
-  //pcl::octree::OctreeNode* node = *it;
-  Processors::Network::OctreeNode node = *it;
-  ASSERT_EQ(node.getNodeType(), Processors::Network::OCTREE_BRANCH_NODE);
-  //Processors::Network::OctreeBranchNode& branchNode = static_cast<Processors::Network::OctreeBranchNode&>(node);
-  //Processors::Network::OctreeBranchNode branchNode = octree.getBranchNode(node);
-  Processors::Network::OctreeBranchNode branchNode(node);
-  ASSERT_EQ(branchNode.getNodeType(), Processors::Network::OCTREE_BRANCH_NODE);
-  ASSERT_EQ(-1, branchNode.getId());
-  branchNode.setId(1);
-  ASSERT_EQ(1, branchNode.getId());
+
+  ++it;
+
+  EXPECT_TRUE(it->isLeafNode());
+  EXPECT_EQ(1, it->getCurrentOctreeDepth());
 }
 
-//TODO: implement
-TEST_F(OctreeTest, shouldGetToOctreeLeafNode) {
-  /*
-   * initialize octree with cloud
-   * initialize iterator
-   * get to the leaf node
-   * get it's id
-   */
-}
+TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
+  PointCloud cloud = getPointCloudWithTwoPoints();
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+  Processors::Network::Octree::DepthFirstIterator next = octree.depthBegin();
 
+  const Processors::Network::Octree::DepthFirstIterator end = octree.depthEnd();
+  ++next;
+  while(next != end) {
+    ++next;
+    ++it;
+  }
+
+  EXPECT_TRUE(it->isLeafNode());
+  EXPECT_EQ(7, it->getCurrentOctreeDepth());
+}

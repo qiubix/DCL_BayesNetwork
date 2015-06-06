@@ -8,7 +8,7 @@ namespace Network {
 Octree::Octree(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
   this->cloud = cloud;
   voxelSize = 0.01f;
-  octree = new OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> (voxelSize);
+  octree = new OctreeWithSIFT (voxelSize);
 }
 
 Octree::~Octree() {
@@ -32,6 +32,10 @@ Octree::DepthFirstIterator Octree::depthBegin() {
 
 Octree::DepthFirstIterator Octree::depthEnd() {
   return octree->depth_end();
+}
+
+Octree::OctreeWithSIFT Octree::getOctreeWithSIFT() {
+  return *octree;
 }
 
 }//:Network

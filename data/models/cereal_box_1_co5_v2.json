@@ -1,0 +1,7 @@
+{
+    "name": "cereal_box_1_co5_v2",
+    "type": "SIFTObjectModel",
+    "mean_viewpoint_features_number": "413",
+    "cloud_xyzrgb": "cereal_box_1_co5_v2_xyzrgb.pcd",
+    "cloud_xyzsift": "cereal_box_1_co5_v2_xyzsift.pcd"
+}

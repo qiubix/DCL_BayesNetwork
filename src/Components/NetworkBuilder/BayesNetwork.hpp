@@ -35,6 +35,8 @@ public:
   std::string getNodeName(int nodeHandle);
   int getNumberOfChildren(const char* nodeName);
   int getNumberOfNodes();
+  int getNumberOfFeatureNodes();
+  BayesNetworkNode getNode(std::string name);
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
   bool visitNode(BayesNetworkNode& node);
@@ -43,9 +45,6 @@ public:
   void exportNetworkToFile();
   DSL_network getNetwork();
 
-  //TODO: make private, after it becomes visible for tests
-  //TODO: maybe extract new class: i.e. CPTManager
-  void fillCPT(std::string name, std::vector<double> probabilities);
 private:
   DSL_network network;
   std::vector <BayesNetworkNode> featureNodes;

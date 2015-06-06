@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 2.8.12)
-
 include(ExternalProject)
 
 set(EXTERNAL_PROJECT_GMOCK_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/gmock)

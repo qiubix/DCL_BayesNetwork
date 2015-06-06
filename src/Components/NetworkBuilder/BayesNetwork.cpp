@@ -128,6 +128,19 @@ int BayesNetwork::getNumberOfNodes()
   return network.GetNumberOfNodes();
 }
 
+int BayesNetwork::getNumberOfFeatureNodes()
+{
+  return featureNodes.size();
+}
+
+BayesNetworkNode BayesNetwork::getNode(std::string name)
+{
+  int nodeHandle = network.FindNode(name.c_str());
+  //TODO: throw exception when node not found
+  BayesNetworkNode node(network.GetNode(nodeHandle));
+  return node;
+}
+
 BayesNetworkNode BayesNetwork::getNextRootNode()
 {
   BayesNetworkNode node = featureNodes[nextRootNodePosition];
@@ -175,7 +188,7 @@ void BayesNetwork::addNode(std::string name)
   LOG(LTRACE) << "Add node to network: " << name;
   int newNode = network.AddNode(DSL_CPT, name.c_str());
   if ( newNode == DSL_OUT_OF_RANGE ) {
-    throw NodeAlreadyExistsException();
+    throw NodeAlreadyExistsException(name.c_str());
   }
   DSL_idArray outcomes;
   std::vector<std::string> outcomesNames;
@@ -185,23 +198,6 @@ void BayesNetwork::addNode(std::string name)
     outcomes.Add(outcomesNames[i].c_str());
   }
   network.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
-}
-
-void BayesNetwork::fillCPT(std::string name, std::vector<double> probabilities)
-{
-  LOG(LTRACE) << "Filling CPT of node " << name;
-  int node = network.FindNode(name.c_str());
-  DSL_sysCoordinates theCoordinates(*network.GetNode(node)->Definition());
-
-  std::vector<double>::iterator it = probabilities.begin();
-  do {
-    theCoordinates.UncheckedValue() = *it;
-    LOG(LTRACE) << "Probability: " << *it;
-    ++it;
-  } while(theCoordinates.Next() != DSL_OUT_OF_RANGE || it != probabilities.end());
-
-  // FIXME: probably after filling CPT it's good to run UpdateBeliefs
-  // network.UpdateBeliefs();
 }
 
 /*!

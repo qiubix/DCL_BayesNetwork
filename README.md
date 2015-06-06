@@ -26,6 +26,7 @@ https://subversion.apache.org/
 This DCL depends on couple other DisCODe libraries, so they have to be present in `DISCODE_DCL_DIR` before building. Currently it depends on the following ones, but in the future releases it will surely become more independent.
 * CvBasic
 * PCL
+* PCLCoreTypes
 * SIFTObjectModel
 
 ## Installation
