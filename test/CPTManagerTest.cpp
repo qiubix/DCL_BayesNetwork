@@ -111,7 +111,6 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
 
   std::vector<double> cpt = manager.displayCPT();
 
-  //TODO: in C++11 it'll be much simpler
   std::vector<double> probabilities = { 0.8,0.2 };
   ASSERT_EQ(probabilities, cpt);
 }
@@ -124,9 +123,7 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithParents)
 
   std::vector<double> cpt = manager.displayCPT();
 
-  //TODO: in C++11 it'll be much simpler
-  const double probs[] = { 0.4, 0.3, 0.2, 0.1 };
-  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  std::vector<double> probabilities = { 0.4, 0.3, 0.2, 0.1 };
   ASSERT_EQ(probabilities, cpt);
 }
 
@@ -135,8 +132,7 @@ TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingVectorOfIncorrectSize)
   DSL_node* node = createNodeWithoutCPT();
   ASSERT_EQ(2, node->Definition()->GetSize());
   CPTManager manager(node);
-  std::vector<double> probabilities;
-  probabilities.push_back(0.8);
+  std::vector<double> probabilities = { 0.8 };
 
   ASSERT_THROW(manager.fillCPT(probabilities), DivergentCPTSizeException);
 
@@ -151,11 +147,10 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutParents)
   DSL_node* node = createNodeWithoutCPT();
   ASSERT_EQ(2, node->Definition()->GetSize());
   CPTManager manager(node);
-  std::vector<double> probabilities;
-  probabilities.push_back(0.8);
-  probabilities.push_back(0.2);
+  std::vector<double> probabilities = { 0.8, 0.2 };
 
   manager.fillCPT(probabilities);
+
   ASSERT_EQ(probabilities, manager.displayCPT());
 }
 
@@ -164,13 +159,10 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
   DSL_node* node = createNodeWithoutCPTWithParent();
   ASSERT_EQ(4, node->Definition()->GetSize());
   CPTManager manager(node);
-  std::vector<double> probabilities;
-  probabilities.push_back(0.4);
-  probabilities.push_back(0.3);
-  probabilities.push_back(0.2);
-  probabilities.push_back(0.1);
+  std::vector<double> probabilities = { 0.4, 0.3, 0.2, 0.1};
 
   manager.fillCPT(probabilities);
+
   ASSERT_EQ(probabilities, manager.displayCPT());
 }
 
@@ -181,9 +173,7 @@ TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingIncorrectProbabilityValue)
 {
   DSL_node* node = createNodeWithoutCPT();
   CPTManager manager(node);
-  std::vector<double> probabilities;
-  probabilities.push_back(1.8);
-  probabilities.push_back(0.2);
+  std::vector<double> probabilities = { 1.8, 0.2 };
 
   ASSERT_THROW(manager.fillCPT(probabilities), IncorrectProbabilityValueException);
 

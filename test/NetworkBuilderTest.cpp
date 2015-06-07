@@ -112,9 +112,7 @@ TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
   Processors::Network::CPTManager manager = network.getNextRootNode().getNodeCPTManager();
-  //TODO: in C++11 it'll be much simpler
-  const double probs[] = { 0.5,0.5 };
-  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  std::vector<double> probabilities = { 0.5, 0.5 };
   ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
 }
 
