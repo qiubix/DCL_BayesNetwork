@@ -3,8 +3,6 @@
 
 #TODO: make this work with other compilers
 
-cmake_minimum_required(VERSION 2.8.12)
-
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 
