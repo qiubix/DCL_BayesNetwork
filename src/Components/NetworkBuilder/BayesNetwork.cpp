@@ -160,10 +160,10 @@ bool BayesNetwork::visitNode(BayesNetworkNode& node)
 {
   LOG(LTRACE) << "Visiting node: " << node.getName();
   bool found = false;
-  for (int i=0; i<featureNodes.size(); ++i) {
-    if (featureNodes[i].getName() == node.getName()) {
+  for (auto& featureNode : featureNodes) {
+    if (featureNode.getName() == node.getName()) {
       found = true;
-      featureNodes[i].visitNode();
+      featureNode.visitNode();
       node.visitNode();
       if (nextRootNodePosition < featureNodes.size()-1)
         ++nextRootNodePosition;
@@ -191,11 +191,9 @@ void BayesNetwork::addNode(std::string name)
     throw NodeAlreadyExistsException(name.c_str());
   }
   DSL_idArray outcomes;
-  std::vector<std::string> outcomesNames;
-  outcomesNames.push_back("YES");
-  outcomesNames.push_back("NO");
-  for (int i=0; i<outcomesNames.size(); i++) {
-    outcomes.Add(outcomesNames[i].c_str());
+  std::vector<std::string> outcomesNames = { "YES", "NO" };
+  for (auto& outcomeName : outcomesNames) {
+    outcomes.Add(outcomeName.c_str());
   }
   network.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }

@@ -114,7 +114,7 @@ void SIFTAdder::add() {
       LOG(LDEBUG) << "Writing new cloud to empty joint cloud. Size: " << modelCloud->size();
       jointCloud = modelCloud;
       for (unsigned k=0; k<modelCloud->size(); ++k) {
-        std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(k, modelCloud->at(k).multiplicity);
+        std::pair<int,int> nextMultiplicity = std::make_pair(k, modelCloud->at(k).multiplicity);
         modelMultiplicity.insert(nextMultiplicity);
         jointCloud->at(k).pointId = k;
         modelCloud->at(k).pointId = k;
@@ -206,7 +206,7 @@ void SIFTAdder::add() {
       continue;
     }
     for (unsigned k=0; k<cloudPartToJoin->size(); ++k) {
-      std::pair<int,int> nextMultiplicity = std::make_pair<int,int>(jointCloud->size()+k, cloudPartToJoin->at(k).multiplicity);
+      std::pair<int,int> nextMultiplicity = std::make_pair(jointCloud->size()+k, cloudPartToJoin->at(k).multiplicity);
       modelMultiplicity.insert(nextMultiplicity);
       cloudPartToJoin->at(k).pointId = nextId;
       ++nextId;
