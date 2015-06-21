@@ -121,7 +121,7 @@ void SOMEvaluation::deactivateFeatures()
     int node = theNet.FindNode(nodeName.c_str());
     if(node != DSL_OUT_OF_RANGE) {
       LOG(LWARNING) << "Deactivating node " << nodeName;
-      theNet.GetNode(node)->Value()->SetEvidence(1);
+      theNet.GetNode(node)->Value()->SetEvidence(0);
       theNet.UpdateBeliefs();
     }
     else {
@@ -145,7 +145,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
       LOG(LWARNING) << "children " << theNet.NumChildren(node);
       LOG(LWARNING) << "parents " << theNet.NumParents(node);
       //LOG(LWARNING) << "parents " << theNet.GetNode(node)->Parents().GetSize();
-      theNet.GetNode(node)->Value()->SetEvidence(0);
+      theNet.GetNode(node)->Value()->SetEvidence(1);
       theNet.UpdateBeliefs();
     }
   }

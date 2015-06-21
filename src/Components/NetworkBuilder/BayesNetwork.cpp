@@ -192,8 +192,8 @@ void BayesNetwork::addNode(std::string name)
   }
   DSL_idArray outcomes;
   std::vector<std::string> outcomesNames;
-  outcomesNames.push_back("YES");
   outcomesNames.push_back("NO");
+  outcomesNames.push_back("YES");
   for (int i=0; i<outcomesNames.size(); i++) {
     outcomes.Add(outcomesNames[i].c_str());
   }
