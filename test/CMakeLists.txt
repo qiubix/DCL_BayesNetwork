@@ -35,3 +35,7 @@ file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 set(NETWORK_BUILDER_TEST_SRC NetworkBuilderTest.cpp)
 set(NETWORK_BUILDER_TEST_LIB procNetworkBuilder)
 create_test(NetworkBuilderTest ${NETWORK_BUILDER_TEST_SRC} ${NETWORK_BUILDER_TEST_LIB})
+
+set(SOM_EVALUATION_TEST_SRC SOMEvaluationTest.cpp)
+set(SOM_EVALUATION_TEST_LIB procSOMEvaluation)
+create_test(SOMEvaluationTest ${SOM_EVALUATION_TEST_SRC} ${SOM_EVALUATION_TEST_LIB})
