@@ -75,6 +75,15 @@ BayesNetworkNode class
 + should get next octree node in depth-search
 + should get last octree node in depth-search
 
+5. SOMEvaluation
+- should deactivate all features
+- should set node to observed
+- should propagate probabilities
+- should read hypothesis probability
+- should activate all features of instance
+
 Integration tests
 - should read SIFT point cloud from input port
 - should write network to output port
+- should read network from input port
+- should display proper probability for sample model and instance
