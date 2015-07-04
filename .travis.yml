@@ -21,6 +21,7 @@ branches:
     - /^release\/.*/
     - /^hotfix\/.*/
     - feature/optimizeDependencies
+    - feature/C++11
 
 cache:
   apt: true
