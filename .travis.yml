@@ -23,12 +23,6 @@ branches:
     - feature/optimizeDependencies
     - feature/C++11
 
-cache:
-  apt: true
-  directories:
-    - /usr/local/share/cmake-3.2
-    - ~/src
-
 before_script:
   # sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
   # sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
