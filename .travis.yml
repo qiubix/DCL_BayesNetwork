@@ -5,11 +5,12 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - boost-latest/ppa
     - v-launchpad-jochen-sprickerhof-de/pcl
     packages:
     - gcc-4.8
     - g++-4.8
-    - libboost-all-dev
+    - libboost1.54-dev
     - libopencv-dev
     - libpcl-all
 branches:
@@ -25,7 +26,7 @@ before_script:
   - sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
-  - sudo apt-get install g++-4.8 libboost-all-dev libopencv-dev libpcl-all
+  - sudo apt-get install g++-4.8 libopencv-dev libpcl-all
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   # wget http://www.cmake.org/files/v3.2/cmake-3.2.1.tar.gz
   # tar xzf cmake-3.2.1.tar.gz
