@@ -88,7 +88,7 @@ protected:
   void onNetwork();
   void onInstance();
 
-private:
+public:
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
   std::vector <int> instance;
