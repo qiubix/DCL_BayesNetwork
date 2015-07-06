@@ -37,5 +37,5 @@ set(NETWORK_BUILDER_TEST_LIB procNetworkBuilder)
 create_test(NetworkBuilderTest ${NETWORK_BUILDER_TEST_SRC} ${NETWORK_BUILDER_TEST_LIB})
 
 set(SOM_EVALUATION_TEST_SRC SOMEvaluationTest.cpp)
-set(SOM_EVALUATION_TEST_LIB procSOMEvaluation)
+set(SOM_EVALUATION_TEST_LIB procSOMEvaluation procNetworkBuilder)
 create_test(SOMEvaluationTest ${SOM_EVALUATION_TEST_SRC} ${SOM_EVALUATION_TEST_LIB})

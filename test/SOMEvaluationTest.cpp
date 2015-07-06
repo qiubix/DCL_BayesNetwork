@@ -4,10 +4,14 @@ using ::testing::Eq;
 using ::testing::Test;
 
 #include "../src/Components/SOMEvaluation/SOMEvaluation.hpp"
+#include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
 
 TEST(SOMEvaluationTest, shouldDisplayDefaultProbabilityOnStart) {
-  Processors::Network::SOMEvaluation evaluator;
-  evaluator.theNet.AddNode(0,"V_0");
+  Processors::Network::BayesNetwork networkWrapper;
+  networkWrapper.addVoxelNode(0);
+
+  Processors::Network::SOMEvaluation evaluator("evaluator");
+  evaluator.theNet = networkWrapper.getNetwork();
 
   double hypothesisProbability = evaluator.getNodeProbability(0);
 
