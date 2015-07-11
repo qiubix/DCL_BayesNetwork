@@ -78,7 +78,7 @@ TEST_F(OctreeNodeTest, shouldInitWithPclOctreeNode) {
   Octree::DepthFirstIterator it = getSampleOctreeFirstNode();
   Processors::Network::OctreeNode node = it.getCurrentOctreeNode();
 
-  ASSERT_EQ(pcl::octree::BRANCH_NODE, node.getNodePtr()->getNodeType());
+  ASSERT_THAT(node.getNodePtr()->getNodeType(), Eq(pcl::octree::BRANCH_NODE));
 }
 
 TEST_F(OctreeNodeTest, shouldCopyNode) {
@@ -88,8 +88,8 @@ TEST_F(OctreeNodeTest, shouldCopyNode) {
   Processors::Network::OctreeNode copy = node;
   Processors::Network::OctreeNode secondCopy(node);
 
-  ASSERT_EQ(pcl::octree::BRANCH_NODE, copy.getNodePtr()->getNodeType());
-  ASSERT_EQ(pcl::octree::BRANCH_NODE, secondCopy.getNodePtr()->getNodeType());
+  ASSERT_THAT(copy.getNodePtr()->getNodeType(), Eq(pcl::octree::BRANCH_NODE));
+  ASSERT_THAT(secondCopy.getNodePtr()->getNodeType(), Eq(pcl::octree::BRANCH_NODE));
 }
 
 class OctreeLeafNodeTest : public OctreeNodeTest
@@ -107,13 +107,13 @@ TEST_F(OctreeLeafNodeTest, shouldReturnPointIndices) {
   std::vector<int> pointIndices;
   pointIndices.push_back(1);
 
-  ASSERT_EQ(pointIndices, node.getPointIndices());
+  ASSERT_THAT(node.getPointIndices(), Eq(pointIndices));
 
   ++it;
   while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
   node = it.getCurrentOctreeNode();
   pointIndices[0] = 0;
-  ASSERT_EQ(pointIndices, node.getPointIndices());
+  ASSERT_THAT(node.getPointIndices(), Eq(pointIndices));
 }
 
 TEST_F(OctreeLeafNodeTest, shouldSetId) {
@@ -124,7 +124,7 @@ TEST_F(OctreeLeafNodeTest, shouldSetId) {
 
   node.setId(3);
 
-  ASSERT_EQ(3, node.getId());
+  ASSERT_THAT(node.getId(), Eq(3));
 }
 
 TEST_F(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
@@ -133,7 +133,7 @@ TEST_F(OctreeLeafNodeTest, shouldGetNumberOfChildren) {
   while((*it)->getNodeType() != pcl::octree::LEAF_NODE) ++it;
   Processors::Network::OctreeLeafNode node = it.getCurrentOctreeNode();
 
-  ASSERT_EQ(1, node.getNumberOfChildren());
+  ASSERT_THAT(node.getNumberOfChildren(), Eq(1));
 }
 
 class OctreeBranchNodeTest : public OctreeNodeTest
@@ -153,7 +153,7 @@ TEST_F(OctreeBranchNodeTest, shouldReturnTrueIfNextNodeIsAlsoBranchNode) {
   if ((*it)->getNodeType() == pcl::octree::BRANCH_NODE)
     isNextBranchNode = true;
 
-  ASSERT_EQ(isNextBranchNode, node.nextNodeIsAlsoBranchNode());
+  ASSERT_THAT(node.nextNodeIsAlsoBranchNode(), Eq(isNextBranchNode));
 }
 
 TEST_F(OctreeBranchNodeTest, shouldHaveOnlyOneChild) {
@@ -163,8 +163,8 @@ TEST_F(OctreeBranchNodeTest, shouldHaveOnlyOneChild) {
   Processors::Network::OctreeBranchNode node = it.getCurrentOctreeNode();
   int numberOfChildren = node.getNumberOfChildren();
 
-  ASSERT_EQ(1, numberOfChildren);
-  ASSERT_EQ(1, octree.getLeafCount());
+  ASSERT_THAT(numberOfChildren, Eq(1));
+  ASSERT_THAT(octree.getLeafCount(), Eq(1));
 }
 
 TEST_F(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
@@ -174,7 +174,7 @@ TEST_F(OctreeBranchNodeTest, shouldHaveMultipleChildren) {
   Processors::Network::OctreeBranchNode node = it.getCurrentOctreeNode();
   int numberOfChildren = node.getNumberOfChildren();
 
-  ASSERT_EQ(2, numberOfChildren);
+  ASSERT_THAT(numberOfChildren, Eq(2));
 }
 
 TEST_F(OctreeBranchNodeTest, shouldSetId) {
@@ -184,7 +184,7 @@ TEST_F(OctreeBranchNodeTest, shouldSetId) {
 
   node.setId(4);
 
-  ASSERT_EQ(4, node.getId());
+  ASSERT_THAT(node.getId(), Eq(4));
 }
 
 TEST_F(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
@@ -192,7 +192,7 @@ TEST_F(OctreeBranchNodeTest, shouldGetNumberOfChildren) {
   Octree::DepthFirstIterator it = octree.depth_begin();
   Processors::Network::OctreeBranchNode node = it.getCurrentOctreeNode();
 
-  ASSERT_EQ(2, node.getNumberOfChildren());
+  ASSERT_THAT(node.getNumberOfChildren(), Eq(2));
 }
 
 TEST_F(OctreeNodeTest, shouldSetId) {
@@ -208,8 +208,8 @@ TEST_F(OctreeNodeTest, shouldSetId) {
     nodes[i]->setId(i);
   }
 
-  ASSERT_EQ(0, nodes[0]->getId());
-  ASSERT_EQ(1, nodes[1]->getId());
+  ASSERT_THAT(nodes[0]->getId(), Eq(0));
+  ASSERT_THAT(nodes[1]->getId(), Eq(1));
 }
 
 TEST_F(OctreeNodeTest, shouldGetNumberOfChildren) {
@@ -219,5 +219,5 @@ TEST_F(OctreeNodeTest, shouldGetNumberOfChildren) {
 
   int numberOfChildren = node->getNumberOfChildren();
 
-  ASSERT_EQ(2, numberOfChildren);
+  ASSERT_THAT(numberOfChildren, Eq(2));
 }
