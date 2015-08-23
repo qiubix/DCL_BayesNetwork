@@ -24,6 +24,8 @@
 //#include <Types/PointXYZSIFT>
 #include "../../Types/PointXYZSIFT.hpp"
 
+#include "../NetworkBuilder/AbstractNetwork.hpp"
+
 namespace Processors {
 namespace Network {
 
@@ -96,6 +98,7 @@ public:
 
   std::vector<DSL_network> networks;
   DSL_network theNet;
+  AbstractNetwork* network;
 
   void evaluate();
   void deactivateFeatures();
@@ -103,6 +106,8 @@ public:
   void displayHypothesisProbability(int modelId = 0);
   int findFeatureNode(int nodeId);
   double getNodeProbability(int nodeId);
+
+  void setNetwork(AbstractNetwork* network);
 };
 
 }//: namespace Network

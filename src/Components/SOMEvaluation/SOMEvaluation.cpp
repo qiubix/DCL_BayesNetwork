@@ -177,13 +177,19 @@ int SOMEvaluation::findFeatureNode(int nodeId)
 
 double SOMEvaluation::getNodeProbability(int nodeId)
 {
-  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
-  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
-  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
-  theCoordinates[0] = theNames->FindPosition("YES");
-  theCoordinates.GoToCurrentPosition();
-  double probability = theCoordinates.UncheckedValue();
+//  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
+//  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
+//  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
+//  theCoordinates[0] = theNames->FindPosition("YES");
+//  theCoordinates.GoToCurrentPosition();
+//  double probability = theCoordinates.UncheckedValue();
+  double probability = network -> getNodeProbability("V_0");
   return probability;
+}
+
+void SOMEvaluation::setNetwork(AbstractNetwork* network)
+{
+  this -> network = network;
 }
 
 }//: namespace Network
