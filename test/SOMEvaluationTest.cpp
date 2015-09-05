@@ -30,9 +30,11 @@ TEST(SOMEvaluationTest, shouldDisplayDefaultProbabilityOnStart) {
 }
 
 TEST(SOMEvaluationTest, shouldClearAllEvidenceOnStart) {
-  SOMEvaluation evaluator("evaluator");
   MockNetwork mockNetwork;
   EXPECT_CALL(mockNetwork, clearEvidence());
-  
+
+  SOMEvaluation evaluator("evaluator");
+  evaluator.setNetwork(&mockNetwork);
+
   evaluator.evaluate();
 }

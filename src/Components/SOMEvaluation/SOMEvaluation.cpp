@@ -90,21 +90,22 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
   LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
-  LOG(LDEBUG) << "instance size: " << instance.size();
+//  LOG(LDEBUG) << "instance size: " << instance.size();
 
   //theNet = networks[0];
 
   Common::Timer timer;
   timer.restart();
 
-  theNet.UpdateBeliefs();
-  theNet.ClearAllEvidence();
-  theNet.UpdateBeliefs();
-  deactivateFeatures();
-  activateMatchedFeatureNodes();
+  network -> clearEvidence();
+//  theNet.UpdateBeliefs();
+//  theNet.ClearAllEvidence();
+//  theNet.UpdateBeliefs();
+//  deactivateFeatures();
+//  activateMatchedFeatureNodes();
   //theNet.UpdateBeliefs();
 
-  displayHypothesisProbability();
+//  displayHypothesisProbability();
 
   LOG(LINFO) << " runtime: " << timer.elapsed();
   LOG(LDEBUG) << "SOMEvaluation finished";
