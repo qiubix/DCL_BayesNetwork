@@ -38,3 +38,10 @@ TEST(SOMEvaluationTest, shouldClearAllEvidenceOnStart) {
 
   evaluator.evaluate();
 }
+
+
+/*
+ * should set all evidence to NO on start
+ * should call activate on all features in provided instance
+ * should propagate probabilities to hypothesis node
+ */
