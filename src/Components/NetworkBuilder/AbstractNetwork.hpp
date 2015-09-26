@@ -8,6 +8,7 @@ public:
 
   virtual double getNodeProbability(const std::string& name) = 0;
   virtual void clearEvidence() = 0;
+  virtual bool nodeExists(const std::string& nodeName) = 0;
   virtual void setNodeEvidence(const std::string& nodeName, int state) = 0;
 
 private:

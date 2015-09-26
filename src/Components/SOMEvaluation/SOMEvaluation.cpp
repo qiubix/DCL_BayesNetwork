@@ -101,7 +101,7 @@ void SOMEvaluation::evaluate()
 //  theNet.UpdateBeliefs();
 //  theNet.ClearAllEvidence();
 //  theNet.UpdateBeliefs();
-//  deactivateFeatures();
+  deactivateFeatures();
 //  activateMatchedFeatureNodes();
   //theNet.UpdateBeliefs();
 
@@ -119,12 +119,15 @@ void SOMEvaluation::deactivateFeatures()
     std::stringstream ss;
     ss << "F_" << nodeId;
     std::string nodeName(ss.str());
-    int node = theNet.FindNode(nodeName.c_str());
-    if(node != DSL_OUT_OF_RANGE) {
-      LOG(LWARNING) << "Deactivating node " << nodeName;
-      theNet.GetNode(node)->Value()->SetEvidence(0);
-      theNet.UpdateBeliefs();
+    if ( network -> nodeExists(nodeName) ) {
+      network -> setNodeEvidence(nodeName, 0);
     }
+//    int node = theNet.FindNode(nodeName.c_str());
+//    if(node != DSL_OUT_OF_RANGE) {
+//      LOG(LWARNING) << "Deactivating node " << nodeName;
+//      theNet.GetNode(node)->Value()->SetEvidence(0);
+//      theNet.UpdateBeliefs();
+//    }
     else {
       break;
     }
