@@ -44,7 +44,8 @@ TEST(SOMEvaluationTest, shouldClearAllEvidenceOnStart) {
 
 TEST(SOMEvaluationTest, shouldSetAllEvidenceToNoOnStart) {
   MockNetwork mockNetwork;
-  EXPECT_CALL(mockNetwork, setNodeEvidence(_, 0));
+  EXPECT_CALL(mockNetwork, nodeExists(_)).Times(2).WillOnce(Return(true));
+  EXPECT_CALL(mockNetwork, setNodeEvidence(_, 0)).Times(1);
 
   SOMEvaluation evaluator("evaluator");
   evaluator.setNetwork(&mockNetwork);
