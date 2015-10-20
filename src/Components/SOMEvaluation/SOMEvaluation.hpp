@@ -108,6 +108,7 @@ public:
   double getNodeProbability(int nodeId);
 
   void setNetwork(AbstractNetwork* network);
+  void setInstance(std::vector<int> instance);
 };
 
 }//: namespace Network

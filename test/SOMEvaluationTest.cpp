@@ -57,9 +57,23 @@ TEST(SOMEvaluationTest, shouldSetAllEvidenceToNoOnStart) {
   evaluator.evaluate();
 }
 
+TEST(SOMEvaluationTest, shouldCallActivateOnAllFeaturesInProvidedInstance) {
+  MockNetwork mockNetwork;
+  std::vector<int> instance;
+  instance.push_back(1);
+  instance.push_back(3);
+  EXPECT_CALL(mockNetwork, setNodeEvidence("F_1", 1)).Times(1);
+  EXPECT_CALL(mockNetwork, setNodeEvidence("F_3", 1)).Times(1);
+
+  SOMEvaluation evaluator("evaluator");
+  evaluator.setNetwork(&mockNetwork);
+  evaluator.setInstance(instance);
+
+  evaluator.evaluate();
+}
 
 /*
- * should set all evidence to NO on start
+ * + should set all evidence to NO on start
  * should call activate on all features in provided instance
  * should propagate probabilities to hypothesis node
  */

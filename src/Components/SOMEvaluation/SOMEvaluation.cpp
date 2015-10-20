@@ -196,5 +196,9 @@ void SOMEvaluation::setNetwork(AbstractNetwork* network)
   this -> network = network;
 }
 
+void SOMEvaluation::setInstance(std::vector<int> instance) {
+  this -> instance = instance;
+}
+
 }//: namespace Network
 }//: namespace Processors
