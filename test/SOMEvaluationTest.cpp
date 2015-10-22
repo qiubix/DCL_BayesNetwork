@@ -18,6 +18,7 @@ public:
   MOCK_METHOD0(clearEvidence, void());
   MOCK_METHOD2(setNodeEvidence, void(const std::string&, int));
   MOCK_METHOD1(nodeExists, bool(const std::string&));
+  MOCK_METHOD0(propagateProbabilities, void());
 };
 
 TEST(SOMEvaluationTest, shouldDisplayDefaultProbabilityOnStart) {
@@ -72,8 +73,18 @@ TEST(SOMEvaluationTest, shouldCallActivateOnAllFeaturesInProvidedInstance) {
   evaluator.evaluate();
 }
 
+TEST(SOMEvaluationTest, shouldPropagateProbabilitiesToHypothesisNode) {
+  MockNetwork mockNetwork;
+  EXPECT_CALL(mockNetwork, propagateProbabilities()).Times(1);
+
+  SOMEvaluation evaluator("evaluator");
+  evaluator.setNetwork(&mockNetwork);
+
+  evaluator.evaluate();
+}
+
 /*
  * + should set all evidence to NO on start
- * should call activate on all features in provided instance
- * should propagate probabilities to hypothesis node
+ * + should call activate on all features in provided instance
+ * + should propagate probabilities to hypothesis node
  */

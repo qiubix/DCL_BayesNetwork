@@ -103,6 +103,7 @@ void SOMEvaluation::evaluate()
 //  theNet.UpdateBeliefs();
   deactivateFeatures();
   activateMatchedFeatureNodes();
+  network -> propagateProbabilities();
   //theNet.UpdateBeliefs();
 
 //  displayHypothesisProbability();
