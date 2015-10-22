@@ -102,7 +102,7 @@ void SOMEvaluation::evaluate()
 //  theNet.ClearAllEvidence();
 //  theNet.UpdateBeliefs();
   deactivateFeatures();
-//  activateMatchedFeatureNodes();
+  activateMatchedFeatureNodes();
   //theNet.UpdateBeliefs();
 
 //  displayHypothesisProbability();
@@ -138,7 +138,12 @@ void SOMEvaluation::deactivateFeatures()
 void SOMEvaluation::activateMatchedFeatureNodes()
 {
   LOG(LTRACE) << "Activating matched feature nodes";
-  for (unsigned i=0; i<instance.size(); ++i) {
+  for (unsigned i =0; i <instance.size(); ++i) {
+    std::stringstream ss;
+    ss << "F_" << instance[i];
+    std::string nodeName(ss.str());
+    network -> setNodeEvidence(nodeName, 1);
+    /*
     int node = findFeatureNode(instance[i]);
     LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
     if(node != DSL_OUT_OF_RANGE) {
@@ -152,6 +157,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
       theNet.GetNode(node)->Value()->SetEvidence(1);
       theNet.UpdateBeliefs();
     }
+     */
   }
   LOG(LDEBUG) << "Finished activating matched features";
 }
