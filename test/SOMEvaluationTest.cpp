@@ -4,6 +4,7 @@ using ::testing::_;
 #include <gtest/gtest.h>
 using ::testing::Test;
 using ::testing::Return;
+using ::testing::NiceMock;
 
 #include "../src/Components/SOMEvaluation/SOMEvaluation.hpp"
 #include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
@@ -22,7 +23,7 @@ public:
 };
 
 TEST(SOMEvaluationTest, shouldDisplayDefaultProbabilityOnStart) {
-  MockNetwork mockNetwork;
+  NiceMock<MockNetwork> mockNetwork;
   EXPECT_CALL(mockNetwork, getNodeProbability("V_0"))
     .WillOnce(Return(0.5));
 
@@ -34,7 +35,7 @@ TEST(SOMEvaluationTest, shouldDisplayDefaultProbabilityOnStart) {
 }
 
 TEST(SOMEvaluationTest, shouldClearAllEvidenceOnStart) {
-  MockNetwork mockNetwork;
+  NiceMock<MockNetwork> mockNetwork;
   EXPECT_CALL(mockNetwork, clearEvidence());
 
   SOMEvaluation evaluator("evaluator");
@@ -44,7 +45,7 @@ TEST(SOMEvaluationTest, shouldClearAllEvidenceOnStart) {
 }
 
 TEST(SOMEvaluationTest, shouldSetAllEvidenceToNoOnStart) {
-  MockNetwork mockNetwork;
+  NiceMock<MockNetwork> mockNetwork;
   EXPECT_CALL(mockNetwork, nodeExists(_))
     .Times(3)
     .WillOnce(Return(true))
@@ -59,7 +60,7 @@ TEST(SOMEvaluationTest, shouldSetAllEvidenceToNoOnStart) {
 }
 
 TEST(SOMEvaluationTest, shouldCallActivateOnAllFeaturesInProvidedInstance) {
-  MockNetwork mockNetwork;
+  NiceMock<MockNetwork> mockNetwork;
   std::vector<int> instance;
   instance.push_back(1);
   instance.push_back(3);
@@ -74,7 +75,7 @@ TEST(SOMEvaluationTest, shouldCallActivateOnAllFeaturesInProvidedInstance) {
 }
 
 TEST(SOMEvaluationTest, shouldPropagateProbabilitiesToHypothesisNode) {
-  MockNetwork mockNetwork;
+  NiceMock<MockNetwork> mockNetwork;
   EXPECT_CALL(mockNetwork, propagateProbabilities()).Times(1);
 
   SOMEvaluation evaluator("evaluator");
@@ -82,9 +83,3 @@ TEST(SOMEvaluationTest, shouldPropagateProbabilitiesToHypothesisNode) {
 
   evaluator.evaluate();
 }
-
-/*
- * + should set all evidence to NO on start
- * + should call activate on all features in provided instance
- * + should propagate probabilities to hypothesis node
- */
