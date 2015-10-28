@@ -33,8 +33,8 @@ TEST_F(BayesNetworkNodeTest, shouldGetFirstRootNode)
 
   BayesNetworkNode node = network.getNextRootNode();
 
-  ASSERT_FALSE(node.isVisited());
-  ASSERT_EQ(FIRST_ROOT_NODE_NAME, node.getName());
+  ASSERT_THAT(node.isVisited(), Eq(false));
+  ASSERT_THAT(node.getName(), Eq(FIRST_ROOT_NODE_NAME));
 }
 
 //FIXME: this should belong to BayesNetworkNode test suite
@@ -43,14 +43,14 @@ TEST_F(BayesNetworkNodeTest, shouldCopyNodes)
   BayesNetwork network;
   network.addFeatureNode(0);
   BayesNetworkNode node = network.getNextRootNode();
-  ASSERT_FALSE(node.isVisited());
-  ASSERT_EQ("F_0", node.getName());
+  ASSERT_THAT(node.isVisited(), Eq(false));
+  ASSERT_THAT(node.getName(), Eq("F_0"));
   node.visitNode();
-  ASSERT_TRUE(node.isVisited());
+  ASSERT_THAT(node.isVisited(), Eq(true));
 
   BayesNetworkNode newNode = node;
-  ASSERT_EQ("F_0", newNode.getName());
-  ASSERT_TRUE(newNode.isVisited());
+  ASSERT_THAT(newNode.getName(), Eq("F_0"));
+  ASSERT_THAT(newNode.isVisited(), Eq(true));
   //TODO: test for other cases of copying
 }
 
