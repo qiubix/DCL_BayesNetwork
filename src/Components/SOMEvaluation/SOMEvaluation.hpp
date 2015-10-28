@@ -20,7 +20,11 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-#include <Types/PointXYZSIFT.hpp>
+//TODO: FIXME: include types from PCL
+//#include <Types/PointXYZSIFT>
+#include "../../Types/PointXYZSIFT.hpp"
+
+#include "../NetworkBuilder/AbstractNetwork.hpp"
 
 namespace Processors {
 namespace Network {
@@ -86,7 +90,7 @@ protected:
   void onNetwork();
   void onInstance();
 
-private:
+public:
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
   std::vector <int> instance;
@@ -94,6 +98,7 @@ private:
 
   std::vector<DSL_network> networks;
   DSL_network theNet;
+  AbstractNetwork* network;
 
   void evaluate();
   void deactivateFeatures();
@@ -101,6 +106,9 @@ private:
   void displayHypothesisProbability(int modelId = 0);
   int findFeatureNode(int nodeId);
   double getNodeProbability(int nodeId);
+
+  void setNetwork(AbstractNetwork* network);
+  void setInstance(std::vector<int> instance);
 };
 
 }//: namespace Network

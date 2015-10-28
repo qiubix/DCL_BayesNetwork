@@ -90,21 +90,23 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
   LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
-  LOG(LDEBUG) << "instance size: " << instance.size();
+//  LOG(LDEBUG) << "instance size: " << instance.size();
 
   //theNet = networks[0];
 
   Common::Timer timer;
   timer.restart();
 
-  theNet.UpdateBeliefs();
-  theNet.ClearAllEvidence();
-  theNet.UpdateBeliefs();
+  network -> clearEvidence();
+//  theNet.UpdateBeliefs();
+//  theNet.ClearAllEvidence();
+//  theNet.UpdateBeliefs();
   deactivateFeatures();
   activateMatchedFeatureNodes();
+  network -> propagateProbabilities();
   //theNet.UpdateBeliefs();
 
-  displayHypothesisProbability();
+//  displayHypothesisProbability();
 
   LOG(LINFO) << " runtime: " << timer.elapsed();
   LOG(LDEBUG) << "SOMEvaluation finished";
@@ -118,12 +120,15 @@ void SOMEvaluation::deactivateFeatures()
     std::stringstream ss;
     ss << "F_" << nodeId;
     std::string nodeName(ss.str());
-    int node = theNet.FindNode(nodeName.c_str());
-    if(node != DSL_OUT_OF_RANGE) {
-      LOG(LWARNING) << "Deactivating node " << nodeName;
-      theNet.GetNode(node)->Value()->SetEvidence(0);
-      theNet.UpdateBeliefs();
+    if ( network -> nodeExists(nodeName) ) {
+      network -> setNodeEvidence(nodeName, 0);
     }
+//    int node = theNet.FindNode(nodeName.c_str());
+//    if(node != DSL_OUT_OF_RANGE) {
+//      LOG(LWARNING) << "Deactivating node " << nodeName;
+//      theNet.GetNode(node)->Value()->SetEvidence(0);
+//      theNet.UpdateBeliefs();
+//    }
     else {
       break;
     }
@@ -134,7 +139,12 @@ void SOMEvaluation::deactivateFeatures()
 void SOMEvaluation::activateMatchedFeatureNodes()
 {
   LOG(LTRACE) << "Activating matched feature nodes";
-  for (unsigned i=0; i<instance.size(); ++i) {
+  for (unsigned i =0; i <instance.size(); ++i) {
+    std::stringstream ss;
+    ss << "F_" << instance[i];
+    std::string nodeName(ss.str());
+    network -> setNodeEvidence(nodeName, 1);
+    /*
     int node = findFeatureNode(instance[i]);
     LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
     if(node != DSL_OUT_OF_RANGE) {
@@ -148,6 +158,7 @@ void SOMEvaluation::activateMatchedFeatureNodes()
       theNet.GetNode(node)->Value()->SetEvidence(1);
       theNet.UpdateBeliefs();
     }
+     */
   }
   LOG(LDEBUG) << "Finished activating matched features";
 }
@@ -177,13 +188,23 @@ int SOMEvaluation::findFeatureNode(int nodeId)
 
 double SOMEvaluation::getNodeProbability(int nodeId)
 {
-  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
-  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
-  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
-  theCoordinates[0] = theNames->FindPosition("YES");
-  theCoordinates.GoToCurrentPosition();
-  double probability = theCoordinates.UncheckedValue();
+//  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
+//  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
+//  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
+//  theCoordinates[0] = theNames->FindPosition("YES");
+//  theCoordinates.GoToCurrentPosition();
+//  double probability = theCoordinates.UncheckedValue();
+  double probability = network -> getNodeProbability("V_0");
   return probability;
+}
+
+void SOMEvaluation::setNetwork(AbstractNetwork* network)
+{
+  this -> network = network;
+}
+
+void SOMEvaluation::setInstance(std::vector<int> instance) {
+  this -> instance = instance;
 }
 
 }//: namespace Network

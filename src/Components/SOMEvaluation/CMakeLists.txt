@@ -6,6 +6,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(procSOMEvaluation SHARED ${files})
-target_link_libraries(procSOMEvaluation ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS})
+target_link_libraries(procSOMEvaluation ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS} ${Boost_LIBRARIES})
 
 INSTALL_COMPONENT(procSOMEvaluation)
