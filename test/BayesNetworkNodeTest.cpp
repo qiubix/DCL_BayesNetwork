@@ -61,14 +61,14 @@ TEST_F(BayesNetworkNodeTest, shouldGetNextRootNode)
   network.addFeatureNode(1);
 
   BayesNetworkNode firstNode = network.getNextRootNode();
-  EXPECT_FALSE(firstNode.isVisited());
-  EXPECT_EQ(FIRST_ROOT_NODE_NAME, firstNode.getName());
+  EXPECT_THAT(firstNode.isVisited(), Eq(false));
+  EXPECT_THAT(firstNode.getName(), Eq(FIRST_ROOT_NODE_NAME));
   network.visitNode(firstNode);
-  ASSERT_TRUE(firstNode.isVisited());
+  ASSERT_THAT(firstNode.isVisited(), Eq(true));
 
   BayesNetworkNode secondNode = network.getNextRootNode();
-  EXPECT_FALSE(secondNode.isVisited());
-  EXPECT_EQ(SECOND_ROOT_NODE_NAME, secondNode.getName());
+  EXPECT_THAT(secondNode.isVisited(), Eq(false));
+  EXPECT_THAT(secondNode.getName(), Eq(SECOND_ROOT_NODE_NAME));
 }
 
 /*TODO: FIXME: split to multiple tests, see test_cases.md
@@ -84,35 +84,35 @@ TEST_F(BayesNetworkNodeTest, shouldGetNextNotVisitedRootNode)
   network.addFeatureNode(0);
   network.addFeatureNode(1);
   network.addFeatureNode(2);
-  ASSERT_EQ(3, network.getNumberOfNodes());
+  ASSERT_THAT(network.getNumberOfNodes(), Eq(3));
 
   BayesNetworkNode firstNode = network.getNextRootNode();
-  EXPECT_FALSE(firstNode.isVisited());
-  EXPECT_EQ(FIRST_ROOT_NODE_NAME, firstNode.getName());
+  EXPECT_THAT(firstNode.isVisited(), Eq(false));
+  EXPECT_THAT(firstNode.getName(), Eq(FIRST_ROOT_NODE_NAME));
   network.visitNode(firstNode);
-  ASSERT_TRUE(firstNode.isVisited());
+  ASSERT_THAT(firstNode.isVisited(), Eq(true));
 
   BayesNetworkNode secondNode = network.getNextRootNode();
-  EXPECT_FALSE(secondNode.isVisited());
-  EXPECT_EQ(SECOND_ROOT_NODE_NAME, secondNode.getName());
+  EXPECT_THAT(secondNode.isVisited(), Eq(false));
+  EXPECT_THAT(secondNode.getName(), Eq(SECOND_ROOT_NODE_NAME));
 
   //second node wasn't marked as visited
   BayesNetworkNode anotherNode = network.getNextRootNode();
-  EXPECT_EQ(SECOND_ROOT_NODE_NAME, anotherNode.getName());
+  EXPECT_THAT(anotherNode.getName(), Eq(SECOND_ROOT_NODE_NAME));
 
   network.visitNode(secondNode);
-  ASSERT_TRUE(secondNode.isVisited());
+  ASSERT_THAT(secondNode.isVisited(), Eq(true));
 
   BayesNetworkNode thirdNode = network.getNextRootNode();
-  EXPECT_FALSE(thirdNode.isVisited());
-  EXPECT_EQ(THIRD_ROOT_NODE_NAME, thirdNode.getName());
+  EXPECT_THAT(thirdNode.isVisited(), Eq(false));
+  EXPECT_THAT(thirdNode.getName(), Eq(THIRD_ROOT_NODE_NAME));
 
   network.visitNode(thirdNode);
 
   //no more root nodes in network, so method getNextRootNode() returns last node
   BayesNetworkNode lastNode = network.getNextRootNode();
-  EXPECT_TRUE(lastNode.isVisited());
-  EXPECT_EQ(THIRD_ROOT_NODE_NAME, lastNode.getName());
+  EXPECT_THAT(lastNode.isVisited(), Eq(true));
+  EXPECT_THAT(lastNode.getName(), Eq(THIRD_ROOT_NODE_NAME));
 }
 
 TEST_F(BayesNetworkNodeTest, shouldGetNumberOfChildren)
@@ -141,7 +141,7 @@ TEST_F(BayesNetworkNodeTest, shouldGetNodeChild)
   BayesNetworkNode secondNode = network.getNextRootNode();
 
   BayesNetworkNode childNode = network.getChild(firstNode);
-  EXPECT_EQ("V_0", childNode.getName());
+  EXPECT_THAT(childNode.getName(), Eq("V_0"));
   childNode = network.getChild(secondNode);
-  EXPECT_EQ("V_0", childNode.getName());
+  EXPECT_THAT(childNode.getName(), Eq("V_0"));
 }
