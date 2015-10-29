@@ -106,7 +106,7 @@ protected:
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
 {
   DSL_node* node = createNodeWithCPTOfSize2();
-  ASSERT_EQ(2, node->Definition()->GetSize());
+  ASSERT_THAT(node->Definition()->GetSize(), Eq(2));
   CPTManager manager(node);
 
   std::vector<double> cpt = manager.displayCPT();
@@ -120,7 +120,7 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithoutParents)
 TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithParents)
 {
   DSL_node* node = createNodeWithCPTOfSize4();
-  ASSERT_EQ(4, node->Definition()->GetSize());
+  ASSERT_THAT(node->Definition()->GetSize(), Eq(4));
   CPTManager manager(node);
 
   std::vector<double> cpt = manager.displayCPT();
@@ -128,7 +128,7 @@ TEST_F(CPTManagerTest, shouldDisplayCPTOfTheNodeWithParents)
   //TODO: in C++11 it'll be much simpler
   const double probs[] = { 0.4, 0.3, 0.2, 0.1 };
   std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
-  ASSERT_EQ(probabilities, cpt);
+  ASSERT_THAT(cpt, Eq(probabilities));
 }
 
 TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingVectorOfIncorrectSize)
@@ -150,20 +150,20 @@ TEST_F(CPTManagerTest, shouldThrowExceptionWhenPassingVectorOfIncorrectSize)
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithoutParents)
 {
   DSL_node* node = createNodeWithoutCPT();
-  ASSERT_EQ(2, node->Definition()->GetSize());
+  ASSERT_THAT(node->Definition()->GetSize(), Eq(2));
   CPTManager manager(node);
   std::vector<double> probabilities;
   probabilities.push_back(0.8);
   probabilities.push_back(0.2);
 
   manager.fillCPT(probabilities);
-  ASSERT_EQ(probabilities, manager.displayCPT());
+  ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
 }
 
 TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
 {
   DSL_node* node = createNodeWithoutCPTWithParent();
-  ASSERT_EQ(4, node->Definition()->GetSize());
+  ASSERT_THAT(node->Definition()->GetSize(), Eq(4));
   CPTManager manager(node);
   std::vector<double> probabilities;
   probabilities.push_back(0.4);
@@ -172,7 +172,7 @@ TEST_F(CPTManagerTest, shouldSetCPTOfTheNodeWithParent)
   probabilities.push_back(0.1);
 
   manager.fillCPT(probabilities);
-  ASSERT_EQ(probabilities, manager.displayCPT());
+  ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
 }
 
 //TODO: test for adding incorrect probabilities:
@@ -199,5 +199,5 @@ TEST_F(CPTManagerTest, shouldDisplayNodeProbability)
   CPTManager manager(node);
 
   double probability = manager.getProbability();
-  ASSERT_EQ(PROBABILITY_VALUE, probability);
+  ASSERT_THAT(probability, Eq(PROBABILITY_VALUE));
 }
