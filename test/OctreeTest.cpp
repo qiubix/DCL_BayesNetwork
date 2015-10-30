@@ -53,10 +53,10 @@ TEST_F(OctreeTest, shouldInitializeOctreeWithPointCloud) {
   octree.init();
 
   Processors::Network::Octree::OctreeWithSIFT octreeWithSIFT = octree.getOctreeWithSIFT();
-  EXPECT_EQ(1, octreeWithSIFT.getBranchCount());
-  EXPECT_EQ(1, octreeWithSIFT.getLeafCount());
-  EXPECT_EQ(0.01f, octreeWithSIFT.getResolution());
-  EXPECT_EQ(1, octreeWithSIFT.getTreeDepth());
+  EXPECT_THAT(octreeWithSIFT.getBranchCount(), Eq(1));
+  EXPECT_THAT(octreeWithSIFT.getLeafCount(), Eq(1));
+  EXPECT_THAT(octreeWithSIFT.getResolution(), Eq(0.01f));
+  EXPECT_THAT(octreeWithSIFT.getTreeDepth(), Eq(1));
 }
 
 TEST_F(OctreeTest, shouldGetFirstOctreeNode) {
@@ -66,8 +66,8 @@ TEST_F(OctreeTest, shouldGetFirstOctreeNode) {
 
   Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
 
-  ASSERT_TRUE(it->isBranchNode());
-  ASSERT_EQ(0, it->getCurrentOctreeDepth());
+  ASSERT_THAT(it->isBranchNode(), Eq(true));
+  ASSERT_THAT(it->getCurrentOctreeDepth(), Eq(0));
 }
 
 TEST_F(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
@@ -78,8 +78,8 @@ TEST_F(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
 
   ++it;
 
-  EXPECT_TRUE(it->isLeafNode());
-  EXPECT_EQ(1, it->getCurrentOctreeDepth());
+  EXPECT_THAT(it->isLeafNode(), Eq(true));
+  EXPECT_THAT(it->getCurrentOctreeDepth(), Eq(1));
 }
 
 TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
@@ -96,6 +96,6 @@ TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
     ++it;
   }
 
-  EXPECT_TRUE(it->isLeafNode());
-  EXPECT_EQ(7, it->getCurrentOctreeDepth());
+  EXPECT_THAT(it->isLeafNode(), Eq(true));
+  EXPECT_THAT(it->getCurrentOctreeDepth(), Eq(7));
 }
