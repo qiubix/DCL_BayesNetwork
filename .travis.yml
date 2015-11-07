@@ -8,12 +8,6 @@ branches:
     - /^hotfix\/.*/
     - feature/optimizeDependencies
 
-cache:
-  apt: true
-  directories:
-    - /usr/local/share/cmake-3.2
-    - ~/src
-
 before_script:
   - sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
   - sudo apt-get update -qq
