@@ -11,10 +11,11 @@ branches:
 
 addons:
   apt:
-    #    sources:
+    sources:
+      - boost-latest
     #      - v-launchpad-jochen-sprickerhof-de/pcl
     packages:
-      - libboost-all-dev
+      - libboost1.55-all-dev
       - libopencv-dev
       - libpcl1
 
