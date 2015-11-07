@@ -11,12 +11,12 @@ branches:
 
 addons:
   apt:
-    sources:
-      - v-launchpad-jochen-sprickerhof-de/pcl
+    #    sources:
+    #      - v-launchpad-jochen-sprickerhof-de/pcl
     packages:
       - libboost-all-dev
       - libopencv-dev
-      - libpcl-all
+      - libpcl1
 
 before_script:
   # sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
