@@ -17,7 +17,9 @@ addons:
     packages:
       - libboost1.55-all-dev
       - libopencv-dev
-      - libpcl1
+      - libeigen3-dev
+      - libflann-dev
+      - libvtk5-dev
 
 before_script:
   # sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl -y
