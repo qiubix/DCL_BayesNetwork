@@ -53,8 +53,7 @@ before_script:
         -DBUILD_surface=OFF \
         -DBUILD_tools=OFF \
         -DBUILD_tracking=OFF \
-        -DBUILD_visualization=OFF \
-        $PCL_DIR
+        -DBUILD_visualization=OFF .
   - make -j4
   - ln -s /tmp/pcl/build/lib /tmp/libpcl
   - export PATH=$PATH:/tmp/libpcl
