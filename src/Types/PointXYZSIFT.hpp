@@ -8,8 +8,8 @@
 
 #include <pcl/point_representation.h>
 
-#include <pcl/filters/passthrough.h>
-#include <pcl/filters/impl/passthrough.hpp>
+//#include <pcl/filters/passthrough.h>
+//#include <pcl/filters/impl/passthrough.hpp>
 
 #include "pcl/impl/instantiate.hpp"
 
@@ -32,11 +32,11 @@ struct PointXYZSIFT
 {
   PCL_ADD_POINT4D;                  // preferred way of adding a XYZ+padding
   float descriptor[128];
-  int multiplicity; 
+  int multiplicity;
   int pointId;
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 } EIGEN_ALIGN16;
- 
+
 POINT_CLOUD_REGISTER_POINT_STRUCT (PointXYZSIFT           // here we assume a XYZ + "test" (as fields)
                                    ,(float, x, x)
                                    (float, y, y)
@@ -50,7 +50,7 @@ POINT_CLOUD_REGISTER_POINT_STRUCT (PointXYZSIFT           // here we assume a XY
 //} //: namespace Types
 
 namespace pcl{
-template<> 
+template<>
 class DefaultPointRepresentation<PointXYZSIFT> : public PointRepresentation<PointXYZSIFT>
   {
     public:
@@ -67,7 +67,7 @@ class DefaultPointRepresentation<PointXYZSIFT> : public PointRepresentation<Poin
         out[1] = p.y;
         out[2] = p.z;
       }
-  };	
+  };
 }
 
 
