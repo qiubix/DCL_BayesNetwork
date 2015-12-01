@@ -54,7 +54,7 @@ before_script:
     #       -DBUILD_tools=OFF \
     #       -DBUILD_tracking=OFF \
     #       -DBUILD_visualization=OFF .
-  - make pcl_common/fast pcl_octree/fast pcl_io/fast -j2
+  - make pcl_common/fast pcl_octree/fast pcl_io -j2
   - ln -s /tmp/pcl/build/lib /tmp/libpcl
   - export PATH=$PATH:/home/travis/src/DisCODe/build/inst/bin
   - export DISCODE_DCL_DIR=/home/travis/src/DCL/
