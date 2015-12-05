@@ -41,5 +41,3 @@ ADD_SUBDIRECTORY(test)
 
 enable_testing()
 
-# Enable test coverage tools
-#include(Coverage)
