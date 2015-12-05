@@ -18,7 +18,10 @@ addons:
       - libopencv-dev
       - libeigen3-dev
       - libflann-dev
+      - lcov
 
+before_install:
+  - pip install --user cpp-coveralls
 before_script:
   - git clone https://github.com/PointCloudLibrary/pcl.git /tmp/pcl
   - export PCL_DIR=/tmp/pcl
@@ -51,4 +54,6 @@ before_script:
   - export DISCODE_DCL_DIR=/home/travis/src/DCL/
   - cd ~/build/qiubix/DCL_BayesNetwork
   - ./install_discode.sh
-script: cmake -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF . && make && make test
+script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF . && make && make test
+after_success:
+  - coveralls --exclude lib --exclude tests --exclude ext --gcov-options '\-lp'
