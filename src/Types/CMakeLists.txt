@@ -2,11 +2,11 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # If DCL provides any additional libraries - add them here
 
-# # Get soource files of library
-# FILE(GLOB lib_src *.cpp)
-# ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src})
-# # Link with other libraries
-# TARGET_LINK_LIBRARIES(BayesNetworkTypes ${OpenCV_LIBRARIES})
+# Get soource files of library
+FILE(GLOB lib_src *.cpp)
+ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src})
+# Link with other libraries
+TARGET_LINK_LIBRARIES(BayesNetworkTypes ${PCL_COMMON_LIBRARIES} ${PCL_OCTREE_LIBRARIES})
 #
 # # Install library
 # INSTALL(

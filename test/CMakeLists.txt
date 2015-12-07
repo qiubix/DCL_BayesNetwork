@@ -28,7 +28,7 @@ set(OCTREE_NODE_TEST_LIB procNetworkBuilder)
 create_test(OctreeNodeTest ${OCTREE_NODE_TEST_SRC} ${OCTREE_NODE_TEST_LIB})
 
 set(OCTREE_TEST_SRC OctreeTest.cpp)
-set(OCTREE_TEST_LIB procNetworkBuilder)
+set(OCTREE_TEST_LIB BayesNetworkTypes)
 create_test(OctreeTest ${OCTREE_TEST_SRC} ${OCTREE_TEST_LIB})
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -41,5 +41,5 @@ set(SOM_EVALUATION_TEST_LIB procSOMEvaluation procNetworkBuilder)
 create_test(SOMEvaluationTest ${SOM_EVALUATION_TEST_SRC} "${SOM_EVALUATION_TEST_LIB}")
 
 set(OCTREE_BUILDER_TEST_SRC OctreeBuilderTest.cpp)
-set(OCTREE_BUILDER_TEST_LIB procOctreeBuilder)
-create_test(OctreeBuilderTest ${OCTREE_BUILDER_TEST_SRC} ${OCTREE_BUILDER_TEST_LIB})
+set(OCTREE_BUILDER_TEST_LIB procOctreeBuilder BayesNetworkTypes)
+create_test(OctreeBuilderTest ${OCTREE_BUILDER_TEST_SRC} "${OCTREE_BUILDER_TEST_LIB}")

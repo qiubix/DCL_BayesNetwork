@@ -17,6 +17,7 @@
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
 #include "../../Types/PointXYZSIFT.hpp"
+#include "../../Types/Octree.hpp"
 
 namespace Processors {
 namespace Network {
@@ -29,32 +30,36 @@ namespace Network {
 class OctreeBuilder: public Base::Component
 {
 public:
-    OctreeBuilder(const std::string & name = "OctreeBuilder");
-    virtual ~OctreeBuilder();
+  OctreeBuilder(const std::string & name = "OctreeBuilder");
+  virtual ~OctreeBuilder();
 
-    void prepareInterface();
-    void setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
-    pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloud();
+  void prepareInterface();
+  void setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+  pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloud();
+
+  void buildOctree();
+  Octree getOctree();
 
 protected:
 
-    /// Input data stream
-    Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud;
+  /// Input data stream
+  Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud;
 
-    /// Output data stream
-    //Base::DataStreamOut< std::vector<int> > out_jointMultiplicity;
+  /// Output data stream
+  //Base::DataStreamOut< std::vector<int> > out_jointMultiplicity;
 
-    bool onInit();
-    bool onFinish();
-    bool onStart();
-    bool onStop();
+  bool onInit();
+  bool onFinish();
+  bool onStart();
+  bool onStop();
 
-    /*!
-     * Event handler function.
-     */
+  /*!
+   * Event handler function.
+   */
 
 private:
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
+  Octree* octree;
 };
 
 }//: namespace Network

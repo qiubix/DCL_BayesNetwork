@@ -34,6 +34,15 @@ pcl::PointCloud<PointXYZSIFT>::Ptr OctreeBuilder::getPointCloud() {
   return cloud;
 }
 
+void OctreeBuilder::buildOctree() {
+  octree = new Octree(cloud);
+  octree -> init();
+}
+
+Octree OctreeBuilder::getOctree() {
+  return *octree;
+}
+
 bool OctreeBuilder::onInit() {
   LOG(LTRACE) << "OctreeBuilder::initialize\n";
   return true;

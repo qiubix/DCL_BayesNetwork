@@ -11,6 +11,7 @@ using ::testing::Test;
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
 #include "../src/Types/PointXYZSIFT.hpp"
+#include "../src/Types/Octree.hpp"
 
 using Processors::Network::OctreeBuilder;
 
@@ -37,4 +38,14 @@ TEST_F(OctreeBuilderTest, shouldAcceptPointCloudWithSIFT) {
   builder.setPointCloud(getPointCloudWithOnePoint());
   unsigned long numberOfPoints = builder.getPointCloud()->points.size();
   ASSERT_THAT(numberOfPoints, Eq(1));
+}
+
+TEST_F(OctreeBuilderTest, shouldReturnOctreeWithOnePoint) {
+  OctreeBuilder builder("builder");
+  builder.setPointCloud(getPointCloudWithOnePoint());
+
+  builder.buildOctree();
+
+  Processors::Network::Octree octree = builder.getOctree();
+  ASSERT_THAT(octree.getNumberOfPoints(), Eq(1));
 }

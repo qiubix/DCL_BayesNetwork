@@ -6,7 +6,7 @@ using ::testing::Test;
 #include <pcl/point_cloud.h>
 //#include <pcl/io/pcd_io.h>
 
-#include "../src/Components/NetworkBuilder/Octree.hpp"
+#include "../src/Types/Octree.hpp"
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
@@ -98,4 +98,12 @@ TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
 
   EXPECT_THAT(it->isLeafNode(), Eq(true));
   EXPECT_THAT(it->getCurrentOctreeDepth(), Eq(7));
+}
+
+TEST_F(OctreeTest, shouldGetNumberOfPointsInOctree) {
+  PointCloud cloud = getPointCloudWithTwoPoints();
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  
+  ASSERT_THAT(octree.getNumberOfPoints(), Eq(2));
 }

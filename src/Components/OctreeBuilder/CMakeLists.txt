@@ -6,6 +6,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(procOctreeBuilder SHARED ${files})
-target_link_libraries(procOctreeBuilder ${DisCODe_LIBRARIES} ${PCL_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(procOctreeBuilder BayesNetworkTypes ${DisCODe_LIBRARIES} ${PCL_LIBS} ${Boost_LIBRARIES})
 
 INSTALL_COMPONENT(procOctreeBuilder)
