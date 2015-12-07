@@ -16,7 +16,6 @@
 #include "EventHandler2.hpp"
 #include "OctreeContainers.hpp"
 #include "BayesNetwork.hpp"
-#include "Octree.hpp"
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
 
@@ -28,6 +27,7 @@
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
 #include "../../Types/PointXYZSIFT.hpp"
+#include "../../Types/Octree.hpp"
 
 
 namespace Processors {

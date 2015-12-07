@@ -7,7 +7,7 @@ using ::testing::Test;
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 
-#include "../src/Components/NetworkBuilder/Octree.hpp"
+#include "../src/Types/Octree.hpp"
 #include "../src/Components/NetworkBuilder/OctreeNode.hpp"
 #include "../src/Components/NetworkBuilder/OctreeBranchNode.hpp"
 #include "../src/Components/NetworkBuilder/OctreeLeafNode.hpp"
