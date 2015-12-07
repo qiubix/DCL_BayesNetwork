@@ -14,7 +14,9 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 
-#include <Types/PointXYZSIFT.hpp>
+//TODO: FIXME: include types from PCL
+//#include <Types/PointXYZSIFT>
+#include "../../Types/PointXYZSIFT.hpp"
 
 namespace Processors {
 namespace Network {
@@ -27,20 +29,11 @@ namespace Network {
 class OctreeBuilder: public Base::Component
 {
 public:
-    /*!
-     * Constructor.
-     */
     OctreeBuilder(const std::string & name = "OctreeBuilder");
-
-    /*!
-     * Destructor
-     */
     virtual ~OctreeBuilder();
 
-    /*!
-     * Prepare data streams and handlers
-     */
     void prepareInterface();
+    void setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
 
 protected:
 
@@ -50,29 +43,17 @@ protected:
     /// Output data stream
     //Base::DataStreamOut< std::vector<int> > out_jointMultiplicity;
 
-    /*!
-     * Connects source to given device.
-     */
     bool onInit();
-
-    /*!
-     * Disconnect source from device, closes streams, etc.
-     */
     bool onFinish();
-
-    /*!
-     * Start component
-     */
     bool onStart();
-
-    /*!
-     * Stop component
-     */
     bool onStop();
 
     /*!
      * Event handler function.
      */
+
+private:
+    pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
 };
 
 }//: namespace Network
