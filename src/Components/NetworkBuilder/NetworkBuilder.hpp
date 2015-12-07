@@ -56,7 +56,7 @@ public:
    */
   void prepareInterface();
 
-  void buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+  void buildNetwork(Octree octree);
 
   BayesNetwork getNetwork();
 

@@ -14,7 +14,8 @@ Octree::Octree(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
 Octree::~Octree() {
   //Delete octree data structure (pushes allocated nodes to memory pool!).
   octree->deleteTree();
-  delete octree;
+  //FIXME: should this be freed?
+//  delete octree;
 }
 
 void Octree::init() {
@@ -28,6 +29,14 @@ void Octree::init() {
 
 int Octree::getNumberOfPoints() {
   return octree -> getLeafCount();
+}
+
+bool Octree::empty() {
+  return cloud->empty();
+}
+
+PointXYZSIFT Octree::getPoint(unsigned int id) {
+  return cloud->at(id);
 }
 
 Octree::DepthFirstIterator Octree::depthBegin() {

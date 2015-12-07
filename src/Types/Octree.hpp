@@ -23,6 +23,8 @@ public:
 
   void init();
   int getNumberOfPoints();
+  bool empty();
+  PointXYZSIFT getPoint(unsigned int id);
 
   class DepthFirstIterator {
   public:

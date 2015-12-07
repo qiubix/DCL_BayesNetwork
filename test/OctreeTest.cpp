@@ -20,6 +20,7 @@ public:
     cloud->width = 1;
     cloud->height = 1;
     cloud->points.resize(cloud->width * cloud->height);
+    cloud->points[0].pointId = 0;
     cloud->points[0].x = 0.1;
     cloud->points[0].y = 0.2;
     cloud->points[0].z = 0.3;
@@ -32,9 +33,11 @@ public:
     cloud->width = 2;
     cloud->height = 1;
     cloud->points.resize(cloud->width * cloud->height);
+    cloud->points[0].pointId = 0;
     cloud->points[0].x = 0.1;
     cloud->points[0].y = 0.2;
     cloud->points[0].z = 0.3;
+    cloud->points[1].pointId = 1;
     cloud->points[1].x = 1.1;
     cloud->points[1].y = 1.2;
     cloud->points[1].z = 1.3;
@@ -46,6 +49,12 @@ public:
   }
 
 };
+
+TEST_F(OctreeTest, shouldReturnTrueForEmptyPointCloud) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
+  Processors::Network::Octree octree(emptyCloud);
+  ASSERT_THAT(octree.empty(), Eq(true));
+}
 
 TEST_F(OctreeTest, shouldInitializeOctreeWithPointCloud) {
   PointCloud cloud = getPointCloudWithOnePoint();
@@ -106,4 +115,21 @@ TEST_F(OctreeTest, shouldGetNumberOfPointsInOctree) {
   octree.init();
   
   ASSERT_THAT(octree.getNumberOfPoints(), Eq(2));
+}
+
+TEST_F(OctreeTest, shouldGetSIFTPointById) {
+  PointCloud cloud = getPointCloudWithTwoPoints();
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  
+  PointXYZSIFT referencePoint;
+  referencePoint.pointId = 1;
+  referencePoint.x = 1.1;
+  referencePoint.y = 1.2;
+  referencePoint.z = 1.3;
+  for(int i=0; i<128; i++) {
+    referencePoint.descriptor[i] = i;
+  }
+  PointXYZSIFT cloudPoint = octree.getPoint(1);
+  ASSERT_THAT(cloudPoint.y, Eq(referencePoint.y));
 }

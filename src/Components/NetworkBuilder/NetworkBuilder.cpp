@@ -91,7 +91,7 @@ void NetworkBuilder::onJointMultiplicity()
     LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
     pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
     cloudQueue.pop();
-    buildNetwork(cloud);
+//    buildNetwork(cloud);
   }
 }
 
@@ -105,20 +105,16 @@ BayesNetwork NetworkBuilder::getNetwork() {
   return network;
 }
 
-void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
+void NetworkBuilder::buildNetwork(Octree octree) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if( !network.isEmpty() ) {
     return;
   }
 
-  if (cloud->empty()) {
+  if (octree.empty()) {
     throw PointCloudIsEmptyException();
   }
-
-  //TODO: move outside build() method
-  Octree octree(cloud);
-  octree.init();
 
   LOG(LTRACE) << "Creating iterators...";
 
@@ -139,7 +135,7 @@ void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
       createNode(&leafNode);
-      createLeafNodeChildren(leafNode, cloud);
+//      createLeafNodeChildren(leafNode, cloud);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
