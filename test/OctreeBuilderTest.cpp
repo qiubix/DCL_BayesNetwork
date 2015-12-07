@@ -35,5 +35,6 @@ TEST_F(OctreeBuilderTest, shouldAcceptPointCloudWithSIFT) {
   OctreeBuilder builder("builder");
 
   builder.setPointCloud(getPointCloudWithOnePoint());
-  ASSERT_THAT(1, Eq(1));
+  unsigned long numberOfPoints = builder.getPointCloud()->points.size();
+  ASSERT_THAT(numberOfPoints, Eq(1));
 }

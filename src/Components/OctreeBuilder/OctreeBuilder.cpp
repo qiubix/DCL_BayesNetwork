@@ -30,6 +30,10 @@ void OctreeBuilder::setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
   this -> cloud =  cloud;
 }
 
+pcl::PointCloud<PointXYZSIFT>::Ptr OctreeBuilder::getPointCloud() {
+  return cloud;
+}
+
 bool OctreeBuilder::onInit() {
   LOG(LTRACE) << "OctreeBuilder::initialize\n";
   return true;
