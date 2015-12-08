@@ -105,27 +105,27 @@ BayesNetwork NetworkBuilder::getNetwork() {
   return network;
 }
 
-void NetworkBuilder::buildNetwork(Octree octree) {
+void NetworkBuilder::buildNetwork(Octree* octree) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if( !network.isEmpty() ) {
     return;
   }
 
-  if (octree.empty()) {
+  if (octree->empty()) {
     throw PointCloudIsEmptyException();
   }
 
   LOG(LTRACE) << "Creating iterators...";
 
   // Use depth-first iterator
-  Octree::DepthFirstIterator dfIt = octree.depthBegin();
-  const Octree::DepthFirstIterator dfItEnd = octree.depthEnd();
+  Octree::DepthFirstIterator dfIt = octree->depthBegin();
+  const Octree::DepthFirstIterator dfItEnd = octree -> depthEnd();
 
   LOG(LTRACE) << "Creating nodes:";
 
   // Root node
-  addHypothesisNode(octree.depthBegin());
+  addHypothesisNode(octree -> depthBegin());
   ++dfIt;
 
   for (;dfIt != dfItEnd; ++dfIt) {
@@ -135,7 +135,7 @@ void NetworkBuilder::buildNetwork(Octree octree) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
       createNode(&leafNode);
-//      createLeafNodeChildren(leafNode, cloud);
+      createLeafNodeChildren(leafNode, octree);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
@@ -196,7 +196,8 @@ void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud)
+//void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
@@ -218,7 +219,8 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointC
   for(unsigned int i=0; i<childrenCounter; i++)
   {
     LOG(LTRACE) << "Creating child number " << i;
-    PointXYZSIFT p = cloud->at(point_indices[i]);
+//    PointXYZSIFT p = cloud->at(point_indices[i]);
+    PointXYZSIFT p = octree -> getPoint(i);
     logPoint(p, point_indices[i]);
     int featureId = p.pointId;
     network.addFeatureNode(featureId);

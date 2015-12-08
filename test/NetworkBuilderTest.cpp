@@ -68,25 +68,28 @@ TEST_F(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
   pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
   Octree octree(emptyCloud);
 
-  EXPECT_THROW(networkBuilder -> buildNetwork(octree), PointCloudIsEmptyException);
+  EXPECT_THROW(networkBuilder -> buildNetwork(&octree), PointCloudIsEmptyException);
 }
 
 TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
-  networkBuilder -> buildNetwork(getOctreeWithOnePoint());
+  Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
+  networkBuilder -> buildNetwork(octreeWithOnePoint);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
   ASSERT_THAT(network.hasNode("V_0"), Eq(true));
 }
 
-//TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
-//  networkBuilder -> buildNetwork(getOctreeWithOnePoint());
+TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
+  Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
+  octreeWithOnePoint ->init();
+  networkBuilder -> buildNetwork(octreeWithOnePoint);
 
-//  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
-//  ASSERT_THAT(network.hasNode("V_0"), Eq(true));
-//  ASSERT_THAT(network.hasNode("V_1"), Eq(true));
-//  ASSERT_THAT(network.hasNode("F_0"), Eq(true));
-//  ASSERT_THAT(network.getNumberOfNodes(), Eq(3));
-//}
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  ASSERT_THAT(network.hasNode("V_0"), Eq(true));
+  ASSERT_THAT(network.hasNode("V_1"), Eq(true));
+  ASSERT_THAT(network.hasNode("F_0"), Eq(true));
+  ASSERT_THAT(network.getNumberOfNodes(), Eq(3));
+}
 
 //TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
 //  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithThreePoints();

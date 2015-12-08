@@ -56,7 +56,7 @@ public:
    */
   void prepareInterface();
 
-  void buildNetwork(Octree octree);
+  void buildNetwork(Octree* octree);
 
   BayesNetwork getNetwork();
 
@@ -117,7 +117,7 @@ private:
 
   void createNode(OctreeNode* node);
   void connectNodeToNetwork(string bayesParentNodeName);
-  void createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+  void createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree);
 
 
   void exportNetwork();
