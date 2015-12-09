@@ -220,7 +220,7 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* oct
   {
     LOG(LTRACE) << "Creating child number " << i;
 //    PointXYZSIFT p = cloud->at(point_indices[i]);
-    PointXYZSIFT p = octree -> getPoint(i);
+    PointXYZSIFT p = octree -> getPoint(point_indices[i]);
     logPoint(p, point_indices[i]);
     int featureId = p.pointId;
     network.addFeatureNode(featureId);
