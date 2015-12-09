@@ -113,18 +113,18 @@ TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsCloudPoints) {
   ASSERT_THAT(network.getNumberOfFeatureNodes(), Eq(3));
 }
 
-//TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
-//  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithOnePoint();
+TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
+  Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
+  octreeWithOnePoint ->init();
+  networkBuilder -> buildNetwork(octreeWithOnePoint);
 
-//  networkBuilder -> buildNetwork(cloud);
-
-//  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
-//  Processors::Network::CPTManager manager = network.getNextRootNode().getNodeCPTManager();
-//  //TODO: in C++11 it'll be much simpler
-//  const double probs[] = { 0.5,0.5 };
-//  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
-//  ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
-//}
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  Processors::Network::CPTManager manager = network.getNextRootNode().getNodeCPTManager();
+  //TODO: in C++11 it'll be much simpler
+  const double probs[] = { 0.5,0.5 };
+  std::vector<double> probabilities(probs, probs+sizeof(probs)/sizeof(double));
+  ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
+}
 
 //TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
 //  pcl::PointCloud<PointXYZSIFT>::Ptr cloud = getPointCloudWithThreePoints();
