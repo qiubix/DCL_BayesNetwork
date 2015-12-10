@@ -196,7 +196,6 @@ void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
   }
 }
 
-//void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud)
 void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
@@ -219,9 +218,9 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* oct
   for(unsigned int i=0; i<childrenCounter; i++)
   {
     LOG(LTRACE) << "Creating child number " << i;
-//    PointXYZSIFT p = cloud->at(point_indices[i]);
-    PointXYZSIFT p = octree -> getPoint(point_indices[i]);
-    logPoint(p, point_indices[i]);
+    unsigned int pointId = point_indices[i];
+    PointXYZSIFT p = octree -> getPoint(pointId);
+    logPoint(p, pointId);
     int featureId = p.pointId;
     network.addFeatureNode(featureId);
     string featureName = network.createFeatureName(featureId);

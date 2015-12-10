@@ -6,7 +6,7 @@ namespace Processors {
 namespace Network {
 
 Octree::Octree(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
-  this->cloud = cloud;
+  this -> cloud = cloud;
   voxelSize = 0.01f;
   octree = new OctreeWithSIFT (voxelSize);
 }
@@ -18,6 +18,7 @@ Octree::~Octree() {
 //  delete octree;
 }
 
+//TODO: move this to constructor
 void Octree::init() {
   // Set input cloud.
   octree->setInputCloud(cloud);
@@ -32,19 +33,19 @@ int Octree::getNumberOfPoints() {
 }
 
 bool Octree::empty() {
-  return cloud->empty();
+  return cloud -> empty();
 }
 
 PointXYZSIFT Octree::getPoint(unsigned int id) {
-  return cloud->at(id);
+  return cloud -> at(id);
 }
 
 Octree::DepthFirstIterator Octree::depthBegin() {
-  return octree->depth_begin();
+  return octree -> depth_begin();
 }
 
 Octree::DepthFirstIterator Octree::depthEnd() {
-  return octree->depth_end();
+  return octree -> depth_end();
 }
 
 Octree::OctreeWithSIFT Octree::getOctreeWithSIFT() {
