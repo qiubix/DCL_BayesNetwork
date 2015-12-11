@@ -66,6 +66,7 @@ protected:
   Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
   Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
   Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+  Base::DataStreamIn< Octree* > in_octree;
 
   /// Output data stream
   Base::DataStreamOut<DSL_network> out_network;
@@ -100,6 +101,7 @@ protected:
 private:
   BayesNetwork network;
   std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
+  std::stack <Octree* > octreeQueue;
 
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;

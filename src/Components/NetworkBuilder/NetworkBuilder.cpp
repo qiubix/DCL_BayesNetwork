@@ -16,9 +16,9 @@
 #include "Common/Timer.hpp"
 #include "NetworkBuilderExceptions.hpp"
 
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
 #include <boost/bind.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+//#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace Processors {
 namespace Network {
@@ -45,11 +45,13 @@ void NetworkBuilder::prepareInterface()
 
   // Register data streams.
   //registerStream("in_cloud", &in_cloud_xyz);
-  registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+  registerStream("in_octree", &in_octree);
+//  registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
   registerStream("in_jointMultiplicity", &in_jointMultiplicity);
   // Register handlers
   registerHandler("onNewModel", boost::bind(&NetworkBuilder::onNewModel, this));
-  addDependency("onNewModel", &in_cloud_xyzsift);
+//  addDependency("onNewModel", &in_cloud_xyzsift);
+  addDependency("onNewModel", &in_octree);
 
   registerHandler("onJointMultiplicity", boost::bind(&NetworkBuilder::onJointMultiplicity, this));
   addDependency("onJointMultiplicity", &in_jointMultiplicity);
@@ -79,20 +81,28 @@ bool NetworkBuilder::onStop()
 void NetworkBuilder::onNewModel()
 {
   LOG(LTRACE) << "On new model";
-  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
-  cloudQueue.push(newCloud);
+//  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
+//  cloudQueue.push(newCloud);
+  Octree* newOctree = in_octree.read();
+  octreeQueue.push(newOctree);
 }
 
 void NetworkBuilder::onJointMultiplicity()
 {
   LOG(LTRACE) << "On joint multiplicity";
   jointMultiplicityVector = in_jointMultiplicity.read();
-  if (cloudQueue.size() > 0) {
-    LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
-    cloudQueue.pop();
-//    buildNetwork(cloud);
+  if (octreeQueue.size() > 0) {
+    LOG(LDEBUG) << "Size of octreeQueue: " << octreeQueue.size();
+    Octree* octree = octreeQueue.top();
+    octreeQueue.pop();
+    buildNetwork(octree);
   }
+//  if (cloudQueue.size() > 0) {
+//    LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
+//    pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
+//    cloudQueue.pop();
+//    buildNetwork(cloud);
+//  }
 }
 
 bool NetworkBuilder::onStart()
