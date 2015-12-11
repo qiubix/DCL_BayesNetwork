@@ -46,7 +46,7 @@ protected:
   Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud;
 
   /// Output data stream
-  //Base::DataStreamOut< std::vector<int> > out_jointMultiplicity;
+  Base::DataStreamOut< Octree* > out_octree;
 
   bool onInit();
   bool onFinish();
@@ -56,6 +56,7 @@ protected:
   /*!
    * Event handler function.
    */
+  void onNewCloud();
 
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;

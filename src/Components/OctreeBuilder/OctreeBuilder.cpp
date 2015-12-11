@@ -24,6 +24,10 @@ OctreeBuilder::~OctreeBuilder() {
 
 void OctreeBuilder::prepareInterface() {
   LOG(LTRACE) << "OctreeBuilder::prepareInterface\n";
+  registerStream("in_cloud", &in_cloud);
+  registerStream("out_octree", &out_octree);
+  registerHandler("onNewCloud", boost::bind(&OctreeBuilder::onNewCloud, this));
+  addDependency("onNewCloud", &in_cloud);
 }
 
 void OctreeBuilder::setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
@@ -61,6 +65,12 @@ bool OctreeBuilder::onStop() {
 bool OctreeBuilder::onStart() {
   LOG(LTRACE) << "OctreeBuilder::onStart\n";
   return true;
+}
+
+void OctreeBuilder::onNewCloud() {
+  setPointCloud(in_cloud.read());
+  buildOctree();
+  out_octree.write(octree);
 }
 
 }//: namespace Network
