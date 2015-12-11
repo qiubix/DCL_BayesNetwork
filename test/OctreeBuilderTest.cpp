@@ -74,3 +74,11 @@ TEST_F(OctreeBuilderTest, shouldReturnOctreeWithThreePoints) {
   Processors::Network::Octree octree = builder.getOctree();
   ASSERT_THAT(octree.getNumberOfPoints(), Eq(3));
 }
+
+TEST_F(OctreeBuilderTest, shouldInitializeComponentHandlers) {
+  OctreeBuilder builder("builder");
+  builder.prepareInterface();
+  
+  std::string handlers = builder.listHandlers();
+  ASSERT_THAT(handlers, Eq("onNewCloud\n"));
+}
