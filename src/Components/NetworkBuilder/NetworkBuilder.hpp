@@ -14,7 +14,6 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
-#include "OctreeContainers.hpp"
 #include "BayesNetwork.hpp"
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
