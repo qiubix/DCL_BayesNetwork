@@ -163,3 +163,10 @@ TEST_F(NetworkBuilderTest, shouldHaveNodesWithUniqueNames) {
 TEST_F(NetworkBuilderTest, shouldWriteNetworkToOutputPort) {
   EXPECT_TRUE(true);
 }
+
+TEST_F(NetworkBuilderTest, shouldInitializeHandlers) {
+  networkBuilder -> prepareInterface();
+  
+  std::string handlers = networkBuilder -> listHandlers();
+  ASSERT_THAT(handlers, Eq("onJointMultiplicity\nonNewModel\n"));
+}
