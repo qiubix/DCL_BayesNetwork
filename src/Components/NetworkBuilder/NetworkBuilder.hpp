@@ -14,9 +14,7 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
-#include "OctreeContainers.hpp"
 #include "BayesNetwork.hpp"
-#include "Octree.hpp"
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
 
@@ -28,6 +26,7 @@
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
 #include "../../Types/PointXYZSIFT.hpp"
+#include "../../Types/Octree.hpp"
 
 
 namespace Processors {
@@ -56,7 +55,7 @@ public:
    */
   void prepareInterface();
 
-  void buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+  void buildNetwork(Octree* octree);
 
   BayesNetwork getNetwork();
 
@@ -66,6 +65,7 @@ protected:
   Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
   Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
   Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+  Base::DataStreamIn< Octree* > in_octree;
 
   /// Output data stream
   Base::DataStreamOut<DSL_network> out_network;
@@ -100,6 +100,7 @@ protected:
 private:
   BayesNetwork network;
   std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
+  std::stack <Octree* > octreeQueue;
 
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
@@ -117,7 +118,7 @@ private:
 
   void createNode(OctreeNode* node);
   void connectNodeToNetwork(string bayesParentNodeName);
-  void createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+  void createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree);
 
 
   void exportNetwork();

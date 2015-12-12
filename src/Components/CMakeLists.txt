@@ -3,6 +3,8 @@ ADD_COMPONENT(NetworkBuilder)
 
 ADD_COMPONENT(MapMultiplicity)
 
+ADD_COMPONENT(OctreeBuilder)
+
 #ADD_COMPONENT(NetworkTester)
 
 #ADD_COMPONENT(MultipleModels)
