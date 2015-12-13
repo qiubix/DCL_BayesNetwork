@@ -32,6 +32,9 @@ public:
   virtual ~PointCloudIndexer();
 
   void prepareInterface();
+  
+  void setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
+  pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloud();
 
 protected:
 

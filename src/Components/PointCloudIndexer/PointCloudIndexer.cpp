@@ -22,6 +22,14 @@ void PointCloudIndexer::prepareInterface() {
   LOG(LTRACE) << "PointCloudIndexer::prepareInterface\n";
 }
 
+void PointCloudIndexer::setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
+  this -> cloud =  cloud;
+}
+
+pcl::PointCloud<PointXYZSIFT>::Ptr PointCloudIndexer::getPointCloud() {
+  return cloud;
+}
+
 bool PointCloudIndexer::onInit() {
   LOG(LTRACE) << "PointCloudIndexer::initialize\n";
   return true;

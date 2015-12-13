@@ -59,5 +59,9 @@ public:
 TEST_F(PointCloudIndexerTest, shouldAcceptPointCloudWithSIFT) {
   PointCloudIndexer indexer("indexer");
 
-  ASSERT_THAT(1, Eq(1));
+  indexer.setPointCloud(getPointCloudWithOnePoint());
+  unsigned long numberOfPoints = indexer.getPointCloud()->points.size();
+  ASSERT_THAT(numberOfPoints, Eq(1));
+  int descriptor = indexer.getPointCloud() -> points[0].descriptor[127];
+  ASSERT_THAT(descriptor, Eq(127));
 }
