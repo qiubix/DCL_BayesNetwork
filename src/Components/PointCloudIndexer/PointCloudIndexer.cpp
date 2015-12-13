@@ -30,6 +30,12 @@ pcl::PointCloud<PointXYZSIFT>::Ptr PointCloudIndexer::getPointCloud() {
   return cloud;
 }
 
+void PointCloudIndexer::indexPoints() {
+  for (int i=0; i<cloud->points.size(); ++i) {
+    cloud -> points[i].pointId = i;
+  }
+}
+
 bool PointCloudIndexer::onInit() {
   LOG(LTRACE) << "PointCloudIndexer::initialize\n";
   return true;

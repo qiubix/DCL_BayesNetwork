@@ -65,3 +65,19 @@ TEST_F(PointCloudIndexerTest, shouldAcceptPointCloudWithSIFT) {
   int descriptor = indexer.getPointCloud() -> points[0].descriptor[127];
   ASSERT_THAT(descriptor, Eq(127));
 }
+
+TEST_F(PointCloudIndexerTest, shouldIndexPointsIncrementally) {
+  PointCloudIndexer indexer("indexer");
+  indexer.setPointCloud(getPointCloudWithThreePoints());
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloudBeforeIndexing = indexer.getPointCloud();
+  ASSERT_THAT(cloudBeforeIndexing -> points[0].pointId, Eq(999));
+  ASSERT_THAT(cloudBeforeIndexing -> points[1].pointId, Eq(999));
+  ASSERT_THAT(cloudBeforeIndexing -> points[2].pointId, Eq(999));
+  
+  indexer.indexPoints();
+  
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloudAfterIndexing = indexer.getPointCloud();
+  ASSERT_THAT(cloudAfterIndexing -> points[0].pointId, Eq(0));
+  ASSERT_THAT(cloudAfterIndexing -> points[1].pointId, Eq(1));
+  ASSERT_THAT(cloudAfterIndexing -> points[2].pointId, Eq(2));
+}
