@@ -20,6 +20,10 @@ PointCloudIndexer::~PointCloudIndexer() {
 
 void PointCloudIndexer::prepareInterface() {
   LOG(LTRACE) << "PointCloudIndexer::prepareInterface\n";
+  registerStream("in_cloud", &in_cloud);
+  registerStream("out_octree", &out_cloud);
+  registerHandler("onNewCloud", boost::bind(&PointCloudIndexer::onNewCloud, this));
+  addDependency("onNewCloud", &in_cloud);
 }
 
 void PointCloudIndexer::setPointCloud(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
@@ -49,6 +53,10 @@ bool PointCloudIndexer::onFinish() {
 bool PointCloudIndexer::onStop() {
   LOG(LTRACE) << "PointCloudIndexer::onStop\n";
   return true;
+}
+
+void PointCloudIndexer::onNewCloud() {
+  
 }
 
 bool PointCloudIndexer::onStart() {

@@ -54,6 +54,7 @@ protected:
   /*!
    * Event handler function.
    */
+  void onNewCloud();
 
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;

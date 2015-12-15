@@ -81,3 +81,11 @@ TEST_F(PointCloudIndexerTest, shouldIndexPointsIncrementally) {
   ASSERT_THAT(cloudAfterIndexing -> points[1].pointId, Eq(1));
   ASSERT_THAT(cloudAfterIndexing -> points[2].pointId, Eq(2));
 }
+
+TEST_F(PointCloudIndexerTest, shouldInitializeComponentHandlers) {
+  PointCloudIndexer indexer("indexer");
+  indexer.prepareInterface();
+  
+  std::string handlers = indexer.listHandlers();
+  ASSERT_THAT(handlers, Eq("onNewCloud\n"));
+}
