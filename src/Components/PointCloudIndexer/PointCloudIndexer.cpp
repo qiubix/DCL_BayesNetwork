@@ -56,7 +56,9 @@ bool PointCloudIndexer::onStop() {
 }
 
 void PointCloudIndexer::onNewCloud() {
-  
+  setPointCloud(in_cloud.read());
+  indexPoints();
+  out_cloud.write(getPointCloud());
 }
 
 bool PointCloudIndexer::onStart() {
