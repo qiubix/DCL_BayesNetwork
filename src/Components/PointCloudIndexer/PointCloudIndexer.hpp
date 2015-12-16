@@ -44,7 +44,7 @@ protected:
   Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud;
 
   /// Output data stream
-  Base::DataStreamIn< pcl::PointCloud<PointXYZSIFT>::Ptr > out_cloud;
+  Base::DataStreamOut< pcl::PointCloud<PointXYZSIFT>::Ptr > out_cloud;
 
   bool onInit();
   bool onFinish();
