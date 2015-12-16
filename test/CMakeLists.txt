@@ -43,3 +43,7 @@ create_test(SOMEvaluationTest ${SOM_EVALUATION_TEST_SRC} "${SOM_EVALUATION_TEST_
 set(OCTREE_BUILDER_TEST_SRC OctreeBuilderTest.cpp)
 set(OCTREE_BUILDER_TEST_LIB procOctreeBuilder BayesNetworkTypes)
 create_test(OctreeBuilderTest ${OCTREE_BUILDER_TEST_SRC} "${OCTREE_BUILDER_TEST_LIB}")
+
+set(POINT_CLOUD_INDEXER_TEST_SRC PointCloudIndexerTest.cpp)
+set(POINT_CLOUD_INDEXER_TEST_LIB procPointCloudIndexer)
+create_test(PointCloudIndexerTest ${POINT_CLOUD_INDEXER_TEST_SRC} "${POINT_CLOUD_INDEXER_TEST_LIB}")

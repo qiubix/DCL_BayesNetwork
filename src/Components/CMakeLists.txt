@@ -5,6 +5,8 @@ ADD_COMPONENT(MapMultiplicity)
 
 ADD_COMPONENT(OctreeBuilder)
 
+ADD_COMPONENT(PointCloudIndexer)
+
 #ADD_COMPONENT(NetworkTester)
 
 #ADD_COMPONENT(MultipleModels)
