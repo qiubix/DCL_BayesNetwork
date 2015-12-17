@@ -8,13 +8,13 @@ ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src} OctreeContainers.hpp)
 # Link with other libraries
 TARGET_LINK_LIBRARIES(BayesNetworkTypes ${PCL_COMMON_LIBRARIES} ${PCL_OCTREE_LIBRARIES})
 #
-# # Install library
-# INSTALL(
-#   TARGETS BayesNetworkTypes
-#   RUNTIME DESTINATION bin COMPONENT applications
-#   LIBRARY DESTINATION lib COMPONENT applications
-#   ARCHIVE DESTINATION lib COMPONENT sdk
-# )
+# Install library
+INSTALL(
+  TARGETS BayesNetworkTypes
+  RUNTIME DESTINATION bin COMPONENT applications
+  LIBRARY DESTINATION lib COMPONENT applications
+  ARCHIVE DESTINATION lib COMPONENT sdk
+)
 
 # If DCL provides any additional headers to be used from outside of it, add them
 
