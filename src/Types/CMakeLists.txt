@@ -6,8 +6,8 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 FILE(GLOB lib_src *.cpp)
 ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src} OctreeContainers.hpp)
 # Link with other libraries
-TARGET_LINK_LIBRARIES(BayesNetworkTypes ${PCL_COMMON_LIBRARIES} ${PCL_OCTREE_LIBRARIES})
-#
+TARGET_LINK_LIBRARIES(BayesNetworkTypes ${PCL_OCTREE_LIBRARIES})
+
 # Install library
 INSTALL(
   TARGETS BayesNetworkTypes
