@@ -74,7 +74,8 @@ void SOMEvaluation::onNetwork()
 {
   LOG(LWARNING) << "SOMEvaluation::onNetwork";
   networks = in_networks.read();
-  theNet = networks[0];
+  //theNet = networks[0];
+  setNetwork(networks[0]);
 }
 
 void SOMEvaluation::onInstance()

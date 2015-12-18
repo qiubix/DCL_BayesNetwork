@@ -54,7 +54,7 @@ public:
 
 protected:
   ///Input data streams
-  Base::DataStreamIn< std::vector<DSL_network> > in_networks;
+  Base::DataStreamIn< std::vector<AbstractNetwork* > > in_networks;
   Base::DataStreamIn< std::vector<int> > in_instanceMatchedFeatures;
 
   //Output data streams

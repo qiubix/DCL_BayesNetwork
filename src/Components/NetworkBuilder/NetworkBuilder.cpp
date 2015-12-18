@@ -259,8 +259,10 @@ void NetworkBuilder::exportNetwork()
   LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
   LOG(LDEBUG) << "after writing network to file";
-  std::vector<DSL_network> networks;
-  networks.push_back(network.getNetwork());
+  //std::vector<DSL_network> networks;
+  std::vector<AbstractNetwork*> networks;
+  //networks.push_back(network.getNetwork());
+  networks.push_back(network);
   out_networks.write(networks);
   //out_network.write(network.getNetwork());
 }
