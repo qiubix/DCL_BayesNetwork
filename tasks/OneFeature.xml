@@ -25,11 +25,11 @@
         <Component name="InstanceReader" type="BayesNetwork:PCDReader" priority="2" bump="0">
           <param name="filename">../data/SimpleObjects/object_1/feature_0.pcd</param>
         </Component>
-        <Component name="Indexer" type="BayesNetwork:PointCloudIndexer" priority="9" bump="0">
+        <Component name="Indexer" type="BayesNetwork:PointCloudIndexer" priority="3" bump="0">
         </Component>
-        <Component name="OctreeBuilder" type="BayesNetwork:OctreeBuilder" priority="9" bump="0">
+        <Component name="OctreeBuilder" type="BayesNetwork:OctreeBuilder" priority="4" bump="0">
         </Component>
-        <Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="10" bump="0">
+        <Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="5" bump="0">
         </Component>
         <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bump="0">
         </Component>
@@ -52,14 +52,14 @@
     <Source name="Indexer.out_cloud">
       <sink>OctreeBuilder.in_cloud</sink>
       <sink>SIFTFeatureMatcher.in_jointCloud</sink>
-      <sink>Mapper.in_jointCloud</sink>
+      <!-- <sink>Mapper.in_jointCloud</sink> -->
     </Source>
     <Source name="OctreeBuilder.out_octree">
       <sink>NetworkBuilder.in_octree</sink>
     </Source>
-    <Source name="Mapper.out_jointMultiplicity">
-      <sink>NetworkBuilder.in_jointMultiplicity</sink>
-    </Source>
+    <!-- <Source name="Mapper.out_jointMultiplicity"> -->
+      <!-- <sink>NetworkBuilder.in_jointMultiplicity</sink> -->
+      <!-- </Source> -->
 
     <Source name="InstanceReader.out_cloud_xyzsift">
       <sink>SIFTFeatureMatcher.in_instanceCloud</sink>

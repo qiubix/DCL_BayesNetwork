@@ -90,13 +90,14 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
   LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
-//  LOG(LDEBUG) << "instance size: " << instance.size();
+  LOG(LDEBUG) << "instance size: " << instance.size();
 
   //theNet = networks[0];
 
   Common::Timer timer;
   timer.restart();
 
+  LOG(LDEBUG) << "clearing evidence...";
   network -> clearEvidence();
 //  theNet.UpdateBeliefs();
 //  theNet.ClearAllEvidence();
