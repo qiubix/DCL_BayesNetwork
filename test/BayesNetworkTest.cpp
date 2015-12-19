@@ -219,6 +219,13 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName
 
 TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  handle = net.FindNode("F_1");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  net.UpdateBeliefs();
+  network.setNetwork(net);
 
   double probability = network.getNodeProbability("V_0");
   ASSERT_THAT(probability, Eq(0.5));

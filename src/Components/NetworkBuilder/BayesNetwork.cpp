@@ -16,7 +16,13 @@ BayesNetwork::BayesNetwork()
 }
 
 double BayesNetwork::getNodeProbability(const std::string &name) {
-  return 0.5;
+  int nodeId = network.FindNode(name.c_str());
+  DSL_sysCoordinates theCoordinates(*network.GetNode(nodeId)->Value());
+  DSL_idArray *theNames = network.GetNode(nodeId)->Definition()->GetOutcomesNames();
+  theCoordinates[0] = theNames->FindPosition("YES");
+  theCoordinates.GoToCurrentPosition();
+  double probability = theCoordinates.UncheckedValue();
+  return probability;
 }
 
 void BayesNetwork::clearEvidence() {
@@ -201,6 +207,10 @@ void BayesNetwork::exportNetworkToFile()
 DSL_network BayesNetwork::getNetwork()
 {
   return network;
+}
+
+void BayesNetwork::setNetwork(DSL_network network) {
+  this->network = network;
 }
 
 void BayesNetwork::addNode(std::string name)

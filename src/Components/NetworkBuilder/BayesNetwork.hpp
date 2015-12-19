@@ -51,6 +51,7 @@ public:
   //exporting network
   void exportNetworkToFile();
   DSL_network getNetwork();
+  void setNetwork(DSL_network network);
 
 private:
   DSL_network network;
