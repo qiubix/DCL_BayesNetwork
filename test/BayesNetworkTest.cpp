@@ -230,3 +230,9 @@ TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
   double probability = network.getNodeProbability("V_0");
   ASSERT_THAT(probability, Eq(0.5));
 }
+
+TEST_F(BayesNetworkTest, shouldReturnTrueForExistingNode) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  ASSERT_THAT(network.nodeExists("V_0"), Eq(true));
+}

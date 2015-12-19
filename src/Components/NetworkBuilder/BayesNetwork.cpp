@@ -30,7 +30,7 @@ void BayesNetwork::clearEvidence() {
 }
 
 bool BayesNetwork::nodeExists(const std::string &nodeName) {
-  return false;
+  return true;
 }
 
 void BayesNetwork::setNodeEvidence(const std::string &nodeName, int state) {
