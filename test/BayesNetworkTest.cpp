@@ -217,3 +217,9 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName
   EXPECT_THROW(network.createFeatureName(-1), UnableToCreateNodeNameWithThisIdException);
 }
 
+TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  double probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Eq(0.5));
+}

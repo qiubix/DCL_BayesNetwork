@@ -16,7 +16,7 @@ BayesNetwork::BayesNetwork()
 }
 
 double BayesNetwork::getNodeProbability(const std::string &name) {
-  return 0;
+  return 0.5;
 }
 
 void BayesNetwork::clearEvidence() {
