@@ -236,3 +236,9 @@ TEST_F(BayesNetworkTest, shouldReturnTrueForExistingNode) {
 
   ASSERT_THAT(network.nodeExists("V_0"), Eq(true));
 }
+
+TEST_F(BayesNetworkTest, shouldReturnFalseForNonExistingNode) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  ASSERT_THAT(network.nodeExists("V_7"), Eq(false));
+}
