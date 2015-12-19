@@ -15,6 +15,26 @@ BayesNetwork::BayesNetwork()
   nextRootNodePosition = 0;
 }
 
+double BayesNetwork::getNodeProbability(const std::string &name) {
+  return 0;
+}
+
+void BayesNetwork::clearEvidence() {
+  network.ClearAllEvidence();
+}
+
+bool BayesNetwork::nodeExists(const std::string &nodeName) {
+  return false;
+}
+
+void BayesNetwork::setNodeEvidence(const std::string &nodeName, int state) {
+
+}
+
+void BayesNetwork::propagateProbabilities() {
+
+}
+
 bool BayesNetwork::isEmpty()
 {
   return network.GetNumberOfNodes() == 0;
