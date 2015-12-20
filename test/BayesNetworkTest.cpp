@@ -258,3 +258,15 @@ TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
   probability = network.getNodeProbability("V_0");
   ASSERT_THAT(probability, Eq(0.5));
 }
+
+TEST_F(BayesNetworkTest, shouldSetNodeEvidence) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  int STATE = 0;
+
+  network.setNodeEvidence("F_0", STATE);
+
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  int evidence = net.GetNode(handle)->Value()->GetEvidence();
+  ASSERT_THAT(evidence, Eq(STATE));
+}
