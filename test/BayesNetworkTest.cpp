@@ -2,6 +2,7 @@
 using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
+using ::testing::Ne;
 
 #include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
 #include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
@@ -241,4 +242,19 @@ TEST_F(BayesNetworkTest, shouldReturnFalseForNonExistingNode) {
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
 
   ASSERT_THAT(network.nodeExists("V_7"), Eq(false));
+}
+
+TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  network.setNetwork(net);
+  double probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Ne(0.5));
+
+  network.propagateProbabilities();
+
+  probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Eq(0.5));
 }

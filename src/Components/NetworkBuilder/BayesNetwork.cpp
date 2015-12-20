@@ -39,7 +39,7 @@ void BayesNetwork::setNodeEvidence(const std::string &nodeName, int state) {
 }
 
 void BayesNetwork::propagateProbabilities() {
-
+  network.UpdateBeliefs();
 }
 
 bool BayesNetwork::isEmpty()
