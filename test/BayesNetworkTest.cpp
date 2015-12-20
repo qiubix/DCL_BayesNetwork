@@ -261,7 +261,7 @@ TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
 
 TEST_F(BayesNetworkTest, shouldSetNodeEvidence) {
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
-  int STATE = 0;
+  int STATE = 1;
 
   network.setNodeEvidence("F_0", STATE);
 
