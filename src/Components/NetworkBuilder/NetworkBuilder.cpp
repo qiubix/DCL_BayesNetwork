@@ -262,7 +262,7 @@ void NetworkBuilder::exportNetwork()
   //std::vector<DSL_network> networks;
   std::vector<AbstractNetwork*> networks;
   //networks.push_back(network.getNetwork());
-  networks.push_back(network);
+  networks.push_back(&network);
   out_networks.write(networks);
   //out_network.write(network.getNetwork());
 }

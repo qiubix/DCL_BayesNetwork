@@ -96,7 +96,8 @@ public:
   std::vector <int> instance;
   std::vector <double> hypothesesProbabilities;
 
-  std::vector<DSL_network> networks;
+  //std::vector<DSL_network> networks;
+  std::vector<AbstractNetwork*> networks;
   DSL_network theNet;
   AbstractNetwork* network;
 
