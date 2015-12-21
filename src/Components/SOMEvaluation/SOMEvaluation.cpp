@@ -108,7 +108,7 @@ void SOMEvaluation::evaluate()
   network -> propagateProbabilities();
   //theNet.UpdateBeliefs();
 
-//  displayHypothesisProbability();
+  displayHypothesisProbability();
 
   LOG(LINFO) << " runtime: " << timer.elapsed();
   LOG(LDEBUG) << "SOMEvaluation finished";
@@ -171,8 +171,8 @@ void SOMEvaluation::displayHypothesisProbability(int modelId)
   //string nodeName = "H_" + modelId;
   string nodeName = "V_0";
   LOG(LTRACE) << "Display probability of hypothesis: " << nodeName;
-  int hypothesis = theNet.FindNode(nodeName.c_str());
-  double hypothesisProbability = getNodeProbability(hypothesis);
+  //int hypothesis = theNet.FindNode(nodeName.c_str());
+  double hypothesisProbability = getNodeProbability(0);
 
   LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
 
