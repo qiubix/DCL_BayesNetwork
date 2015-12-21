@@ -7,8 +7,7 @@
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
 #include "../../Types/PointXYZSIFT.hpp"
-
-#include "OctreeContainers.hpp"
+#include "../../Types/OctreeContainers.hpp"
 
 namespace Processors {
 namespace Network {

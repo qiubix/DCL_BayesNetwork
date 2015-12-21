@@ -2,6 +2,7 @@
 using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
+using ::testing::Ne;
 
 #include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
 #include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
@@ -95,20 +96,20 @@ class BayesNetworkTest : public Test {
 TEST_F(BayesNetworkTest, shouldCreateEmptyNetwork)
 {
   BayesNetwork network;
-  EXPECT_TRUE(network.isEmpty());
+  EXPECT_THAT(network.isEmpty(), Eq(true));
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfNodesInNetwork)
 {
   BayesNetwork network;
   int numberOfNodes = network.getNumberOfNodes();
-  EXPECT_EQ(0, numberOfNodes);
+  EXPECT_THAT(numberOfNodes, Eq(0));
 }
 
 TEST_F(BayesNetworkTest, shouldCheckIfNetworkHasNode)
 {
   BayesNetwork newNetwork;
-  ASSERT_FALSE(newNetwork.hasNode(FIRST_NODE_NAME));
+  ASSERT_THAT(newNetwork.hasNode(FIRST_NODE_NAME), Eq(false));
 }
 
 TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
@@ -117,8 +118,8 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 
   newNetwork.addVoxelNode(FIRST_NODE_ID);
 
-  ASSERT_TRUE(newNetwork.hasNode(FIRST_NODE_NAME));
-  ASSERT_EQ(1, newNetwork.getNumberOfNodes());
+  ASSERT_THAT(newNetwork.hasNode(FIRST_NODE_NAME), Eq(true));
+  ASSERT_THAT(newNetwork.getNumberOfNodes(), Eq(1));
 }
 
 TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
@@ -126,12 +127,12 @@ TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
 
   network.addVoxelNode(SECOND_NODE_ID);
-  EXPECT_TRUE(network.hasNode(SECOND_NODE_NAME));
-  ASSERT_EQ(4, network.getNumberOfNodes());
+  EXPECT_THAT(network.hasNode(SECOND_NODE_NAME), Eq(true));
+  ASSERT_THAT(network.getNumberOfNodes(), Eq(4));
 
   network.addFeatureNode(2);
-  EXPECT_TRUE(network.hasNode("F_2"));
-  ASSERT_EQ(5, network.getNumberOfNodes());
+  EXPECT_THAT(network.hasNode("F_2"), Eq(true));
+  ASSERT_THAT(network.getNumberOfNodes(), Eq(5));
 }
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfFeatureNodesInNetwork)
@@ -156,25 +157,25 @@ TEST_F(BayesNetworkTest, shouldConnectTwoNodes)
 
   int numberOfChildren = getNumberOfChildren(FIRST_NODE_NAME);
   int numberOfParents = getNumberOfParents(SECOND_NODE_NAME);
-  ASSERT_EQ(0, numberOfChildren);
-  ASSERT_EQ(0, numberOfParents);
+  ASSERT_THAT(numberOfChildren, Eq(0));
+  ASSERT_THAT(numberOfParents, Eq(0));
 
   int parentCPTSize = getCPTSize(FIRST_NODE_NAME);
   int childCPTSize = getCPTSize(SECOND_NODE_NAME);
-  ASSERT_EQ(2, parentCPTSize);
-  ASSERT_EQ(2, childCPTSize);
+  ASSERT_THAT(parentCPTSize, Eq(2));
+  ASSERT_THAT(childCPTSize, Eq(2));
 
   network->connectNodes(FIRST_NODE_NAME, SECOND_NODE_NAME);
 
   numberOfChildren = getNumberOfChildren(FIRST_NODE_NAME);
   numberOfParents = getNumberOfParents(SECOND_NODE_NAME);
-  EXPECT_EQ(1, numberOfChildren);
-  EXPECT_EQ(1, numberOfParents);
+  EXPECT_THAT(numberOfChildren, Eq(1));
+  EXPECT_THAT(numberOfParents, Eq(1));
 
   parentCPTSize = getCPTSize(FIRST_NODE_NAME);
   childCPTSize = getCPTSize(SECOND_NODE_NAME);
-  EXPECT_EQ(2, parentCPTSize);
-  EXPECT_EQ(4, childCPTSize);
+  EXPECT_THAT(parentCPTSize, Eq(2));
+  EXPECT_THAT(childCPTSize, Eq(4));
 }
 
 //TODO: split this test
@@ -206,7 +207,7 @@ TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
 {
   BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
   int numberOfChildren = network.getNumberOfChildren("V_0");
-  ASSERT_EQ(2, numberOfChildren);
+  ASSERT_THAT(numberOfChildren, Eq(2));
 }
 
 TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName)
@@ -217,3 +218,55 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName
   EXPECT_THROW(network.createFeatureName(-1), UnableToCreateNodeNameWithThisIdException);
 }
 
+TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  handle = net.FindNode("F_1");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  net.UpdateBeliefs();
+  network.setNetwork(net);
+
+  double probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Eq(0.5));
+}
+
+TEST_F(BayesNetworkTest, shouldReturnTrueForExistingNode) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  ASSERT_THAT(network.nodeExists("V_0"), Eq(true));
+}
+
+TEST_F(BayesNetworkTest, shouldReturnFalseForNonExistingNode) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  ASSERT_THAT(network.nodeExists("V_7"), Eq(false));
+}
+
+TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  network.setNetwork(net);
+  double probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Ne(0.5));
+
+  network.propagateProbabilities();
+
+  probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Eq(0.5));
+}
+
+TEST_F(BayesNetworkTest, shouldSetNodeEvidence) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  int STATE = 1;
+
+  network.setNodeEvidence("F_0", STATE);
+
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  int evidence = net.GetNode(handle)->Value()->GetEvidence();
+  ASSERT_THAT(evidence, Eq(STATE));
+}

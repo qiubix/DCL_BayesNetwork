@@ -6,9 +6,7 @@
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
+#include "PointXYZSIFT.hpp"
 
 #include "OctreeContainers.hpp"
 
@@ -24,6 +22,9 @@ public:
   ~Octree();
 
   void init();
+  int getNumberOfPoints();
+  bool empty();
+  PointXYZSIFT getPoint(unsigned int id);
 
   class DepthFirstIterator {
   public:

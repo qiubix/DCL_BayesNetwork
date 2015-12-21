@@ -6,7 +6,7 @@ using ::testing::Test;
 #include <pcl/point_cloud.h>
 //#include <pcl/io/pcd_io.h>
 
-#include "../src/Components/NetworkBuilder/Octree.hpp"
+#include "../src/Types/Octree.hpp"
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
@@ -20,6 +20,7 @@ public:
     cloud->width = 1;
     cloud->height = 1;
     cloud->points.resize(cloud->width * cloud->height);
+    cloud->points[0].pointId = 0;
     cloud->points[0].x = 0.1;
     cloud->points[0].y = 0.2;
     cloud->points[0].z = 0.3;
@@ -32,9 +33,11 @@ public:
     cloud->width = 2;
     cloud->height = 1;
     cloud->points.resize(cloud->width * cloud->height);
+    cloud->points[0].pointId = 0;
     cloud->points[0].x = 0.1;
     cloud->points[0].y = 0.2;
     cloud->points[0].z = 0.3;
+    cloud->points[1].pointId = 1;
     cloud->points[1].x = 1.1;
     cloud->points[1].y = 1.2;
     cloud->points[1].z = 1.3;
@@ -47,16 +50,22 @@ public:
 
 };
 
+TEST_F(OctreeTest, shouldReturnTrueForEmptyPointCloud) {
+  pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
+  Processors::Network::Octree octree(emptyCloud);
+  ASSERT_THAT(octree.empty(), Eq(true));
+}
+
 TEST_F(OctreeTest, shouldInitializeOctreeWithPointCloud) {
   PointCloud cloud = getPointCloudWithOnePoint();
   Processors::Network::Octree octree(cloud);
   octree.init();
 
   Processors::Network::Octree::OctreeWithSIFT octreeWithSIFT = octree.getOctreeWithSIFT();
-  EXPECT_EQ(1, octreeWithSIFT.getBranchCount());
-  EXPECT_EQ(1, octreeWithSIFT.getLeafCount());
-  EXPECT_EQ(0.01f, octreeWithSIFT.getResolution());
-  EXPECT_EQ(1, octreeWithSIFT.getTreeDepth());
+  EXPECT_THAT(octreeWithSIFT.getBranchCount(), Eq(1));
+  EXPECT_THAT(octreeWithSIFT.getLeafCount(), Eq(1));
+  EXPECT_THAT(octreeWithSIFT.getResolution(), Eq(0.01f));
+  EXPECT_THAT(octreeWithSIFT.getTreeDepth(), Eq(1));
 }
 
 TEST_F(OctreeTest, shouldGetFirstOctreeNode) {
@@ -66,8 +75,8 @@ TEST_F(OctreeTest, shouldGetFirstOctreeNode) {
 
   Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
 
-  ASSERT_TRUE(it->isBranchNode());
-  ASSERT_EQ(0, it->getCurrentOctreeDepth());
+  ASSERT_THAT(it->isBranchNode(), Eq(true));
+  ASSERT_THAT(it->getCurrentOctreeDepth(), Eq(0));
 }
 
 TEST_F(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
@@ -78,8 +87,8 @@ TEST_F(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
 
   ++it;
 
-  EXPECT_TRUE(it->isLeafNode());
-  EXPECT_EQ(1, it->getCurrentOctreeDepth());
+  EXPECT_THAT(it->isLeafNode(), Eq(true));
+  EXPECT_THAT(it->getCurrentOctreeDepth(), Eq(1));
 }
 
 TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
@@ -96,6 +105,31 @@ TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
     ++it;
   }
 
-  EXPECT_TRUE(it->isLeafNode());
-  EXPECT_EQ(7, it->getCurrentOctreeDepth());
+  EXPECT_THAT(it->isLeafNode(), Eq(true));
+  EXPECT_THAT(it->getCurrentOctreeDepth(), Eq(7));
+}
+
+TEST_F(OctreeTest, shouldGetNumberOfPointsInOctree) {
+  PointCloud cloud = getPointCloudWithTwoPoints();
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  
+  ASSERT_THAT(octree.getNumberOfPoints(), Eq(2));
+}
+
+TEST_F(OctreeTest, shouldGetSIFTPointById) {
+  PointCloud cloud = getPointCloudWithTwoPoints();
+  Processors::Network::Octree octree(cloud);
+  octree.init();
+  
+  PointXYZSIFT referencePoint;
+  referencePoint.pointId = 1;
+  referencePoint.x = 1.1;
+  referencePoint.y = 1.2;
+  referencePoint.z = 1.3;
+  for(int i=0; i<128; i++) {
+    referencePoint.descriptor[i] = i;
+  }
+  PointXYZSIFT cloudPoint = octree.getPoint(1);
+  ASSERT_THAT(cloudPoint.y, Eq(referencePoint.y));
 }

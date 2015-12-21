@@ -16,10 +16,10 @@ link_directories(${Boost_LIBRARY_DIRS})
 # TODO: remove another DCL dependencies
 # Find another DCLs our one depends on
 # Use macro: DISCODE_FIND_DCL(<DCL_NAME>)
-DISCODE_FIND_DCL(CvBasic)
-DISCODE_FIND_DCL(PCL)
-DISCODE_FIND_DCL(PCLCoreTypes)
-DISCODE_FIND_DCL(SIFTObjectModel)
+#DISCODE_FIND_DCL(CvBasic)
+#DISCODE_FIND_DCL(PCL)
+#DISCODE_FIND_DCL(PCLCoreTypes)
+#DISCODE_FIND_DCL(SIFTObjectModel)
 
 # ##############################################################################
 # Add source directories

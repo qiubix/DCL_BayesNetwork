@@ -16,9 +16,9 @@
 #include "Common/Timer.hpp"
 #include "NetworkBuilderExceptions.hpp"
 
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
 #include <boost/bind.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+//#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace Processors {
 namespace Network {
@@ -45,14 +45,16 @@ void NetworkBuilder::prepareInterface()
 
   // Register data streams.
   //registerStream("in_cloud", &in_cloud_xyz);
-  registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
+  registerStream("in_octree", &in_octree);
+//  registerStream("in_cloud_xyzsift", &in_cloud_xyzsift);
   registerStream("in_jointMultiplicity", &in_jointMultiplicity);
   // Register handlers
   registerHandler("onNewModel", boost::bind(&NetworkBuilder::onNewModel, this));
-  addDependency("onNewModel", &in_cloud_xyzsift);
+//  addDependency("onNewModel", &in_cloud_xyzsift);
+  addDependency("onNewModel", &in_octree);
 
   registerHandler("onJointMultiplicity", boost::bind(&NetworkBuilder::onJointMultiplicity, this));
-  addDependency("onJointMultiplicity", &in_jointMultiplicity);
+  //addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
   //registerStream("out_network", &out_network);
   registerStream("out_networks", &out_networks);
@@ -79,20 +81,32 @@ bool NetworkBuilder::onStop()
 void NetworkBuilder::onNewModel()
 {
   LOG(LTRACE) << "On new model";
-  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
-  cloudQueue.push(newCloud);
+//  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
+//  cloudQueue.push(newCloud);
+  Octree* newOctree = in_octree.read();
+  LOG(LDEBUG) << "Number of points in new model: " << newOctree -> getNumberOfPoints();
+  octreeQueue.push(newOctree);
+  Octree* octree = octreeQueue.top();
+  octreeQueue.pop();
+  buildNetwork(octree);
 }
 
 void NetworkBuilder::onJointMultiplicity()
 {
   LOG(LTRACE) << "On joint multiplicity";
   jointMultiplicityVector = in_jointMultiplicity.read();
-  if (cloudQueue.size() > 0) {
-    LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
-    cloudQueue.pop();
-    buildNetwork(cloud);
+  if (octreeQueue.size() > 0) {
+    LOG(LDEBUG) << "Size of octreeQueue: " << octreeQueue.size();
+    Octree* octree = octreeQueue.top();
+    octreeQueue.pop();
+    buildNetwork(octree);
   }
+//  if (cloudQueue.size() > 0) {
+//    LOG(LDEBUG) << "Size of cloudQueue: " << cloudQueue.size();
+//    pcl::PointCloud<PointXYZSIFT>::Ptr cloud = cloudQueue.top();
+//    cloudQueue.pop();
+//    buildNetwork(cloud);
+//  }
 }
 
 bool NetworkBuilder::onStart()
@@ -105,31 +119,27 @@ BayesNetwork NetworkBuilder::getNetwork() {
   return network;
 }
 
-void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
+void NetworkBuilder::buildNetwork(Octree* octree) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if( !network.isEmpty() ) {
     return;
   }
 
-  if (cloud->empty()) {
+  if (octree->empty()) {
     throw PointCloudIsEmptyException();
   }
-
-  //TODO: move outside build() method
-  Octree octree(cloud);
-  octree.init();
 
   LOG(LTRACE) << "Creating iterators...";
 
   // Use depth-first iterator
-  Octree::DepthFirstIterator dfIt = octree.depthBegin();
-  const Octree::DepthFirstIterator dfItEnd = octree.depthEnd();
+  Octree::DepthFirstIterator dfIt = octree->depthBegin();
+  const Octree::DepthFirstIterator dfItEnd = octree -> depthEnd();
 
   LOG(LTRACE) << "Creating nodes:";
 
   // Root node
-  addHypothesisNode(octree.depthBegin());
+  addHypothesisNode(octree -> depthBegin());
   ++dfIt;
 
   for (;dfIt != dfItEnd; ++dfIt) {
@@ -139,7 +149,7 @@ void NetworkBuilder::buildNetwork(pcl::PointCloud<PointXYZSIFT>::Ptr cloud) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
       createNode(&leafNode);
-      createLeafNodeChildren(leafNode, cloud);
+      createLeafNodeChildren(leafNode, octree);
     }
     else if (node.getNodeType() == OCTREE_BRANCH_NODE) {
       LOG(LDEBUG) << "Entering octree branch node.";
@@ -200,7 +210,7 @@ void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointCloud<PointXYZSIFT>::Ptr cloud)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
@@ -222,8 +232,9 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, pcl::PointC
   for(unsigned int i=0; i<childrenCounter; i++)
   {
     LOG(LTRACE) << "Creating child number " << i;
-    PointXYZSIFT p = cloud->at(point_indices[i]);
-    logPoint(p, point_indices[i]);
+    unsigned int pointId = point_indices[i];
+    PointXYZSIFT p = octree -> getPoint(pointId);
+    logPoint(p, pointId);
     int featureId = p.pointId;
     network.addFeatureNode(featureId);
     string featureName = network.createFeatureName(featureId);
@@ -248,8 +259,10 @@ void NetworkBuilder::exportNetwork()
   LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
   LOG(LDEBUG) << "after writing network to file";
-  std::vector<DSL_network> networks;
-  networks.push_back(network.getNetwork());
+  //std::vector<DSL_network> networks;
+  std::vector<AbstractNetwork*> networks;
+  //networks.push_back(network.getNetwork());
+  networks.push_back(&network);
   out_networks.write(networks);
   //out_network.write(network.getNetwork());
 }

@@ -8,14 +8,21 @@
 #include "../../../lib/SMILE/smile.h"
 
 #include "BayesNetworkNode.hpp"
+#include "AbstractNetwork.hpp"
 
 namespace Processors {
 namespace Network {
 
-class BayesNetwork {
+class BayesNetwork : public AbstractNetwork {
 public:
   BayesNetwork();
   ~BayesNetwork() {}
+
+  double getNodeProbability(const std::string& name);
+  void clearEvidence();
+  bool nodeExists(const std::string& nodeName);
+  void setNodeEvidence(const std::string& nodeName, int state);
+  void propagateProbabilities();
 
   bool isEmpty();
   bool hasNode(const char* nodeName);
@@ -44,6 +51,7 @@ public:
   //exporting network
   void exportNetworkToFile();
   DSL_network getNetwork();
+  void setNetwork(DSL_network network);
 
 private:
   DSL_network network;

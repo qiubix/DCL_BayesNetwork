@@ -1,1 +1,11 @@
-- kolejnosc stanow w feature node
++ kolejnosc stanow w feature node
+- remove dependencies in tests
+- add mocks
+- change matchers and asserts
+- cleanup tests
+- encapsulate types in classes
+- test evaluators
+- change feature id mapping
+- reevaluate indices concept
+- decrease cross-component dependencies
+- implement acceptance tests

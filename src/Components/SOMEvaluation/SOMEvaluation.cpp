@@ -74,13 +74,14 @@ void SOMEvaluation::onNetwork()
 {
   LOG(LWARNING) << "SOMEvaluation::onNetwork";
   networks = in_networks.read();
-  theNet = networks[0];
+  //theNet = networks[0];
+  setNetwork(networks[0]);
 }
 
 void SOMEvaluation::onInstance()
 {
   LOG(LDEBUG) << "SOMEvaluation::onInstance";
-  if(theNet.GetNumberOfNodes() != 0) {
+  if( ! network -> isEmpty()) {
     LOG(LDEBUG) << "There is a network ready to be evaluated";
     instance = in_instanceMatchedFeatures.read();
     evaluate();
@@ -97,11 +98,14 @@ void SOMEvaluation::evaluate()
   Common::Timer timer;
   timer.restart();
 
-  theNet.UpdateBeliefs();
-  theNet.ClearAllEvidence();
-  theNet.UpdateBeliefs();
+  LOG(LDEBUG) << "clearing evidence...";
+  network -> clearEvidence();
+//  theNet.UpdateBeliefs();
+//  theNet.ClearAllEvidence();
+//  theNet.UpdateBeliefs();
   deactivateFeatures();
   activateMatchedFeatureNodes();
+  network -> propagateProbabilities();
   //theNet.UpdateBeliefs();
 
   displayHypothesisProbability();
@@ -118,12 +122,15 @@ void SOMEvaluation::deactivateFeatures()
     std::stringstream ss;
     ss << "F_" << nodeId;
     std::string nodeName(ss.str());
-    int node = theNet.FindNode(nodeName.c_str());
-    if(node != DSL_OUT_OF_RANGE) {
-      LOG(LWARNING) << "Deactivating node " << nodeName;
-      theNet.GetNode(node)->Value()->SetEvidence(1);
-      theNet.UpdateBeliefs();
+    if ( network -> nodeExists(nodeName) ) {
+      network -> setNodeEvidence(nodeName, 0);
     }
+//    int node = theNet.FindNode(nodeName.c_str());
+//    if(node != DSL_OUT_OF_RANGE) {
+//      LOG(LWARNING) << "Deactivating node " << nodeName;
+//      theNet.GetNode(node)->Value()->SetEvidence(0);
+//      theNet.UpdateBeliefs();
+//    }
     else {
       break;
     }
@@ -134,7 +141,12 @@ void SOMEvaluation::deactivateFeatures()
 void SOMEvaluation::activateMatchedFeatureNodes()
 {
   LOG(LTRACE) << "Activating matched feature nodes";
-  for (unsigned i=0; i<instance.size(); ++i) {
+  for (unsigned i =0; i <instance.size(); ++i) {
+    std::stringstream ss;
+    ss << "F_" << instance[i];
+    std::string nodeName(ss.str());
+    network -> setNodeEvidence(nodeName, 1);
+    /*
     int node = findFeatureNode(instance[i]);
     LOG(LDEBUG) << "Observing node: nodeId = " << node << " point id: " << instance[i];
     if(node != DSL_OUT_OF_RANGE) {
@@ -145,9 +157,10 @@ void SOMEvaluation::activateMatchedFeatureNodes()
       LOG(LWARNING) << "children " << theNet.NumChildren(node);
       LOG(LWARNING) << "parents " << theNet.NumParents(node);
       //LOG(LWARNING) << "parents " << theNet.GetNode(node)->Parents().GetSize();
-      theNet.GetNode(node)->Value()->SetEvidence(0);
+      theNet.GetNode(node)->Value()->SetEvidence(1);
       theNet.UpdateBeliefs();
     }
+     */
   }
   LOG(LDEBUG) << "Finished activating matched features";
 }
@@ -158,8 +171,8 @@ void SOMEvaluation::displayHypothesisProbability(int modelId)
   //string nodeName = "H_" + modelId;
   string nodeName = "V_0";
   LOG(LTRACE) << "Display probability of hypothesis: " << nodeName;
-  int hypothesis = theNet.FindNode(nodeName.c_str());
-  double hypothesisProbability = getNodeProbability(hypothesis);
+  //int hypothesis = theNet.FindNode(nodeName.c_str());
+  double hypothesisProbability = getNodeProbability(0);
 
   LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
 
@@ -177,13 +190,23 @@ int SOMEvaluation::findFeatureNode(int nodeId)
 
 double SOMEvaluation::getNodeProbability(int nodeId)
 {
-  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
-  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
-  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
-  theCoordinates[0] = theNames->FindPosition("YES");
-  theCoordinates.GoToCurrentPosition();
-  double probability = theCoordinates.UncheckedValue();
+//  LOG(LTRACE) << "Get probability of node with id = " << nodeId;
+//  DSL_sysCoordinates theCoordinates(*theNet.GetNode(nodeId)->Value());
+//  DSL_idArray *theNames = theNet.GetNode(nodeId)->Definition()->GetOutcomesNames();
+//  theCoordinates[0] = theNames->FindPosition("YES");
+//  theCoordinates.GoToCurrentPosition();
+//  double probability = theCoordinates.UncheckedValue();
+  double probability = network -> getNodeProbability("V_0");
   return probability;
+}
+
+void SOMEvaluation::setNetwork(AbstractNetwork* network)
+{
+  this -> network = network;
+}
+
+void SOMEvaluation::setInstance(std::vector<int> instance) {
+  this -> instance = instance;
 }
 
 }//: namespace Network
