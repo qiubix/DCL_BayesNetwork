@@ -37,7 +37,7 @@ bool BayesNetwork::nodeExists(const std::string &nodeName) {
 void BayesNetwork::setNodeEvidence(const std::string &nodeName, int state) {
     int node = network.FindNode(nodeName.c_str());
     if(node != DSL_OUT_OF_RANGE) {
-      LOG(LWARNING) << "Deactivating node " << nodeName;
+      LOG(LWARNING) << "Setting state of node " << nodeName << " to " << state;
       network.GetNode(node)->Value()->SetEvidence(state);
     }
 }

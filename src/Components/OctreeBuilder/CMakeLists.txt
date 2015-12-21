@@ -5,7 +5,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
-add_library(procOctreeBuilder SHARED ${files})
-target_link_libraries(procOctreeBuilder BayesNetworkTypes ${DisCODe_LIBRARIES} ${PCL_LIBS} ${Boost_LIBRARIES})
+add_library(OctreeBuilder SHARED ${files})
+target_link_libraries(OctreeBuilder BayesNetworkTypes ${DisCODe_LIBRARIES} ${PCL_LIBS} ${Boost_LIBRARIES})
 
-INSTALL_COMPONENT(procOctreeBuilder)
+INSTALL_COMPONENT(OctreeBuilder)

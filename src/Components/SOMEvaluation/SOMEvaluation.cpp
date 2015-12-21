@@ -74,13 +74,14 @@ void SOMEvaluation::onNetwork()
 {
   LOG(LWARNING) << "SOMEvaluation::onNetwork";
   networks = in_networks.read();
-  theNet = networks[0];
+  //theNet = networks[0];
+  setNetwork(networks[0]);
 }
 
 void SOMEvaluation::onInstance()
 {
   LOG(LDEBUG) << "SOMEvaluation::onInstance";
-  if(theNet.GetNumberOfNodes() != 0) {
+  if( ! network -> isEmpty()) {
     LOG(LDEBUG) << "There is a network ready to be evaluated";
     instance = in_instanceMatchedFeatures.read();
     evaluate();
@@ -90,13 +91,14 @@ void SOMEvaluation::onInstance()
 void SOMEvaluation::evaluate()
 {
   LOG(LDEBUG) << "================= SOMEvaluation: evaluate =================";
-//  LOG(LDEBUG) << "instance size: " << instance.size();
+  LOG(LDEBUG) << "instance size: " << instance.size();
 
   //theNet = networks[0];
 
   Common::Timer timer;
   timer.restart();
 
+  LOG(LDEBUG) << "clearing evidence...";
   network -> clearEvidence();
 //  theNet.UpdateBeliefs();
 //  theNet.ClearAllEvidence();
@@ -106,7 +108,7 @@ void SOMEvaluation::evaluate()
   network -> propagateProbabilities();
   //theNet.UpdateBeliefs();
 
-//  displayHypothesisProbability();
+  displayHypothesisProbability();
 
   LOG(LINFO) << " runtime: " << timer.elapsed();
   LOG(LDEBUG) << "SOMEvaluation finished";
@@ -169,8 +171,8 @@ void SOMEvaluation::displayHypothesisProbability(int modelId)
   //string nodeName = "H_" + modelId;
   string nodeName = "V_0";
   LOG(LTRACE) << "Display probability of hypothesis: " << nodeName;
-  int hypothesis = theNet.FindNode(nodeName.c_str());
-  double hypothesisProbability = getNodeProbability(hypothesis);
+  //int hypothesis = theNet.FindNode(nodeName.c_str());
+  double hypothesisProbability = getNodeProbability(0);
 
   LOG(LWARNING) << "Hypothesis probability: " << hypothesisProbability;
 

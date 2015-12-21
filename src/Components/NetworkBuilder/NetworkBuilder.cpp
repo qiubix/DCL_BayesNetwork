@@ -54,7 +54,7 @@ void NetworkBuilder::prepareInterface()
   addDependency("onNewModel", &in_octree);
 
   registerHandler("onJointMultiplicity", boost::bind(&NetworkBuilder::onJointMultiplicity, this));
-  addDependency("onJointMultiplicity", &in_jointMultiplicity);
+  //addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
   //registerStream("out_network", &out_network);
   registerStream("out_networks", &out_networks);
@@ -84,7 +84,11 @@ void NetworkBuilder::onNewModel()
 //  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
 //  cloudQueue.push(newCloud);
   Octree* newOctree = in_octree.read();
+  LOG(LDEBUG) << "Number of points in new model: " << newOctree -> getNumberOfPoints();
   octreeQueue.push(newOctree);
+  Octree* octree = octreeQueue.top();
+  octreeQueue.pop();
+  buildNetwork(octree);
 }
 
 void NetworkBuilder::onJointMultiplicity()
@@ -255,8 +259,10 @@ void NetworkBuilder::exportNetwork()
   LOG(LDEBUG) << "before writing network to file";
   network.exportNetworkToFile();
   LOG(LDEBUG) << "after writing network to file";
-  std::vector<DSL_network> networks;
-  networks.push_back(network.getNetwork());
+  //std::vector<DSL_network> networks;
+  std::vector<AbstractNetwork*> networks;
+  //networks.push_back(network.getNetwork());
+  networks.push_back(&network);
   out_networks.write(networks);
   //out_network.write(network.getNetwork());
 }

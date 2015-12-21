@@ -17,6 +17,7 @@ class MockNetwork : public AbstractNetwork
 public:
   MOCK_METHOD1(getNodeProbability, double(const std::string&));
   MOCK_METHOD0(clearEvidence, void());
+  MOCK_METHOD0(isEmpty, bool());
   MOCK_METHOD2(setNodeEvidence, void(const std::string&, int));
   MOCK_METHOD1(nodeExists, bool(const std::string&));
   MOCK_METHOD0(propagateProbabilities, void());

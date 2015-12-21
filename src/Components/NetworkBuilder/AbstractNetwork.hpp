@@ -6,6 +6,7 @@ class AbstractNetwork
 public:
   virtual ~AbstractNetwork(){};
 
+  virtual bool isEmpty() = 0;
   virtual double getNodeProbability(const std::string& name) = 0;
   virtual void clearEvidence() = 0;
   virtual bool nodeExists(const std::string& nodeName) = 0;

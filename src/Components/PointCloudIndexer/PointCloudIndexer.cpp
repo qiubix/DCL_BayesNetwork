@@ -21,7 +21,7 @@ PointCloudIndexer::~PointCloudIndexer() {
 void PointCloudIndexer::prepareInterface() {
   LOG(LTRACE) << "PointCloudIndexer::prepareInterface\n";
   registerStream("in_cloud", &in_cloud);
-  registerStream("out_octree", &out_cloud);
+  registerStream("out_cloud", &out_cloud);
   registerHandler("onNewCloud", boost::bind(&PointCloudIndexer::onNewCloud, this));
   addDependency("onNewCloud", &in_cloud);
 }
