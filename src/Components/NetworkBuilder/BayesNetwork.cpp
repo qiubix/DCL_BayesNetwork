@@ -15,6 +15,37 @@ BayesNetwork::BayesNetwork()
   nextRootNodePosition = 0;
 }
 
+double BayesNetwork::getNodeProbability(const std::string &name) {
+  int nodeId = network.FindNode(name.c_str());
+  DSL_sysCoordinates theCoordinates(*network.GetNode(nodeId)->Value());
+  DSL_idArray *theNames = network.GetNode(nodeId)->Definition()->GetOutcomesNames();
+  theCoordinates[0] = theNames->FindPosition("YES");
+  theCoordinates.GoToCurrentPosition();
+  double probability = theCoordinates.UncheckedValue();
+  return probability;
+}
+
+void BayesNetwork::clearEvidence() {
+  network.ClearAllEvidence();
+}
+
+bool BayesNetwork::nodeExists(const std::string &nodeName) {
+  int node = network.FindNode(nodeName.c_str());
+  return node != DSL_OUT_OF_RANGE;
+}
+
+void BayesNetwork::setNodeEvidence(const std::string &nodeName, int state) {
+    int node = network.FindNode(nodeName.c_str());
+    if(node != DSL_OUT_OF_RANGE) {
+      LOG(LWARNING) << "Deactivating node " << nodeName;
+      network.GetNode(node)->Value()->SetEvidence(state);
+    }
+}
+
+void BayesNetwork::propagateProbabilities() {
+  network.UpdateBeliefs();
+}
+
 bool BayesNetwork::isEmpty()
 {
   return network.GetNumberOfNodes() == 0;
@@ -181,6 +212,10 @@ void BayesNetwork::exportNetworkToFile()
 DSL_network BayesNetwork::getNetwork()
 {
   return network;
+}
+
+void BayesNetwork::setNetwork(DSL_network network) {
+  this->network = network;
 }
 
 void BayesNetwork::addNode(std::string name)

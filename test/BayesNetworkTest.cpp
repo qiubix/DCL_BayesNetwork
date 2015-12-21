@@ -2,6 +2,7 @@
 using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
+using ::testing::Ne;
 
 #include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
 #include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
@@ -217,3 +218,55 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName
   EXPECT_THROW(network.createFeatureName(-1), UnableToCreateNodeNameWithThisIdException);
 }
 
+TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  handle = net.FindNode("F_1");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  net.UpdateBeliefs();
+  network.setNetwork(net);
+
+  double probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Eq(0.5));
+}
+
+TEST_F(BayesNetworkTest, shouldReturnTrueForExistingNode) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  ASSERT_THAT(network.nodeExists("V_0"), Eq(true));
+}
+
+TEST_F(BayesNetworkTest, shouldReturnFalseForNonExistingNode) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  ASSERT_THAT(network.nodeExists("V_7"), Eq(false));
+}
+
+TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  net.GetNode(handle)->Value()->SetEvidence(0);
+  network.setNetwork(net);
+  double probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Ne(0.5));
+
+  network.propagateProbabilities();
+
+  probability = network.getNodeProbability("V_0");
+  ASSERT_THAT(probability, Eq(0.5));
+}
+
+TEST_F(BayesNetworkTest, shouldSetNodeEvidence) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  int STATE = 1;
+
+  network.setNodeEvidence("F_0", STATE);
+
+  DSL_network net = network.getNetwork();
+  int handle = net.FindNode("F_0");
+  int evidence = net.GetNode(handle)->Value()->GetEvidence();
+  ASSERT_THAT(evidence, Eq(STATE));
+}
