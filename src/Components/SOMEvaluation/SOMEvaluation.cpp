@@ -81,7 +81,7 @@ void SOMEvaluation::onNetwork()
 void SOMEvaluation::onInstance()
 {
   LOG(LDEBUG) << "SOMEvaluation::onInstance";
-  if(theNet.GetNumberOfNodes() != 0) {
+  if( ! network -> isEmpty()) {
     LOG(LDEBUG) << "There is a network ready to be evaluated";
     instance = in_instanceMatchedFeatures.read();
     evaluate();
