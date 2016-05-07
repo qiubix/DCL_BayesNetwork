@@ -1,4 +1,5 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 function(create_test name src libs)
   add_executable(${name} ${src})

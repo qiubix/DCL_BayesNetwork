@@ -6,12 +6,10 @@ using ::testing::Test;
 #include <pcl/point_cloud.h>
 //#include <pcl/io/pcd_io.h>
 
-#include "../src/Components/OctreeBuilder/OctreeBuilder.hpp"
+#include "Components/OctreeBuilder/OctreeBuilder.hpp"
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../src/Types/PointXYZSIFT.hpp"
-#include "../src/Types/Octree.hpp"
+#include "Types/PointXYZSIFT.hpp"
+#include "Types/Octree.hpp"
 
 using Processors::Network::OctreeBuilder;
 

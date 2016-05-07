@@ -8,9 +8,7 @@ using ::testing::Test;
 
 #include "../src/Components/PointCloudIndexer/PointCloudIndexer.hpp"
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../src/Types/PointXYZSIFT.hpp"
+#include "Types/PointXYZSIFT.hpp"
 
 using Processors::Network::PointCloudIndexer;
 

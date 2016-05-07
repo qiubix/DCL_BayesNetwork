@@ -4,9 +4,9 @@ using ::testing::Eq;
 using ::testing::Test;
 
 //#include <pcl/io/pcd_io.h>
-#include "../src/Components/NetworkBuilder/NetworkBuilder.hpp"
-#include "../src/Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
-#include "../src/Components/NetworkBuilder/CPTManager.hpp"
+#include "Components/NetworkBuilder/NetworkBuilder.hpp"
+#include "Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
+#include "Components/NetworkBuilder/CPTManager.hpp"
 
 using Processors::Network::Octree;
 

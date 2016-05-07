@@ -6,11 +6,8 @@ using ::testing::Test;
 #include <pcl/point_cloud.h>
 //#include <pcl/io/pcd_io.h>
 
-#include "../src/Types/Octree.hpp"
-
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../src/Types/PointXYZSIFT.hpp"
+#include "Types/Octree.hpp"
+#include "Types/PointXYZSIFT.hpp"
 
 class OctreeTest : public Test {
 public:

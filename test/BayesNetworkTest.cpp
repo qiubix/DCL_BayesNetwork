@@ -4,9 +4,9 @@ using ::testing::Eq;
 using ::testing::Test;
 using ::testing::Ne;
 
-#include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
-#include "../src/Components/NetworkBuilder/BayesNetworkNode.hpp"
-#include "../src/Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+#include "Components/NetworkBuilder/BayesNetwork.hpp"
+#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
+#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
 
 using namespace Processors::Network;
 

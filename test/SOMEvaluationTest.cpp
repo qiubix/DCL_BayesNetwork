@@ -6,9 +6,9 @@ using ::testing::Test;
 using ::testing::Return;
 using ::testing::NiceMock;
 
-#include "../src/Components/SOMEvaluation/SOMEvaluation.hpp"
-#include "../src/Components/NetworkBuilder/BayesNetwork.hpp"
-#include "../src/Components/NetworkBuilder/AbstractNetwork.hpp"
+#include "Components/SOMEvaluation/SOMEvaluation.hpp"
+#include "Components/NetworkBuilder/BayesNetwork.hpp"
+#include "Components/NetworkBuilder/AbstractNetwork.hpp"
 
 using Processors::Network::SOMEvaluation;
 
