@@ -63,14 +63,27 @@ TEST_F(OctreeBuilderTest, shouldAcceptPointCloudWithSIFT) {
   ASSERT_THAT(numberOfPoints, Eq(1));
 }
 
-TEST_F(OctreeBuilderTest, shouldReturnOctreeWithThreePoints) {
+TEST_F(OctreeBuilderTest, shouldReturnOctreeWithSameNumberOfPointsAsPointCloud) {
   OctreeBuilder builder("builder");
-  builder.setPointCloud(getPointCloudWithThreePoints());
+  PointCloud pointCloud = getPointCloudWithThreePoints();
+  builder.setPointCloud(pointCloud);
 
   builder.buildOctree();
 
   Processors::Network::Octree octree = builder.getOctree();
-  ASSERT_THAT(octree.getNumberOfPoints(), Eq(3));
+  ASSERT_THAT(octree.getNumberOfPoints(), Eq(pointCloud -> size()));
+}
+
+TEST_F(OctreeBuilderTest, shouldReturnOctreeWithOnlyOneRoot) {
+  //TODO
+}
+
+TEST_F(OctreeBuilderTest, shouldHaveLeafsWithAtMostEightPoints) {
+  //TODO
+}
+
+TEST_F(OctreeBuilderTest, shouldReturnOctreeWithProperResolution) {
+  //TODO
 }
 
 TEST_F(OctreeBuilderTest, shouldInitializeComponentHandlers) {
