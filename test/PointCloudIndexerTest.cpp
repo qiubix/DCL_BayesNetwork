@@ -23,6 +23,7 @@ public:
 
   typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
+  //TODO: extract those methods to separate PointCloudGenerator class
   PointCloud getPointCloudWithOnePoint() {
     PointCloud cloud(new pcl::PointCloud<PointXYZSIFT>);
     cloud->width = 1;
@@ -68,8 +69,8 @@ TEST_F(PointCloudIndexerTest, shouldAcceptPointCloudWithSIFT) {
 
   unsigned long numberOfPoints = indexer -> getPointCloud()->points.size();
   ASSERT_THAT(numberOfPoints, Eq(1));
-  int descriptor = indexer -> getPointCloud() -> points[0].descriptor[127];
-  ASSERT_THAT(descriptor, Eq(127));
+  float descriptor = indexer -> getPointCloud() -> points[0].descriptor[127];
+  ASSERT_THAT(descriptor, Eq(127.0));
 }
 
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithSameNumberOfPointsAsModel) {
@@ -84,16 +85,16 @@ TEST_F(PointCloudIndexerTest, shouldCreateCloudWithSameNumberOfPointsAsModel) {
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithEveryPointIndexed) {
   indexer -> setPointCloud(getPointCloudWithThreePoints());
   PointCloud cloudBeforeIndexing = indexer -> getPointCloud();
-  ASSERT_THAT(cloudBeforeIndexing -> points[0].pointId, Eq(DEFAULT_INDEX));
-  ASSERT_THAT(cloudBeforeIndexing -> points[1].pointId, Eq(DEFAULT_INDEX));
-  ASSERT_THAT(cloudBeforeIndexing -> points[2].pointId, Eq(DEFAULT_INDEX));
-  
+  for (int i = 0; i < cloudBeforeIndexing->size(); ++i) {
+    ASSERT_THAT(cloudBeforeIndexing -> points[i].pointId, Eq(DEFAULT_INDEX));
+  }
+
   indexer -> indexPoints();
   
   PointCloud cloudAfterIndexing = indexer -> getPointCloud();
-  ASSERT_THAT(cloudAfterIndexing -> points[0].pointId, Eq(0));
-  ASSERT_THAT(cloudAfterIndexing -> points[1].pointId, Eq(1));
-  ASSERT_THAT(cloudAfterIndexing -> points[2].pointId, Eq(2));
+  for (int j = 0; j < cloudAfterIndexing->size(); ++j) {
+    ASSERT_THAT(cloudAfterIndexing -> points[j].pointId, Ne(DEFAULT_INDEX));
+  }
 }
 
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithUniquePointIndices) {
@@ -111,12 +112,34 @@ TEST_F(PointCloudIndexerTest, shouldCreateCloudWithUniquePointIndices) {
   }
 }
 
-TEST_F(PointCloudIndexerTest, shouldCreateCloudWithCorrectCoordinatesInPoints) {
-  //TODO
+TEST_F(PointCloudIndexerTest, shouldCreateCloudWithCorrectCoordinatesInPoints)
+{
+  PointCloud pointCloud = getPointCloudWithThreePoints();
+  indexer -> setPointCloud(pointCloud);
+  const int POINT_INDEX = 2;
+  PointXYZSIFT pointXYZSIFT = pointCloud -> points[POINT_INDEX];
+
+  indexer -> indexPoints();
+
+  PointCloud indexedPointCloud = indexer -> getPointCloud();
+  ASSERT_THAT(indexedPointCloud -> points[POINT_INDEX].x, Eq(pointXYZSIFT.x));
+  ASSERT_THAT(indexedPointCloud -> points[POINT_INDEX].y, Eq(pointXYZSIFT.y));
+  ASSERT_THAT(indexedPointCloud -> points[POINT_INDEX].z, Eq(pointXYZSIFT.z));
 }
 
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithCorrectSIFTDescriptorInPoints) {
-  //TODO
+  PointCloud pointCloud = getPointCloudWithThreePoints();
+  indexer -> setPointCloud(pointCloud);
+  const int POINT_INDEX = 2;
+  PointXYZSIFT pointXYZSIFT = pointCloud -> points[POINT_INDEX];
+
+  indexer -> indexPoints();
+
+  PointCloud indexedPointCloud = indexer -> getPointCloud();
+  for (int i = 0; i < indexedPointCloud -> size(); ++i) {
+    float newSIFTDescriptor = indexedPointCloud -> points[POINT_INDEX].descriptor[i];
+    ASSERT_THAT(newSIFTDescriptor, Eq(pointXYZSIFT.descriptor[i]));
+  }
 }
 
 TEST_F(PointCloudIndexerTest, shouldInitializeComponentHandlers) {
