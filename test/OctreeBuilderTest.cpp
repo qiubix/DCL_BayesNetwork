@@ -15,6 +15,10 @@ using Processors::Network::OctreeBuilder;
 
 class OctreeBuilderTest : public Test {
 public:
+  OctreeBuilderTest() {
+    builder = new OctreeBuilder("builder");
+  }
+
   typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
   PointCloud getPointCloudWithOnePoint() {
@@ -53,29 +57,25 @@ public:
     }
     return cloud;
   }
+
+  OctreeBuilder* builder;
 };
 
 TEST_F(OctreeBuilderTest, shouldAcceptPointCloudWithSIFT) {
-  OctreeBuilder builder("builder");
+  builder -> setPointCloud(getPointCloudWithOnePoint());
 
-  builder.setPointCloud(getPointCloudWithOnePoint());
-  unsigned long numberOfPoints = builder.getPointCloud()->points.size();
+  unsigned long numberOfPoints = builder -> getPointCloud()->points.size();
   ASSERT_THAT(numberOfPoints, Eq(1));
 }
 
 TEST_F(OctreeBuilderTest, shouldReturnOctreeWithSameNumberOfPointsAsPointCloud) {
-  OctreeBuilder builder("builder");
   PointCloud pointCloud = getPointCloudWithThreePoints();
-  builder.setPointCloud(pointCloud);
+  builder -> setPointCloud(pointCloud);
 
-  builder.buildOctree();
+  builder -> buildOctree();
 
-  Processors::Network::Octree octree = builder.getOctree();
+  Processors::Network::Octree octree = builder -> getOctree();
   ASSERT_THAT(octree.getNumberOfPoints(), Eq(pointCloud -> size()));
-}
-
-TEST_F(OctreeBuilderTest, shouldReturnOctreeWithOnlyOneRoot) {
-  //TODO
 }
 
 TEST_F(OctreeBuilderTest, shouldHaveLeafsWithAtMostEightPoints) {
@@ -87,9 +87,8 @@ TEST_F(OctreeBuilderTest, shouldReturnOctreeWithProperResolution) {
 }
 
 TEST_F(OctreeBuilderTest, shouldInitializeComponentHandlers) {
-  OctreeBuilder builder("builder");
-  builder.prepareInterface();
+  builder -> prepareInterface();
   
-  std::string handlers = builder.listHandlers();
+  std::string handlers = builder -> listHandlers();
   ASSERT_THAT(handlers, Eq("onNewCloud\n"));
 }
