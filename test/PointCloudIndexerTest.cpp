@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 using ::testing::Eq;
+using ::testing::Ne;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
@@ -17,6 +18,8 @@ public:
   PointCloudIndexerTest() {
     indexer = new PointCloudIndexer("indexer");
   }
+
+  static const int DEFAULT_INDEX = 999;
 
   typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
@@ -40,15 +43,15 @@ public:
     cloud -> points[0].x = 0.0;
     cloud -> points[0].y = 0.0;
     cloud -> points[0].z = 0.0;
-    cloud -> points[0].pointId = 999;
+    cloud -> points[0].pointId = DEFAULT_INDEX;
     cloud -> points[1].x = 1.0;
     cloud -> points[1].y = 1.0;
     cloud -> points[1].z = 1.0;
-    cloud -> points[1].pointId = 999;
+    cloud -> points[1].pointId = DEFAULT_INDEX;
     cloud -> points[2].x = 0.0;
     cloud -> points[2].y = 0.0;
     cloud -> points[2].z = 1.0;
-    cloud -> points[2].pointId = 999;
+    cloud -> points[2].pointId = DEFAULT_INDEX;
     for(int i=0; i<128; i++) {
       cloud -> points[0].descriptor[i] = i;
       cloud -> points[1].descriptor[i] = 128-i;
@@ -70,22 +73,50 @@ TEST_F(PointCloudIndexerTest, shouldAcceptPointCloudWithSIFT) {
 }
 
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithSameNumberOfPointsAsModel) {
+  PointCloud pointCloudWithThreePoints = getPointCloudWithThreePoints();
+  indexer -> setPointCloud(pointCloudWithThreePoints);
 
+  indexer -> indexPoints();
+
+  ASSERT_THAT(indexer -> getPointCloud() -> size(), Eq(3));
 }
 
-TEST_F(PointCloudIndexerTest, shouldIndexPointsIncrementally) {
+TEST_F(PointCloudIndexerTest, shouldCreateCloudWithEveryPointIndexed) {
   indexer -> setPointCloud(getPointCloudWithThreePoints());
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloudBeforeIndexing = indexer -> getPointCloud();
-  ASSERT_THAT(cloudBeforeIndexing -> points[0].pointId, Eq(999));
-  ASSERT_THAT(cloudBeforeIndexing -> points[1].pointId, Eq(999));
-  ASSERT_THAT(cloudBeforeIndexing -> points[2].pointId, Eq(999));
+  PointCloud cloudBeforeIndexing = indexer -> getPointCloud();
+  ASSERT_THAT(cloudBeforeIndexing -> points[0].pointId, Eq(DEFAULT_INDEX));
+  ASSERT_THAT(cloudBeforeIndexing -> points[1].pointId, Eq(DEFAULT_INDEX));
+  ASSERT_THAT(cloudBeforeIndexing -> points[2].pointId, Eq(DEFAULT_INDEX));
   
   indexer -> indexPoints();
   
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloudAfterIndexing = indexer -> getPointCloud();
+  PointCloud cloudAfterIndexing = indexer -> getPointCloud();
   ASSERT_THAT(cloudAfterIndexing -> points[0].pointId, Eq(0));
   ASSERT_THAT(cloudAfterIndexing -> points[1].pointId, Eq(1));
   ASSERT_THAT(cloudAfterIndexing -> points[2].pointId, Eq(2));
+}
+
+TEST_F(PointCloudIndexerTest, shouldCreateCloudWithUniquePointIndices) {
+  indexer -> setPointCloud(getPointCloudWithThreePoints());
+
+  indexer -> indexPoints();
+
+  PointCloud cloudAfterIndexing = indexer -> getPointCloud();
+  for (int i=0; i < cloudAfterIndexing -> size() - 1; i++) {
+    int firstPointId = cloudAfterIndexing -> points[i].pointId;
+    for (int j = i + 1; j < cloudAfterIndexing->size(); ++j) {
+      int secondPointId = cloudAfterIndexing -> points[j].pointId;
+      ASSERT_THAT(firstPointId, Ne(secondPointId));
+    }
+  }
+}
+
+TEST_F(PointCloudIndexerTest, shouldCreateCloudWithCorrectCoordinatesInPoints) {
+  //TODO
+}
+
+TEST_F(PointCloudIndexerTest, shouldCreateCloudWithCorrectSIFTDescriptorInPoints) {
+  //TODO
 }
 
 TEST_F(PointCloudIndexerTest, shouldInitializeComponentHandlers) {
