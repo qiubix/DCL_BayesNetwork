@@ -14,6 +14,10 @@ using Processors::Network::PointCloudIndexer;
 
 class PointCloudIndexerTest : public Test {
 public:
+  PointCloudIndexerTest() {
+    indexer = new PointCloudIndexer("indexer");
+  }
+
   typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
   PointCloud getPointCloudWithOnePoint() {
@@ -52,38 +56,41 @@ public:
     }
     return cloud;
   }
+
+  PointCloudIndexer* indexer;
 };
 
 TEST_F(PointCloudIndexerTest, shouldAcceptPointCloudWithSIFT) {
-  PointCloudIndexer indexer("indexer");
+  indexer -> setPointCloud(getPointCloudWithOnePoint());
 
-  indexer.setPointCloud(getPointCloudWithOnePoint());
-  unsigned long numberOfPoints = indexer.getPointCloud()->points.size();
+  unsigned long numberOfPoints = indexer -> getPointCloud()->points.size();
   ASSERT_THAT(numberOfPoints, Eq(1));
-  int descriptor = indexer.getPointCloud() -> points[0].descriptor[127];
+  int descriptor = indexer -> getPointCloud() -> points[0].descriptor[127];
   ASSERT_THAT(descriptor, Eq(127));
 }
 
+TEST_F(PointCloudIndexerTest, shouldCreateCloudWithSameNumberOfPointsAsModel) {
+
+}
+
 TEST_F(PointCloudIndexerTest, shouldIndexPointsIncrementally) {
-  PointCloudIndexer indexer("indexer");
-  indexer.setPointCloud(getPointCloudWithThreePoints());
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloudBeforeIndexing = indexer.getPointCloud();
+  indexer -> setPointCloud(getPointCloudWithThreePoints());
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloudBeforeIndexing = indexer -> getPointCloud();
   ASSERT_THAT(cloudBeforeIndexing -> points[0].pointId, Eq(999));
   ASSERT_THAT(cloudBeforeIndexing -> points[1].pointId, Eq(999));
   ASSERT_THAT(cloudBeforeIndexing -> points[2].pointId, Eq(999));
   
-  indexer.indexPoints();
+  indexer -> indexPoints();
   
-  pcl::PointCloud<PointXYZSIFT>::Ptr cloudAfterIndexing = indexer.getPointCloud();
+  pcl::PointCloud<PointXYZSIFT>::Ptr cloudAfterIndexing = indexer -> getPointCloud();
   ASSERT_THAT(cloudAfterIndexing -> points[0].pointId, Eq(0));
   ASSERT_THAT(cloudAfterIndexing -> points[1].pointId, Eq(1));
   ASSERT_THAT(cloudAfterIndexing -> points[2].pointId, Eq(2));
 }
 
 TEST_F(PointCloudIndexerTest, shouldInitializeComponentHandlers) {
-  PointCloudIndexer indexer("indexer");
-  indexer.prepareInterface();
+  indexer -> prepareInterface();
   
-  std::string handlers = indexer.listHandlers();
+  std::string handlers = indexer -> listHandlers();
   ASSERT_THAT(handlers, Eq("onNewCloud\n"));
 }
