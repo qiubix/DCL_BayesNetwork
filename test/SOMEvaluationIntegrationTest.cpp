@@ -43,13 +43,43 @@ TEST(SOMEvalationIntegrationTest, shouldActivateSameNumberOfFeatureNodesInBayesN
 }
 
 TEST(SOMEvalationIntegrationTest, shouldReturn1WhenAllFeaturesWereMatched) {
-  //TODO
+  BayesNetwork network = getDefaultBayesNetwork();
+  SOMEvaluation evaluator("evaluator");
+  std::vector<int> indicesCollection;
+  indicesCollection.push_back(0);
+  indicesCollection.push_back(1);
+  evaluator.setInstance(indicesCollection);
+  evaluator.setNetwork(&network);
+
+  evaluator.evaluate();
+
+  ASSERT_THAT(evaluator.getNodeProbability(0), Eq(1));
 }
 
 TEST(SOMEvalationIntegrationTest, shouldReturn0WhenNoFeaturesWereMatched) {
-  //TODO
+  BayesNetwork network = getDefaultBayesNetwork();
+  SOMEvaluation evaluator("evaluator");
+  std::vector<int> indicesCollection;
+  indicesCollection.push_back(2);
+  indicesCollection.push_back(3);
+  evaluator.setInstance(indicesCollection);
+  evaluator.setNetwork(&network);
+
+  evaluator.evaluate();
+
+  ASSERT_THAT(evaluator.getNodeProbability(0), Eq(0));
 }
 
 TEST(SOMEvalationIntegrationTest, shouldReturnProperFractionWhenOnlySomeFeaturesWereMatched) {
-  //TODO
+  BayesNetwork network = getDefaultBayesNetwork();
+  SOMEvaluation evaluator("evaluator");
+  std::vector<int> indicesCollection;
+  indicesCollection.push_back(1);
+  indicesCollection.push_back(3);
+  evaluator.setInstance(indicesCollection);
+  evaluator.setNetwork(&network);
+
+  evaluator.evaluate();
+
+  ASSERT_THAT(evaluator.getNodeProbability(0), Eq(0.5));
 }
