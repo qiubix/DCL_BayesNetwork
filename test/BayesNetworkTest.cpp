@@ -284,3 +284,12 @@ TEST_F(BayesNetworkTest, shouldGetNodeEvidence) {
   network.setNodeEvidence("F_0", 1);
   ASSERT_THAT(network.getNodeEvidence("F_0"), Eq(1));
 }
+
+TEST_F(BayesNetworkTest, shouldGetListOfFeatureNodeNames) {
+  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+
+  std::vector<std::string> featureNodeNames;
+  featureNodeNames.push_back("F_0");
+  featureNodeNames.push_back("F_1");
+  ASSERT_THAT(network.getFeatureNodeNames(), Eq(featureNodeNames));
+}

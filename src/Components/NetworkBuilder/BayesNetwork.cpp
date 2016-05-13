@@ -164,6 +164,15 @@ int BayesNetwork::getNumberOfFeatureNodes()
   return featureNodes.size();
 }
 
+std::vector<std::string> BayesNetwork::getFeatureNodeNames()
+{
+  std::vector<std::string> names;
+  for (int i = 0; i < featureNodes.size(); i++) {
+    names.push_back(featureNodes[i].getName());
+  }
+  return names;
+}
+
 BayesNetworkNode BayesNetwork::getNode(std::string name)
 {
   int nodeHandle = network.FindNode(name.c_str());

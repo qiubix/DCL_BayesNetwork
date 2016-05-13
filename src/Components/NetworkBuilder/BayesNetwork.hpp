@@ -44,6 +44,7 @@ public:
   int getNumberOfChildren(const char* nodeName);
   int getNumberOfNodes();
   int getNumberOfFeatureNodes();
+  std::vector<std::string> getFeatureNodeNames();
   BayesNetworkNode getNode(std::string name);
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);

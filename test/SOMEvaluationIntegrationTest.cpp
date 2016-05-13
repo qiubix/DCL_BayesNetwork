@@ -23,7 +23,23 @@ TEST(SOMEvalationIntegrationTest, shouldNotActivateAnyFeatureNodeInBayesNetworkF
 }
 
 TEST(SOMEvalationIntegrationTest, shouldActivateSameNumberOfFeatureNodesInBayesNetworkAsNumberOfElementsInIndicesCollection) {
-  //TODO
+  BayesNetwork network = getDefaultBayesNetwork();
+  SOMEvaluation evaluator("evaluator");
+  std::vector<int> indicesCollection;
+  indicesCollection.push_back(1);
+  evaluator.setInstance(indicesCollection);
+  evaluator.setNetwork(&network);
+
+  evaluator.evaluate();
+
+  std::vector<std::string> featureNodeNames = network.getFeatureNodeNames();
+  int numberOfActiveFeatures = 0;
+  for (int i = 0; i < featureNodeNames.size(); i++) {
+    if (network.getNodeEvidence(featureNodeNames[i]) == 1) {
+      ++numberOfActiveFeatures;
+    }
+  }
+  ASSERT_THAT(numberOfActiveFeatures, Eq(indicesCollection.size()));
 }
 
 TEST(SOMEvalationIntegrationTest, shouldReturn1WhenAllFeaturesWereMatched) {
