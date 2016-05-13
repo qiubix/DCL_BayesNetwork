@@ -52,3 +52,7 @@ create_test(OctreeBuilderTest ${OCTREE_BUILDER_TEST_SRC} "${OCTREE_BUILDER_TEST_
 set(POINT_CLOUD_INDEXER_TEST_SRC PointCloudIndexerTest.cpp)
 set(POINT_CLOUD_INDEXER_TEST_LIB procPointCloudIndexer)
 create_test(PointCloudIndexerTest ${POINT_CLOUD_INDEXER_TEST_SRC} "${POINT_CLOUD_INDEXER_TEST_LIB}")
+
+set(SIFT_FEATURE_MATCHER_TEST_SRC SIFTFeatureMatcherTest.cpp)
+set(SIFT_FEATURE_MATCHER_TEST_LIB procSIFTFeatureMatcher)
+create_test(SIFTFeatureMatcherTest ${SIFT_FEATURE_MATCHER_TEST_SRC} "${SIFT_FEATURE_MATCHER_TEST_LIB}")
