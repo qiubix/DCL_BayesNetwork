@@ -1,3 +1,4 @@
+#pragma once
 #ifndef BAYES_NETWORK_NODE_HPP
 #define BAYES_NETWORK_NODE_HPP
 

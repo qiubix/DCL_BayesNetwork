@@ -2,7 +2,7 @@
  * \file SOMEvaluation.hpp
  * \brief Declaration of SOMEvaluation component class
  */
-
+#pragma once
 #ifndef SOM_EVALUATION_HPP_
 #define SOM_EVALUATION_HPP_
 
@@ -14,11 +14,11 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 
-#include "../../../lib/SMILE/smile.h"
-#include <opencv2/core/core.hpp>
+//#include "../../../lib/SMILE/smile.h"
+//#include <opencv2/core/core.hpp>
 
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
+//#include <pcl/point_cloud.h>
+//#include <pcl/point_types.h>
 
 //TODO: FIXME: include types from PCL
 //#include <Types/PointXYZSIFT>
@@ -98,14 +98,14 @@ public:
 
   //std::vector<DSL_network> networks;
   std::vector<AbstractNetwork*> networks;
-  DSL_network theNet;
+//  DSL_network theNet;
   AbstractNetwork* network;
 
   void evaluate();
   void deactivateFeatures();
   void activateMatchedFeatureNodes();
   void displayHypothesisProbability(int modelId = 0);
-  int findFeatureNode(int nodeId);
+//  int findFeatureNode(int nodeId);
   double getNodeProbability(int nodeId);
 
   void setNetwork(AbstractNetwork* network);

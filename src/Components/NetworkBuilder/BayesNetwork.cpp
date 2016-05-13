@@ -203,6 +203,12 @@ bool BayesNetwork::visitNode(BayesNetworkNode& node)
   return found;
 }
 
+int BayesNetwork::getNodeEvidence(const std::string& featureNodeName) {
+  int nodeHandle = network.FindNode(featureNodeName.c_str());
+  int evidence = network.GetNode(nodeHandle)->Value()->GetEvidence();
+  return evidence;
+}
+
 void BayesNetwork::exportNetworkToFile()
 {
   LOG(LTRACE) << "Exporting network to file out_network.xdsl";

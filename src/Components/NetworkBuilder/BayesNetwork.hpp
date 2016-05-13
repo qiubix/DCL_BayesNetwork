@@ -1,3 +1,4 @@
+#pragma once
 #ifndef BAYES_NETWORK_HPP
 #define BAYES_NETWORK_HPP
 
@@ -47,6 +48,7 @@ public:
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
   bool visitNode(BayesNetworkNode& node);
+  int getNodeEvidence(const std::string& featureNodeName);
 
   //exporting network
   void exportNetworkToFile();

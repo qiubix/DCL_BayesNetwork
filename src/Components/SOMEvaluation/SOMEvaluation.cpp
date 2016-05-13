@@ -180,13 +180,13 @@ void SOMEvaluation::displayHypothesisProbability(int modelId)
   out_probabilities.write(hypothesesProbabilities);
 }
 
-int SOMEvaluation::findFeatureNode(int nodeId)
-{
-  std::stringstream ss;
-  ss << "F_" << nodeId;
-  std::string nodeName(ss.str());
-  return theNet.FindNode(nodeName.c_str());
-}
+//int SOMEvaluation::findFeatureNode(int nodeId)
+//{
+//  std::stringstream ss;
+//  ss << "F_" << nodeId;
+//  std::string nodeName(ss.str());
+//  return theNet.FindNode(nodeName.c_str());
+//}
 
 double SOMEvaluation::getNodeProbability(int nodeId)
 {

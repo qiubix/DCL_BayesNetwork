@@ -270,3 +270,17 @@ TEST_F(BayesNetworkTest, shouldSetNodeEvidence) {
   int evidence = net.GetNode(handle)->Value()->GetEvidence();
   ASSERT_THAT(evidence, Eq(STATE));
 }
+
+TEST_F(BayesNetworkTest, shouldGetNodeEvidence) {
+  BayesNetwork network;
+  network.addFeatureNode(0);
+  network.addVoxelNode(0);
+  network.connectNodes("F_0", "V_0");
+  network.setCPTofAllVoxelNodes(1);
+  network.propagateProbabilities();
+
+  ASSERT_THAT(network.getNodeEvidence("F_0"), Eq(DSL_OUT_OF_RANGE));
+
+  network.setNodeEvidence("F_0", 1);
+  ASSERT_THAT(network.getNodeEvidence("F_0"), Eq(1));
+}
