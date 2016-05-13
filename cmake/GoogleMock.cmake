@@ -5,7 +5,8 @@ set(EXTERNAL_PROJECT_GMOCK_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/gmock)
 
 ExternalProject_Add(
     gmock
-    SVN_REPOSITORY http://googlemock.googlecode.com/svn/tags/release-1.7.0
+    #SVN_REPOSITORY http://googlemock.googlecode.com/svn/tags/release-1.7.0
+    GIT_REPOSITORY https://github.com/google/googletest
     #TODO: figure out what happens if download time is longer than specified timeout
     #TIMEOUT 10
 
