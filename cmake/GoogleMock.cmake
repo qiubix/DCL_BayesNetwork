@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-set(EXTERNAL_PROJECT_GMOCK_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/gmock/googlemock)
+set(EXTERNAL_PROJECT_GMOCK_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/gmock)
 set(EXTERNAL_PROJECT_GMOCK_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/gmock)
 
 ExternalProject_Add(
@@ -34,10 +34,10 @@ set(GMOCK_INCLUDE_DIRS ${source_dir}/googlemock/include)
 include_directories(${GMOCK_INCLUDE_DIRS})
 
 ExternalProject_Get_Property(gmock binary_dir)
-set(GMOCK_LIBRARIES ${binary_dir}/${CMAKE_STATIC_LIBRARY_PREFIX}gmock${CMAKE_STATIC_LIBRARY_SUFFIX})
-set(GMOCK_MAIN_LIBRARIES ${binary_dir}/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(GMOCK_LIBRARIES ${binary_dir}/googlemock/${CMAKE_STATIC_LIBRARY_PREFIX}gmock${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(GMOCK_MAIN_LIBRARIES ${binary_dir}/googlemock/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-set(GTEST_INCLUDE_DIRS ${source_dir}/googletest/gtest/include)
+set(GTEST_INCLUDE_DIRS ${source_dir}/googletest/include)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 set(GTEST_LIBRARIES ${binary_dir}/googletest/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX})

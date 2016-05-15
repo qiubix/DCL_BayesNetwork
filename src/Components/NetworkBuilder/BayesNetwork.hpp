@@ -4,7 +4,7 @@
 
 #include <string>
 #include <vector>
-#include <gtest/gtest.h>
+//#include <gtest/gtest.h>
 
 #include "../../../lib/SMILE/smile.h"
 
@@ -66,7 +66,7 @@ private:
 
   int generateNext(std::string::iterator start, std::string::iterator end);
 
-  FRIEND_TEST(BayesNetworkTest, shouldFillNodeCPT);
+//  FRIEND_TEST(BayesNetworkTest, shouldFillNodeCPT);
 };
 
 
