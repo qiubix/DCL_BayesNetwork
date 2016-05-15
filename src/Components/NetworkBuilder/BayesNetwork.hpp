@@ -1,9 +1,10 @@
+#pragma once
 #ifndef BAYES_NETWORK_HPP
 #define BAYES_NETWORK_HPP
 
 #include <string>
 #include <vector>
-#include <gtest/gtest.h>
+//#include <gtest/gtest.h>
 
 #include "../../../lib/SMILE/smile.h"
 
@@ -43,10 +44,12 @@ public:
   int getNumberOfChildren(const char* nodeName);
   int getNumberOfNodes();
   int getNumberOfFeatureNodes();
+  std::vector<std::string> getFeatureNodeNames();
   BayesNetworkNode getNode(std::string name);
   BayesNetworkNode getNextRootNode();
   BayesNetworkNode getChild(BayesNetworkNode parent);
   bool visitNode(BayesNetworkNode& node);
+  int getNodeEvidence(const std::string& featureNodeName);
 
   //exporting network
   void exportNetworkToFile();
@@ -63,7 +66,7 @@ private:
 
   int generateNext(std::string::iterator start, std::string::iterator end);
 
-  FRIEND_TEST(BayesNetworkTest, shouldFillNodeCPT);
+//  FRIEND_TEST(BayesNetworkTest, shouldFillNodeCPT);
 };
 
 

@@ -54,6 +54,6 @@ before_script:
   - export DISCODE_DCL_DIR=/home/travis/src/DCL/
   - cd ~/build/qiubix/DCL_BayesNetwork
   - ./install_discode.sh
-script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF . && make && make test
+script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF -DCOMPONENT_SOMJSONReader=OFF -DCOMPONENT_MapMultiplicity=OFF . && make && make test
 after_success:
   - coveralls --exclude lib --exclude tests --exclude ext --gcov-options '\-lp'

@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 using ::testing::Eq;
+using ::testing::Le;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
@@ -104,7 +105,7 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
   ASSERT_THAT(network.hasNode("F_4"), Eq(true));
 }
 
-TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsCloudPoints) {
+TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsPointsInOctree) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
   networkBuilder -> buildNetwork(octreeWithThreePoints);
@@ -158,6 +159,52 @@ TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
 
 TEST_F(NetworkBuilderTest, shouldHaveNodesWithUniqueNames) {
   EXPECT_TRUE(true);
+}
+
+TEST_F(NetworkBuilderTest, shouldReduceLongBranchesToSingleVertices) {
+  Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
+  octreeWithThreePoints -> init();
+  ASSERT_THAT(octreeWithThreePoints -> getOctreeWithSIFT().getTreeDepth(), Eq(7));
+
+  networkBuilder -> buildNetwork(octreeWithThreePoints);
+
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  ASSERT_THAT(network.getNumberOfNodes(), Eq(7));
+  std::string nodeNames[3] = {"F_0", "F_2", "F_4"};
+  for (int i = 0; i < nodeNames -> size(); ++i) {
+    Processors::Network::BayesNetworkNode node = network.getNode(nodeNames[i]);
+    int depth = 0;
+    while (node.getNumberOfChildren() != 0) {
+      depth++;
+      node = node.getChild();
+    }
+    ASSERT_THAT(depth, Eq(2));
+  }
+}
+
+TEST_F(NetworkBuilderTest, shouldHaveAtMostSameNumberOfLevelsAsOctree) {
+  const int OCTREE_DEPTH = 7;
+  Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
+  octreeWithThreePoints -> init();
+  ASSERT_THAT(octreeWithThreePoints -> getOctreeWithSIFT().getTreeDepth(), Eq(OCTREE_DEPTH));
+
+  networkBuilder -> buildNetwork(octreeWithThreePoints);
+
+  Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
+  std::string nodeNames[3] = {"F_0", "F_2", "F_4"};
+  for (int i = 0; i < nodeNames -> size(); ++i) {
+    Processors::Network::BayesNetworkNode node = network.getNode(nodeNames[i]);
+    int depth = 0;
+    while (node.getNumberOfChildren() != 0) {
+      depth++;
+      node = node.getChild();
+    }
+    ASSERT_THAT(depth, Le(OCTREE_DEPTH));
+  }
+}
+
+TEST_F(NetworkBuilderTest, shouldPointsFromSingleLeafInOctreeHaveSingleChild) {
+  //TODO
 }
 
 TEST_F(NetworkBuilderTest, shouldWriteNetworkToOutputPort) {

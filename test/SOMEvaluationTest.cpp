@@ -1,13 +1,13 @@
 #include <gmock/gmock.h>
 using ::testing::Eq;
 using ::testing::_;
-#include <gtest/gtest.h>
+//#include <gtest/gtest.h>
 using ::testing::Test;
 using ::testing::Return;
 using ::testing::NiceMock;
 
 #include "Components/SOMEvaluation/SOMEvaluation.hpp"
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
+//#include "Components/NetworkBuilder/BayesNetwork.hpp"
 #include "Components/NetworkBuilder/AbstractNetwork.hpp"
 
 using Processors::Network::SOMEvaluation;
