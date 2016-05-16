@@ -11,7 +11,7 @@ ADD_COMPONENT(PointCloudIndexer)
 
 #ADD_COMPONENT(MultipleModels)
 
-ADD_COMPONENT(SIFTAdder)
+#ADD_COMPONENT(SIFTAdder)
 
 ADD_COMPONENT(SIFTFeatureMatcher)
 

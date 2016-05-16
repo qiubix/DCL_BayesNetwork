@@ -1,3 +1,4 @@
+#pragma once
 #ifndef POINTXYZSIFT_HPP_
 #define POINTXYZSIFT_HPP_
 
@@ -6,7 +7,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/io/pcd_io.h>
 
-#include <pcl/point_representation.h>
+//#include <pcl/point_representation.h>
 
 //#include <pcl/filters/passthrough.h>
 //#include <pcl/filters/impl/passthrough.hpp>
@@ -48,27 +49,6 @@ POINT_CLOUD_REGISTER_POINT_STRUCT (PointXYZSIFT           // here we assume a XY
 
 
 //} //: namespace Types
-
-namespace pcl{
-template<>
-class DefaultPointRepresentation<PointXYZSIFT> : public PointRepresentation<PointXYZSIFT>
-  {
-    public:
-      DefaultPointRepresentation ()
-      {
-        nr_dimensions_ = 3;
-        trivial_ = true;
-      }
-
-      virtual void
-      copyToFloatArray (const PointXYZSIFT &p, float * out) const
-      {
-        out[0] = p.x;
-        out[1] = p.y;
-        out[2] = p.z;
-      }
-  };
-}
 
 
 

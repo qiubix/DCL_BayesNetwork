@@ -14,9 +14,9 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 
-#include <opencv2/core/core.hpp>
+//#include <opencv2/core/core.hpp>
 #include <vector>
-#include <map>
+//#include <map>
 
 #include <Types/PointXYZSIFT.hpp>
 
