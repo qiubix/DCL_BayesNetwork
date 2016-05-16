@@ -1,3 +1,4 @@
+#pragma once
 #ifndef OCTREE_BRANCH_NODE_HPP
 #define OCTREE_BRANCH_NODE_HPP
 

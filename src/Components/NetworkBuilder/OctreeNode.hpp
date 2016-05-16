@@ -1,13 +1,12 @@
+#pragma once
 #ifndef OCTREE_NODE_HPP
 #define OCTREE_NODE_HPP
 
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
-#include "../../Types/OctreeContainers.hpp"
+#include "Types/PointXYZSIFT.hpp"
+#include "Types/OctreeContainers.hpp"
 
 namespace Processors {
 namespace Network {

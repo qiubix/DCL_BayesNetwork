@@ -3,10 +3,10 @@ using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
+//#include "Components/NetworkBuilder/BayesNetwork.hpp"
 #include "Components/NetworkBuilder/CPTManager.hpp"
 #include "Components/NetworkBuilder/CPTManagerExceptions.hpp"
-#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
 
 using namespace Processors::Network;
 

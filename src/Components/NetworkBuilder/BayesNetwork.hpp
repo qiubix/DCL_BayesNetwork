@@ -6,7 +6,7 @@
 #include <vector>
 //#include <gtest/gtest.h>
 
-#include "../../../lib/SMILE/smile.h"
+#include "SMILE/smile.h"
 
 #include "BayesNetworkNode.hpp"
 #include "AbstractNetwork.hpp"

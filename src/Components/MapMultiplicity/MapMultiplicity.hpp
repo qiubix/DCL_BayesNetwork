@@ -3,6 +3,7 @@
  * \brief
  */
 
+#pragma once
 #ifndef MAP_MULTIPLICITY_HPP_
 #define MAP_MULTIPLICITY_HPP_
 

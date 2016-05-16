@@ -3,7 +3,7 @@
 #define BAYES_NETWORK_NODE_HPP
 
 #include <string>
-#include "../../../lib/SMILE/smile.h"
+#include "SMILE/smile.h"
 #include "CPTManager.hpp"
 
 namespace Processors {

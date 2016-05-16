@@ -3,6 +3,7 @@
  * \brief
  */
 
+#pragma once
 #ifndef NETWORK_BUILDER_HPP
 #define NETWORK_BUILDER_HPP
 
@@ -23,10 +24,8 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
-#include "../../Types/Octree.hpp"
+#include "Types/PointXYZSIFT.hpp"
+#include "Types/Octree.hpp"
 
 
 namespace Processors {

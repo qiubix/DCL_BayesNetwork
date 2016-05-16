@@ -1,3 +1,4 @@
+#pragma once
 #ifndef OCTREE_LEAF_NODE_HPP
 #define OCTREE_LEAF_NODE_HPP
 

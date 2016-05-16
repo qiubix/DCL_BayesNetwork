@@ -1,3 +1,4 @@
+#pragma once
 #ifndef BAYES_NETWORK_EXCEPTIONS
 #define BAYES_NETWORK_EXCEPTIONS
 
