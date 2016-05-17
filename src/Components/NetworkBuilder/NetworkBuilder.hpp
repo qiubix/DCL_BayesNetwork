@@ -21,8 +21,8 @@
 
 //#include <opencv2/core/core.hpp>
 
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
+//#include <pcl/point_cloud.h>
+//#include <pcl/point_types.h>
 
 #include "Types/PointXYZSIFT.hpp"
 #include "Types/Octree.hpp"
@@ -63,11 +63,11 @@ protected:
   /// Input data stream
   Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
   Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
-  Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
+//  Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
   Base::DataStreamIn< Octree* > in_octree;
 
   /// Output data stream
-  Base::DataStreamOut<DSL_network> out_network;
+//  Base::DataStreamOut<DSL_network> out_network;
   //Base::DataStreamOut<std::vector<DSL_network> > out_networks;
   Base::DataStreamOut<std::vector<AbstractNetwork*> > out_networks;
 
@@ -99,7 +99,7 @@ protected:
 
 private:
   BayesNetwork network;
-  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
+//  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
   std::stack <Octree* > octreeQueue;
 
   std::map <int, string> features;

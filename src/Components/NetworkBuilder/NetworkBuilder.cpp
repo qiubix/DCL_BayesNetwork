@@ -6,9 +6,9 @@
 #include <memory>
 #include <string>
 #include <sstream>
-#include <iostream>
+//#include <iostream>
 #include <algorithm>
-#include <assert.h>
+//#include <assert.h>
 
 #include "NetworkBuilder.hpp"
 
