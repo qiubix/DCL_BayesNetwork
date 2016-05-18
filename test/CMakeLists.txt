@@ -20,9 +20,9 @@ target_link_libraries(NetworkBuilderTest TestUtils)
 create_test_suite(SOMEvaluationTest SOMEvaluationTest.cpp procSOMEvaluation)
 target_link_libraries(SOMEvaluationTest procNetworkBuilder)
 
-set(SOM_EVALUATION_INTEGRATION_TEST_SRC SOMEvaluationIntegrationTest.cpp BayesNetworkGenerator.cpp)
 set(SOM_EVALUATION_INTEGRATION_TEST_LIB procSOMEvaluation procNetworkBuilder)
-create_test_suite(SOMEvaluationIntegrationTest "${SOM_EVALUATION_INTEGRATION_TEST_SRC}" "${SOM_EVALUATION_INTEGRATION_TEST_LIB}")
+create_test_suite(SOMEvaluationIntegrationTest SOMEvaluationIntegrationTest.cpp "${SOM_EVALUATION_INTEGRATION_TEST_LIB}")
+target_link_libraries(SOMEvaluationIntegrationTest TestUtils)
 
 create_test_suite(OctreeBuilderTest OctreeBuilderTest.cpp OctreeBuilder)
 target_link_libraries(OctreeBuilderTest BayesNetworkTypes)

@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <Components/SOMEvaluation/SOMEvaluation.hpp>
-#include "BayesNetworkGenerator.hpp"
+#include <Components/NetworkBuilder/BayesNetwork.hpp>
+#include "utils/BayesNetworkGenerator.hpp"
 #include <vector>
 
 using ::testing::Eq;
