@@ -42,6 +42,8 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 #SET(CMAKE_CXX_FLAGS "-O0")
 #SET(CMAKE_C_FLAGS "-O0")
+include(DefaultBuildType)
+set_default_build_type(Debug)
 
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)
