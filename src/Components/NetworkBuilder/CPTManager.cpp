@@ -1,3 +1,7 @@
+#include <SMILE/syscoord.h>
+#include <SMILE/idarray.h>
+#include <SMILE/node.h>
+#include <SMILE/nodedef.h>
 #include "CPTManager.hpp"
 #include "Logger.hpp"
 #include "CPTManagerExceptions.hpp"

@@ -6,6 +6,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(procSIFTFeatureMatcher SHARED ${files})
-target_link_libraries(procSIFTFeatureMatcher ${DisCODe_LIBRARIES} ${OpenCV_LIBS} ${SMILE_LIBS} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
+target_link_libraries(procSIFTFeatureMatcher ${DisCODe_LIBRARIES} ${SMILE_LIBS} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
 
 INSTALL_COMPONENT(procSIFTFeatureMatcher)

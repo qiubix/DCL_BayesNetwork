@@ -1,3 +1,4 @@
+#pragma once
 #ifndef ABSTRACT_NETWORK_HPP
 #define ABSTRACT_NETWORK_HPP
 

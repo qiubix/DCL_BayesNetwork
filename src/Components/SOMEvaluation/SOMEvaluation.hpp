@@ -12,7 +12,7 @@
 #include "Component_Aux.hpp"
 #include "Component.hpp"
 #include "DataStream.hpp"
-#include "Property.hpp"
+//#include "Property.hpp"
 
 //#include "../../../lib/SMILE/smile.h"
 //#include <opencv2/core/core.hpp>
@@ -20,11 +20,9 @@
 //#include <pcl/point_cloud.h>
 //#include <pcl/point_types.h>
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
+#include "Types/PointXYZSIFT.hpp"
 
-#include "../NetworkBuilder/AbstractNetwork.hpp"
+#include "Components/NetworkBuilder/AbstractNetwork.hpp"
 
 namespace Processors {
 namespace Network {

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CPT_MANAGER_EXCEPTIONS
 #define CPT_MANAGER_EXCEPTIONS
 

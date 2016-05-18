@@ -1,9 +1,12 @@
+#pragma once
 #ifndef CPT_MANAGER_HPP
 #define CPT_MANAGER_HPP
 
 #include <string>
 #include <vector>
-#include "../../../lib/SMILE/smile.h"
+//#include "SMILE/smile.h"
+
+class DSL_node;
 
 namespace Processors {
 namespace Network {

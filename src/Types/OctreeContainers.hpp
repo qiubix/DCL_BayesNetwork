@@ -1,16 +1,18 @@
+#pragma once
 #ifndef OCTREE_CONTAINERS_HPP
 #define OCTREE_CONTAINERS_HPP
 
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/octree/octree.h>
-#include <pcl/octree/octree_impl.h>
+//#include <pcl/point_cloud.h>
+//#include <pcl/point_types.h>
+//#include <pcl/octree/octree.h>
+//#include <pcl/octree/octree_impl.h>
+#include <pcl/octree/octree_container.h>
 
 using namespace pcl::octree;
 namespace Processors {
 namespace Network {
-  
-class OctreeContainerEmptyWithId : public OctreeContainerEmpty 
+
+class OctreeContainerEmptyWithId : public OctreeContainerEmpty
 {
 public:
     OctreeContainerEmptyWithId() : OctreeContainerEmpty()
@@ -32,7 +34,7 @@ public:
     {
         this->nodeId = nodeId;
     }
-    void setParentId(int parentId) 
+    void setParentId(int parentId)
     {
         this->parentId = parentId;
     }
@@ -42,10 +44,10 @@ private:
     int parentId;
 };
 
-class OctreeContainerPointIndicesWithId : public OctreeContainerPointIndices 
+class OctreeContainerPointIndicesWithId : public OctreeContainerPointIndices
 {
 public:
-    OctreeContainerPointIndicesWithId() : OctreeContainerPointIndices() 
+    OctreeContainerPointIndicesWithId() : OctreeContainerPointIndices()
     {
         this->nodeId = -1;
         this->parentId = -1;
@@ -64,7 +66,7 @@ public:
     {
         this->nodeId = nodeId;
     }
-    void setParentId(int parentId) 
+    void setParentId(int parentId)
     {
         this->parentId = parentId;
     }
@@ -74,7 +76,7 @@ private:
     int parentId;
 };
 
-}//: namespace Network   
+}//: namespace Network
 }//: namespace Processors
 
 

@@ -12,7 +12,7 @@
 #include "Component_Aux.hpp"
 #include "Component.hpp"
 #include "DataStream.hpp"
-#include "Property.hpp"
+//#include "Property.hpp"
 
 //#include "../../../lib/SMILE/smile.h"
 #include <opencv2/core/core.hpp>
