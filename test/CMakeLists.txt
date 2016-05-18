@@ -1,5 +1,7 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
+add_subdirectory(utils)
+
 create_test_suite(CPTManagerTest CPTManagerTest.cpp procNetworkBuilder)
 
 create_test_suite(BayesNetworkTest BayesNetworkTest.cpp procNetworkBuilder)
@@ -13,6 +15,7 @@ create_test_suite(OctreeTest OctreeTest.cpp BayesNetworkTypes)
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 create_test_suite(NetworkBuilderTest NetworkBuilderTest.cpp procNetworkBuilder)
+target_link_libraries(NetworkBuilderTest TestUtils)
 
 create_test_suite(SOMEvaluationTest SOMEvaluationTest.cpp procSOMEvaluation)
 target_link_libraries(SOMEvaluationTest procNetworkBuilder)
