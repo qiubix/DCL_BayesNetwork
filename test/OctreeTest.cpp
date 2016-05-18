@@ -4,6 +4,8 @@ using ::testing::Eq;
 using ::testing::Test;
 
 #include <pcl/point_cloud.h>
+#include <pcl/octree/octree.h>
+#include <pcl/octree/octree_impl.h>
 //#include <pcl/io/pcd_io.h>
 
 #include "Types/Octree.hpp"
@@ -110,7 +112,7 @@ TEST_F(OctreeTest, shouldGetNumberOfPointsInOctree) {
   PointCloud cloud = getPointCloudWithTwoPoints();
   Processors::Network::Octree octree(cloud);
   octree.init();
-  
+
   ASSERT_THAT(octree.getNumberOfPoints(), Eq(2));
 }
 
@@ -118,7 +120,7 @@ TEST_F(OctreeTest, shouldGetSIFTPointById) {
   PointCloud cloud = getPointCloudWithTwoPoints();
   Processors::Network::Octree octree(cloud);
   octree.init();
-  
+
   PointXYZSIFT referencePoint;
   referencePoint.pointId = 1;
   referencePoint.x = 1.1;

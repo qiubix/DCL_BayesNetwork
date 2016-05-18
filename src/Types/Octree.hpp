@@ -1,11 +1,14 @@
+#pragma once
 #ifndef OCTREE_HPP
 #define OCTREE_HPP
 
-#include <pcl/point_cloud.h>
+//#include <pcl/point_cloud.h>
 //#include <pcl/point_types.h>
-#include <pcl/octree/octree.h>
-#include <pcl/octree/octree_impl.h>
+//#include <pcl/octree/octree.h>
+//#include <pcl/octree/octree_impl.h>
 
+#include <pcl/octree/octree_pointcloud.h>
+#include <pcl/octree/octree_nodes.h>
 #include "PointXYZSIFT.hpp"
 
 #include "OctreeContainers.hpp"

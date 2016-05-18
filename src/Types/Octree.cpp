@@ -1,4 +1,6 @@
 #include "Octree.hpp"
+#include <pcl/octree/octree.h>
+#include <pcl/octree/octree_impl.h>
 
 using namespace pcl::octree;
 
