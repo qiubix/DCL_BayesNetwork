@@ -1,10 +1,12 @@
+#pragma once
 #ifndef OCTREE_CONTAINERS_HPP
 #define OCTREE_CONTAINERS_HPP
 
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/octree/octree.h>
-#include <pcl/octree/octree_impl.h>
+//#include <pcl/point_cloud.h>
+//#include <pcl/point_types.h>
+//#include <pcl/octree/octree.h>
+//#include <pcl/octree/octree_impl.h>
+#include <pcl/octree/octree_container.h>
 
 using namespace pcl::octree;
 namespace Processors {
