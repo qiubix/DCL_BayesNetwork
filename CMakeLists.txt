@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 2.6)
 # Find DisCODe installation
 FIND_PACKAGE(DisCODe REQUIRED)
 
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib/SMILE)
 SET(SMILE_LIBS smile smilearn)
 
@@ -27,6 +30,7 @@ include(DisCODeMacros)
 # Testing
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 include(GoogleMock)
+include(TestSuite)
 set(CMAKE_AUTOMOC ON)
 
 # Set default install prefix to dist folder
