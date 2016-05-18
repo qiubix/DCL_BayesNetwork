@@ -4,7 +4,9 @@
 
 #include <string>
 #include <vector>
-#include "SMILE/smile.h"
+//#include "SMILE/smile.h"
+
+class DSL_node;
 
 namespace Processors {
 namespace Network {

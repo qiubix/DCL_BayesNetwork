@@ -4,6 +4,7 @@ using ::testing::Eq;
 using ::testing::Test;
 
 //#include "Components/NetworkBuilder/BayesNetwork.hpp"
+#include <SMILE/smile.h>
 #include "Components/NetworkBuilder/CPTManager.hpp"
 #include "Components/NetworkBuilder/CPTManagerExceptions.hpp"
 //#include "Components/NetworkBuilder/BayesNetworkNode.hpp"

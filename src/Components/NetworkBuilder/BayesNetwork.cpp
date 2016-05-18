@@ -1,5 +1,9 @@
 #include <sstream>
 #include <iostream>
+#include <SMILE/syscoord.h>
+#include <SMILE/node.h>
+#include <SMILE/nodedef.h>
+#include <SMILE/nodeval.h>
 
 #include "BayesNetwork.hpp"
 #include "Logger.hpp"

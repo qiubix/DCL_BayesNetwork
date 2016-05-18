@@ -1,3 +1,6 @@
+//#include "SMILE/smile.h"
+#include <SMILE/network.h>
+#include <SMILE/node.h>
 #include "BayesNetworkNode.hpp"
 
 namespace Processors {

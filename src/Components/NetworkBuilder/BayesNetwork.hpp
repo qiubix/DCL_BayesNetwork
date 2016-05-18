@@ -4,9 +4,10 @@
 
 #include <string>
 #include <vector>
+#include <SMILE/network.h>
 //#include <gtest/gtest.h>
 
-#include "SMILE/smile.h"
+//#include "SMILE/smile.h"
 
 #include "BayesNetworkNode.hpp"
 #include "AbstractNetwork.hpp"

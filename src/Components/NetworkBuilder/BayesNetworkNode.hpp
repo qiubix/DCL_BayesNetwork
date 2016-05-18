@@ -3,8 +3,10 @@
 #define BAYES_NETWORK_NODE_HPP
 
 #include <string>
-#include "SMILE/smile.h"
+//#include "SMILE/smile.h"
 #include "CPTManager.hpp"
+
+class DSL_node;
 
 namespace Processors {
 namespace Network {
