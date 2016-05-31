@@ -1,7 +1,7 @@
-#This macro sets up the default cmake build type.
+#This function sets up the default cmake build type.
 #BUILD_TYPE: one of the cmake build types, e.g.: Debug, Release...
 
-cmake_minimum_required(VERSION 2.8.12)
+#cmake_minimum_required(VERSION 2.8.12)
 
 function(set_default_build_type BUILD_TYPE)
     if(NOT CMAKE_BUILD_TYPE)
