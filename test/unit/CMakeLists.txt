@@ -16,7 +16,6 @@ create_test_suite(NetworkBuilderTest NetworkBuilderTest.cpp procNetworkBuilder)
 target_link_libraries(NetworkBuilderTest TestUtils)
 
 create_test_suite(SOMEvaluationTest SOMEvaluationTest.cpp procSOMEvaluation)
-target_link_libraries(SOMEvaluationTest procNetworkBuilder)
 
 create_test_suite(OctreeBuilderTest OctreeBuilderTest.cpp OctreeBuilder)
 target_link_libraries(OctreeBuilderTest BayesNetworkTypes)

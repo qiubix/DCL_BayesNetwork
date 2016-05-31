@@ -15,7 +15,7 @@ PointCloud getPointCloudWithOnePoint() {
   return cloud;
 }
 
-pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloudWithThreePoints() {
+PointCloud getPointCloudWithThreePoints() {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
   cloud -> width = 3;
   cloud -> height = 1;

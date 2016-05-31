@@ -9,16 +9,22 @@
 //#include <iostream>
 #include <algorithm>
 //#include <assert.h>
+//#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+//#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "NetworkBuilder.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
-#include "NetworkBuilderExceptions.hpp"
 
-//#include <boost/thread.hpp>
-#include <boost/bind.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
+#include "NetworkBuilderExceptions.hpp"
+//#include "BayesNetwork.hpp"
+#include "OctreeBranchNode.hpp"
+#include "OctreeLeafNode.hpp"
+#include "Types/PointXYZSIFT.hpp"
+//#include "Types/Octree.hpp"
+
 
 namespace Processors {
 namespace Network {

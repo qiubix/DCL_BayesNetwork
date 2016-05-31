@@ -8,8 +8,8 @@ struct PointXYZSIFT;
 
 typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
-pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloudWithOnePoint();
+PointCloud getPointCloudWithOnePoint();
 
-pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloudWithThreePoints();
+PointCloud getPointCloudWithThreePoints();
 
 #endif //BAYESNETWORK_POINTCLOUDGENERATOR_HPP

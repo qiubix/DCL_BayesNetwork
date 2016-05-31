@@ -15,22 +15,30 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
+
 #include "BayesNetwork.hpp"
-#include "OctreeBranchNode.hpp"
-#include "OctreeLeafNode.hpp"
+//#include "OctreeBranchNode.hpp"
+//#include "OctreeLeafNode.hpp"
 
 //#include <opencv2/core/core.hpp>
 
 //#include <pcl/point_cloud.h>
 //#include <pcl/point_types.h>
 
-#include "Types/PointXYZSIFT.hpp"
+//#include "Types/PointXYZSIFT.hpp"
+
+//TODO: use forward declaration, create common base class for Octree::DepthFirstIterator
 #include "Types/Octree.hpp"
 
+struct PointXYZSIFT;
 
 namespace Processors {
 namespace Network {
 
+//class Octree;
+class OctreeNode;
+class OctreeLeafNode;
+class OctreeBranchNode;
 /*!
  * \class NetworkBuilder
  * \brief Class used to build Bayes network based on features multiplicity and spacial dependencies between them
