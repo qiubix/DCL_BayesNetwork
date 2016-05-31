@@ -1,0 +1,28 @@
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+
+create_test_suite(CPTManagerTest CPTManagerTest.cpp procNetworkBuilder)
+
+create_test_suite(BayesNetworkTest BayesNetworkTest.cpp procNetworkBuilder)
+
+create_test_suite(BayesNetworkNodeTest BayesNetworkNodeTest.cpp procNetworkBuilder)
+
+create_test_suite(OctreeNodeTest OctreeNodeTest.cpp procNetworkBuilder)
+target_link_libraries(OctreeNodeTest BayesNetworkTypes)
+
+create_test_suite(OctreeTest OctreeTest.cpp BayesNetworkTypes)
+file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+create_test_suite(NetworkBuilderTest NetworkBuilderTest.cpp procNetworkBuilder)
+target_link_libraries(NetworkBuilderTest TestUtils)
+
+create_test_suite(SOMEvaluationTest SOMEvaluationTest.cpp procSOMEvaluation)
+target_link_libraries(SOMEvaluationTest procNetworkBuilder)
+
+create_test_suite(OctreeBuilderTest OctreeBuilderTest.cpp OctreeBuilder)
+target_link_libraries(OctreeBuilderTest BayesNetworkTypes)
+
+create_test_suite(PointCloudIndexerTest PointCloudIndexerTest.cpp procPointCloudIndexer)
+
+#set(SIFT_FEATURE_MATCHER_TEST_SRC SIFTFeatureMatcherTest.cpp)
+#set(SIFT_FEATURE_MATCHER_TEST_LIB procSIFTFeatureMatcher)
+#create_test(SIFTFeatureMatcherTest ${SIFT_FEATURE_MATCHER_TEST_SRC} "${SIFT_FEATURE_MATCHER_TEST_LIB}")

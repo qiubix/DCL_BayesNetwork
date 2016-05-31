@@ -1,0 +1,5 @@
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+
+set(SOM_EVALUATION_INTEGRATION_TEST_LIB procSOMEvaluation procNetworkBuilder)
+create_test_suite(SOMEvaluationIntegrationTest SOMEvaluationIntegrationTest.cpp "${SOM_EVALUATION_INTEGRATION_TEST_LIB}")
+target_link_libraries(SOMEvaluationIntegrationTest TestUtils)
