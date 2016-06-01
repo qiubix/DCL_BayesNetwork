@@ -7,9 +7,9 @@ create_test_suite(BayesNetworkTest BayesNetworkTest.cpp procNetworkBuilder)
 create_test_suite(BayesNetworkNodeTest BayesNetworkNodeTest.cpp procNetworkBuilder)
 
 create_test_suite(OctreeNodeTest OctreeNodeTest.cpp procNetworkBuilder)
-target_link_libraries(OctreeNodeTest BayesNetworkTypes)
+target_link_libraries(OctreeNodeTest OctreeTypes)
 
-create_test_suite(OctreeTest OctreeTest.cpp BayesNetworkTypes)
+create_test_suite(OctreeTest OctreeTest.cpp OctreeTypes)
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 create_test_suite(NetworkBuilderTest NetworkBuilderTest.cpp procNetworkBuilder)
@@ -18,7 +18,7 @@ target_link_libraries(NetworkBuilderTest TestUtils)
 create_test_suite(SOMEvaluationTest SOMEvaluationTest.cpp procSOMEvaluation)
 
 create_test_suite(OctreeBuilderTest OctreeBuilderTest.cpp OctreeBuilder)
-target_link_libraries(OctreeBuilderTest BayesNetworkTypes)
+target_link_libraries(OctreeBuilderTest OctreeTypes)
 
 create_test_suite(PointCloudIndexerTest PointCloudIndexerTest.cpp procPointCloudIndexer)
 

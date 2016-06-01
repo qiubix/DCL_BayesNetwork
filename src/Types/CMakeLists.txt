@@ -3,14 +3,19 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 # If DCL provides any additional libraries - add them here
 
 # Get soource files of library
-FILE(GLOB lib_src *.cpp)
-ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src} OctreeContainers.hpp)
+# FILE(GLOB lib_src *.cpp)
+# ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src} OctreeContainers.hpp)
+# # Link with other libraries
+# TARGET_LINK_LIBRARIES(BayesNetworkTypes ${PCL_OCTREE_LIBRARIES})
+
+# Get soource files of library
+ADD_LIBRARY(OctreeTypes SHARED Octree.cpp OctreeContainers.hpp)
 # Link with other libraries
-TARGET_LINK_LIBRARIES(BayesNetworkTypes ${PCL_OCTREE_LIBRARIES})
+TARGET_LINK_LIBRARIES(OctreeTypes ${PCL_OCTREE_LIBRARIES})
 
 # Install library
 INSTALL(
-  TARGETS BayesNetworkTypes
+  TARGETS OctreeTypes
   RUNTIME DESTINATION bin COMPONENT applications
   LIBRARY DESTINATION lib COMPONENT applications
   ARCHIVE DESTINATION lib COMPONENT sdk
