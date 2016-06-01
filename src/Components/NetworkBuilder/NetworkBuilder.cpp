@@ -20,8 +20,8 @@
 
 #include "NetworkBuilderExceptions.hpp"
 //#include "BayesNetwork.hpp"
-#include "OctreeBranchNode.hpp"
-#include "OctreeLeafNode.hpp"
+#include "Types/OctreeBranchNode.hpp"
+#include "Types/OctreeLeafNode.hpp"
 #include "Types/PointXYZSIFT.hpp"
 #include "Types/BayesNetwork.hpp"
 //#include "Types/Octree.hpp"
