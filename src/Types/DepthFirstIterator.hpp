@@ -10,6 +10,8 @@
 namespace Processors {
 namespace Network {
 
+class OctreeNode;
+
 class DepthFirstIterator {
 public:
   typedef pcl::octree::OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator OctreeIterator;
@@ -19,8 +21,9 @@ public:
   DepthFirstIterator operator++();
   DepthFirstIterator operator++(int foo);
 
-  pcl::octree::OctreeNode* operator*();
+//  pcl::octree::OctreeNode* operator*();
 
+  OctreeNode getCurrentNode();
   OctreeIterator* operator->();
 
   bool operator==(const DepthFirstIterator& reference);

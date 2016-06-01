@@ -153,7 +153,7 @@ void NetworkBuilder::buildNetwork(AbstractOctree* octree) {
 
   for (;dfIt != dfItEnd; ++dfIt) {
     LOG(LDEBUG) << "========= Another node in depth search =========";
-    OctreeNode node = *dfIt;
+    OctreeNode node = dfIt.getCurrentNode();
     if (node.getNodeType() == OCTREE_LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
@@ -284,9 +284,9 @@ void NetworkBuilder::addHypothesisNode(DepthFirstIterator it, int modelId)
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  OctreeNode node = *it;
+  OctreeNode node = it.getCurrentNode();
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
-    OctreeBranchNode root(*it);
+    OctreeBranchNode root(it.getCurrentNode());
     createNode(&root);
     addNodeToParentStack(root);
     ++branchNodeCount;

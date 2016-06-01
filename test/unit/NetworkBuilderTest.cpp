@@ -8,6 +8,7 @@ using ::testing::Test;
 #include "Types/BayesNetwork.hpp"
 #include "Types/CPTManager.hpp"
 #include <Types/Octree.hpp>
+#include <Types/AbstractOctree.hpp>
 
 #include "Components/NetworkBuilder/NetworkBuilder.hpp"
 #include "Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
@@ -25,6 +26,17 @@ public:
   Processors::Network::NetworkBuilder* networkBuilder;
 
 };
+
+//class MockOctree : public AbstractOctree {
+//  virtual bool empty() = 0;
+//  virtual int getNumberOfPoints() = 0;
+//  virtual DepthFirstIterator depthBegin() = 0;
+//  virtual DepthFirstIterator depthEnd() = 0;
+//  virtual PointXYZSIFT getPoint(unsigned int id) = 0;
+//  MOCK_METHOD0(empty, bool());
+//  MOCK_METHOD0(getNumberOfPoints, int());
+//
+//};
 
 TEST_F(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
   pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);

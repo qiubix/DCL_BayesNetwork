@@ -1,4 +1,5 @@
 #include "DepthFirstIterator.hpp"
+#include "OctreeNode.hpp"
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
@@ -22,9 +23,14 @@ DepthFirstIterator DepthFirstIterator::operator++(int foo) {
   return *this;
 }
 
-pcl::octree::OctreeNode* DepthFirstIterator::operator*() {
-  return it.getCurrentOctreeNode();
+OctreeNode DepthFirstIterator::getCurrentNode() {
+  OctreeNode node = it.getCurrentOctreeNode();
+  return node;
 }
+
+//pcl::octree::OctreeNode* DepthFirstIterator::operator*() {
+//  return it.getCurrentOctreeNode();
+//}
 
 OctreeIterator* DepthFirstIterator::operator->() {
   return &it;
