@@ -19,7 +19,7 @@
 #include "Common/Timer.hpp"
 
 #include "NetworkBuilderExceptions.hpp"
-//#include "BayesNetwork.hpp"
+#include "BayesNetwork.hpp"
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
 #include "Types/PointXYZSIFT.hpp"
@@ -38,11 +38,13 @@ NetworkBuilder::NetworkBuilder(const std::string & name) : Base::Component(name)
   nextId = 0;
   numberOfVoxels = 0;
   featureNodeCount = 0;
+  network = new BayesNetwork();
 }
 
 NetworkBuilder::~NetworkBuilder()
 {
   LOG(LTRACE)<<"Good bye NetworkBuilder\n";
+  delete network;
 }
 
 void NetworkBuilder::prepareInterface()
@@ -122,13 +124,13 @@ bool NetworkBuilder::onStart()
 }
 
 BayesNetwork NetworkBuilder::getNetwork() {
-  return network;
+  return *network;
 }
 
 void NetworkBuilder::buildNetwork(Octree* octree) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
-  if( !network.isEmpty() ) {
+  if( !network -> isEmpty() ) {
     return;
   }
 
@@ -172,7 +174,7 @@ void NetworkBuilder::buildNetwork(Octree* octree) {
       }
     }
   }
-  network.setCPTofAllVoxelNodes(numberOfVoxels);
+  network -> setCPTofAllVoxelNodes(numberOfVoxels);
 
   exportNetwork();
 }
@@ -181,8 +183,8 @@ void NetworkBuilder::createNode(OctreeNode* node)
 {
   LOG(LDEBUG) << "Creating node: " << nextId;
   node->setId(nextId);
-  network.addVoxelNode(nextId);
-  string bayesParentNodeName = network.createVoxelName(nextId);
+  network -> addVoxelNode(nextId);
+  string bayesParentNodeName = network -> createVoxelName(nextId);
   ++numberOfVoxels;
   ++nextId;
 
@@ -198,9 +200,9 @@ void NetworkBuilder::connectNodeToNetwork(string bayesParentNodeName)
 {
   OctreeBranchNode parent(parentStack.top());
   int parentId = parent.getId();
-  string bayesChildNodeName = network.createVoxelName(parentId);
+  string bayesChildNodeName = network -> createVoxelName(parentId);
   parentStack.pop();
-  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
+  network -> connectNodes(bayesParentNodeName, bayesChildNodeName);
 }
 
 void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
@@ -221,7 +223,7 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* oct
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
   int parentId = leafNode.getId();
-  string parentName = network.createVoxelName(parentId);
+  string parentName = network -> createVoxelName(parentId);
   int childrenCounter = leafNode.getNumberOfChildren();
 
   if (childrenCounter > maxLeafContainerSize) {
@@ -242,14 +244,14 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* oct
     PointXYZSIFT p = octree -> getPoint(pointId);
     logPoint(p, pointId);
     int featureId = p.pointId;
-    network.addFeatureNode(featureId);
-    string featureName = network.createFeatureName(featureId);
-    network.connectNodes(featureName, parentName);
+    network -> addFeatureNode(featureId);
+    string featureName = network -> createFeatureName(featureId);
+    network -> connectNodes(featureName, parentName);
     ++featureNodeCount;
   }//: for points
 
   LOG(LTRACE) << "voxel ID: " << parentId;
-  LOG(LTRACE) << "voxel name: " << network.createVoxelName(parentId);
+  LOG(LTRACE) << "voxel name: " << network -> createVoxelName(parentId);
   LOG(LTRACE) << "children count: " <<childrenCounter;
   leafNodeCount++;
 }
@@ -263,12 +265,12 @@ void NetworkBuilder::exportNetwork()
   LOG(LWARNING) << "maxLeafContainerSize: " << maxLeafContainerSize;
 
   LOG(LDEBUG) << "before writing network to file";
-  network.exportNetworkToFile();
+  network -> exportNetworkToFile();
   LOG(LDEBUG) << "after writing network to file";
   //std::vector<DSL_network> networks;
   std::vector<AbstractNetwork*> networks;
   //networks.push_back(network.getNetwork());
-  networks.push_back(&network);
+  networks.push_back(network);
   out_networks.write(networks);
   //out_network.write(network.getNetwork());
 }

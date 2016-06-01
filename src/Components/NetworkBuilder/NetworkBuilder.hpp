@@ -16,7 +16,8 @@
 #include "Property.hpp"
 #include "EventHandler2.hpp"
 
-#include "BayesNetwork.hpp"
+#include "AbstractNetwork.hpp"
+//#include "BayesNetwork.hpp"
 //#include "OctreeBranchNode.hpp"
 //#include "OctreeLeafNode.hpp"
 
@@ -36,6 +37,7 @@ namespace Processors {
 namespace Network {
 
 //class Octree;
+class BayesNetwork;
 class OctreeNode;
 class OctreeLeafNode;
 class OctreeBranchNode;
@@ -106,7 +108,7 @@ protected:
   void onJointMultiplicity();
 
 private:
-  BayesNetwork network;
+  BayesNetwork* network;
 //  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
   std::stack <Octree* > octreeQueue;
 

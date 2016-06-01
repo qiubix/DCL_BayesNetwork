@@ -5,6 +5,7 @@ using ::testing::Le;
 using ::testing::Test;
 
 //#include <pcl/io/pcd_io.h>
+#include "Components/NetworkBuilder/BayesNetwork.hpp"
 #include "Components/NetworkBuilder/NetworkBuilder.hpp"
 #include "Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
 #include "Components/NetworkBuilder/CPTManager.hpp"
@@ -171,7 +172,7 @@ TEST_F(NetworkBuilderTest, shouldWriteNetworkToOutputPort) {
 
 TEST_F(NetworkBuilderTest, shouldInitializeHandlers) {
   networkBuilder -> prepareInterface();
-  
+
   std::string handlers = networkBuilder -> listHandlers();
   ASSERT_THAT(handlers, Eq("onJointMultiplicity\nonNewModel\n"));
 }
