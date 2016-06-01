@@ -10,6 +10,7 @@ using ::testing::Test;
 //#include <pcl/io/pcd_io.h>
 
 #include "Types/Octree.hpp"
+#include "Types/DepthFirstIterator.hpp"
 #include "Types/PointXYZSIFT.hpp"
 
 class OctreeTest : public Test {
@@ -39,7 +40,7 @@ TEST_F(OctreeTest, shouldGetFirstOctreeNode) {
   Processors::Network::Octree octree(cloud);
   octree.init();
 
-  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+  Processors::Network::DepthFirstIterator it = octree.depthBegin();
 
   ASSERT_THAT(it->isBranchNode(), Eq(true));
   ASSERT_THAT(it->getCurrentOctreeDepth(), Eq(0));
@@ -49,7 +50,7 @@ TEST_F(OctreeTest, shouldGetNextOctreeNodeInDepthSearch) {
   PointCloud cloud = getPointCloudWithOnePoint();
   Processors::Network::Octree octree(cloud);
   octree.init();
-  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
+  Processors::Network::DepthFirstIterator it = octree.depthBegin();
 
   ++it;
 
@@ -61,10 +62,10 @@ TEST_F(OctreeTest, shouldGetLastOctreeNodeInDepthSearch) {
   PointCloud cloud = getPointCloudWithTwoPoints();
   Processors::Network::Octree octree(cloud);
   octree.init();
-  Processors::Network::Octree::DepthFirstIterator it = octree.depthBegin();
-  Processors::Network::Octree::DepthFirstIterator next = octree.depthBegin();
+  Processors::Network::DepthFirstIterator it = octree.depthBegin();
+  Processors::Network::DepthFirstIterator next = octree.depthBegin();
 
-  const Processors::Network::Octree::DepthFirstIterator end = octree.depthEnd();
+  const Processors::Network::DepthFirstIterator end = octree.depthEnd();
   ++next;
   while(next != end) {
     ++next;

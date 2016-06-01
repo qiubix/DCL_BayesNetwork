@@ -142,8 +142,8 @@ void NetworkBuilder::buildNetwork(Octree* octree) {
   LOG(LTRACE) << "Creating iterators...";
 
   // Use depth-first iterator
-  Octree::DepthFirstIterator dfIt = octree->depthBegin();
-  const Octree::DepthFirstIterator dfItEnd = octree -> depthEnd();
+  DepthFirstIterator dfIt = octree->depthBegin();
+  const DepthFirstIterator dfItEnd = octree -> depthEnd();
 
   LOG(LTRACE) << "Creating nodes:";
 
@@ -276,7 +276,7 @@ void NetworkBuilder::exportNetwork()
   //out_network.write(network.getNetwork());
 }
 
-void NetworkBuilder::addHypothesisNode(Octree::DepthFirstIterator it, int modelId)
+void NetworkBuilder::addHypothesisNode(DepthFirstIterator it, int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
   /*

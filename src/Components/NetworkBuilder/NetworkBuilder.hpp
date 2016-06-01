@@ -30,6 +30,7 @@
 
 //TODO: use forward declaration, create common base class for Octree::DepthFirstIterator
 #include "Types/Octree.hpp"
+#include "Types/DepthFirstIterator.hpp"
 
 struct PointXYZSIFT;
 
@@ -133,7 +134,7 @@ private:
 
   void exportNetwork();
 
-  void addHypothesisNode(Octree::DepthFirstIterator it, int modelId = 0);
+  void addHypothesisNode(DepthFirstIterator it, int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();

@@ -17,7 +17,7 @@ INSTALL(
 )
 
 # Get soource files of library
-SET(octree_types_src Octree.cpp OctreeNode.cpp OctreeBranchNode.cpp OctreeLeafNode.cpp)
+SET(octree_types_src Octree.cpp OctreeNode.cpp OctreeBranchNode.cpp OctreeLeafNode.cpp DepthFirstIterator.cpp)
 ADD_LIBRARY(OctreeTypes SHARED ${octree_types_src} OctreeContainers.hpp)
 # Link with other libraries
 TARGET_LINK_LIBRARIES(OctreeTypes ${DisCODe_LIBRARIES} ${PCL_OCTREE_LIBRARIES} ${PCL_IO_LIBRARIES})

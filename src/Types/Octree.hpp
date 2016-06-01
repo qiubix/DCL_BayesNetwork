@@ -18,6 +18,8 @@ using namespace pcl::octree;
 namespace Processors {
 namespace Network {
 
+class DepthFirstIterator;
+
 class Octree {
 public:
   typedef OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> OctreeWithSIFT;
@@ -29,36 +31,36 @@ public:
   bool empty();
   PointXYZSIFT getPoint(unsigned int id);
 
-  class DepthFirstIterator {
-  public:
-    typedef OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator OctreeIterator;
-    DepthFirstIterator(OctreeIterator it) {
-      this->it = it;
-    }
-    DepthFirstIterator operator++() {
-      DepthFirstIterator dfIt = *this;
-      it++;
-      return dfIt;
-    }
-    DepthFirstIterator operator++(int foo) {
-      it++;
-      return *this;
-    }
-    pcl::octree::OctreeNode* operator*() {
-      return it.getCurrentOctreeNode();
-    }
-    OctreeIterator* operator->() {
-      return &it;
-    }
-    bool operator==(const DepthFirstIterator& reference) {
-      return it == reference.it;
-    }
-    bool operator!=(const DepthFirstIterator& reference) {
-      return it != reference.it;
-    }
-  private:
-    OctreeIterator it;
-  };
+//  class DepthFirstIterator {
+//  public:
+//    typedef OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId>::DepthFirstIterator OctreeIterator;
+//    DepthFirstIterator(OctreeIterator it) {
+//      this->it = it;
+//    }
+//    DepthFirstIterator operator++() {
+//      DepthFirstIterator dfIt = *this;
+//      it++;
+//      return dfIt;
+//    }
+//    DepthFirstIterator operator++(int foo) {
+//      it++;
+//      return *this;
+//    }
+//    pcl::octree::OctreeNode* operator*() {
+//      return it.getCurrentOctreeNode();
+//    }
+//    OctreeIterator* operator->() {
+//      return &it;
+//    }
+//    bool operator==(const DepthFirstIterator& reference) {
+//      return it == reference.it;
+//    }
+//    bool operator!=(const DepthFirstIterator& reference) {
+//      return it != reference.it;
+//    }
+//  private:
+//    OctreeIterator it;
+//  };
 
   DepthFirstIterator depthBegin();
   DepthFirstIterator depthEnd();
