@@ -9,6 +9,13 @@ ADD_LIBRARY(BayesNetworkTypes SHARED ${lib_src} BayesNetworkExceptions.hpp Abstr
 # Link with other libraries
 TARGET_LINK_LIBRARIES(BayesNetworkTypes ${SMILE_LIBS} ${DisCODe_LIBRARIES})
 
+INSTALL(
+  TARGETS BayesNetworkTypes
+  RUNTIME DESTINATION bin COMPONENT applications
+  LIBRARY DESTINATION lib COMPONENT applications
+  ARCHIVE DESTINATION lib COMPONENT sdk
+)
+
 # Get soource files of library
 ADD_LIBRARY(OctreeTypes SHARED Octree.cpp OctreeContainers.hpp)
 # Link with other libraries
