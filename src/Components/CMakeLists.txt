@@ -7,10 +7,6 @@ ADD_COMPONENT(OctreeBuilder)
 
 ADD_COMPONENT(PointCloudIndexer)
 
-#ADD_COMPONENT(NetworkTester)
-
-#ADD_COMPONENT(MultipleModels)
-
 #ADD_COMPONENT(SIFTAdder)
 
 ADD_COMPONENT(SIFTFeatureMatcher)
