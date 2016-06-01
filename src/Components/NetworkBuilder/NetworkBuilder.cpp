@@ -19,10 +19,11 @@
 #include "Common/Timer.hpp"
 
 #include "NetworkBuilderExceptions.hpp"
-#include "BayesNetwork.hpp"
+//#include "BayesNetwork.hpp"
 #include "OctreeBranchNode.hpp"
 #include "OctreeLeafNode.hpp"
 #include "Types/PointXYZSIFT.hpp"
+#include "Types/BayesNetwork.hpp"
 //#include "Types/Octree.hpp"
 
 

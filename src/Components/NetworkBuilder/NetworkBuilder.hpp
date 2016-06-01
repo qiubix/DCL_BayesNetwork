@@ -16,7 +16,7 @@
 #include "Property.hpp"
 #include "EventHandler2.hpp"
 
-#include "AbstractNetwork.hpp"
+#include "Types/AbstractNetwork.hpp"
 //#include "BayesNetwork.hpp"
 //#include "OctreeBranchNode.hpp"
 //#include "OctreeLeafNode.hpp"

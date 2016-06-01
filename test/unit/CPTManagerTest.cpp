@@ -5,8 +5,10 @@ using ::testing::Test;
 
 //#include "Components/NetworkBuilder/BayesNetwork.hpp"
 #include <SMILE/smile.h>
-#include "Components/NetworkBuilder/CPTManager.hpp"
-#include "Components/NetworkBuilder/CPTManagerExceptions.hpp"
+//#include "Components/NetworkBuilder/CPTManager.hpp"
+//#include "Components/NetworkBuilder/CPTManagerExceptions.hpp"
+#include "Types/CPTManager.hpp"
+#include "Types/CPTManagerExceptions.hpp"
 //#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
 
 using namespace Processors::Network;

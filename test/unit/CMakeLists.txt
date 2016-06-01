@@ -1,10 +1,10 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
-create_test_suite(CPTManagerTest CPTManagerTest.cpp procNetworkBuilder)
+create_test_suite(CPTManagerTest CPTManagerTest.cpp BayesNetworkTypes)
 
-create_test_suite(BayesNetworkTest BayesNetworkTest.cpp procNetworkBuilder)
+create_test_suite(BayesNetworkTest BayesNetworkTest.cpp BayesNetworkTypes)
 
-create_test_suite(BayesNetworkNodeTest BayesNetworkNodeTest.cpp procNetworkBuilder)
+create_test_suite(BayesNetworkNodeTest BayesNetworkNodeTest.cpp BayesNetworkTypes)
 
 create_test_suite(OctreeNodeTest OctreeNodeTest.cpp procNetworkBuilder)
 target_link_libraries(OctreeNodeTest OctreeTypes)

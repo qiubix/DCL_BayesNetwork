@@ -8,7 +8,7 @@ using ::testing::NiceMock;
 
 #include "Components/SOMEvaluation/SOMEvaluation.hpp"
 //#include "Components/NetworkBuilder/BayesNetwork.hpp"
-#include "Components/NetworkBuilder/AbstractNetwork.hpp"
+#include "Types/AbstractNetwork.hpp"
 
 using Processors::Network::SOMEvaluation;
 

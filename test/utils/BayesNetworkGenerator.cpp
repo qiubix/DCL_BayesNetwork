@@ -1,5 +1,5 @@
 #include "BayesNetworkGenerator.hpp"
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
+#include "Types/BayesNetwork.hpp"
 
 using Processors::Network::BayesNetwork;
 

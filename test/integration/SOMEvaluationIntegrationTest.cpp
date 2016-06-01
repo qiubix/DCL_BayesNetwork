@@ -1,6 +1,6 @@
 #include <gmock/gmock.h>
 #include <Components/SOMEvaluation/SOMEvaluation.hpp>
-#include <Components/NetworkBuilder/BayesNetwork.hpp>
+#include <Types/BayesNetwork.hpp>
 #include "utils/BayesNetworkGenerator.hpp"
 #include <vector>
 

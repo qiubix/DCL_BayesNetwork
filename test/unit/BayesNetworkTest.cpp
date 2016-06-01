@@ -7,9 +7,12 @@ using ::testing::Ne;
 #include <SMILE/node.h>
 #include <SMILE/nodedef.h>
 #include <SMILE/nodeval.h>
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
-#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
-#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+//#include "Components/NetworkBuilder/BayesNetwork.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+#include "Types/BayesNetwork.hpp"
+#include "Types/BayesNetworkNode.hpp"
+#include "Types/BayesNetworkExceptions.hpp"
 
 using namespace Processors::Network;
 
