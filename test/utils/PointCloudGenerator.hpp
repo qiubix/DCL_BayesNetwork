@@ -10,6 +10,8 @@ typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
 PointCloud getPointCloudWithOnePoint();
 
+PointCloud getPointCloudWithTwoPoints();
+
 PointCloud getPointCloudWithThreePoints();
 
 #endif //BAYESNETWORK_POINTCLOUDGENERATOR_HPP

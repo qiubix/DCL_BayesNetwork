@@ -12,6 +12,7 @@ create_test_suite(OctreeNodeTest OctreeNodeTest.cpp OctreeTypes)
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 create_test_suite(OctreeTest OctreeTest.cpp OctreeTypes)
+target_link_libraries(OctreeTest TestUtils)
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 create_test_suite(NetworkBuilderTest NetworkBuilderTest.cpp procNetworkBuilder)
