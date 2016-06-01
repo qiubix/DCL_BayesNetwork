@@ -24,7 +24,7 @@
 #include "Types/OctreeLeafNode.hpp"
 #include "Types/PointXYZSIFT.hpp"
 #include "Types/BayesNetwork.hpp"
-//#include "Types/Octree.hpp"
+#include "Types/AbstractOctree.hpp"
 
 
 namespace Processors {
@@ -92,10 +92,10 @@ void NetworkBuilder::onNewModel()
   LOG(LTRACE) << "On new model";
 //  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
 //  cloudQueue.push(newCloud);
-  Octree* newOctree = in_octree.read();
+  AbstractOctree* newOctree = in_octree.read();
   LOG(LDEBUG) << "Number of points in new model: " << newOctree -> getNumberOfPoints();
   octreeQueue.push(newOctree);
-  Octree* octree = octreeQueue.top();
+  AbstractOctree* octree = octreeQueue.top();
   octreeQueue.pop();
   buildNetwork(octree);
 }
@@ -106,7 +106,7 @@ void NetworkBuilder::onJointMultiplicity()
   jointMultiplicityVector = in_jointMultiplicity.read();
   if (octreeQueue.size() > 0) {
     LOG(LDEBUG) << "Size of octreeQueue: " << octreeQueue.size();
-    Octree* octree = octreeQueue.top();
+    AbstractOctree* octree = octreeQueue.top();
     octreeQueue.pop();
     buildNetwork(octree);
   }
@@ -128,7 +128,7 @@ BayesNetwork NetworkBuilder::getNetwork() {
   return *network;
 }
 
-void NetworkBuilder::buildNetwork(Octree* octree) {
+void NetworkBuilder::buildNetwork(AbstractOctree* octree) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
   if( !network -> isEmpty() ) {
@@ -219,7 +219,7 @@ void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, AbstractOctree* octree)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 

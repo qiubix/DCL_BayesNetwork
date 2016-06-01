@@ -29,7 +29,7 @@
 //#include "Types/PointXYZSIFT.hpp"
 
 //TODO: use forward declaration, create common base class for Octree::DepthFirstIterator
-#include "Types/Octree.hpp"
+//#include "Types/Octree.hpp"
 #include "Types/DepthFirstIterator.hpp"
 
 struct PointXYZSIFT;
@@ -37,7 +37,7 @@ struct PointXYZSIFT;
 namespace Processors {
 namespace Network {
 
-//class Octree;
+class AbstractOctree;
 class BayesNetwork;
 class OctreeNode;
 class OctreeLeafNode;
@@ -65,7 +65,7 @@ public:
    */
   void prepareInterface();
 
-  void buildNetwork(Octree* octree);
+  void buildNetwork(AbstractOctree* octree);
 
   BayesNetwork getNetwork();
 
@@ -75,7 +75,7 @@ protected:
   Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
   Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
 //  Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
-  Base::DataStreamIn< Octree* > in_octree;
+  Base::DataStreamIn< AbstractOctree* > in_octree;
 
   /// Output data stream
 //  Base::DataStreamOut<DSL_network> out_network;
@@ -111,7 +111,7 @@ protected:
 private:
   BayesNetwork* network;
 //  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
-  std::stack <Octree* > octreeQueue;
+  std::stack <AbstractOctree* > octreeQueue;
 
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
@@ -129,7 +129,7 @@ private:
 
   void createNode(OctreeNode* node);
   void connectNodeToNetwork(string bayesParentNodeName);
-  void createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree);
+  void createLeafNodeChildren(OctreeLeafNode leafNode, AbstractOctree* octree);
 
 
   void exportNetwork();

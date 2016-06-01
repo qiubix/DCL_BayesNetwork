@@ -12,6 +12,7 @@
 #include "PointXYZSIFT.hpp"
 
 #include "OctreeContainers.hpp"
+#include "AbstractOctree.hpp"
 
 using namespace pcl::octree;
 
@@ -20,7 +21,7 @@ namespace Network {
 
 class DepthFirstIterator;
 
-class Octree {
+class Octree : public AbstractOctree {
 public:
   typedef OctreePointCloud<PointXYZSIFT, OctreeContainerPointIndicesWithId, OctreeContainerEmptyWithId> OctreeWithSIFT;
   Octree(pcl::PointCloud<PointXYZSIFT>::Ptr cloud);
