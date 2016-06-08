@@ -8,10 +8,14 @@ struct PointXYZSIFT;
 
 typedef pcl::PointCloud<PointXYZSIFT>::Ptr PointCloud;
 
+static const int DEFAULT_INDEX = 999;
+
 PointCloud getPointCloudWithOnePoint();
 
 PointCloud getPointCloudWithTwoPoints();
 
 PointCloud getPointCloudWithThreePoints();
+
+PointCloud getPointCloudWithThreePointsUnindexed();
 
 #endif //BAYESNETWORK_POINTCLOUDGENERATOR_HPP

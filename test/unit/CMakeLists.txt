@@ -24,6 +24,7 @@ create_test_suite(OctreeBuilderTest OctreeBuilderTest.cpp OctreeBuilder)
 target_link_libraries(OctreeBuilderTest OctreeTypes)
 
 create_test_suite(PointCloudIndexerTest PointCloudIndexerTest.cpp procPointCloudIndexer)
+target_link_libraries(PointCloudIndexerTest TestUtils)
 
 #set(SIFT_FEATURE_MATCHER_TEST_SRC SIFTFeatureMatcherTest.cpp)
 #set(SIFT_FEATURE_MATCHER_TEST_LIB procSIFTFeatureMatcher)
