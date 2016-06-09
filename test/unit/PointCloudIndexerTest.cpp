@@ -8,7 +8,7 @@ using ::testing::Test;
 #include <pcl/point_cloud.h>
 //#include <pcl/io/pcd_io.h>
 
-#include "../src/Components/PointCloudIndexer/PointCloudIndexer.hpp"
+#include "Components/PointCloudIndexer/PointCloudIndexer.hpp"
 
 #include "Types/PointXYZSIFT.hpp"
 #include "utils/PointCloudGenerator.hpp"

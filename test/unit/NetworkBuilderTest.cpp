@@ -9,6 +9,7 @@ using ::testing::Test;
 #include "Types/CPTManager.hpp"
 #include <Types/Octree.hpp>
 #include <Types/AbstractOctree.hpp>
+#include <Types/AbstractNetwork.hpp>
 
 #include "Components/NetworkBuilder/NetworkBuilder.hpp"
 #include "Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
@@ -38,6 +39,17 @@ public:
 //
 //};
 
+//class MockNetwork : public AbstractNetwork
+//{
+//public:
+//  MOCK_METHOD1(getNodeProbability, double(const std::string&));
+//  MOCK_METHOD0(clearEvidence, void());
+//  MOCK_METHOD0(isEmpty, bool());
+//  MOCK_METHOD2(setNodeEvidence, void(const std::string&, int));
+//  MOCK_METHOD1(nodeExists, bool(const std::string&));
+//  MOCK_METHOD0(propagateProbabilities, void());
+//};
+
 TEST_F(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
   pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
   Octree octree(emptyCloud);
@@ -48,6 +60,7 @@ TEST_F(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
 TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
   Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
   octreeWithOnePoint -> init();
+
   networkBuilder -> buildNetwork(octreeWithOnePoint);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
@@ -57,6 +70,7 @@ TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
 TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
   Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
   octreeWithOnePoint -> init();
+
   networkBuilder -> buildNetwork(octreeWithOnePoint);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
@@ -69,6 +83,7 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
 TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
+
   networkBuilder -> buildNetwork(octreeWithThreePoints);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
@@ -81,6 +96,7 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
 TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsPointsInOctree) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
+
   networkBuilder -> buildNetwork(octreeWithThreePoints);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
@@ -90,6 +106,7 @@ TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsPointsInOctree
 TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
   Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
   octreeWithOnePoint -> init();
+
   networkBuilder -> buildNetwork(octreeWithOnePoint);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
@@ -103,6 +120,7 @@ TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
 TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
+
   networkBuilder -> buildNetwork(octreeWithThreePoints);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
@@ -120,6 +138,7 @@ TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
 TEST_F(NetworkBuilderTest, shouldNotHaveCycles) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
+
   networkBuilder -> buildNetwork(octreeWithThreePoints);
 
   Processors::Network::BayesNetwork network = networkBuilder -> getNetwork();
