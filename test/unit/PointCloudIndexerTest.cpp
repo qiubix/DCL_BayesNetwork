@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 using ::testing::Eq;
 using ::testing::Ne;
+using ::testing::Not;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
@@ -23,6 +24,36 @@ public:
   PointCloudIndexer* indexer;
 };
 
+MATCHER(hasEveryPointWithIdDifferentThanDefaultIndex, "") {
+  for (int i = 0; i < arg->size(); ++i) {
+    if (arg -> points[i].pointId == DEFAULT_INDEX)
+      return false;
+  }
+  return true;
+}
+
+MATCHER(hasEveryPointWithDefaultIndex, "") {
+  for (int i = 0; i < arg->size(); ++i) {
+    if (arg -> points[i].pointId != DEFAULT_INDEX)
+      return false;
+  }
+  return true;
+}
+
+MATCHER(hasEveryPointWithUniqueIndex, "") {
+  for (int i=0; i < arg -> size() - 1; i++) {
+    int firstPointId = arg -> points[i].pointId;
+
+    for (int j = i + 1; j < arg -> size(); ++j) {
+      int secondPointId = arg -> points[j].pointId;
+      if (firstPointId == secondPointId)
+        return false;
+    }
+
+  }
+  return true;
+}
+
 TEST_F(PointCloudIndexerTest, shouldAcceptPointCloudWithSIFT) {
   indexer -> setPointCloud(getPointCloudWithOnePoint());
 
@@ -44,16 +75,12 @@ TEST_F(PointCloudIndexerTest, shouldCreateCloudWithSameNumberOfPointsAsModel) {
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithEveryPointIndexed) {
   indexer -> setPointCloud(getPointCloudWithThreePointsUnindexed());
   PointCloud cloudBeforeIndexing = indexer -> getPointCloud();
-  for (int i = 0; i < cloudBeforeIndexing->size(); ++i) {
-    ASSERT_THAT(cloudBeforeIndexing -> points[i].pointId, Eq(DEFAULT_INDEX));
-  }
+  ASSERT_THAT(cloudBeforeIndexing, hasEveryPointWithDefaultIndex());
 
   indexer -> indexPoints();
-  
+
   PointCloud cloudAfterIndexing = indexer -> getPointCloud();
-  for (int j = 0; j < cloudAfterIndexing->size(); ++j) {
-    ASSERT_THAT(cloudAfterIndexing -> points[j].pointId, Ne(DEFAULT_INDEX));
-  }
+  ASSERT_THAT(cloudAfterIndexing, hasEveryPointWithIdDifferentThanDefaultIndex());
 }
 
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithUniquePointIndices) {
@@ -62,13 +89,7 @@ TEST_F(PointCloudIndexerTest, shouldCreateCloudWithUniquePointIndices) {
   indexer -> indexPoints();
 
   PointCloud cloudAfterIndexing = indexer -> getPointCloud();
-  for (int i=0; i < cloudAfterIndexing -> size() - 1; i++) {
-    int firstPointId = cloudAfterIndexing -> points[i].pointId;
-    for (int j = i + 1; j < cloudAfterIndexing->size(); ++j) {
-      int secondPointId = cloudAfterIndexing -> points[j].pointId;
-      ASSERT_THAT(firstPointId, Ne(secondPointId));
-    }
-  }
+  ASSERT_THAT(cloudAfterIndexing, hasEveryPointWithUniqueIndex());
 }
 
 TEST_F(PointCloudIndexerTest, shouldCreateCloudWithCorrectCoordinatesInPoints)
