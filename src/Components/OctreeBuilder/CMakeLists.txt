@@ -7,6 +7,6 @@ FILE(GLOB files *.cpp)
 
 # Create an executable file from sources:
 add_library(OctreeBuilder SHARED ${files})
-target_link_libraries(OctreeBuilder BayesNetworkTypes ${DisCODe_LIBRARIES} ${PCL_IO_LIBRARIES})
+target_link_libraries(OctreeBuilder OctreeTypes ${DisCODe_LIBRARIES} ${PCL_IO_LIBRARIES})
 
 INSTALL_COMPONENT(OctreeBuilder)

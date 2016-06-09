@@ -7,9 +7,12 @@ using ::testing::Ne;
 #include <SMILE/node.h>
 #include <SMILE/nodedef.h>
 #include <SMILE/nodeval.h>
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
-#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
-#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+//#include "Components/NetworkBuilder/BayesNetwork.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+#include "Types/BayesNetwork.hpp"
+#include "Types/BayesNetworkNode.hpp"
+#include "Types/BayesNetworkExceptions.hpp"
 
 using namespace Processors::Network;
 
@@ -22,10 +25,8 @@ class BayesNetworkTest : public Test {
       SECOND_NODE_ID(1),
       FIRST_NODE_NAME("V_0"),
       SECOND_NODE_NAME("V_1"),
-      PARENT_NODE_ID(0),
-      PARENT_NODE_NAME("V_0"),
-      CHILD_NODE_ID(1),
-      CHILD_NODE_NAME("V_1"),
+      CHILD_NODE_ID(0),
+      CHILD_NODE_NAME("V_0"),
       FIRST_ROOT_NODE_NAME("F_0"),
       SECOND_ROOT_NODE_NAME("F_1"),
       THIRD_ROOT_NODE_NAME("F_2")
@@ -63,7 +64,7 @@ class BayesNetworkTest : public Test {
       return network;
     }
 
-    BayesNetwork createNetworkWithOneParentAndTwoChildren() {
+    BayesNetwork createNetworkWithOneChildAndTwoParents() {
       BayesNetwork network;
       network.addVoxelNode(0);
       network.addFeatureNode(0);
@@ -75,8 +76,8 @@ class BayesNetworkTest : public Test {
       //getNetwork() returns a COPY of a network, so running AddArc will not change network stored in BN class
  //     network.getNetwork().AddArc(parent,firstChild);
  //     network.getNetwork().AddArc(parent,secondChild);
-      network.connectNodes(PARENT_NODE_NAME,FIRST_ROOT_NODE_NAME);
-      network.connectNodes(PARENT_NODE_NAME,SECOND_ROOT_NODE_NAME);
+      network.connectNodes(CHILD_NODE_NAME,FIRST_ROOT_NODE_NAME);
+      network.connectNodes(CHILD_NODE_NAME,SECOND_ROOT_NODE_NAME);
       return network;
     }
 
@@ -85,8 +86,6 @@ class BayesNetworkTest : public Test {
     const int SECOND_NODE_ID;
     const char* FIRST_NODE_NAME;
     const char* SECOND_NODE_NAME;
-    const int PARENT_NODE_ID;
-    const char* PARENT_NODE_NAME;
     const int CHILD_NODE_ID;
     const char* CHILD_NODE_NAME;
     const std::string FIRST_ROOT_NODE_NAME;
@@ -127,7 +126,7 @@ TEST_F(BayesNetworkTest, shouldAddNodeToEmptyNetwork)
 
 TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
 {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
 
   network.addVoxelNode(SECOND_NODE_ID);
   EXPECT_THAT(network.hasNode(SECOND_NODE_NAME), Eq(true));
@@ -140,13 +139,13 @@ TEST_F(BayesNetworkTest, shouldAddNodeToNetworkWithNodes)
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfFeatureNodesInNetwork)
 {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
   ASSERT_THAT(network.getNumberOfFeatureNodes(), Eq(2));
 }
 
 TEST_F(BayesNetworkTest, shouldThrowExceptionWhenAddingAlreadyExistingNode)
 {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
 
   EXPECT_THROW(network.addVoxelNode(FIRST_NODE_ID), NodeAlreadyExistsException);
   EXPECT_THROW(network.addFeatureNode(1), NodeAlreadyExistsException);
@@ -208,7 +207,7 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenNodesCanNotBeConnected)
 
 TEST_F(BayesNetworkTest, shouldGetNumberOfChildren)
 {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
   int numberOfChildren = network.getNumberOfChildren("V_0");
   ASSERT_THAT(numberOfChildren, Eq(2));
 }
@@ -222,7 +221,7 @@ TEST_F(BayesNetworkTest, shouldThrowExceptionWhenTryingToCreateIncorrectNodeName
 }
 
 TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
   DSL_network net = network.getNetwork();
   int handle = net.FindNode("F_0");
   net.GetNode(handle)->Value()->SetEvidence(0);
@@ -236,19 +235,19 @@ TEST_F(BayesNetworkTest, shouldGetNodeProbability) {
 }
 
 TEST_F(BayesNetworkTest, shouldReturnTrueForExistingNode) {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
 
   ASSERT_THAT(network.nodeExists("V_0"), Eq(true));
 }
 
 TEST_F(BayesNetworkTest, shouldReturnFalseForNonExistingNode) {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
 
   ASSERT_THAT(network.nodeExists("V_7"), Eq(false));
 }
 
 TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
   DSL_network net = network.getNetwork();
   int handle = net.FindNode("F_0");
   net.GetNode(handle)->Value()->SetEvidence(0);
@@ -263,7 +262,7 @@ TEST_F(BayesNetworkTest, shouldPropagateProbabilities) {
 }
 
 TEST_F(BayesNetworkTest, shouldSetNodeEvidence) {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
   int STATE = 1;
 
   network.setNodeEvidence("F_0", STATE);
@@ -289,7 +288,7 @@ TEST_F(BayesNetworkTest, shouldGetNodeEvidence) {
 }
 
 TEST_F(BayesNetworkTest, shouldGetListOfFeatureNodeNames) {
-  BayesNetwork network = createNetworkWithOneParentAndTwoChildren();
+  BayesNetwork network = createNetworkWithOneChildAndTwoParents();
 
   std::vector<std::string> featureNodeNames;
   featureNodeNames.push_back("F_0");

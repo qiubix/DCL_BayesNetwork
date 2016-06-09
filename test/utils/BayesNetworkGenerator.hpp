@@ -2,7 +2,11 @@
 #ifndef BAYESNETWORK_BAYESNETWORKGENERATOR_HPP
 #define BAYESNETWORK_BAYESNETWORKGENERATOR_HPP
 
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
+namespace Processors {
+namespace Network {
+class BayesNetwork;
+}
+}
 
 Processors::Network::BayesNetwork getDefaultBayesNetwork();
 

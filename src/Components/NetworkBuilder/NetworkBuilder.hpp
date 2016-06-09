@@ -15,22 +15,33 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
-#include "BayesNetwork.hpp"
-#include "OctreeBranchNode.hpp"
-#include "OctreeLeafNode.hpp"
+
+#include "Types/AbstractNetwork.hpp"
+//#include "BayesNetwork.hpp"
+//#include "OctreeBranchNode.hpp"
+//#include "OctreeLeafNode.hpp"
 
 //#include <opencv2/core/core.hpp>
 
 //#include <pcl/point_cloud.h>
 //#include <pcl/point_types.h>
 
-#include "Types/PointXYZSIFT.hpp"
-#include "Types/Octree.hpp"
+//#include "Types/PointXYZSIFT.hpp"
 
+//TODO: use forward declaration, create common base class for Octree::DepthFirstIterator
+//#include "Types/Octree.hpp"
+#include "Types/DepthFirstIterator.hpp"
+
+struct PointXYZSIFT;
 
 namespace Processors {
 namespace Network {
 
+class AbstractOctree;
+class BayesNetwork;
+class OctreeNode;
+class OctreeLeafNode;
+class OctreeBranchNode;
 /*!
  * \class NetworkBuilder
  * \brief Class used to build Bayes network based on features multiplicity and spacial dependencies between them
@@ -54,7 +65,7 @@ public:
    */
   void prepareInterface();
 
-  void buildNetwork(Octree* octree);
+  void buildNetwork(AbstractOctree* octree);
 
   BayesNetwork getNetwork();
 
@@ -64,7 +75,7 @@ protected:
   Base::DataStreamIn< std::vector< std::map<int,int> > > in_modelsMultiplicity;
   Base::DataStreamIn< std::vector<int> > in_jointMultiplicity;
 //  Base::DataStreamIn<pcl::PointCloud<PointXYZSIFT>::Ptr > in_cloud_xyzsift;
-  Base::DataStreamIn< Octree* > in_octree;
+  Base::DataStreamIn< AbstractOctree* > in_octree;
 
   /// Output data stream
 //  Base::DataStreamOut<DSL_network> out_network;
@@ -98,9 +109,9 @@ protected:
   void onJointMultiplicity();
 
 private:
-  BayesNetwork network;
+  BayesNetwork* network;
 //  std::stack <pcl::PointCloud<PointXYZSIFT>::Ptr> cloudQueue;
-  std::stack <Octree* > octreeQueue;
+  std::stack <AbstractOctree* > octreeQueue;
 
   std::map <int, string> features;
   std::vector <int> jointMultiplicityVector;
@@ -118,12 +129,12 @@ private:
 
   void createNode(OctreeNode* node);
   void connectNodeToNetwork(string bayesParentNodeName);
-  void createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree);
+  void createLeafNodeChildren(OctreeLeafNode leafNode, AbstractOctree* octree);
 
 
   void exportNetwork();
 
-  void addHypothesisNode(Octree::DepthFirstIterator it, int modelId = 0);
+  void addHypothesisNode(DepthFirstIterator it, int modelId = 0);
 
   std::string getNodeName(int nodeHandle);
   void mapFeaturesNames();

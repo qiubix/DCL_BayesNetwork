@@ -20,9 +20,11 @@
 //#include <pcl/point_cloud.h>
 //#include <pcl/point_types.h>
 
-#include "Types/PointXYZSIFT.hpp"
+//#include "Types/PointXYZSIFT.hpp"
 
-#include "Components/NetworkBuilder/AbstractNetwork.hpp"
+#include "Types/AbstractNetwork.hpp"
+
+struct PointXYZSIFT;
 
 namespace Processors {
 namespace Network {

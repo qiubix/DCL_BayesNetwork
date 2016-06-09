@@ -11,6 +11,7 @@
 #include <Common/Timer.hpp>
 
 #include "SOMEvaluation.hpp"
+#include "Types/PointXYZSIFT.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"

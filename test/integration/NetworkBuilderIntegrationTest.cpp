@@ -5,74 +5,34 @@ using ::testing::Le;
 using ::testing::Test;
 
 //#include <pcl/io/pcd_io.h>
+#include "Types/BayesNetwork.hpp"
+#include "Types/CPTManager.hpp"
+#include <Types/Octree.hpp>
 #include "Components/NetworkBuilder/NetworkBuilder.hpp"
 #include "Components/NetworkBuilder/NetworkBuilderExceptions.hpp"
-#include "Components/NetworkBuilder/CPTManager.hpp"
+
+#include "utils/PointCloudGenerator.hpp"
 
 using Processors::Network::Octree;
 
-class NetworkBuilderTest : public Test {
+class NetworkBuilderIntegrationTest : public Test {
 public:
-  NetworkBuilderTest() {
+  NetworkBuilderIntegrationTest() {
     networkBuilder = new Processors::Network::NetworkBuilder("name");
-  }
-
-  pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloudWithOnePoint() {
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-    cloud -> width = 1;
-    cloud -> height = 1;
-    cloud -> points.resize(cloud -> width * cloud -> height);
-    cloud -> points[0].x = 0.1;
-    cloud -> points[0].y = 0.2;
-    cloud -> points[0].z = 0.3;
-    for(int i=0; i<128; i++) {
-      cloud -> points[0].descriptor[i] = i;
-    }
-    return cloud;
-  }
-  
-  Octree getOctreeWithOnePoint() {
-     Octree octree(getPointCloudWithOnePoint());
-     return octree;
-  }
-
-  pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloudWithThreePoints() {
-    pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-    cloud -> width = 3;
-    cloud -> height = 1;
-    cloud -> points.resize(cloud -> width * cloud -> height);
-    cloud -> points[0].x = 0.0;
-    cloud -> points[0].y = 0.0;
-    cloud -> points[0].z = 0.0;
-    cloud -> points[0].pointId = 0;
-    cloud -> points[1].x = 1.0;
-    cloud -> points[1].y = 1.0;
-    cloud -> points[1].z = 1.0;
-    cloud -> points[1].pointId = 2;
-    cloud -> points[2].x = 0.0;
-    cloud -> points[2].y = 0.0;
-    cloud -> points[2].z = 1.0;
-    cloud -> points[2].pointId = 4;
-    for(int i=0; i<128; i++) {
-      cloud -> points[0].descriptor[i] = i;
-      cloud -> points[1].descriptor[i] = 128-i;
-      cloud -> points[2].descriptor[i] = i*i;
-    }
-    return cloud;
   }
 
   Processors::Network::NetworkBuilder* networkBuilder;
 
 };
 
-TEST_F(NetworkBuilderTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
+TEST_F(NetworkBuilderIntegrationTest, shouldThrowExceptionWhenBuildingFromEmptyCloud) {
   pcl::PointCloud<PointXYZSIFT>::Ptr emptyCloud(new pcl::PointCloud<PointXYZSIFT>);
   Octree octree(emptyCloud);
 
   EXPECT_THROW(networkBuilder -> buildNetwork(&octree), PointCloudIsEmptyException);
 }
 
-TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
+TEST_F(NetworkBuilderIntegrationTest, shouldAddHypothesisNodeToNetwork) {
   Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
   octreeWithOnePoint -> init();
   networkBuilder -> buildNetwork(octreeWithOnePoint);
@@ -81,7 +41,7 @@ TEST_F(NetworkBuilderTest, shouldAddHypothesisNodeToNetwork) {
   ASSERT_THAT(network.hasNode("V_0"), Eq(true));
 }
 
-TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
+TEST_F(NetworkBuilderIntegrationTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
   Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
   octreeWithOnePoint -> init();
   networkBuilder -> buildNetwork(octreeWithOnePoint);
@@ -93,7 +53,7 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithOnlyOneFeatureNode) {
   ASSERT_THAT(network.getNumberOfNodes(), Eq(3));
 }
 
-TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
+TEST_F(NetworkBuilderIntegrationTest, shouldBuildNetworkWithMultipleFeatureNodes) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
   networkBuilder -> buildNetwork(octreeWithThreePoints);
@@ -105,7 +65,7 @@ TEST_F(NetworkBuilderTest, shouldBuildNetworkWithMultipleFeatureNodes) {
   ASSERT_THAT(network.hasNode("F_4"), Eq(true));
 }
 
-TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsPointsInOctree) {
+TEST_F(NetworkBuilderIntegrationTest, shouldHaveTheSameNumberOfFeatureNodesAsPointsInOctree) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
   networkBuilder -> buildNetwork(octreeWithThreePoints);
@@ -114,7 +74,7 @@ TEST_F(NetworkBuilderTest, shouldHaveTheSameNumberOfFeatureNodesAsPointsInOctree
   ASSERT_THAT(network.getNumberOfFeatureNodes(), Eq(3));
 }
 
-TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
+TEST_F(NetworkBuilderIntegrationTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
   Octree* octreeWithOnePoint = new Octree(getPointCloudWithOnePoint());
   octreeWithOnePoint -> init();
   networkBuilder -> buildNetwork(octreeWithOnePoint);
@@ -127,7 +87,7 @@ TEST_F(NetworkBuilderTest, shouldSetDefaultProbabilityValuesForFeatureNodes) {
   ASSERT_THAT(manager.displayCPT(), Eq(probabilities));
 }
 
-TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
+TEST_F(NetworkBuilderIntegrationTest, shouldHaveOnlyOneChildNode) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
   networkBuilder -> buildNetwork(octreeWithThreePoints);
@@ -144,7 +104,7 @@ TEST_F(NetworkBuilderTest, shouldHaveOnlyOneChildNode) {
   ASSERT_THAT(childNode.getNumberOfChildren(), Eq(0));
 }
 
-TEST_F(NetworkBuilderTest, shouldNotHaveCycles) {
+TEST_F(NetworkBuilderIntegrationTest, shouldNotHaveCycles) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
   networkBuilder -> buildNetwork(octreeWithThreePoints);
@@ -153,15 +113,15 @@ TEST_F(NetworkBuilderTest, shouldNotHaveCycles) {
   ASSERT_THAT(network.getNetwork().IsAcyclic(), Eq(1));
 }
 
-TEST_F(NetworkBuilderTest, shouldFillCPTsAcordingToNumberOfParents) {
+TEST_F(NetworkBuilderIntegrationTest, shouldFillCPTsAcordingToNumberOfParents) {
   EXPECT_TRUE(true);
 }
 
-TEST_F(NetworkBuilderTest, shouldHaveNodesWithUniqueNames) {
+TEST_F(NetworkBuilderIntegrationTest, shouldHaveNodesWithUniqueNames) {
   EXPECT_TRUE(true);
 }
 
-TEST_F(NetworkBuilderTest, shouldReduceLongBranchesToSingleVertices) {
+TEST_F(NetworkBuilderIntegrationTest, shouldReduceLongBranchesToSingleVertices) {
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
   ASSERT_THAT(octreeWithThreePoints -> getOctreeWithSIFT().getTreeDepth(), Eq(7));
@@ -182,7 +142,7 @@ TEST_F(NetworkBuilderTest, shouldReduceLongBranchesToSingleVertices) {
   }
 }
 
-TEST_F(NetworkBuilderTest, shouldHaveAtMostSameNumberOfLevelsAsOctree) {
+TEST_F(NetworkBuilderIntegrationTest, shouldHaveAtMostSameNumberOfLevelsAsOctree) {
   const int OCTREE_DEPTH = 7;
   Octree* octreeWithThreePoints = new Octree(getPointCloudWithThreePoints());
   octreeWithThreePoints -> init();
@@ -203,17 +163,17 @@ TEST_F(NetworkBuilderTest, shouldHaveAtMostSameNumberOfLevelsAsOctree) {
   }
 }
 
-TEST_F(NetworkBuilderTest, shouldPointsFromSingleLeafInOctreeHaveSingleChild) {
+TEST_F(NetworkBuilderIntegrationTest, shouldPointsFromSingleLeafInOctreeHaveSingleChild) {
   //TODO
 }
 
-TEST_F(NetworkBuilderTest, shouldWriteNetworkToOutputPort) {
+TEST_F(NetworkBuilderIntegrationTest, shouldWriteNetworkToOutputPort) {
   EXPECT_TRUE(true);
 }
 
-TEST_F(NetworkBuilderTest, shouldInitializeHandlers) {
+TEST_F(NetworkBuilderIntegrationTest, shouldInitializeHandlers) {
   networkBuilder -> prepareInterface();
-  
+
   std::string handlers = networkBuilder -> listHandlers();
   ASSERT_THAT(handlers, Eq("onJointMultiplicity\nonNewModel\n"));
 }

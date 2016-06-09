@@ -9,16 +9,23 @@
 //#include <iostream>
 #include <algorithm>
 //#include <assert.h>
+//#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+//#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "NetworkBuilder.hpp"
 
 #include "Logger.hpp"
 #include "Common/Timer.hpp"
-#include "NetworkBuilderExceptions.hpp"
 
-//#include <boost/thread.hpp>
-#include <boost/bind.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
+#include "NetworkBuilderExceptions.hpp"
+//#include "BayesNetwork.hpp"
+#include "Types/OctreeBranchNode.hpp"
+#include "Types/OctreeLeafNode.hpp"
+#include "Types/PointXYZSIFT.hpp"
+#include "Types/BayesNetwork.hpp"
+#include "Types/AbstractOctree.hpp"
+
 
 namespace Processors {
 namespace Network {
@@ -32,11 +39,13 @@ NetworkBuilder::NetworkBuilder(const std::string & name) : Base::Component(name)
   nextId = 0;
   numberOfVoxels = 0;
   featureNodeCount = 0;
+  network = new BayesNetwork();
 }
 
 NetworkBuilder::~NetworkBuilder()
 {
   LOG(LTRACE)<<"Good bye NetworkBuilder\n";
+  delete network;
 }
 
 void NetworkBuilder::prepareInterface()
@@ -83,10 +92,10 @@ void NetworkBuilder::onNewModel()
   LOG(LTRACE) << "On new model";
 //  pcl::PointCloud<PointXYZSIFT>::Ptr newCloud = in_cloud_xyzsift.read();
 //  cloudQueue.push(newCloud);
-  Octree* newOctree = in_octree.read();
+  AbstractOctree* newOctree = in_octree.read();
   LOG(LDEBUG) << "Number of points in new model: " << newOctree -> getNumberOfPoints();
   octreeQueue.push(newOctree);
-  Octree* octree = octreeQueue.top();
+  AbstractOctree* octree = octreeQueue.top();
   octreeQueue.pop();
   buildNetwork(octree);
 }
@@ -97,7 +106,7 @@ void NetworkBuilder::onJointMultiplicity()
   jointMultiplicityVector = in_jointMultiplicity.read();
   if (octreeQueue.size() > 0) {
     LOG(LDEBUG) << "Size of octreeQueue: " << octreeQueue.size();
-    Octree* octree = octreeQueue.top();
+    AbstractOctree* octree = octreeQueue.top();
     octreeQueue.pop();
     buildNetwork(octree);
   }
@@ -116,13 +125,13 @@ bool NetworkBuilder::onStart()
 }
 
 BayesNetwork NetworkBuilder::getNetwork() {
-  return network;
+  return *network;
 }
 
-void NetworkBuilder::buildNetwork(Octree* octree) {
+void NetworkBuilder::buildNetwork(AbstractOctree* octree) {
   LOG(LDEBUG) << " #################### Building network ################### ";
 
-  if( !network.isEmpty() ) {
+  if( !network -> isEmpty() ) {
     return;
   }
 
@@ -133,8 +142,8 @@ void NetworkBuilder::buildNetwork(Octree* octree) {
   LOG(LTRACE) << "Creating iterators...";
 
   // Use depth-first iterator
-  Octree::DepthFirstIterator dfIt = octree->depthBegin();
-  const Octree::DepthFirstIterator dfItEnd = octree -> depthEnd();
+  DepthFirstIterator dfIt = octree->depthBegin();
+  const DepthFirstIterator dfItEnd = octree -> depthEnd();
 
   LOG(LTRACE) << "Creating nodes:";
 
@@ -144,7 +153,7 @@ void NetworkBuilder::buildNetwork(Octree* octree) {
 
   for (;dfIt != dfItEnd; ++dfIt) {
     LOG(LDEBUG) << "========= Another node in depth search =========";
-    OctreeNode node = *dfIt;
+    OctreeNode node = dfIt.getCurrentNode();
     if (node.getNodeType() == OCTREE_LEAF_NODE) {
       LOG(LDEBUG) << "Entering octree leaf node.";
       OctreeLeafNode leafNode(node);
@@ -166,7 +175,7 @@ void NetworkBuilder::buildNetwork(Octree* octree) {
       }
     }
   }
-  network.setCPTofAllVoxelNodes(numberOfVoxels);
+  network -> setCPTofAllVoxelNodes(numberOfVoxels);
 
   exportNetwork();
 }
@@ -175,8 +184,8 @@ void NetworkBuilder::createNode(OctreeNode* node)
 {
   LOG(LDEBUG) << "Creating node: " << nextId;
   node->setId(nextId);
-  network.addVoxelNode(nextId);
-  string bayesParentNodeName = network.createVoxelName(nextId);
+  network -> addVoxelNode(nextId);
+  string bayesParentNodeName = network -> createVoxelName(nextId);
   ++numberOfVoxels;
   ++nextId;
 
@@ -192,9 +201,9 @@ void NetworkBuilder::connectNodeToNetwork(string bayesParentNodeName)
 {
   OctreeBranchNode parent(parentStack.top());
   int parentId = parent.getId();
-  string bayesChildNodeName = network.createVoxelName(parentId);
+  string bayesChildNodeName = network -> createVoxelName(parentId);
   parentStack.pop();
-  network.connectNodes(bayesParentNodeName, bayesChildNodeName);
+  network -> connectNodes(bayesParentNodeName, bayesChildNodeName);
 }
 
 void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
@@ -210,12 +219,12 @@ void NetworkBuilder::addNodeToParentStack(OctreeBranchNode branchNode)
   }
 }
 
-void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* octree)
+void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, AbstractOctree* octree)
 {
   LOG(LTRACE) << "----- Creating leaf node children -----";
 
   int parentId = leafNode.getId();
-  string parentName = network.createVoxelName(parentId);
+  string parentName = network -> createVoxelName(parentId);
   int childrenCounter = leafNode.getNumberOfChildren();
 
   if (childrenCounter > maxLeafContainerSize) {
@@ -236,14 +245,14 @@ void NetworkBuilder::createLeafNodeChildren(OctreeLeafNode leafNode, Octree* oct
     PointXYZSIFT p = octree -> getPoint(pointId);
     logPoint(p, pointId);
     int featureId = p.pointId;
-    network.addFeatureNode(featureId);
-    string featureName = network.createFeatureName(featureId);
-    network.connectNodes(featureName, parentName);
+    network -> addFeatureNode(featureId);
+    string featureName = network -> createFeatureName(featureId);
+    network -> connectNodes(featureName, parentName);
     ++featureNodeCount;
   }//: for points
 
   LOG(LTRACE) << "voxel ID: " << parentId;
-  LOG(LTRACE) << "voxel name: " << network.createVoxelName(parentId);
+  LOG(LTRACE) << "voxel name: " << network -> createVoxelName(parentId);
   LOG(LTRACE) << "children count: " <<childrenCounter;
   leafNodeCount++;
 }
@@ -257,17 +266,17 @@ void NetworkBuilder::exportNetwork()
   LOG(LWARNING) << "maxLeafContainerSize: " << maxLeafContainerSize;
 
   LOG(LDEBUG) << "before writing network to file";
-  network.exportNetworkToFile();
+  network -> exportNetworkToFile();
   LOG(LDEBUG) << "after writing network to file";
   //std::vector<DSL_network> networks;
   std::vector<AbstractNetwork*> networks;
   //networks.push_back(network.getNetwork());
-  networks.push_back(&network);
+  networks.push_back(network);
   out_networks.write(networks);
   //out_network.write(network.getNetwork());
 }
 
-void NetworkBuilder::addHypothesisNode(Octree::DepthFirstIterator it, int modelId)
+void NetworkBuilder::addHypothesisNode(DepthFirstIterator it, int modelId)
 {
   LOG(LDEBUG) << "Creating hypothesis node. Model id: " << modelId;
   /*
@@ -275,9 +284,9 @@ void NetworkBuilder::addHypothesisNode(Octree::DepthFirstIterator it, int modelI
    * For more models it'll probably cause conflicts with voxel nodes, which are enumerated with IDs > 0.
    * Possible solution: hypothesis node name may start with H_
    */
-  OctreeNode node = *it;
+  OctreeNode node = it.getCurrentNode();
   if(node.getNodeType() == OCTREE_BRANCH_NODE) {
-    OctreeBranchNode root(*it);
+    OctreeBranchNode root(it.getCurrentNode());
     createNode(&root);
     addNodeToParentStack(root);
     ++branchNodeCount;

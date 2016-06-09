@@ -11,6 +11,6 @@ SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 
 # Create an executable file from sources:
 add_library(procNetworkBuilder SHARED ${files})
-target_link_libraries(procNetworkBuilder BayesNetworkTypes ${DisCODe_LIBRARIES} ${SMILE_LIBS} ${PCL_IO_LIBRARIES})
+target_link_libraries(procNetworkBuilder OctreeTypes BayesNetworkTypes ${DisCODe_LIBRARIES} ${PCL_IO_LIBRARIES})
 
 INSTALL_COMPONENT(procNetworkBuilder)

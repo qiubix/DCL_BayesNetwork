@@ -9,9 +9,9 @@ using ::testing::Test;
 
 #include "Types/Octree.hpp"
 #include "Types/OctreeContainers.hpp"
-#include "Components/NetworkBuilder/OctreeNode.hpp"
-#include "Components/NetworkBuilder/OctreeBranchNode.hpp"
-#include "Components/NetworkBuilder/OctreeLeafNode.hpp"
+#include "Types/OctreeNode.hpp"
+#include "Types/OctreeBranchNode.hpp"
+#include "Types/OctreeLeafNode.hpp"
 
 class OctreeNodeTest : public Test
 {

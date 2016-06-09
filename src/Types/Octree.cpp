@@ -1,4 +1,5 @@
 #include "Octree.hpp"
+#include "DepthFirstIterator.hpp"
 #include <pcl/octree/octree.h>
 #include <pcl/octree/octree_impl.h>
 
@@ -42,11 +43,11 @@ PointXYZSIFT Octree::getPoint(unsigned int id) {
   return cloud -> at(id);
 }
 
-Octree::DepthFirstIterator Octree::depthBegin() {
+DepthFirstIterator Octree::depthBegin() {
   return octree -> depth_begin();
 }
 
-Octree::DepthFirstIterator Octree::depthEnd() {
+DepthFirstIterator Octree::depthEnd() {
   return octree -> depth_end();
 }
 

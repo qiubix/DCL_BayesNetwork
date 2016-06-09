@@ -3,9 +3,12 @@ using ::testing::Eq;
 #include <gtest/gtest.h>
 using ::testing::Test;
 
-#include "Components/NetworkBuilder/BayesNetwork.hpp"
-#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
-#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+//#include "Components/NetworkBuilder/BayesNetwork.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkNode.hpp"
+//#include "Components/NetworkBuilder/BayesNetworkExceptions.hpp"
+#include "Types/BayesNetwork.hpp"
+#include "Types/BayesNetworkNode.hpp"
+#include "Types/BayesNetworkExceptions.hpp"
 
 using namespace Processors::Network;
 
