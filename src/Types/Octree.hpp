@@ -67,6 +67,7 @@ public:
   DepthFirstIterator depthEnd();
 
   OctreeWithSIFT getOctreeWithSIFT();
+  pcl::PointCloud<PointXYZSIFT>::Ptr getInputCloud();
 
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;

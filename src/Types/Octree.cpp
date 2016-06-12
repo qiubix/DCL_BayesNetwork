@@ -55,5 +55,9 @@ Octree::OctreeWithSIFT Octree::getOctreeWithSIFT() {
   return *octree;
 }
 
+pcl::PointCloud<PointXYZSIFT>::Ptr Octree::getInputCloud() {
+  return cloud;
+}
+
 }//:Network
 }//:Processors
