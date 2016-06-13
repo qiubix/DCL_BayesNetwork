@@ -4,13 +4,15 @@
 
 #include <string>
 #include <vector>
-#include <SMILE/network.h>
+//#include <SMILE/network.h>
 //#include <gtest/gtest.h>
 
 //#include "SMILE/smile.h"
 
 #include "BayesNetworkNode.hpp"
 #include "AbstractNetwork.hpp"
+
+class DSL_network;
 
 namespace Processors {
 namespace Network {
@@ -55,10 +57,10 @@ public:
   //exporting network
   void exportNetworkToFile();
   DSL_network getNetwork();
-  void setNetwork(DSL_network network);
+  void setNetwork(DSL_network* network);
 
 private:
-  DSL_network network;
+  DSL_network* network;
   std::vector <BayesNetworkNode> featureNodes;
   int nextRootNodePosition;
 

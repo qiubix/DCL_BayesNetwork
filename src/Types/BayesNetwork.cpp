@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iostream>
+#include <SMILE/network.h>
 #include <SMILE/syscoord.h>
 #include <SMILE/node.h>
 #include <SMILE/nodedef.h>
@@ -15,14 +16,15 @@ namespace Network {
 
 BayesNetwork::BayesNetwork()
 {
-  network.SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
+  network = new DSL_network();
+  network -> SetDefaultBNAlgorithm(DSL_ALG_BN_LAURITZEN);
   nextRootNodePosition = 0;
 }
 
 double BayesNetwork::getNodeProbability(const std::string &name) {
-  int nodeId = network.FindNode(name.c_str());
-  DSL_sysCoordinates theCoordinates(*network.GetNode(nodeId)->Value());
-  DSL_idArray *theNames = network.GetNode(nodeId)->Definition()->GetOutcomesNames();
+  int nodeId = network -> FindNode(name.c_str());
+  DSL_sysCoordinates theCoordinates(*network -> GetNode(nodeId)->Value());
+  DSL_idArray *theNames = network -> GetNode(nodeId)->Definition()->GetOutcomesNames();
   theCoordinates[0] = theNames->FindPosition("YES");
   theCoordinates.GoToCurrentPosition();
   double probability = theCoordinates.UncheckedValue();
@@ -30,34 +32,34 @@ double BayesNetwork::getNodeProbability(const std::string &name) {
 }
 
 void BayesNetwork::clearEvidence() {
-  network.ClearAllEvidence();
+  network -> ClearAllEvidence();
 }
 
 bool BayesNetwork::nodeExists(const std::string &nodeName) {
-  int node = network.FindNode(nodeName.c_str());
+  int node = network -> FindNode(nodeName.c_str());
   return node != DSL_OUT_OF_RANGE;
 }
 
 void BayesNetwork::setNodeEvidence(const std::string &nodeName, int state) {
-    int node = network.FindNode(nodeName.c_str());
+    int node = network -> FindNode(nodeName.c_str());
     if(node != DSL_OUT_OF_RANGE) {
       LOG(LWARNING) << "Setting state of node " << nodeName << " to " << state;
-      network.GetNode(node)->Value()->SetEvidence(state);
+      network -> GetNode(node)->Value()->SetEvidence(state);
     }
 }
 
 void BayesNetwork::propagateProbabilities() {
-  network.UpdateBeliefs();
+  network -> UpdateBeliefs();
 }
 
 bool BayesNetwork::isEmpty()
 {
-  return network.GetNumberOfNodes() == 0;
+  return network -> GetNumberOfNodes() == 0;
 }
 
 bool BayesNetwork::hasNode(const char* nodeName)
 {
-  int nodeId = network.FindNode(nodeName);
+  int nodeId = network -> FindNode(nodeName);
   return nodeId != DSL_OUT_OF_RANGE;
 }
 
@@ -73,8 +75,8 @@ void BayesNetwork::addFeatureNode(int id)
   std::string featureName = createFeatureName(id);
   LOG(LDEBUG) << "Adding feature node to network: " << featureName;
   addNode(featureName);
-  int featureNodeHandle = network.FindNode(featureName.c_str());
-  BayesNetworkNode newNode(network.GetNode(featureNodeHandle));
+  int featureNodeHandle = network -> FindNode(featureName.c_str());
+  BayesNetworkNode newNode(network -> GetNode(featureNodeHandle));
   featureNodes.push_back(newNode);
 }
 
@@ -105,9 +107,9 @@ std::string BayesNetwork::createFeatureName(int id)
 void BayesNetwork::connectNodes(std::string parentName, std::string childName)
 {
   LOG(LDEBUG) << "Adding arc between nodes: " << parentName << "->" << childName;
-  int childNode = network.FindNode(childName.c_str());
-  int parentNode = network.FindNode(parentName.c_str());
-  int code = network.AddArc(parentNode, childNode);
+  int childNode = network -> FindNode(childName.c_str());
+  int parentNode = network -> FindNode(parentName.c_str());
+  int code = network -> AddArc(parentNode, childNode);
   //FIXME: AddArc method doesn't return proper code when creating cycle
   if ( code == DSL_OUT_OF_RANGE ) {
     throw UnableToConnectNodesException();
@@ -120,8 +122,8 @@ void BayesNetwork::setCPTofAllVoxelNodes(unsigned int numberOfVoxels)
   for (unsigned int i=0; i<numberOfVoxels; ++i) {
     LOG(LTRACE) << "Setting CPT of voxel number " << i << " " << createVoxelName(i);
     std::string nodeName = createVoxelName(i);
-    int nodeId = network.FindNode(nodeName.c_str());
-    int numberOfParents = network.NumParents(nodeId);
+    int nodeId = network -> FindNode(nodeName.c_str());
+    int numberOfParents = network -> NumParents(nodeId);
     LOG(LTRACE) << "Number of ancestors: " << numberOfParents;
     if(numberOfParents == 0)
       continue;
@@ -141,8 +143,8 @@ void BayesNetwork::setNodeCPT(std::string name, int numberOfParents)
     probabilities.push_back(1-probability);
   } while(generateNext(s.begin(), s.end()));
 
-  int nodeId = network.FindNode(name.c_str());
-  CPTManager cptManager(network.GetNode(nodeId));
+  int nodeId = network -> FindNode(name.c_str());
+  CPTManager cptManager(network -> GetNode(nodeId));
   cptManager.fillCPT(probabilities);
 }
 
@@ -154,13 +156,13 @@ std::string BayesNetwork::getNodeName(int nodeHandle)
 int BayesNetwork::getNumberOfChildren(const char* nodeName)
 {
   LOG(LTRACE) << "Get number of children of node: " << nodeName;
-  int nodeHandle = network.FindNode(nodeName);
-  return network.NumChildren(nodeHandle);
+  int nodeHandle = network -> FindNode(nodeName);
+  return network -> NumChildren(nodeHandle);
 }
 
 int BayesNetwork::getNumberOfNodes()
 {
-  return network.GetNumberOfNodes();
+  return network -> GetNumberOfNodes();
 }
 
 int BayesNetwork::getNumberOfFeatureNodes()
@@ -179,9 +181,9 @@ std::vector<std::string> BayesNetwork::getFeatureNodeNames()
 
 BayesNetworkNode BayesNetwork::getNode(std::string name)
 {
-  int nodeHandle = network.FindNode(name.c_str());
+  int nodeHandle = network -> FindNode(name.c_str());
   //TODO: throw exception when node not found
-  BayesNetworkNode node(network.GetNode(nodeHandle));
+  BayesNetworkNode node(network -> GetNode(nodeHandle));
   return node;
 }
 
@@ -195,7 +197,7 @@ BayesNetworkNode BayesNetwork::getChild(BayesNetworkNode parent)
 {
   LOG(LTRACE) << "Get child of a node: " << parent.getName();
   int childHandle = parent.getChildHandle();
-  BayesNetworkNode child(network.GetNode(childHandle));
+  BayesNetworkNode child(network -> GetNode(childHandle));
   LOG(LTRACE) << "Child name: " << child.getName();
   return child;
 }
@@ -217,30 +219,30 @@ bool BayesNetwork::visitNode(BayesNetworkNode& node)
 }
 
 int BayesNetwork::getNodeEvidence(const std::string& featureNodeName) {
-  int nodeHandle = network.FindNode(featureNodeName.c_str());
-  int evidence = network.GetNode(nodeHandle)->Value()->GetEvidence();
+  int nodeHandle = network -> FindNode(featureNodeName.c_str());
+  int evidence = network -> GetNode(nodeHandle)->Value()->GetEvidence();
   return evidence;
 }
 
 void BayesNetwork::exportNetworkToFile()
 {
   LOG(LTRACE) << "Exporting network to file out_network.xdsl";
-  network.WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
+  network -> WriteFile("out_network.xdsl", DSL_XDSL_FORMAT);
 }
 
 DSL_network BayesNetwork::getNetwork()
 {
-  return network;
+  return *network;
 }
 
-void BayesNetwork::setNetwork(DSL_network network) {
+void BayesNetwork::setNetwork(DSL_network* network) {
   this->network = network;
 }
 
 void BayesNetwork::addNode(std::string name)
 {
   LOG(LTRACE) << "Add node to network: " << name;
-  int newNode = network.AddNode(DSL_CPT, name.c_str());
+  int newNode = network -> AddNode(DSL_CPT, name.c_str());
   if ( newNode == DSL_OUT_OF_RANGE ) {
     throw NodeAlreadyExistsException(name.c_str());
   }
@@ -251,7 +253,7 @@ void BayesNetwork::addNode(std::string name)
   for (int i=0; i<outcomesNames.size(); i++) {
     outcomes.Add(outcomesNames[i].c_str());
   }
-  network.GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
+  network -> GetNode(newNode)->Definition()->SetNumberOfOutcomes(outcomes);
 }
 
 /*!

@@ -5,6 +5,7 @@ using ::testing::Le;
 using ::testing::Test;
 
 //#include <pcl/io/pcd_io.h>
+#include <SMILE/network.h>
 #include "Types/BayesNetwork.hpp"
 #include "Types/CPTManager.hpp"
 #include <Types/Octree.hpp>
