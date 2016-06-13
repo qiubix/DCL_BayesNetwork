@@ -10,9 +10,9 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
 
     def test_should_load_network_builder_component(self):
         tester = ComponentTester()
-        tester.addGenerator('BayesNetworkGenerators:OctreeGenerator')
+        tester.addGenerator('BayesNetwork:OctreeGenerator')
         tester.setComponent('NetworkBuilder', 'BayesNetwork:NetworkBuilder')
-        tester.addSink('BayesNetworkGenerators:BayesNetworkSink')
+        tester.addSink('BayesNetwork:BayesNetworkSink')
         tester.addDataStream('Generator', 'out_octree', 'NetworkBuilder', 'in_octree')
         tester.addDataStream('NetworkBuilder', 'out_network', 'Sink', 'in_network')
         tester.setTerminationStatement('END OF SEQUENCE')
