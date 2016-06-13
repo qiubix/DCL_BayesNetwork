@@ -78,9 +78,9 @@ protected:
   Base::DataStreamIn< AbstractOctree* > in_octree;
 
   /// Output data stream
-//  Base::DataStreamOut<DSL_network> out_network;
+  Base::DataStreamOut<AbstractNetwork*> out_network;
   //Base::DataStreamOut<std::vector<DSL_network> > out_networks;
-  Base::DataStreamOut<std::vector<AbstractNetwork*> > out_networks;
+  //Base::DataStreamOut<std::vector<AbstractNetwork*> > out_networks;
 
   /*!
    * Connects source to given device.
