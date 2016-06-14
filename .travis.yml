@@ -1,6 +1,8 @@
 sudo: false
 language: cpp
 compiler: gcc
+python:
+  - "3.4"
 branches:
   only:
     - master
@@ -22,6 +24,7 @@ addons:
 
 before_install:
   - pip install --user cpp-coveralls
+  - pip install -v pyhamcrest
 before_script:
   - git clone https://github.com/PointCloudLibrary/pcl.git /tmp/pcl
   - export PCL_DIR=/tmp/pcl
@@ -57,3 +60,7 @@ before_script:
 script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF -DCOMPONENT_SOMJSONReader=OFF -DCOMPONENT_MapMultiplicity=OFF . && make && make test
 after_success:
   - coveralls --exclude lib --exclude tests --exclude ext --gcov-options '\-lp'
+  - cd ~/src && git clone https://github.com/qiubix/DisCODeRunner.git
+  - python setup.py install
+  - mkdir -p data/test_tasks
+  - nosetests -v tests/acceptance

@@ -5,9 +5,6 @@ from discoderunner import *
 
 class NetworkBuilderAcceptanceTest(unittest.TestCase):
 
-    def test_should_run_dummy_test(self):
-        assert_that(1, equal_to(1))
-
     def test_should_load_network_builder_component(self):
         tester = ComponentTester()
         tester.addGenerator('BayesNetwork:OctreeGenerator')
@@ -20,7 +17,7 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
         tester.start()
         output = tester.getOutput()
         print(output)
-        assert_that(output, contains_string('Number of feature nodes:'))
+        assert_that(output, contains_string('Number of feature nodes: 8'))
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore', verbosity=2)
