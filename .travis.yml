@@ -25,6 +25,7 @@ addons:
 before_install:
   - pip install --user cpp-coveralls
   - pip install --user -v pyhamcrest
+  - pip install --user nose
 before_script:
   - git clone https://github.com/PointCloudLibrary/pcl.git /tmp/pcl
   - export PCL_DIR=/tmp/pcl
