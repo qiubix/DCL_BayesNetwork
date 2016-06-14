@@ -63,7 +63,7 @@ protected:
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
   Octree* octree;
-  pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloud() const;
+  pcl::PointCloud<PointXYZSIFT>::Ptr getPointCloud(unsigned int numberOfPoints = 8) const;
 };
 
 }//: namespace Network

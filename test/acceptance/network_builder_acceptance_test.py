@@ -35,5 +35,6 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
         print(output)
         assert_that(output, contains_string('Number of all nodes: 23'))
 
+
 if __name__ == '__main__':
     unittest.main(warnings='ignore', verbosity=2)

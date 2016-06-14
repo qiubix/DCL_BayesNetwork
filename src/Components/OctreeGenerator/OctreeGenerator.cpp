@@ -55,9 +55,9 @@ void OctreeGenerator::buildOctree() {
 //  octree -> addPointsFromInputCloud();
 }
 
-pcl::PointCloud<PointXYZSIFT>::Ptr OctreeGenerator::getPointCloud() const {
+pcl::PointCloud<PointXYZSIFT>::Ptr OctreeGenerator::getPointCloud(unsigned int numberOfPoints) const {
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud(new pcl::PointCloud<PointXYZSIFT>);
-  cloud->width = 8;
+  cloud->width = numberOfPoints;
   cloud->height = 1;
   cloud->points.resize(cloud->width * cloud->height);
 

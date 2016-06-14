@@ -63,6 +63,6 @@ after_success:
   - coveralls --exclude lib --exclude tests --exclude ext --gcov-options '\-lp'
   - cd ~/src && git clone https://github.com/qiubix/DisCODeRunner.git && cd DisCODeRunner
   - python setup.py install --user
-  - cd ~/build/qiubix/DCL_BayesNetwork
+  - cd ~/build/qiubix/DCL_BayesNetwork && make install
   - mkdir -p data/test_tasks
   - nosetests -v test/acceptance
