@@ -68,8 +68,8 @@
       <sink>Evaluator.in_instanceMatchedFeatures</sink>
     </Source>
 
-    <Source name="NetworkBuilder.out_networks">
-      <sink>Evaluator.in_networks</sink>
+    <Source name="NetworkBuilder.out_network">
+      <sink>Evaluator.in_network</sink>
     </Source>
 
   </DataStreams>

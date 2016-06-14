@@ -37,8 +37,8 @@ void SOMEvaluation::prepareInterface()
   LOG(LTRACE) << "SOMEvaluation::prepareInterface";
 
   registerHandler("onNetwork", boost::bind(&SOMEvaluation::onNetwork, this));
-  registerStream("in_networks", &in_networks);
-  addDependency("onNetwork", &in_networks);
+  registerStream("in_network", &in_network);
+  addDependency("onNetwork", &in_network);
 
   registerHandler("onInstance", boost::bind(&SOMEvaluation::onInstance, this));
   registerStream("in_instanceMatchedFeatures", &in_instanceMatchedFeatures);
@@ -74,9 +74,10 @@ bool SOMEvaluation::onStop()
 void SOMEvaluation::onNetwork()
 {
   LOG(LWARNING) << "SOMEvaluation::onNetwork";
-  networks = in_networks.read();
+//  networks = in_networks.read();
   //theNet = networks[0];
-  setNetwork(networks[0]);
+  AbstractNetwork* network = in_network.read();
+  setNetwork(network);
 }
 
 void SOMEvaluation::onInstance()

@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 using ::testing::Eq;
 using ::testing::_;
+using ::testing::NotNull;
 //#include <gtest/gtest.h>
 using ::testing::Test;
 using ::testing::Return;
@@ -22,6 +23,26 @@ public:
   MOCK_METHOD1(nodeExists, bool(const std::string&));
   MOCK_METHOD0(propagateProbabilities, void());
 };
+
+TEST(SOMEvaluationTest, shouldCreateSOMEvaluationComponent) {
+  SOMEvaluation evaluator("evaluator");
+
+  ASSERT_THAT(evaluator.name(), Eq("evaluator"));
+}
+
+TEST(SOMEvaluationTest, shouldInitializeStreams) {
+  SOMEvaluation evaluator("evaluator");
+  evaluator.prepareInterface();
+
+  ASSERT_THAT(evaluator.getStream("in_network"), NotNull());
+}
+
+TEST(SOMEvaluationTest, shouldInitializeHandlers) {
+  SOMEvaluation evaluator("evaluator");
+  evaluator.prepareInterface();
+
+  ASSERT_THAT(evaluator.getHandler("onNetwork"), NotNull());
+}
 
 TEST(SOMEvaluationTest, shouldDisplayDefaultProbabilityOnStart) {
   NiceMock<MockNetwork> mockNetwork;
