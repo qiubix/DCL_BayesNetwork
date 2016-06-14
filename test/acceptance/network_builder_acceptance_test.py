@@ -5,45 +5,33 @@ from discoderunner import *
 
 class NetworkBuilderAcceptanceTest(unittest.TestCase):
 
-    def test_should_build_network_with_8_feature_nodes(self):
-        tester = ComponentTester()
-        tester.addGenerator('BayesNetwork:OctreeGenerator')
-        tester.setComponent('NetworkBuilder', 'BayesNetwork:NetworkBuilder')
-        tester.addSink('BayesNetwork:BayesNetworkSink')
-        tester.addDataStream('Generator', 'out_octree', 'NetworkBuilder', 'in_octree')
-        tester.addDataStream('NetworkBuilder', 'out_network', 'Sink', 'in_network')
-        tester.setTerminationStatement('END OF SEQUENCE')
+    def setUp(self):
+        self.tester = ComponentTester()
+        self.tester.addGenerator('BayesNetwork:OctreeGenerator')
+        self.tester.setComponent('NetworkBuilder', 'BayesNetwork:NetworkBuilder')
+        self.tester.addSink('BayesNetwork:BayesNetworkSink')
+        self.tester.addDataStream('Generator', 'out_octree', 'NetworkBuilder', 'in_octree')
+        self.tester.addDataStream('NetworkBuilder', 'out_network', 'Sink', 'in_network')
+        self.tester.setTerminationStatement('END OF SEQUENCE')
 
-        tester.start()
-        output = tester.getOutput()
+    def test_should_build_network_with_8_feature_nodes(self):
+        self.tester.start()
+
+        output = self.tester.getOutput()
         print(output)
         assert_that(output, contains_string('Number of feature nodes: 8'))
 
     def test_should_build_network_with_8_leaf_nodes(self):
-        tester = ComponentTester()
-        tester.addGenerator('BayesNetwork:OctreeGenerator')
-        tester.setComponent('NetworkBuilder', 'BayesNetwork:NetworkBuilder')
-        tester.addSink('BayesNetwork:BayesNetworkSink')
-        tester.addDataStream('Generator', 'out_octree', 'NetworkBuilder', 'in_octree')
-        tester.addDataStream('NetworkBuilder', 'out_network', 'Sink', 'in_network')
-        tester.setTerminationStatement('END OF SEQUENCE')
+        self.tester.start()
 
-        tester.start()
-        output = tester.getOutput()
+        output = self.tester.getOutput()
         print(output)
         assert_that(output, contains_string('Leaf node quantity: 8'))
 
     def test_should_network_have_total_23_nodes(self):
-        tester = ComponentTester()
-        tester.addGenerator('BayesNetwork:OctreeGenerator')
-        tester.setComponent('NetworkBuilder', 'BayesNetwork:NetworkBuilder')
-        tester.addSink('BayesNetwork:BayesNetworkSink')
-        tester.addDataStream('Generator', 'out_octree', 'NetworkBuilder', 'in_octree')
-        tester.addDataStream('NetworkBuilder', 'out_network', 'Sink', 'in_network')
-        tester.setTerminationStatement('END OF SEQUENCE')
+        self.tester.start()
 
-        tester.start()
-        output = tester.getOutput()
+        output = self.tester.getOutput()
         print(output)
         assert_that(output, contains_string('Number of all nodes: 23'))
 

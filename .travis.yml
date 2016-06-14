@@ -65,4 +65,4 @@ after_success:
   - python setup.py install --user
   - cd ~/build/qiubix/DCL_BayesNetwork
   - mkdir -p data/test_tasks
-  - nosetests -v tests/acceptance
+  - nosetests -v test/acceptance
