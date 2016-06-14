@@ -92,6 +92,7 @@ bool OctreeGenerator::onStop() {
 bool OctreeGenerator::onStart() {
   LOG(LTRACE) << "OctreeGenerator::onStart\n";
   buildOctree();
+  out_octree.write(octree);
   return true;
 }
 

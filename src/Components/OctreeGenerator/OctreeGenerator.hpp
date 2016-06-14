@@ -57,7 +57,8 @@ public:
 protected:
 
   /// Output data stream
-  Base::DataStreamOut< pcl::PointCloud<PointXYZSIFT>::Ptr > out_octree;
+//  Base::DataStreamOut< pcl::PointCloud<PointXYZSIFT>::Ptr > out_octree;
+  Base::DataStreamOut< Octree* > out_octree;
 
 private:
   pcl::PointCloud<PointXYZSIFT>::Ptr cloud;
