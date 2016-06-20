@@ -15,6 +15,7 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
         self.tester.setTerminationStatement('END OF SEQUENCE')
 
     def test_should_build_network_with_8_feature_nodes(self):
+        self.tester.setDebugMode(True)
         self.tester.start()
 
         output = self.tester.getOutput()
@@ -22,6 +23,7 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
         assert_that(output, contains_string('Number of feature nodes: 8'))
 
     def test_should_build_network_with_8_leaf_nodes(self):
+        self.tester.setDebugMode(True)
         self.tester.start()
 
         output = self.tester.getOutput()
@@ -29,6 +31,7 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
         assert_that(output, contains_string('Leaf node quantity: 8'))
 
     def test_should_network_have_total_23_nodes(self):
+        self.tester.setDebugMode(True)
         self.tester.start()
 
         output = self.tester.getOutput()

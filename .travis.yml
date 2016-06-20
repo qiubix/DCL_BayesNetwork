@@ -61,8 +61,7 @@ before_script:
 script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF -DCOMPONENT_SOMJSONReader=OFF -DCOMPONENT_MapMultiplicity=OFF . && make && make test
 after_success:
   - coveralls --exclude lib --exclude tests --exclude ext --gcov-options '\-lp'
-  - cd ~/src && git clone https://github.com/qiubix/DisCODeRunner.git && cd DisCODeRunner
+  - cd ~/src && git clone https://github.com/qiubix/DisCODeRunner.git && cd DisCODeRunner && git checkout origin/develop
   - python setup.py install --user
   - cd ~/build/qiubix/DCL_BayesNetwork && make install
-  - mkdir -p data/test_tasks
-  - nosetests -v test/acceptance
+  - nosetests -v --nocapture test/acceptance
