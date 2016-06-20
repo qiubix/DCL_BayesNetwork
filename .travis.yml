@@ -56,7 +56,7 @@ before_script:
   - make pcl_common/fast pcl_octree/fast pcl_io -j2
   - export PATH=$PATH:/home/travis/src/DisCODe/build/inst/bin
   - export DISCODE_DCL_DIR=/home/travis/src/DCL/
-  - mv ~/build/qiubix/DCL_BayesNetwork ~/src/DCL/BayesNetwork
+  - mkdir -p ~/src/DCL && mv ~/build/qiubix/DCL_BayesNetwork ~/src/DCL && mv ~/src/DCL/DCL_BayesNetwork ~/src/DCL/BayesNetwork
   - cd ~/src/DCL/BayesNetwork
   - ./install_discode.sh
 script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF -DCOMPONENT_SOMJSONReader=OFF -DCOMPONENT_MapMultiplicity=OFF . && make && make test
