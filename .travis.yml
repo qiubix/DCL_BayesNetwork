@@ -65,4 +65,7 @@ after_success:
   - cd ~/src && git clone https://github.com/qiubix/DisCODeRunner.git && cd DisCODeRunner && git checkout origin/develop
   - python setup.py install --user
   - cd ~/src/DCL/BayesNetwork && make install
+  - ls -l dist/lib
+  - ldd libOctreeBuilder.so
+  - ldd libprocNetworkBuilder.so
   - nosetests -v --nocapture test/acceptance
