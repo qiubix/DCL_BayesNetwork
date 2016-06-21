@@ -9,7 +9,6 @@ branches:
     - develop
     - /^release\/.*/
     - /^hotfix\/.*/
-    - feature/optimizeDependencies
 
 addons:
   apt:
@@ -30,29 +29,6 @@ before_script:
   - git clone https://github.com/PointCloudLibrary/pcl.git /tmp/pcl
   - export PCL_DIR=/tmp/pcl
   - cd /tmp/pcl && cmake -DCMAKE_INSTALL_PREFIX=/tmp/libpcl .
-    #       -DPCL_ONLY_CORE_POINT_TYPES=ON \
-    #       -DBUILD_2d=OFF \
-    #       -DBUILD_features=OFF \
-    #       -DBUILD_filters=OFF \
-    #       -DBUILD_geometry=OFF \
-    #       -DBUILD_global_tests=OFF \
-    #       -DBUILD_io=ON \
-    #       -DBUILD_kdtree=OFF \
-    #       -DBUILD_keypoints=OFF \
-    #       -DBUILD_ml=OFF \
-    #       -DBUILD_octree=ON \
-    #       -DBUILD_outofcore=OFF \
-    #       -DBUILD_people=OFF \
-    #       -DBUILD_recognition=OFF \
-    #       -DBUILD_registration=OFF \
-    #       -DBUILD_sample_consensus=OFF \
-    #       -DBUILD_search=OFF \
-    #       -DBUILD_segmentation=OFF \
-    #       -DBUILD_stereo=OFF \
-    #       -DBUILD_surface=OFF \
-    #       -DBUILD_tools=OFF \
-    #       -DBUILD_tracking=OFF \
-    #       -DBUILD_visualization=OFF .
   - make pcl_common/fast pcl_octree/fast pcl_io -j2
   - export PATH=$PATH:/home/travis/src/DisCODe/build/inst/bin
   - export DISCODE_DCL_DIR=/home/travis/src/DCL/
@@ -66,7 +42,4 @@ after_success:
   - python setup.py install --user
   - cd ~/src/DCL/BayesNetwork && make install
   - export LD_LIBRARY_PATH=/home/travis/src/DCL/BayesNetwork/dist/lib:$LD_LIBRARY_PATH
-  - ls -l dist/lib
-  - ldd dist/lib/libOctreeBuilder.so
-  - ldd dist/lib/libprocNetworkBuilder.so
   - nosetests -v --nocapture test/acceptance

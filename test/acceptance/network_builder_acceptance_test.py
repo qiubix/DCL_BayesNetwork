@@ -13,8 +13,8 @@ class NetworkBuilderAcceptanceTest(unittest.TestCase):
         self.tester.addDataStream('Generator', 'out_octree', 'NetworkBuilder', 'in_octree')
         self.tester.addDataStream('NetworkBuilder', 'out_network', 'Sink', 'in_network')
         self.tester.addTerminationStatement('END OF SEQUENCE')
-        self.tester.setDebugMode(True)
-        self.tester.setLogLevel('0')
+        # self.tester.setDebugMode(True)
+        # self.tester.setLogLevel('0')
 
     def test_should_build_network_with_8_feature_nodes(self):
         self.tester.start()
