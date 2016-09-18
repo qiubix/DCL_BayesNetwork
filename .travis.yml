@@ -37,6 +37,7 @@ before_script:
   - ./install_discode.sh
 script: cmake  -DCMAKE_BUILD_TYPE=Debug -DCOMPONENT_SIFTAdder=OFF -DCOMPONENT_SIFTFeatureMatcher=OFF -DCOMPONENT_SOMJSONReader=OFF -DCOMPONENT_MapMultiplicity=OFF . && make && make test
 after_success:
+  - make test ARGS="-V"
   - coveralls --exclude lib --exclude tests --exclude ext --gcov-options '\-lp'
   - cd ~/src && git clone https://github.com/qiubix/DisCODeRunner.git && cd DisCODeRunner && git checkout origin/develop
   - python setup.py install --user
