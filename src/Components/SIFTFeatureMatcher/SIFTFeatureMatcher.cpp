@@ -40,7 +40,7 @@ class SIFTFeatureRepresentation: public pcl::DefaultFeatureRepresentation <Point
 	// Override the copyToFloatArray method to define our feature vector
 	virtual void copyToFloatArray (const PointXYZSIFT &p, float * out) const
 	{
-		//This representation is only for determining correspondences (not for use in Kd-tree for example - so use only SIFT part of the point	
+		//This representation is only for determining correspondences (not for use in Kd-tree for example - so use only SIFT part of the point
 		for (register int i = 0; i < 128 ; i++)
 			out[i] = p.descriptor[i];//p.descriptor.at<float>(0, i) ;
 		//std::cout << "SIFTFeatureRepresentation:copyToFloatArray()" << std::endl ;
@@ -65,17 +65,17 @@ void SIFTFeatureMatcher::prepareInterface()
     registerHandler("onJointCloud", boost::bind(&SIFTFeatureMatcher::onJointCloud, this));
     registerStream("in_jointCloud", &in_jointCloud);
     addDependency("onJointCloud", &in_jointCloud);
-    
+
     registerHandler("onInstances", boost::bind(&SIFTFeatureMatcher::onInstances, this));
     registerStream("in_instances", &in_instances);
     addDependency("onInstances", &in_instances);
 //    addDependency("onInstances", &in_jointCloud);
-    
+
     registerHandler("onInstance", boost::bind(&SIFTFeatureMatcher::onInstance, this));
     registerStream("in_instance", &in_instance);
     addDependency("onInstance", &in_instance);
 //    addDependency("onInstance", &in_jointCloud);
-    
+
     registerHandler("onInstanceCloud", boost::bind(&SIFTFeatureMatcher::onInstanceCloud, this));
     registerStream("in_instanceCloud", &in_instanceCloud);
     addDependency("onInstanceCloud", &in_instanceCloud);
@@ -121,7 +121,7 @@ void SIFTFeatureMatcher::onInstances()
     if(jointCloud == NULL) {
         return;
     }
-    
+
     std::vector <AbstractObject*> instances = in_instances.read();
     instance = dynamic_cast<SIFTObjectModel*>(instances.at(0))->cloud_xyzsift;
     LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
@@ -133,7 +133,7 @@ void SIFTFeatureMatcher::onInstance()
     if(jointCloud == NULL) {
         return;
     }
-    
+
     instance = dynamic_cast<SIFTObjectModel*>(in_instance.read())->cloud_xyzsift;
     LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
     matchFeatures();
@@ -144,7 +144,7 @@ void SIFTFeatureMatcher::onInstanceCloud()
     if(jointCloud == NULL) {
         return;
     }
-    
+
     instance = in_instanceCloud.read();
     LOG(LDEBUG) << "Instance cloud size: " << instance -> size();
     matchFeatures();
@@ -153,7 +153,7 @@ void SIFTFeatureMatcher::onInstanceCloud()
 void SIFTFeatureMatcher::matchFeatures()
 {
 	LOG(LDEBUG) << "================= SIFTFeatureMatcher: determining correspondencies =================";
-    
+
 	pcl::CorrespondencesPtr correspondences(new pcl::Correspondences()) ;
 	pcl::registration::CorrespondenceEstimation<PointXYZSIFT, PointXYZSIFT> correst ;
 
@@ -165,6 +165,7 @@ void SIFTFeatureMatcher::matchFeatures()
 
 	LOG(LDEBUG) << "Correspondences determined " << correspondences -> size();
 
+  /*
 	if ( correspondences -> size() > 3 ) {
 		//ransac znalezienie blednych dopasowan
 		pcl::Correspondences inliers ;
@@ -191,13 +192,14 @@ void SIFTFeatureMatcher::matchFeatures()
 					++iter_correspondences;
 				}
 			}
-			++iter_inliers;	
+			++iter_inliers;
 		}
 	}
+	*/
 
 	LOG(LDEBUG) << "Number of reciprocal correspondences: " << correspondences->size() << " out of " << jointCloud->size() << " keypoints";
 
-	for(int i = 0; i< correspondences->size();i++){	
+	for(int i = 0; i< correspondences->size();i++){
 		if (correspondences->at(i).index_query >=jointCloud->size() ||
 		        correspondences->at(i).index_match >=instance->size()){
 			continue;

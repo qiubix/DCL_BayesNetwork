@@ -1,0 +1,80 @@
+<Task>
+  <!-- reference task information -->
+  <Reference>
+    <Author>
+      <name>Karol Katerzawa</name>
+      <link></link>
+    </Author>
+
+    <Description>
+      <brief>BayesNetwork:M1V1</brief>
+      <full></full>
+    </Description>
+  </Reference>
+
+  <!-- task definition -->
+  <Subtasks>
+    <Subtask name="Main">
+      <Executor name="Processing"  period="1">
+        <!--<Component name="SOMJSONReader" type="BayesNetwork:SOMJSONReader" priority="1" bump="4">-->
+          <!--<param name="filenames">../data/SimpleObjects/object_1.json</param>-->
+        <!--</Component>-->
+        <Component name="ModelReader" type="BayesNetwork:PCDReader" priority="1" bump="0">
+          <param name="filename">../data/model_3/model.pcd</param>
+        </Component>
+        <Component name="InstanceReader" type="BayesNetwork:PCDReader" priority="2" bump="0">
+          <param name="filename">../data/model_1/view_1b.pcd</param>
+        </Component>
+        <Component name="Indexer" type="BayesNetwork:PointCloudIndexer" priority="3" bump="0">
+        </Component>
+        <Component name="OctreeBuilder" type="BayesNetwork:OctreeBuilder" priority="4" bump="0">
+        </Component>
+        <Component name="SIFTFeatureMatcher" type="BayesNetwork:SIFTFeatureMatcher" priority="5" bump="0">
+        </Component>
+        <Component name="Mapper" type="BayesNetwork:MapMultiplicity" priority="10" bump="0">
+        </Component>
+        <Component name="NetworkBuilder" type="BayesNetwork:NetworkBuilder" priority="11" bump="0">
+        </Component>
+        <Component name="Evaluator" type="BayesNetwork:SOMEvaluation" priority="12" bump="0">
+        </Component>
+      </Executor>
+    </Subtask>
+  </Subtasks>
+
+  <!-- pipes connecting datastreams -->
+  <DataStreams>
+    <!--<Source name="SOMJSONReader.out_models">-->
+    <!--<sink>Adder.in_models</sink>-->
+    <!--</Source>-->
+    <Source name="ModelReader.out_cloud_xyzsift">
+      <sink>Indexer.in_cloud</sink>
+    </Source>
+    <Source name="Indexer.out_cloud">
+      <sink>OctreeBuilder.in_cloud</sink>
+      <sink>SIFTFeatureMatcher.in_jointCloud</sink>
+      <!-- <sink>Mapper.in_jointCloud</sink> -->
+    </Source>
+    <Source name="OctreeBuilder.out_octree">
+      <sink>NetworkBuilder.in_octree</sink>
+    </Source>
+    <!-- <Source name="Mapper.out_jointMultiplicity"> -->
+      <!-- <sink>NetworkBuilder.in_jointMultiplicity</sink> -->
+      <!-- </Source> -->
+
+    <Source name="InstanceReader.out_cloud_xyzsift">
+      <sink>SIFTFeatureMatcher.in_instanceCloud</sink>
+    </Source>
+    <Source name="SIFTFeatureMatcher.out_featuresIndexes">
+      <sink>Evaluator.in_instanceMatchedFeatures</sink>
+    </Source>
+
+    <Source name="NetworkBuilder.out_network">
+      <sink>Evaluator.in_network</sink>
+    </Source>
+
+  </DataStreams>
+</Task>
+
+
+
+
