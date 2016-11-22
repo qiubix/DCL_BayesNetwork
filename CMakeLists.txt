@@ -7,11 +7,14 @@ cmake_minimum_required(VERSION 2.6)
 # Find DisCODe installation
 FIND_PACKAGE(DisCODe REQUIRED)
 
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib/SMILE)
 SET(SMILE_LIBS smile smilearn)
 
 # OpenCV library
-FIND_PACKAGE( OpenCV REQUIRED )
+#FIND_PACKAGE( OpenCV REQUIRED )
 
 # PCL library
 FIND_PACKAGE(PCL 1.3 REQUIRED)
@@ -27,6 +30,7 @@ include(DisCODeMacros)
 # Testing
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 include(GoogleMock)
+include(TestSuite)
 set(CMAKE_AUTOMOC ON)
 
 # Set default install prefix to dist folder
@@ -35,6 +39,11 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
       ${CMAKE_SOURCE_DIR}/dist CACHE PATH "${CMAKE_PROJECT_NAME} install prefix" FORCE
   )
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+#SET(CMAKE_CXX_FLAGS "-O0")
+#SET(CMAKE_C_FLAGS "-O0")
+include(DefaultBuildType)
+set_default_build_type(Debug)
 
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)

@@ -3,21 +3,20 @@
  * \brief Component for building octree from point cloud
  */
 
+#pragma once
 #ifndef OCTREE_BUILDER_HPP_
 #define OCTREE_BUILDER_HPP_
 
-#define CV_NO_BACKWARD_COMPATIBILITY
+//#define CV_NO_BACKWARD_COMPATIBILITY
 
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
 #include "DataStream.hpp"
-#include "Property.hpp"
+//#include "Property.hpp"
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
-#include "../../Types/Octree.hpp"
+#include "Types/PointXYZSIFT.hpp"
+#include "Types/Octree.hpp"
 
 namespace Processors {
 namespace Network {

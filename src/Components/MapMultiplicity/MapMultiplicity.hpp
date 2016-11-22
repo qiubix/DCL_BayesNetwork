@@ -3,6 +3,7 @@
  * \brief
  */
 
+#pragma once
 #ifndef MAP_MULTIPLICITY_HPP_
 #define MAP_MULTIPLICITY_HPP_
 
@@ -14,9 +15,9 @@
 #include "DataStream.hpp"
 #include "Property.hpp"
 
-#include <opencv2/core/core.hpp>
+//#include <opencv2/core/core.hpp>
 #include <vector>
-#include <map>
+//#include <map>
 
 #include <Types/PointXYZSIFT.hpp>
 

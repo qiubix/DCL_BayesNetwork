@@ -1,0 +1,7 @@
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+
+create_test_suite(OctreeGeneratorTest OctreeGeneratorTest.cpp OctreeGenerator)
+target_link_libraries(OctreeGeneratorTest BayesNetworkTypes)
+
+create_test_suite(BayesNetworkSinkTest BayesNetworkSinkTest.cpp BayesNetworkSink)
+target_link_libraries(BayesNetworkSinkTest BayesNetworkTypes)

@@ -2,7 +2,7 @@
  * \file SOMEvaluation.hpp
  * \brief Declaration of SOMEvaluation component class
  */
-
+#pragma once
 #ifndef SOM_EVALUATION_HPP_
 #define SOM_EVALUATION_HPP_
 
@@ -12,19 +12,19 @@
 #include "Component_Aux.hpp"
 #include "Component.hpp"
 #include "DataStream.hpp"
-#include "Property.hpp"
+//#include "Property.hpp"
 
-#include "../../../lib/SMILE/smile.h"
-#include <opencv2/core/core.hpp>
+//#include "../../../lib/SMILE/smile.h"
+//#include <opencv2/core/core.hpp>
 
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
+//#include <pcl/point_cloud.h>
+//#include <pcl/point_types.h>
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
+//#include "Types/PointXYZSIFT.hpp"
 
-#include "../NetworkBuilder/AbstractNetwork.hpp"
+#include "Types/AbstractNetwork.hpp"
+
+struct PointXYZSIFT;
 
 namespace Processors {
 namespace Network {
@@ -54,7 +54,8 @@ public:
 
 protected:
   ///Input data streams
-  Base::DataStreamIn< std::vector<AbstractNetwork* > > in_networks;
+//  Base::DataStreamIn< std::vector<AbstractNetwork* > > in_networks;
+  Base::DataStreamIn< AbstractNetwork* > in_network;
   Base::DataStreamIn< std::vector<int> > in_instanceMatchedFeatures;
 
   //Output data streams
@@ -98,14 +99,14 @@ public:
 
   //std::vector<DSL_network> networks;
   std::vector<AbstractNetwork*> networks;
-  DSL_network theNet;
+//  DSL_network theNet;
   AbstractNetwork* network;
 
   void evaluate();
   void deactivateFeatures();
   void activateMatchedFeatureNodes();
   void displayHypothesisProbability(int modelId = 0);
-  int findFeatureNode(int nodeId);
+//  int findFeatureNode(int nodeId);
   double getNodeProbability(int nodeId);
 
   void setNetwork(AbstractNetwork* network);

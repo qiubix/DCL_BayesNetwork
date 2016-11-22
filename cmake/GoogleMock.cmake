@@ -5,7 +5,8 @@ set(EXTERNAL_PROJECT_GMOCK_SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/gmock)
 
 ExternalProject_Add(
     gmock
-    SVN_REPOSITORY http://googlemock.googlecode.com/svn/tags/release-1.7.0
+    #SVN_REPOSITORY http://googlemock.googlecode.com/svn/tags/release-1.7.0
+    GIT_REPOSITORY https://github.com/google/googletest
     #TODO: figure out what happens if download time is longer than specified timeout
     #TIMEOUT 10
 
@@ -14,7 +15,7 @@ ExternalProject_Add(
     DOWNLOAD_DIR ${EXTERNAL_PROJECT_GMOCK_SOURCE_DIR}
     SOURCE_DIR ${EXTERNAL_PROJECT_GMOCK_SOURCE_DIR}
     BINARY_DIR ${EXTERNAL_PROJECT_GMOCK_BINARY_DIR}
-    STAMP_DIR ${EXTERNAL_PROJECT_GMOCK_BINARY_DIR}/stamp
+    STAMP_DIR ${CMAKE_BINARY_DIR}/../ext/.stamp/gmock
 
     #configure logging
     LOG_DOWNLOAD ON
@@ -29,17 +30,17 @@ ExternalProject_Add(
 )
 
 ExternalProject_Get_Property(gmock source_dir)
-set(GMOCK_INCLUDE_DIRS ${source_dir}/include)
+set(GMOCK_INCLUDE_DIRS ${source_dir}/googlemock/include)
 include_directories(${GMOCK_INCLUDE_DIRS})
 
 ExternalProject_Get_Property(gmock binary_dir)
-set(GMOCK_LIBRARIES ${binary_dir}/${CMAKE_STATIC_LIBRARY_PREFIX}gmock${CMAKE_STATIC_LIBRARY_SUFFIX})
-set(GMOCK_MAIN_LIBRARIES ${binary_dir}/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(GMOCK_LIBRARIES ${binary_dir}/googlemock/${CMAKE_STATIC_LIBRARY_PREFIX}gmock${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(GMOCK_MAIN_LIBRARIES ${binary_dir}/googlemock/${CMAKE_STATIC_LIBRARY_PREFIX}gmock_main${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-set(GTEST_INCLUDE_DIRS ${source_dir}/gtest/include)
+set(GTEST_INCLUDE_DIRS ${source_dir}/googletest/include)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-set(GTEST_LIBRARIES ${binary_dir}/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX})
-set(GTEST_MAIN_LIBRARIES ${binary_dir}/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(GTEST_LIBRARIES ${binary_dir}/googletest/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX})
+set(GTEST_MAIN_LIBRARIES ${binary_dir}/googletest/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX})
 
 enable_testing()

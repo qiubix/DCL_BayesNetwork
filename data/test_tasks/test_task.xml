@@ -1,0 +1,8 @@
+<Task>
+	<Subtasks>
+		<Subtask name="Main">
+			<Executor name="Processing" period="1"/>
+		</Subtask>
+	</Subtasks>
+	<DataStreams/>
+</Task>

@@ -12,5 +12,5 @@ LINK_DIRECTORIES(${BayesNetwork_LIB_DIR})
 
 # list of libraries to link against when using features of BayesNetwork
 # add all additional libraries built by this dcl (NOT components)
-# SET(BayesNetwork_LIBS lib_1 lib_2)
-# SET(ADDITIONAL_LIB_DIRS @CMAKE_INSTALL_PREFIX@/lib ${ADDITIONAL_LIB_DIRS})
+SET(BayesNetwork_LIBS OctreeTypes BayesNetworkTypes)
+SET(ADDITIONAL_LIB_DIRS @CMAKE_INSTALL_PREFIX@/lib ${ADDITIONAL_LIB_DIRS})

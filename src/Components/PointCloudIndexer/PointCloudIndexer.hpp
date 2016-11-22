@@ -3,6 +3,7 @@
  * \brief Component for indexing cloud points
  */
 
+#pragma once
 #ifndef POINT_CLOUD_INDEXER_HPP_
 #define POINT_CLOUD_INDEXER_HPP_
 
@@ -13,9 +14,7 @@
 #include "Component.hpp"
 #include "DataStream.hpp"
 
-//TODO: FIXME: include types from PCL
-//#include <Types/PointXYZSIFT>
-#include "../../Types/PointXYZSIFT.hpp"
+#include "Types/PointXYZSIFT.hpp"
 
 namespace Processors {
 namespace Network {

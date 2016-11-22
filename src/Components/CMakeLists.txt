@@ -7,11 +7,7 @@ ADD_COMPONENT(OctreeBuilder)
 
 ADD_COMPONENT(PointCloudIndexer)
 
-#ADD_COMPONENT(NetworkTester)
-
-#ADD_COMPONENT(MultipleModels)
-
-ADD_COMPONENT(SIFTAdder)
+#ADD_COMPONENT(SIFTAdder)
 
 ADD_COMPONENT(SIFTFeatureMatcher)
 
@@ -23,3 +19,6 @@ ADD_COMPONENT(SOMJSONReader)
 
 ADD_COMPONENT(PCDReader)
 
+ADD_COMPONENT(OctreeGenerator)
+
+ADD_COMPONENT(BayesNetworkSink)
