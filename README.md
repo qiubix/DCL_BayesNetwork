@@ -1,13 +1,11 @@
 DCL_BayesNetwork
 ================
 
+[![Build Status](https://travis-ci.org/qiubix/DCL_BayesNetwork.svg?branch=master)](https://travis-ci.org/qiubix/DCL_BayesNetwork)
+
 Description
 -----------
 DisCODe components for creating bayesian network and conducting reasoning based on this network.
-
-master: [![Build Status](https://travis-ci.org/qiubix/DCL_BayesNetwork.svg?branch=master)](https://travis-ci.org/qiubix/DCL_BayesNetwork)
-
-develop: [![Build Status](https://travis-ci.org/qiubix/DCL_BayesNetwork.svg?branch=develop)](https://travis-ci.org/qiubix/DCL_BayesNetwork)
 
 ##Dependencies
 SMILE library:
@@ -18,9 +16,6 @@ http://pointclouds.org/
 
 OpenCV library:
 http://opencv.org/
-
-SVN:
-https://subversion.apache.org/
 
 ### Another DCL dependencies:
 This DCL depends on couple other DisCODe libraries, so they have to be present in `DISCODE_DCL_DIR` before building. Currently it depends on the following ones, but in the future releases it will surely become more independent.
