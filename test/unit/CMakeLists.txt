@@ -6,12 +6,12 @@ create_test_suite(BayesNetworkTest BayesNetworkTest.cpp BayesNetworkTypes)
 
 create_test_suite(BayesNetworkNodeTest BayesNetworkNodeTest.cpp BayesNetworkTypes)
 
-create_test_suite(OctreeNodeTest OctreeNodeTest.cpp OctreeTypes)
+create_test_suite(OctreeNodeTest OctreeNodeTest.cpp BayesNetworkTypes)
 #target_link_libraries(OctreeNodeTest OctreeTypes)
 #target_link_libraries(OctreeNodeTest BayesNetworkTypes)
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-create_test_suite(OctreeTest OctreeTest.cpp OctreeTypes)
+create_test_suite(OctreeTest OctreeTest.cpp BayesNetworkTypes)
 target_link_libraries(OctreeTest TestUtils)
 file(COPY test_cloud.pcd DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -21,7 +21,7 @@ target_link_libraries(NetworkBuilderTest TestUtils)
 create_test_suite(SOMEvaluationTest SOMEvaluationTest.cpp procSOMEvaluation)
 
 create_test_suite(OctreeBuilderTest OctreeBuilderTest.cpp OctreeBuilder)
-target_link_libraries(OctreeBuilderTest OctreeTypes)
+target_link_libraries(OctreeBuilderTest BayesNetworkTypes)
 
 create_test_suite(PointCloudIndexerTest PointCloudIndexerTest.cpp procPointCloudIndexer)
 target_link_libraries(PointCloudIndexerTest TestUtils)

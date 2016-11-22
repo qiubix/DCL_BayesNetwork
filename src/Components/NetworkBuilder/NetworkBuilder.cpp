@@ -65,8 +65,8 @@ void NetworkBuilder::prepareInterface()
   registerHandler("onJointMultiplicity", boost::bind(&NetworkBuilder::onJointMultiplicity, this));
   //addDependency("onJointMultiplicity", &in_jointMultiplicity);
 
-  //registerStream("out_network", &out_network);
-  registerStream("out_networks", &out_networks);
+  registerStream("out_network", &out_network);
+  //registerStream("out_networks", &out_networks);
 }
 
 bool NetworkBuilder::onInit()
@@ -272,7 +272,8 @@ void NetworkBuilder::exportNetwork()
   std::vector<AbstractNetwork*> networks;
   //networks.push_back(network.getNetwork());
   networks.push_back(network);
-  out_networks.write(networks);
+  //out_networks.write(networks);
+  out_network.write(network);
   //out_network.write(network.getNetwork());
 }
 

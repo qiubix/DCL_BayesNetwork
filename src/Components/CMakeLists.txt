@@ -19,3 +19,6 @@ ADD_COMPONENT(SOMJSONReader)
 
 ADD_COMPONENT(PCDReader)
 
+ADD_COMPONENT(OctreeGenerator)
+
+ADD_COMPONENT(BayesNetworkSink)
